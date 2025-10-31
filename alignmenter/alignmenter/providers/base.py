@@ -37,3 +37,12 @@ def parse_provider_model(identifier: str) -> Tuple[str, str]:
     if not provider or not model:
         raise ValueError("Provider and model name must be non-empty.")
     return provider, model
+
+
+class EmbeddingProvider(Protocol):
+    """Protocol for embedding generators."""
+
+    name: str
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        ...

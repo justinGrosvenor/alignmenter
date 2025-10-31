@@ -8,7 +8,14 @@ version = "0.0.1"
 description = "Alignment auditing toolkit scaffold"
 authors = [{name = "Alignmenter"}]
 readme = "README.md"
-dependencies = ["typer[all]", "pydantic", "openai>=1.0.0", "pyyaml>=6.0"]
+dependencies = [
+  "typer[all]",
+  "pydantic",
+  "openai>=1.0.0",
+  "pyyaml>=6.0",
+  "sentence-transformers>=2.2.2",
+  "torch",
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
