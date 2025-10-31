@@ -1,0 +1,11 @@
+.env
+env/
+.venv/
+__pycache__/
+node_modules/
+marketing/.next/
+marketing/out/
+marketing/.env.local
+reports/
+.pytest_cache/
+.DS_Store
