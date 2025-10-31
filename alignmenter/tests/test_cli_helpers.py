@@ -119,9 +119,10 @@ def test_dataset_lint_strict(tmp_path: Path) -> None:
 
 
 def test_run_command(tmp_path: Path) -> None:
-    dataset = Path(__file__).resolve().parents[1] / "datasets" / "demo_conversations.jsonl"
-    persona = Path(__file__).resolve().parents[1] / "configs" / "persona" / "default.yaml"
-    keywords = Path(__file__).resolve().parents[1] / "configs" / "safety_keywords.yaml"
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
+    keywords = root / "configs" / "safety_keywords.yaml"
 
     result = runner.invoke(
         app,
@@ -150,9 +151,10 @@ def test_run_command(tmp_path: Path) -> None:
 
 
 def test_run_command_with_compare(tmp_path: Path) -> None:
-    dataset = Path(__file__).resolve().parents[1] / "datasets" / "demo_conversations.jsonl"
-    persona = Path(__file__).resolve().parents[1] / "configs" / "persona" / "default.yaml"
-    keywords = Path(__file__).resolve().parents[1] / "configs" / "safety_keywords.yaml"
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
+    keywords = root / "configs" / "safety_keywords.yaml"
 
     result = runner.invoke(
         app,
@@ -178,8 +180,9 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
 
 
 def test_run_command_invalid_model() -> None:
-    dataset = Path(__file__).resolve().parents[1] / "datasets" / "demo_conversations.jsonl"
-    persona = Path(__file__).resolve().parents[1] / "configs" / "persona" / "default.yaml"
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
 
     result = runner.invoke(
         app,
