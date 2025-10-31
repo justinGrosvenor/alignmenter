@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import math
-from typing import Iterable
+from typing import Iterable, Optional, Sequence
 
-from alignmenter.utils import stable_hash
+from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 
 
 class StabilityScorer:
-    """Compute intra-session embedding drift and variance stability."""
+    """Measure intra-session embedding drift."""
 
     id = "stability"
 
-    def __init__(self, min_turns: int = 2) -> None:
+    def __init__(self, *, embedding: Optional[str] = None, min_turns: int = 2) -> None:
+        self.embedder = load_embedding_provider(embedding)
         self.min_turns = min_turns
 
     def score(self, sessions: Iterable) -> dict:
@@ -22,13 +23,10 @@ class StabilityScorer:
             turns = getattr(session, "turns", None)
             if turns is None and hasattr(session, "get"):
                 turns = session.get("turns", [])
-            vectors = [
-                _text_to_vector(turn.get("text", ""))
-                for turn in turns or []
-                if turn.get("role") == "assistant" and turn.get("text")
-            ]
-            if len(vectors) < self.min_turns:
+            responses = [turn.get("text", "") for turn in turns or [] if turn.get("role") == "assistant" and turn.get("text")]
+            if len(responses) < self.min_turns:
                 continue
+            vectors = [normalize_vector(vector) for vector in self.embedder.embed(responses)]
             session_scores.append(_session_stability(vectors))
 
         if not session_scores:
@@ -41,7 +39,7 @@ class StabilityScorer:
 
         session_variance = _mean(score["variance"] for score in session_scores)
         mean_distance = _mean(score["mean_distance"] for score in session_scores)
-        stability = _normalize(session_variance)
+        stability = 1 / (1 + session_variance)
 
         return {
             "stability": round(stability, 3),
@@ -51,25 +49,9 @@ class StabilityScorer:
         }
 
 
-def _text_to_vector(text: str) -> dict[int, float]:
-    tokens = [token.lower() for token in text.split() if token]
-    vector: dict[int, float] = {}
-    for token in tokens:
-        bucket = stable_hash(token)
-        vector[bucket] = vector.get(bucket, 0.0) + 1.0
-    norm = math.sqrt(sum(value * value for value in vector.values()))
-    if norm:
-        for key in list(vector.keys()):
-            vector[key] /= norm
-    return vector
-
-
-def _session_stability(vectors: list[dict[int, float]]) -> dict:
-    mean_vector = _mean_vector(vectors)
-    distances = [
-        cosine_distance(vector, mean_vector)
-        for vector in vectors
-    ]
+def _session_stability(vectors: list[list[float]]) -> dict:
+    mean_vector = normalize_vector(_mean_vector(vectors))
+    distances = [cosine_distance(vector, mean_vector) for vector in vectors]
     variance = _mean((distance - _mean(distances)) ** 2 for distance in distances)
     return {
         "variance": variance,
@@ -77,37 +59,38 @@ def _session_stability(vectors: list[dict[int, float]]) -> dict:
     }
 
 
-def _mean_vector(vectors: list[dict[int, float]]) -> dict[int, float]:
+def normalize_vector(vector: Sequence[float]) -> list[float]:
+    norm = math.sqrt(sum(value * value for value in vector))
+    if not norm:
+        return list(vector)
+    return [value / norm for value in vector]
+
+
+def _mean_vector(vectors: list[list[float]]) -> list[float]:
     if not vectors:
-        return {}
-    accumulator: dict[int, float] = {}
+        return []
+    length = max(len(vector) for vector in vectors)
+    totals = [0.0] * length
     for vector in vectors:
-        for index, value in vector.items():
-            accumulator[index] = accumulator.get(index, 0.0) + value
+        for idx, value in enumerate(vector):
+            totals[idx] += value
     count = len(vectors)
-    for index in list(accumulator.keys()):
-        accumulator[index] /= count
-    norm = math.sqrt(sum(value * value for value in accumulator.values()))
-    if norm:
-        for index in list(accumulator.keys()):
-            accumulator[index] /= norm
-    return accumulator
+    return [value / count for value in totals]
 
 
-def cosine_distance(vec_a: dict[int, float], vec_b: dict[int, float]) -> float:
-    if not vec_a or not vec_b:
+def cosine_distance(vec_a: Sequence[float], vec_b: Sequence[float]) -> float:
+    length = min(len(vec_a), len(vec_b))
+    if not length:
         return 1.0
-    dot = sum(value * vec_b.get(index, 0.0) for index, value in vec_a.items())
+    dot = sum(vec_a[i] * vec_b[i] for i in range(length))
     similarity = max(-1.0, min(1.0, dot))
     return 1 - similarity
 
 
-def _normalize(variance: float) -> float:
-    return 1 / (1 + variance)
-
-
 def _mean(values: Iterable[float]) -> float:
-    values = list(values)
-    if not values:
-        return 0.0
-    return sum(values) / len(values)
+    total = 0.0
+    count = 0
+    for value in values:
+        total += value
+        count += 1
+    return total / count if count else 0.0
