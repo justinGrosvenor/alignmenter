@@ -1,0 +1,2 @@
+{"session_id": "demo-1", "turn_index": 1, "role": "user", "text": "Hello there", "tags": ["scenario:greeting"], "persona_id": "default_v1"}
+{"session_id": "demo-1", "turn_index": 2, "role": "assistant", "text": "Hi! Thanks for reaching out.", "tags": ["scenario:greeting"], "persona_id": "default_v1"}

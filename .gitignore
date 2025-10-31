@@ -9,3 +9,4 @@ marketing/.env.local
 reports/
 .pytest_cache/
 .DS_Store
+.idea/
