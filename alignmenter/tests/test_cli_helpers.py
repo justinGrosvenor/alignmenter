@@ -119,6 +119,11 @@ def test_dataset_lint_strict(tmp_path: Path) -> None:
 
 
 def test_run_command(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
+    keywords = root / "configs" / "safety_keywords.yaml"
+
     result = runner.invoke(
         app,
         [
@@ -126,11 +131,11 @@ def test_run_command(tmp_path: Path) -> None:
             "--model",
             "openai:gpt-4o-mini",
             "--dataset",
-            "alignmenter/datasets/demo_conversations.jsonl",
+            str(dataset),
             "--persona",
-            "alignmenter/configs/persona/default.yaml",
+            str(persona),
             "--keywords",
-            "alignmenter/configs/safety_keywords.yaml",
+            str(keywords),
             "--out",
             str(tmp_path),
         ],
@@ -146,6 +151,11 @@ def test_run_command(tmp_path: Path) -> None:
 
 
 def test_run_command_with_compare(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
+    keywords = root / "configs" / "safety_keywords.yaml"
+
     result = runner.invoke(
         app,
         [
@@ -155,11 +165,11 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
             "--compare",
             "openai:gpt-4o-mini",
             "--dataset",
-            "alignmenter/datasets/demo_conversations.jsonl",
+            str(dataset),
             "--persona",
-            "alignmenter/configs/persona/default.yaml",
+            str(persona),
             "--keywords",
-            "alignmenter/configs/safety_keywords.yaml",
+            str(keywords),
             "--out",
             str(tmp_path),
         ],
@@ -170,6 +180,10 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
 
 
 def test_run_command_invalid_model() -> None:
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    dataset = root / "datasets" / "demo_conversations.jsonl"
+    persona = root / "configs" / "persona" / "default.yaml"
+
     result = runner.invoke(
         app,
         [
@@ -177,9 +191,9 @@ def test_run_command_invalid_model() -> None:
             "--model",
             "gpt-4o-mini",
             "--dataset",
-            "alignmenter/datasets/demo_conversations.jsonl",
+            str(dataset),
             "--persona",
-            "alignmenter/configs/persona/default.yaml",
+            str(persona),
         ],
     )
 
