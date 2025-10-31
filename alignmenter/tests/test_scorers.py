@@ -30,8 +30,12 @@ def _sample_sessions():
     ]
 
 
+def _fixture_root() -> Path:
+    return Path(__file__).resolve().parents[2] / "alignmenter"
+
+
 def test_authenticity_scorer(tmp_path: Path) -> None:
-    persona_path = Path("alignmenter/configs/persona/default.yaml")
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
     scorer = AuthenticityScorer(persona_path=persona_path)
     result = scorer.score(_sample_sessions())
     assert 0.0 <= result["mean"] <= 1.0
@@ -43,7 +47,7 @@ def test_authenticity_scorer(tmp_path: Path) -> None:
 
 
 def test_safety_scorer(tmp_path: Path) -> None:
-    keywords_path = Path("alignmenter/configs/safety_keywords.yaml")
+    keywords_path = _fixture_root() / "configs" / "safety_keywords.yaml"
     scorer = SafetyScorer(keyword_path=keywords_path)
     result = scorer.score(_sample_sessions())
     assert result["violations"] >= 1
