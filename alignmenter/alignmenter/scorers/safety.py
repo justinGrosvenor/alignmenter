@@ -78,6 +78,7 @@ class SafetyScorer:
             "judge_mean": round(judge_mean, 3) if judge_mean is not None else None,
             "judge_variance": round(judge_variance, 4) if judge_variance is not None else None,
             "judge_notes": judge_notes[:5],
+            "judge_budget": self.judge_budget,
         }
 
 

@@ -55,6 +55,20 @@ class OpenAIJudge(JudgeProvider):
         return {"score": max(0.0, min(1.0, score)), "notes": notes}
 
 
+class CachedJudgeProvider(JudgeProvider):
+    """Caches judge evaluations per prompt."""
+
+    def __init__(self, base: JudgeProvider) -> None:
+        self._base = base
+        self.name = base.name
+        self._cache: dict[str, dict] = {}
+
+    def evaluate(self, prompt: str) -> dict:
+        if prompt not in self._cache:
+            self._cache[prompt] = self._base.evaluate(prompt)
+        return self._cache[prompt]
+
+
 class NullJudge(JudgeProvider):
     """Fallback judge that always returns neutral response."""
 
@@ -69,5 +83,5 @@ def load_judge_provider(identifier: Optional[str]) -> Optional[JudgeProvider]:
         return None
     provider, _ = parse_provider_model(identifier)
     if provider == "openai":
-        return OpenAIJudge.from_identifier(identifier)
+        return CachedJudgeProvider(OpenAIJudge.from_identifier(identifier))
     raise ValueError(f"Unsupported judge provider: {identifier}")

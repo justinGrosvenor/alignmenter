@@ -21,6 +21,10 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "ALIGNMENTER_OPENAI_API_KEY"),
     )
+    anthropic_api_key: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("ANTHROPIC_API_KEY", "ALIGNMENTER_ANTHROPIC_API_KEY"),
+    )
     default_model: str = Field(
         default="openai:gpt-4o-mini",
         validation_alias=AliasChoices("ALIGNMENTER_DEFAULT_MODEL"),
