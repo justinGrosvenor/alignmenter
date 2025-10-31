@@ -86,7 +86,15 @@ def run(
         StabilityScorer(),
     ]
 
-    runner = Runner(config=config, scorers=scorers)
+    compare_scorers = None
+    if compare:
+        compare_scorers = [
+            AuthenticityScorer(persona_path=persona_path),
+            SafetyScorer(keyword_path=keywords_path),
+            StabilityScorer(),
+        ]
+
+    runner = Runner(config=config, scorers=scorers, compare_scorers=compare_scorers)
 
     try:
         run_dir = runner.execute()

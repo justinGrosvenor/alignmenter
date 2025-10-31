@@ -139,6 +139,34 @@ def test_run_command(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     contents = list(tmp_path.glob("*"))
     assert contents, "Expected artifacts in output directory"
+    results_path = contents[0] / "results.json"
+    assert results_path.exists()
+    payload = json.loads(results_path.read_text())
+    assert payload.get("scorecards")
+
+
+def test_run_command_with_compare(tmp_path: Path) -> None:
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            "--model",
+            "openai:gpt-4o-mini",
+            "--compare",
+            "openai:gpt-4o-mini",
+            "--dataset",
+            "alignmenter/datasets/demo_conversations.jsonl",
+            "--persona",
+            "alignmenter/configs/persona/default.yaml",
+            "--keywords",
+            "alignmenter/configs/safety_keywords.yaml",
+            "--out",
+            str(tmp_path),
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Run complete" in result.output
 
 
 def test_run_command_invalid_model() -> None:
