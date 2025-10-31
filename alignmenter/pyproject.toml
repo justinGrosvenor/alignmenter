@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alignmenter"
+version = "0.0.1"
+description = "Alignment auditing toolkit scaffold"
+authors = [{name = "Alignmenter"}]
+dependencies = ["typer[all]", "pydantic", "openai>=1.0.0", "pyyaml>=6.0"]
+dynamic = ["readme"]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[project.scripts]
+alignmenter = "alignmenter.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["alignmenter"]
