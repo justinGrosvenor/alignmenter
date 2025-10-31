@@ -8,6 +8,7 @@ from typing import Optional
 
 import typer
 
+from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.scorers.authenticity import AuthenticityScorer
@@ -45,35 +46,33 @@ def _resolve_path(candidate: str | Path) -> Path:
 
 @app.command()
 def run(
-    model: str = typer.Option(..., help="Primary model identifier (provider:model-id)."),
-    dataset: str = typer.Option(
-        "alignmenter/datasets/demo_conversations.jsonl", help="Path to conversation dataset."
-    ),
-    persona: str = typer.Option(
-        "alignmenter/configs/persona/default.yaml", help="Persona pack to evaluate against."
-    ),
+    model: Optional[str] = typer.Option(None, help="Primary model identifier (provider:model-id)."),
+    dataset: Optional[str] = typer.Option(None, help="Path to conversation dataset."),
+    persona: Optional[str] = typer.Option(None, help="Persona pack to evaluate against."),
     compare: Optional[str] = typer.Option(
         None, help="Optional secondary model identifier for diff runs."
     ),
-    out: str = typer.Option("reports/", help="Output directory for run artifacts."),
-    keywords: str = typer.Option(
-        "alignmenter/configs/safety_keywords.yaml", help="Safety keyword configuration file."
-    ),
+    out: Optional[str] = typer.Option(None, help="Output directory for run artifacts."),
+    keywords: Optional[str] = typer.Option(None, help="Safety keyword configuration file."),
+    embedding: Optional[str] = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
 ) -> None:
     """Execute an evaluation run."""
 
+    settings = get_settings()
+    model_identifier = model or settings.default_model
+
     try:
-        parse_provider_model(model)
+        parse_provider_model(model_identifier)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
 
-    dataset_path = _resolve_path(dataset)
-    persona_path = _resolve_path(persona)
-    keywords_path = _resolve_path(keywords)
-    out_dir = Path(out)
+    dataset_path = _resolve_path(dataset or settings.default_dataset)
+    persona_path = _resolve_path(persona or settings.default_persona)
+    keywords_path = _resolve_path(keywords or settings.default_keywords)
+    out_dir = Path(out or "reports/")
 
     config = RunConfig(
-        model=model,
+        model=model_identifier,
         dataset_path=dataset_path,
         persona_path=persona_path,
         compare_model=compare,
@@ -81,17 +80,17 @@ def run(
     )
 
     scorers = [
-        AuthenticityScorer(persona_path=persona_path),
+        AuthenticityScorer(persona_path=persona_path, embedding=embedding or settings.embedding_provider),
         SafetyScorer(keyword_path=keywords_path),
-        StabilityScorer(),
+        StabilityScorer(embedding=embedding or settings.embedding_provider),
     ]
 
     compare_scorers = None
     if compare:
         compare_scorers = [
-            AuthenticityScorer(persona_path=persona_path),
+            AuthenticityScorer(persona_path=persona_path, embedding=embedding or settings.embedding_provider),
             SafetyScorer(keyword_path=keywords_path),
-            StabilityScorer(),
+            StabilityScorer(embedding=embedding or settings.embedding_provider),
         ]
 
     runner = Runner(config=config, scorers=scorers, compare_scorers=compare_scorers)

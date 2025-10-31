@@ -84,11 +84,12 @@ def hashed_vector(text: str, buckets: int = 512) -> list[float]:
 
 
 def load_embedding_provider(identifier: Optional[str]) -> EmbeddingProvider:
-    if identifier is None:
+    if identifier in (None, "", "hashed"):
         return PassthroughEmbeddingProvider()
-    provider, _ = parse_provider_model(identifier)
+    provider, model = parse_provider_model(identifier)
     if provider == "openai":
-        return OpenAIEmbeddingProvider.from_identifier(identifier)
+        return OpenAIEmbeddingProvider(model=model)
     if provider == "sentence-transformer":
-        return SentenceTransformerProvider(model=identifier.split(":", 1)[1])
+        name = model or "sentence-transformers/all-MiniLM-L6-v2"
+        return SentenceTransformerProvider(model=name)
     raise ValueError(f"Unsupported embedding provider: {identifier}")
