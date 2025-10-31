@@ -5,6 +5,8 @@ from __future__ import annotations
 import math
 from typing import Iterable
 
+from alignmenter.utils import stable_hash
+
 
 class StabilityScorer:
     """Compute intra-session embedding drift and variance stability."""
@@ -53,7 +55,7 @@ def _text_to_vector(text: str) -> dict[int, float]:
     tokens = [token.lower() for token in text.split() if token]
     vector: dict[int, float] = {}
     for token in tokens:
-        bucket = hash(token) % 512
+        bucket = stable_hash(token)
         vector[bucket] = vector.get(bucket, 0.0) + 1.0
     norm = math.sqrt(sum(value * value for value in vector.values()))
     if norm:
