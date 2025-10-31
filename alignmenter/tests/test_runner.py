@@ -18,8 +18,8 @@ class StubScorer:
 def test_runner_execute_creates_reports(tmp_path: Path) -> None:
     config = RunConfig(
         model="openai:gpt-4o-mini",
-        dataset_path=Path("alignmenter/datasets/demo_conversations.jsonl"),
-        persona_path=Path("alignmenter/configs/persona/default.yaml"),
+        dataset_path=Path(__file__).resolve().parents[1] / "datasets" / "demo_conversations.jsonl",
+        persona_path=Path(__file__).resolve().parents[1] / "configs" / "persona" / "default.yaml",
         run_id="test",
         report_out_dir=tmp_path,
     )
@@ -43,8 +43,8 @@ def test_runner_execute_creates_reports(tmp_path: Path) -> None:
 def test_runner_execute_with_compare(tmp_path: Path) -> None:
     config = RunConfig(
         model="openai:gpt-4o-mini",
-        dataset_path=Path("alignmenter/datasets/demo_conversations.jsonl"),
-        persona_path=Path("alignmenter/configs/persona/default.yaml"),
+        dataset_path=Path(__file__).resolve().parents[1] / "datasets" / "demo_conversations.jsonl",
+        persona_path=Path(__file__).resolve().parents[1] / "configs" / "persona" / "default.yaml",
         compare_model="openai:gpt-4o-mini",
         run_id="test",
         report_out_dir=tmp_path,
