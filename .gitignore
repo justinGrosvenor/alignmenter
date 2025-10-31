@@ -9,3 +9,4 @@ marketing/.env.local
 .pytest_cache/
 .DS_Store
 .idea/
+*.egg-info/
