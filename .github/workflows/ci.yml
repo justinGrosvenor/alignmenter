@@ -2,8 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main, feature/** ]
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   python-tests:
@@ -30,7 +35,7 @@ jobs:
   marketing-build:
     runs-on: ubuntu-latest
     env:
-      S3_BUCKET: ${{ secrets.MARKETING_BUCKET }}
+      MARKETING_BUCKET: ${{ secrets.MARKETING_BUCKET }}
     defaults:
       run:
         working-directory: marketing
@@ -46,14 +51,20 @@ jobs:
       - name: Build
         run: npm run build
       - name: Configure AWS credentials
-        if: ${{ env.S3_BUCKET != '' }}
+        if: ${{ env.MARKETING_BUCKET != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      - name: Sync to S3
-        if: ${{ env.S3_BUCKET != '' }}
+      - name: Sync static site to S3
+        if: ${{ env.MARKETING_BUCKET != '' }}
         run: |
-          npm run export -- --out out || npx next export -o out
-          aws s3 sync out/ s3://$S3_BUCKET/ --delete
+          BUCKET=${MARKETING_BUCKET#s3://}
+          BUCKET=${BUCKET%/}
+          BUCKET=$(printf '%s' "$BUCKET" | tr -d '[:space:]')
+          if [ -z "$BUCKET" ]; then
+            echo 'MARKETING_BUCKET secret is empty; skipping deploy.'
+            exit 0
+          fi
+          aws s3 sync ./out "s3://$BUCKET" --delete
