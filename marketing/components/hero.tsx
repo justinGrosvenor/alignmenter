@@ -28,7 +28,7 @@ export function Hero() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 px-4">
           <Link
-            href="https://github.com/alignmenter"
+            href="https://github.com/justinGrosvenor/alignmenter"
             className="w-full sm:w-auto group relative rounded-full bg-signal px-6 sm:px-8 py-3 sm:py-4 font-semibold text-black shadow-lg shadow-signal/40 transition-all hover:shadow-signal/60 hover:scale-105 text-center"
           >
             <span className="relative z-10">Get started</span>
@@ -36,7 +36,7 @@ export function Hero() {
           </Link>
 
           <Link
-            href="https://github.com/alignmenter"
+            href="https://github.com/justinGrosvenor/alignmenter"
             className="w-full sm:w-auto rounded-full border-2 border-slate-700 px-6 sm:px-8 py-3 sm:py-4 font-semibold text-slate-200 transition-all hover:border-signal/70 hover:text-white hover:bg-signal/5 text-center"
           >
             View documentation

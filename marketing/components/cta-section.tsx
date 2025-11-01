@@ -23,7 +23,7 @@ export function CTASection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 px-4">
               <Link
-                href="https://github.com/alignmenter"
+                href="https://github.com/justinGrosvenor/alignmenter"
                 className="w-full sm:w-auto group relative rounded-full bg-signal px-6 sm:px-8 py-3 sm:py-4 font-semibold text-black shadow-lg shadow-signal/40 transition-all hover:shadow-signal/60 hover:scale-105"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
@@ -35,7 +35,7 @@ export function CTASection() {
               </Link>
 
               <Link
-                href="https://github.com/alignmenter"
+                href="https://github.com/justinGrosvenor/alignmenter"
                 className="w-full sm:w-auto rounded-full border-2 border-signal/50 px-6 sm:px-8 py-3 sm:py-4 font-semibold text-white transition-all hover:border-signal hover:bg-signal/10 text-center"
               >
                 View on GitHub

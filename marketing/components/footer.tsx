@@ -19,7 +19,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3 sm:gap-4">
               <Link
-                href="https://github.com/alignmenter"
+                href="https://github.com/justinGrosvenor/alignmenter"
                 className="text-slate-400 hover:text-signal transition-colors"
                 aria-label="GitHub"
               >
@@ -44,22 +44,22 @@ export function Footer() {
             <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
             <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-400">
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   Documentation
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   Quick start
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   CLI reference
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   Examples
                 </Link>
               </li>
@@ -71,22 +71,22 @@ export function Footer() {
             <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Resources</h4>
             <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-400">
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   GitHub
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter/issues" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter/issues" className="hover:text-signal transition-colors">
                   Issues
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   Roadmap
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
                   Contributing
                 </Link>
               </li>
