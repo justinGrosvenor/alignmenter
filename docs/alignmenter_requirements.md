@@ -186,7 +186,16 @@ alignmenter report --last
 alignmenter persona scaffold --name "Acme Voice"
 alignmenter persona export --dataset datasets/demo_conversations.jsonl --out annotation.csv
 alignmenter dataset lint datasets/demo_conversations.jsonl
+alignmenter run --config alignmenter/configs/demo_config.yaml
 ```
+
+Run configs (`configs/*.yaml`) support the following keys:
+
+- `model`, `compare_model`, `run_id`
+- `dataset`, `persona`, `keywords` (paths resolve relative to the config file)
+- `embedding` (e.g., `sentence-transformer:all-MiniLM-L6-v2`)
+- `judge.provider` / `judge.budget`
+- `report.out_dir`, `report.include_raw`
 
 ### Provider Interface
 ```python

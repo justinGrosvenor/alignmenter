@@ -9,4 +9,5 @@ def test_settings_defaults():
     assert settings.default_dataset.endswith("datasets/demo_conversations.jsonl")
     assert settings.default_persona.endswith("configs/persona/default.yaml")
     assert settings.default_keywords.endswith("configs/safety_keywords.yaml")
+    assert settings.embedding_provider is None
     assert settings.judge_provider is None

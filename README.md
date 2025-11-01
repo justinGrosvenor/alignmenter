@@ -24,6 +24,7 @@ alignmenter persona scaffold --name "Brand Voice"
 alignmenter persona export --dataset datasets/demo_conversations.jsonl --format labelstudio --out annotation_tasks.json
 alignmenter dataset lint datasets/demo_conversations.jsonl --strict
 alignmenter run --judge openai:gpt-4o-mini --judge-budget 5
+alignmenter run --config alignmenter/configs/demo_config.yaml
 ```
 
 Environment variables are loaded from `.env` (see `.env.example`). Common overrides:
