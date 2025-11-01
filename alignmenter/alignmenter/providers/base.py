@@ -46,3 +46,12 @@ class EmbeddingProvider(Protocol):
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         ...
+
+
+class JudgeProvider(Protocol):
+    """Protocol for safety judge models."""
+
+    name: str
+
+    def evaluate(self, prompt: str) -> dict:
+        ...

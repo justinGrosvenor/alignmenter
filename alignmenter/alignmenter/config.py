@@ -17,10 +17,13 @@ class Settings(BaseSettings):
     """Runtime configuration for Alignmenter."""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
-
     openai_api_key: Optional[str] = Field(
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "ALIGNMENTER_OPENAI_API_KEY"),
+    )
+    anthropic_api_key: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("ANTHROPIC_API_KEY", "ALIGNMENTER_ANTHROPIC_API_KEY"),
     )
     default_model: str = Field(
         default="openai:gpt-4o-mini",
@@ -41,6 +44,14 @@ class Settings(BaseSettings):
     default_keywords: str = Field(
         default=str(PROJECT_ROOT / "configs" / "safety_keywords.yaml"),
         validation_alias=AliasChoices("ALIGNMENTER_DEFAULT_KEYWORDS"),
+    )
+    judge_provider: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PROVIDER"),
+    )
+    judge_budget: Optional[int] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_BUDGET"),
     )
 
 

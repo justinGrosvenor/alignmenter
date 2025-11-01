@@ -16,6 +16,7 @@ dependencies = [
   "pyyaml>=6.0",
   "sentence-transformers>=2.2.2",
   "torch",
+  "tiktoken>=0.7.0",
 ]
 
 [project.optional-dependencies]

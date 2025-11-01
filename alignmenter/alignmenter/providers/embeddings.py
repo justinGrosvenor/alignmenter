@@ -83,13 +83,44 @@ def hashed_vector(text: str, buckets: int = 512) -> list[float]:
     return vector
 
 
+class CachedEmbeddingProvider(EmbeddingProvider):
+    """Caches embeddings for repeated text inputs."""
+
+    def __init__(self, base: EmbeddingProvider) -> None:
+        self._base = base
+        self.name = base.name
+        self._cache: dict[str, list[float]] = {}
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        results: list[list[float]] = []
+        missing: list[str] = []
+
+        for text in texts:
+            if text in self._cache:
+                results.append(self._cache[text])
+            else:
+                missing.append(text)
+
+        if missing:
+            new_vectors = self._base.embed(missing)
+            for text, vector in zip(missing, new_vectors):
+                stored = list(vector)
+                self._cache[text] = stored
+
+        return [self._cache[text] for text in texts]
+
+
 def load_embedding_provider(identifier: Optional[str]) -> EmbeddingProvider:
     if identifier in (None, "", "hashed"):
-        return PassthroughEmbeddingProvider()
-    provider, model = parse_provider_model(identifier)
-    if provider == "openai":
-        return OpenAIEmbeddingProvider(model=model)
-    if provider == "sentence-transformer":
-        name = model or "sentence-transformers/all-MiniLM-L6-v2"
-        return SentenceTransformerProvider(model=name)
-    raise ValueError(f"Unsupported embedding provider: {identifier}")
+        provider = PassthroughEmbeddingProvider()
+    else:
+        provider_name, model = parse_provider_model(identifier)
+        if provider_name == "openai":
+            provider = OpenAIEmbeddingProvider(model=model)
+        elif provider_name == "sentence-transformer":
+            name = model or "sentence-transformers/all-MiniLM-L6-v2"
+            provider = SentenceTransformerProvider(model=name)
+        else:
+            raise ValueError(f"Unsupported embedding provider: {identifier}")
+
+    return CachedEmbeddingProvider(provider)

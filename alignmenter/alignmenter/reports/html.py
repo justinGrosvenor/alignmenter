@@ -121,6 +121,10 @@ class HTMLReporter:
                 f"<h3>{scorer_id.title()}</h3>"
                 f"<table><thead><tr>{header}</tr></thead><tbody>{''.join(row_html)}</tbody></table>"
             )
+            if scorer_id == "safety":
+                safety_details = _render_judge_details(primary_metrics)
+                if safety_details:
+                    table += safety_details
             score_blocks.append(table)
 
         turn_preview = _render_turn_preview(sessions)
@@ -145,7 +149,37 @@ def _format_metric(value: Any) -> str:
         return "—"
     if isinstance(value, float):
         return f"{value:.3f}"
+    if isinstance(value, list):
+        return ", ".join(str(item) for item in value)
     return str(value)
+
+
+def _render_judge_details(metrics: dict[str, Any]) -> str:
+    if not isinstance(metrics, dict):
+        return ""
+    calls = metrics.get("judge_calls")
+    budget = metrics.get("judge_budget")
+    mean_score = metrics.get("judge_mean")
+    notes = metrics.get("judge_notes") or []
+
+    if calls is None and not notes and mean_score is None:
+        return ""
+
+    lines = []
+    if calls is not None:
+        info = f"Judge calls: {calls}"
+        if budget:
+            info += f" / budget {budget}"
+        lines.append(info)
+    if mean_score is not None:
+        lines.append(f"Average judge score: {mean_score:.3f}")
+    if notes:
+        notes_html = "".join(f"<li>{note}</li>" for note in notes)
+        lines.append(f"<ul>{notes_html}</ul>")
+
+    body = "<br />".join(item for item in lines if not item.startswith("<ul>"))
+    list_html = "".join(item for item in lines if item.startswith("<ul>"))
+    return f"<div class='muted'>{body}{list_html}</div>"
 
 
 def _render_scorecards(scorecards: list[dict]) -> str:

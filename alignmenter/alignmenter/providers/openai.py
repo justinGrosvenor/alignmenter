@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from typing import Any, Optional, TYPE_CHECKING
 
 try:  # pragma: no cover - import guard
@@ -12,6 +11,8 @@ except ImportError:  # pragma: no cover - handled at runtime
 
 if TYPE_CHECKING:  # pragma: no cover
     from openai import OpenAI as _OpenAI
+
+from alignmenter.config import get_settings
 
 from .base import ChatResponse, parse_provider_model
 
@@ -23,7 +24,6 @@ class OpenAIProvider:
 
     def __init__(self, model: str, client: Optional["_OpenAI"] = None) -> None:
         self.model = model
-        api_key = os.getenv("OPENAI_API_KEY")
         if client is not None:
             self._client = client
         else:
@@ -31,7 +31,8 @@ class OpenAIProvider:
                 raise RuntimeError(
                     "The 'openai' package is required for OpenAIProvider. Install with 'pip install openai'."
                 )
-            self._client = OpenAI(api_key=api_key)
+            settings = get_settings()
+            self._client = OpenAI(api_key=settings.openai_api_key)
 
     @classmethod
     def from_model_identifier(cls, identifier: str, client: Optional["_OpenAI"] = None) -> "OpenAIProvider":

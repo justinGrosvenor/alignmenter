@@ -10,6 +10,7 @@ import typer
 
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
+from alignmenter.providers.judges import load_judge_provider
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.safety import SafetyScorer
@@ -55,6 +56,8 @@ def run(
     out: Optional[str] = typer.Option(None, help="Output directory for run artifacts."),
     keywords: Optional[str] = typer.Option(None, help="Safety keyword configuration file."),
     embedding: Optional[str] = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
+    judge: Optional[str] = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
+    judge_budget: Optional[int] = typer.Option(None, help="Maximum LLM judge calls per run."),
 ) -> None:
     """Execute an evaluation run."""
 
@@ -70,6 +73,8 @@ def run(
     persona_path = _resolve_path(persona or settings.default_persona)
     keywords_path = _resolve_path(keywords or settings.default_keywords)
     out_dir = Path(out or "reports/")
+    judge_identifier = judge or settings.judge_provider
+    judge_budget = judge_budget if judge_budget is not None else settings.judge_budget
 
     config = RunConfig(
         model=model_identifier,
@@ -79,18 +84,31 @@ def run(
         report_out_dir=out_dir,
     )
 
+    scorer_kwargs = {
+        "embedding": embedding or settings.embedding_provider,
+    }
+    judge_provider = load_judge_provider(judge_identifier)
+
     scorers = [
-        AuthenticityScorer(persona_path=persona_path, embedding=embedding or settings.embedding_provider),
-        SafetyScorer(keyword_path=keywords_path),
-        StabilityScorer(embedding=embedding or settings.embedding_provider),
+        AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
+        SafetyScorer(
+            keyword_path=keywords_path,
+            judge=judge_provider.evaluate if judge_provider else None,
+            judge_budget=judge_budget,
+        ),
+        StabilityScorer(**scorer_kwargs),
     ]
 
     compare_scorers = None
     if compare:
         compare_scorers = [
-            AuthenticityScorer(persona_path=persona_path, embedding=embedding or settings.embedding_provider),
-            SafetyScorer(keyword_path=keywords_path),
-            StabilityScorer(embedding=embedding or settings.embedding_provider),
+            AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
+            SafetyScorer(
+                keyword_path=keywords_path,
+                judge=judge_provider.evaluate if judge_provider else None,
+                judge_budget=judge_budget,
+            ),
+            StabilityScorer(**scorer_kwargs),
         ]
 
     runner = Runner(config=config, scorers=scorers, compare_scorers=compare_scorers)

@@ -53,6 +53,7 @@ def test_safety_scorer(tmp_path: Path) -> None:
     assert result["violations"] >= 1
     assert "violence" in result["categories"]
     assert result["judge_calls"] == 0
+    assert result["judge_budget"] is None
 
 
 def test_stability_scorer() -> None:
