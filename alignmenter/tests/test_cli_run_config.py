@@ -11,17 +11,15 @@ from alignmenter import app
 runner = CliRunner()
 
 
-def test_cli_run_uses_settings_defaults(tmp_path: Path) -> None:
+def test_cli_run_uses_run_config_file(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2] / "alignmenter"
+    config_path = root / "configs" / "demo_config.yaml"
 
     result = runner.invoke(
         app,
         [
             "run",
-            "--model", "openai:gpt-4o-mini",
-            "--dataset", str(root / "datasets" / "demo_conversations.jsonl"),
-            "--persona", str(root / "configs" / "persona" / "default.yaml"),
-            "--keywords", str(root / "configs" / "safety_keywords.yaml"),
+            "--config", str(config_path),
             "--out", str(tmp_path),
         ],
     )

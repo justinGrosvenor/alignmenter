@@ -11,6 +11,7 @@ import typer
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
 from alignmenter.providers.judges import load_judge_provider
+from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.safety import SafetyScorer
@@ -47,6 +48,7 @@ def _resolve_path(candidate: str | Path) -> Path:
 
 @app.command()
 def run(
+    config: Optional[str] = typer.Option(None, "--config", "-c", help="Path to run configuration YAML."),
     model: Optional[str] = typer.Option(None, help="Primary model identifier (provider:model-id)."),
     dataset: Optional[str] = typer.Option(None, help="Path to conversation dataset."),
     persona: Optional[str] = typer.Option(None, help="Persona pack to evaluate against."),
@@ -62,30 +64,51 @@ def run(
     """Execute an evaluation run."""
 
     settings = get_settings()
-    model_identifier = model or settings.default_model
+    config_options: dict[str, object] = {}
+    if config:
+        config_path = _resolve_path(config)
+        config_options = load_run_options(config_path)
+
+    model_identifier = model or config_options.get("model") or settings.default_model
 
     try:
         parse_provider_model(model_identifier)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
 
-    dataset_path = _resolve_path(dataset or settings.default_dataset)
-    persona_path = _resolve_path(persona or settings.default_persona)
-    keywords_path = _resolve_path(keywords or settings.default_keywords)
-    out_dir = Path(out or "reports/")
-    judge_identifier = judge or settings.judge_provider
-    judge_budget = judge_budget if judge_budget is not None else settings.judge_budget
+    dataset_candidate = dataset or config_options.get("dataset") or settings.default_dataset
+    persona_candidate = persona or config_options.get("persona") or settings.default_persona
+    keywords_candidate = keywords or config_options.get("keywords") or settings.default_keywords
+    out_candidate = out or config_options.get("report_out_dir") or "reports/"
+
+    dataset_path = _resolve_path(dataset_candidate)
+    persona_path = _resolve_path(persona_candidate)
+    keywords_path = _resolve_path(keywords_candidate)
+    out_dir = Path(out_candidate)
+
+    compare_identifier = compare if compare is not None else config_options.get("compare_model")
+    judge_identifier = judge or config_options.get("judge_provider") or settings.judge_provider
+    judge_budget = (
+        judge_budget
+        if judge_budget is not None
+        else config_options.get("judge_budget", settings.judge_budget)
+    )
+    run_id = config_options.get("run_id", "alignmenter_run")
+    include_raw = config_options.get("include_raw")
 
     config = RunConfig(
         model=model_identifier,
         dataset_path=dataset_path,
         persona_path=persona_path,
-        compare_model=compare,
+        compare_model=compare_identifier,
         report_out_dir=out_dir,
+        run_id=run_id,
+        include_raw=bool(include_raw) if include_raw is not None else True,
     )
 
+    embedding_identifier = embedding or config_options.get("embedding") or settings.embedding_provider
     scorer_kwargs = {
-        "embedding": embedding or settings.embedding_provider,
+        "embedding": embedding_identifier,
     }
     judge_provider = load_judge_provider(judge_identifier)
 
@@ -100,7 +123,7 @@ def run(
     ]
 
     compare_scorers = None
-    if compare:
+    if compare_identifier:
         compare_scorers = [
             AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
             SafetyScorer(
