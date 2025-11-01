@@ -163,6 +163,55 @@ def demo(
     )
 
 
+@app.command()
+def report(
+    last: bool = typer.Option(False, "--last", help="Open the most recent report."),
+    path: Optional[str] = typer.Option(None, "--path", help="Path to specific report directory."),
+    reports_dir: str = typer.Option("reports", help="Base reports directory."),
+) -> None:
+    """Open or view reports."""
+    import platform
+    import subprocess
+
+    if not last and not path:
+        raise typer.BadParameter("Either --last or --path must be specified.")
+
+    if path:
+        report_dir = Path(path)
+    else:
+        # Find most recent report
+        reports_base = Path(reports_dir)
+        if not reports_base.exists():
+            raise typer.BadParameter(f"Reports directory not found: {reports_base}")
+
+        subdirs = [d for d in reports_base.iterdir() if d.is_dir()]
+        if not subdirs:
+            raise typer.BadParameter(f"No reports found in {reports_base}")
+
+        # Sort by modification time, most recent first
+        report_dir = max(subdirs, key=lambda d: d.stat().st_mtime)
+
+    html_path = report_dir / "index.html"
+    if not html_path.exists():
+        raise typer.BadParameter(f"No HTML report found at {html_path}")
+
+    typer.secho(f"Opening report: {html_path}", fg=typer.colors.GREEN)
+
+    # Open in browser
+    system = platform.system()
+    try:
+        if system == "Darwin":  # macOS
+            subprocess.run(["open", str(html_path)], check=True)
+        elif system == "Linux":
+            subprocess.run(["xdg-open", str(html_path)], check=True)
+        elif system == "Windows":
+            subprocess.run(["start", str(html_path)], shell=True, check=True)
+        else:
+            typer.echo(f"Could not open browser. Please open: {html_path}")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        typer.echo(f"Could not open browser. Please open: {html_path}")
+
+
 def _slugify(name: str) -> str:
     slug = "".join(ch.lower() if ch.isalnum() else "_" for ch in name)
     while "__" in slug:
