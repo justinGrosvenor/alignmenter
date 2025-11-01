@@ -53,14 +53,20 @@ def load_run_options(path: Path) -> dict[str, Any]:
         options["embedding"] = embedding
 
     judge_section = data.get("judge")
+    safety_section = data.get("scorers", {}).get("safety", {})
+    if not isinstance(judge_section, dict):
+        judge_section = safety_section.get("judge") if isinstance(safety_section, dict) else None
+
     if isinstance(judge_section, dict):
-        options["judge_provider"] = judge_section.get("provider")
-        options["judge_budget"] = judge_section.get("budget")
-    else:
-        if data.get("judge_provider"):
-            options["judge_provider"] = data.get("judge_provider")
-        if data.get("judge_budget") is not None:
-            options["judge_budget"] = data.get("judge_budget")
+        if judge_section.get("provider"):
+            options["judge_provider"] = judge_section.get("provider")
+        if judge_section.get("budget") is not None:
+            options["judge_budget"] = judge_section.get("budget")
+
+    if options.get("judge_provider") is None and data.get("judge_provider"):
+        options["judge_provider"] = data.get("judge_provider")
+    if options.get("judge_budget") is None and data.get("judge_budget") is not None:
+        options["judge_budget"] = data.get("judge_budget")
 
     report = data.get("report", {})
     if isinstance(report, dict):

@@ -3,11 +3,13 @@ model: openai:gpt-4o-mini
 compare_model: null
 dataset: ../datasets/demo_conversations.jsonl
 persona: persona/default.yaml
-keywords: safety_keywords.yaml
+scorers:
+  safety:
+    keyword_lists: safety_keywords.yaml
+    judge:
+      provider: none
+      budget: null
 embedding: hashed
-judge:
-  provider: none
-  budget: null
 report:
   out_dir: ../reports/
   include_raw: true

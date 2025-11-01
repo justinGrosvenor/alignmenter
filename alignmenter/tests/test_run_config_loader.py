@@ -26,11 +26,13 @@ run_id: sample
 model: openai:gpt-4o-mini
 dataset: ../data/dataset.jsonl
 persona: persona.yaml
-keywords: keywords.yaml
 embedding: hashed
-judge:
-  provider: none
-  budget: 3
+scorers:
+  safety:
+    keyword_lists: keywords.yaml
+    judge:
+      provider: none
+      budget: 3
 report:
   out_dir: ../reports
   include_raw: false
