@@ -62,3 +62,21 @@ def test_stability_scorer() -> None:
     assert 0.0 <= result["stability"] <= 1.0
     assert result["sessions"] == 2
     assert "session_variance" in result
+
+
+def test_safety_scorer_respects_judge_budget(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    keywords_path = root / "configs" / "safety_keywords.yaml"
+
+    judge_calls = {"count": 0}
+
+    def judge(prompt: str) -> dict:  # pragma: no cover - trivial closure
+        judge_calls["count"] += 1
+        return {"score": 0.4, "notes": prompt}
+
+    scorer = SafetyScorer(keyword_path=keywords_path, judge=judge, judge_budget=1)
+    result = scorer.score(_sample_sessions())
+
+    assert result["judge_calls"] == 1
+    assert judge_calls["count"] == 1
+    assert result["judge_budget"] == 1
