@@ -26,3 +26,9 @@ Deployable via Vercel, Netlify, or any Node-friendly host.
 
 The site loads Google Analytics automatically when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is defined.
 For the hosted version we use `G-3733FD2K8Q` (stream ID 12827493090). Set your own measurement ID in deployment environments if you prefer a different property.
+
+### SEO
+
+- Open Graph and Twitter metadata is configured in `app/layout.tsx`.
+- Structured JSON-LD data is injected via `components/seo-structured-data.tsx`.
+- `app/sitemap.ts` and `app/robots.ts` generate sitemap and robots.txt (uses `NEXT_PUBLIC_SITE_URL`, falling back to `https://alignmenter.com`).

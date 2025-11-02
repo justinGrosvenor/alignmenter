@@ -100,11 +100,11 @@ export function Footer() {
             © 2025 Alignmenter. Licensed under Apache 2.0.
           </p>
           <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="#" className="hover:text-signal transition-colors">
-              Privacy
+            <Link href="https://x.com/alignmenter" className="hover:text-signal transition-colors">
+              X (Twitter)
             </Link>
-            <Link href="#" className="hover:text-signal transition-colors">
-              Terms
+            <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
+              GitHub
             </Link>
           </div>
         </div>

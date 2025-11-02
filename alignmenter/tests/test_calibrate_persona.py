@@ -18,7 +18,10 @@ def _write_jsonl(path: Path, records: list[dict]) -> None:
 
 
 def _load_calibrator() -> object:
-    script_path = _locate_repo_root() / "scripts" / "calibrate_persona.py"
+    root = _locate_repo_root()
+    script_path = root / "src" / "alignmenter" / "scripts" / "calibrate_persona.py"
+    if not script_path.exists():
+        script_path = root / "scripts" / "calibrate_persona.py"
     spec = importlib.util.spec_from_file_location("calibrate_persona", script_path)
     module = importlib.util.module_from_spec(spec)
     assert spec and spec.loader
@@ -30,8 +33,9 @@ def _load_calibrator() -> object:
 def _locate_repo_root() -> Path:
     current = Path(__file__).resolve()
     for parent in current.parents:
-        candidate = parent / "scripts" / "calibrate_persona.py"
-        if candidate.exists():
+        legacy = parent / "scripts" / "calibrate_persona.py"
+        src_path = parent / "src" / "alignmenter" / "scripts" / "calibrate_persona.py"
+        if legacy.exists() or src_path.exists():
             return parent
     raise RuntimeError("Could not locate scripts/calibrate_persona.py")
 
