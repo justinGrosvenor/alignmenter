@@ -91,3 +91,9 @@ jobs:
             exit 0
           fi
           aws s3 sync ./out "s3://$BUCKET" --delete
+      - name: Invalidate CloudFront cache
+        if: ${{ github.event_name == 'push' && env.MARKETING_BUCKET != '' && secrets.CLOUDFRONT_DISTRO != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ secrets.CLOUDFRONT_DISTRO }}" \
+            --paths "/*"
