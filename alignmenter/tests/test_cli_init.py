@@ -41,8 +41,9 @@ def test_init_creates_env_and_config(tmp_path: Path, monkeypatch) -> None:
         [
             "y",  # configure OpenAI
             "sk-test",  # api key
-            "openai:gpt-4o-mini",  # default model
             "sentence-transformer:all-MiniLM-L6-v2",  # embedding provider
+            "gpt://brand-voice-chef",  # custom GPT id
+            "",  # accept default model (derived from GPT id)
             "y",  # enable judge
             "openai:gpt-4o-mini",  # judge provider
             "10",  # judge budget
@@ -63,12 +64,13 @@ def test_init_creates_env_and_config(tmp_path: Path, monkeypatch) -> None:
 
     env_text = (tmp_path / ".env").read_text()
     assert "OPENAI_API_KEY=sk-test" in env_text
-    assert "ALIGNMENTER_DEFAULT_MODEL=openai:gpt-4o-mini" in env_text
+    assert "ALIGNMENTER_DEFAULT_MODEL=openai-gpt:gpt://brand-voice-chef" in env_text
     assert "ALIGNMENTER_JUDGE_BUDGET=10" in env_text
     assert "ALIGNMENTER_JUDGE_BUDGET_USD=5" in env_text
+    assert "ALIGNMENTER_CUSTOM_GPT_ID=gpt://brand-voice-chef" in env_text
 
     config_payload = yaml.safe_load((tmp_path / "configs/init_run.yaml").read_text())
-    assert config_payload["model"] == "openai:gpt-4o-mini"
+    assert config_payload["model"] == "openai-gpt:gpt://brand-voice-chef"
     assert config_payload["dataset"] == "datasets/demo_conversations.jsonl"
     safety = config_payload["scorers"]["safety"]
     assert safety["judge"]["provider"] == "openai:gpt-4o-mini"

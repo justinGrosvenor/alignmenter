@@ -88,15 +88,29 @@ def init(
             show_default=False,
         ).strip()
 
-    default_model = typer.prompt(
-        "Default chat model (provider:model)",
-        default=settings.default_model or env_entries.get("ALIGNMENTER_DEFAULT_MODEL", "openai:gpt-4o-mini"),
-    ).strip()
-
     embedding_default = env_entries.get("ALIGNMENTER_EMBEDDING_PROVIDER") or settings.embedding_provider or "hashed"
     embedding_provider = typer.prompt(
         "Embedding provider",
         default=embedding_default,
+    ).strip()
+
+    custom_gpt_id = ""
+    if use_openai:
+        custom_gpt_id = typer.prompt(
+            "Default Custom GPT id (gpt://...), leave blank to skip",
+            default=env_entries.get("ALIGNMENTER_CUSTOM_GPT_ID") or settings.custom_gpt_id or "",
+            show_default=False,
+        ).strip()
+
+    existing_default_model = env_entries.get("ALIGNMENTER_DEFAULT_MODEL") or settings.default_model
+    if custom_gpt_id and (not existing_default_model or existing_default_model in {"openai:gpt-4o-mini", ""}):
+        suggested_model = f"openai-gpt:{custom_gpt_id}"
+    else:
+        suggested_model = existing_default_model or "openai:gpt-4o-mini"
+
+    default_model = typer.prompt(
+        "Default chat model (provider:model)",
+        default=suggested_model,
     ).strip()
 
     use_judge = typer.confirm(
@@ -150,6 +164,7 @@ def init(
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT": _format_float(judge_price_in),
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT": _format_float(judge_price_out),
         "ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL": str(judge_tokens) if judge_tokens is not None else None,
+        "ALIGNMENTER_CUSTOM_GPT_ID": custom_gpt_id or None,
     }
 
     _write_env(env_path, env_updates, existing=env_entries)

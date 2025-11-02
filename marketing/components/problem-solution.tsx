@@ -76,7 +76,7 @@ export function ProblemSolution() {
                 models side-by-side, and catch problems before shipping.
               </p>
               <p>
-                Works with OpenAI, Anthropic, and local models. Your data stays on your computer.
+                Works with OpenAI, custom GPTs, Anthropic, and local models. Your data stays on your computer.
                 Everything runs locally with shareable HTML reports.
               </p>
             </div>

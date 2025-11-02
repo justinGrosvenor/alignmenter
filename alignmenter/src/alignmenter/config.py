@@ -77,6 +77,10 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_COMPLETION_TOKENS"),
     )
+    custom_gpt_id: Optional[str] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_CUSTOM_GPT_ID"),
+    )
     safety_classifier: Optional[str] = Field(
         default="auto",
         validation_alias=AliasChoices("ALIGNMENTER_SAFETY_CLASSIFIER"),

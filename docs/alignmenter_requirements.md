@@ -61,7 +61,12 @@ Applied ML engineers, product/brand owners, and researchers who need transparent
 - **When** `alignmenter run --persona configs/persona/goth_muse.yaml`
 - **Then** Authenticity uses exemplars and lexicon from that pack
 
-### S4: Local Model
+### S4: Custom GPT Voice
+- **Given** a saved GPT Builder ID (`gpt://.../brand-voice-chef`) and OpenAI API key
+- **When** `alignmenter run --model openai-gpt:brand-voice-chef`
+- **Then** Alignmenter calls the GPT responses API, syncs the GPT instructions into a temporary persona pack, and scores authenticity/safety/stability against that branded voice
+
+### S5: Local Model
 - **When** `alignmenter run --model local:http://localhost:8000/v1/chat/completions`
 - **Then** executes locally and logs latency/tokens/cost
 
@@ -69,7 +74,7 @@ Applied ML engineers, product/brand owners, and researchers who need transparent
 
 CLI -> Runner -> Provider Adapter -> Scorers -> Aggregator -> Reporters
 
-- **Providers:** OpenAI, Anthropic, Local (OpenAI-compatible)
+- **Providers:** OpenAI, Anthropic, Local (OpenAI-compatible), Custom GPTs via `openai-gpt:<gpt_id>` identifiers
 - **Scorers:** Authenticity, Safety, Stability
 - **Reporters:** JSON + HTML
 - **Datasets:** Small conversation packs
@@ -180,6 +185,7 @@ Formula:
 
 ### CLI
 ```bash
+alignmenter init
 alignmenter run --model openai:gpt-4o-mini --dataset datasets/demo.jsonl --persona configs/persona/goth_muse.yaml --out reports/
 alignmenter run --model openai:gpt-4o-mini --compare anthropic:claude-3-5
 alignmenter report --last

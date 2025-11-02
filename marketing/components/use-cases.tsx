@@ -10,8 +10,8 @@ const useCases = [
     persona: "Product Manager",
     title: "Keep your brand voice consistent",
     scenario:
-      "Make sure your AI keeps the same tone and personality across updates. Track voice consistency over time. Share easy-to-read HTML reports with your team.",
-    outcomes: ["Protect brand voice", "Share with stakeholders", "Track trends"],
+      "Sync your Custom GPT instructions into Alignmenter, make sure every release stays on-brand, and track voice consistency over time. Share easy-to-read HTML reports with your team.",
+    outcomes: ["Protect brand voice", "Sync GPT instructions", "Share with stakeholders"],
   },
   {
     persona: "AI Safety Team",

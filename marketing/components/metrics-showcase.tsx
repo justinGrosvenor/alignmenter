@@ -9,6 +9,7 @@ const metrics = [
       "Compares writing style to your brand examples",
       "Checks personality traits match your tone",
       "Flags words and phrases that feel off-brand",
+      "Syncs instructions from your custom GPTs",
       "Shows confidence ranges for each score",
     ],
     color: "signal",

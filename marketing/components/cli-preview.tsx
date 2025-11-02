@@ -38,8 +38,13 @@ export function CLIPreview() {
 
             <div className="flex items-start gap-2">
               <span className="text-signal flex-shrink-0">$</span>
+              <span className="text-slate-300">alignmenter init</span>
+            </div>
+
+            <div className="flex items-start gap-2">
+              <span className="text-signal flex-shrink-0">$</span>
               <span className="text-slate-300 break-all">
-                alignmenter run --model openai:gpt-4o-mini --dataset datasets/demo.jsonl
+                alignmenter run --model openai-gpt:brand-voice --config configs/brand.yaml
               </span>
             </div>
 
@@ -77,26 +82,26 @@ export function CLIPreview() {
 
         {/* Feature callouts */}
         <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 px-4">
-          <div className="text-center space-y-1 sm:space-y-2">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-              &lt; 5 min
+            <div className="text-center space-y-1 sm:space-y-2">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+                &lt; 5 min
+              </div>
+              <div className="text-xs sm:text-sm text-slate-400">
+                Test runtime on your laptop
+              </div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-400">
-              Test runtime on your laptop
-            </div>
-          </div>
 
-          <div className="text-center space-y-1 sm:space-y-2">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-              3 providers
+            <div className="text-center space-y-1 sm:space-y-2">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+                Custom GPT ready
+              </div>
+              <div className="text-xs sm:text-sm text-slate-400">
+                OpenAI, Anthropic, local, GPT Builder
+              </div>
             </div>
-            <div className="text-xs sm:text-sm text-slate-400">
-              OpenAI, Anthropic, local
-            </div>
-          </div>
 
-          <div className="text-center space-y-1 sm:space-y-2">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+            <div className="text-center space-y-1 sm:space-y-2">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
               100% local
             </div>
             <div className="text-xs sm:text-sm text-slate-400">

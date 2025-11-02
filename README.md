@@ -47,6 +47,7 @@ alignmenter persona export \
   --format labelstudio \
   --out annotation_tasks.json
 alignmenter dataset lint datasets/demo_conversations.jsonl --strict
+alignmenter run --model openai-gpt:brand-voice --config configs/init_run.yaml
 alignmenter run --config alignmenter/configs/demo_config.yaml
 ```
 

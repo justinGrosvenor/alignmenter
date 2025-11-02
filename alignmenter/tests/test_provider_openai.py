@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from alignmenter.providers.base import parse_provider_model
-from alignmenter.providers.openai import OpenAIProvider
+from alignmenter.providers.openai import OpenAIProvider, OpenAICustomGPTProvider
 
 
 def test_parse_provider_model_valid() -> None:
@@ -55,3 +55,37 @@ def test_openai_provider_chat() -> None:
 
     assert result.text == "Hello"
     assert result.usage == {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15}
+
+
+class DummyResponsesClient:
+    def __init__(self, response):
+        self._response = response
+        self.kwargs = None
+
+    def create(self, **kwargs):  # pragma: no cover - trivial
+        self.kwargs = kwargs
+        return self._response
+
+
+class DummyGPTClient:
+    def __init__(self, response):
+        self.responses = DummyResponsesClient(response)
+
+
+def test_openai_custom_gpt_provider_chat() -> None:
+    response = SimpleNamespace(
+        output_text=None,
+        output=[{"content": [{"text": "Hello from GPT"}]}],
+        usage={"prompt_tokens": 42, "completion_tokens": 8, "total_tokens": 50},
+    )
+    client = DummyGPTClient(response)
+    provider = OpenAICustomGPTProvider.from_model_identifier(
+        "openai-gpt:gpt://brand-voice-chef",
+        client=client,
+    )
+
+    result = provider.chat([{"role": "user", "content": "Hi"}])
+
+    assert client.responses.kwargs["model"] == "gpt://brand-voice-chef"
+    assert result.text == "Hello from GPT"
+    assert result.usage == {"prompt_tokens": 42, "completion_tokens": 8, "total_tokens": 50}
