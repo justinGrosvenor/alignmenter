@@ -7,8 +7,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple
 
-from alignmenter.reports.html import HTMLReporter
-from alignmenter.reports.json_out import JSONReporter
+from alignmenter.reporting.html import HTMLReporter
+from alignmenter.reporting.json_out import JSONReporter
 from alignmenter.utils.io import read_jsonl, write_json
 
 

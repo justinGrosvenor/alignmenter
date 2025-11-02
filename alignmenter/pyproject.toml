@@ -26,5 +26,10 @@ dev = ["pytest", "ruff"]
 [project.scripts]
 alignmenter = "alignmenter.cli:app"
 
+[tool.setuptools]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
 [tool.setuptools.packages.find]
-where = ["alignmenter"]
+where = ["src"]

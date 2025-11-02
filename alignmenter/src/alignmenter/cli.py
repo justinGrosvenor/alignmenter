@@ -27,10 +27,11 @@ app.add_typer(dataset_app, name="dataset")
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = PACKAGE_ROOT.parent
 PACKAGE_NAME = PACKAGE_ROOT.name
-CONFIGS_DIR = PACKAGE_ROOT / "configs"
+CONFIGS_DIR = PROJECT_ROOT / "configs"
 PERSONA_DIR = CONFIGS_DIR / "persona"
-DATASETS_DIR = PACKAGE_ROOT / "datasets"
+DATASETS_DIR = PROJECT_ROOT / "datasets"
 SAFETY_KEYWORDS = CONFIGS_DIR / "safety_keywords.yaml"
 
 
@@ -46,7 +47,7 @@ def _resolve_path(candidate: str | Path) -> Path:
         normalized = path
         if normalized.parts and normalized.parts[0] == PACKAGE_NAME:
             normalized = Path(*normalized.parts[1:])
-        fallback = PACKAGE_ROOT / normalized
+        fallback = PROJECT_ROOT / normalized
         if fallback.exists():
             return fallback
     raise typer.BadParameter(f"Path not found: {candidate}")
@@ -189,14 +190,17 @@ def demo(
 ) -> None:
     """Convenience wrapper around run for demo datasets."""
     typer.secho("Running demo evaluation...")
-    ctx = typer.get_current_context()
-    ctx.invoke(
-        run,
+    run(
         model=model,
+        config=None,
         dataset=str(DATASETS_DIR / "demo_conversations.jsonl"),
         persona=str(PERSONA_DIR / "default.yaml"),
+        compare=None,
         out=out,
         keywords=str(SAFETY_KEYWORDS),
+        embedding=None,
+        judge=None,
+        judge_budget=None,
     )
 
 

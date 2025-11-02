@@ -10,3 +10,4 @@ marketing/.env.local
 .DS_Store
 .idea/
 *.egg-info/
+reports/
