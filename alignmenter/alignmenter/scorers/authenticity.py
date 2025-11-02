@@ -10,10 +10,13 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Iterable, Optional, Sequence, Tuple
 
+import logging
+
 from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 from alignmenter.utils import load_yaml
 
 TOKEN_PATTERN = re.compile(r"[\w']+")
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -122,6 +125,10 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
         token_weights = {token: 1.0 for token in trait_positive}
         token_weights.update({token: -1.0 for token in trait_negative})
         trait_model = TraitModel(bias=0.0, token_weights=token_weights, phrase_weights={})
+        LOGGER.info(
+            "No calibrated trait model found for persona '%s'; using heuristic weights.",
+            persona.get("id", persona_path.stem) if isinstance(persona, dict) else persona_path.stem,
+        )
 
     return PersonaProfile(
         preferred=preferred,

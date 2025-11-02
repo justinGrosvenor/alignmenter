@@ -6,11 +6,12 @@ import json
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import typer
 
 from alignmenter.scorers.authenticity import TOKEN_PATTERN
+from alignmenter.utils import load_yaml
 
 app = typer.Typer()
 
@@ -53,7 +54,15 @@ def calibrate(
     if not dataset_path.exists():
         raise typer.BadParameter(f"Dataset not found: {dataset}")
 
-    samples = _load_samples(dataset_path)
+    persona_id = _load_persona_id(persona_path_obj)
+    typer.echo(f"Persona id: {persona_id}")
+
+    if not isinstance(l2, (int, float)):
+        l2 = float(getattr(l2, "default", 0.0))
+
+    samples, skipped = _load_samples(dataset_path, expected_persona=persona_id)
+    if skipped:
+        typer.echo(f"Skipped {skipped} samples with mismatched persona_id")
     if len(samples) < min_samples:
         raise typer.BadParameter(
             f"Insufficient labeled samples: {len(samples)} < {min_samples}. "
@@ -94,8 +103,16 @@ def calibrate(
     typer.echo(f"Output: {out_path}")
 
 
-def _load_samples(path: Path) -> list[Sample]:
+def _load_persona_id(persona_path: Path) -> str:
+    persona = load_yaml(persona_path) or {}
+    if isinstance(persona, dict) and persona.get("id"):
+        return str(persona["id"])
+    raise typer.BadParameter(f"Persona file {persona_path} is missing required 'id' field")
+
+
+def _load_samples(path: Path, expected_persona: str) -> Tuple[list[Sample], int]:
     samples: list[Sample] = []
+    skipped = 0
     with path.open("r", encoding="utf-8") as handle:
         for line_no, line in enumerate(handle, start=1):
             line = line.strip()
@@ -108,11 +125,20 @@ def _load_samples(path: Path) -> list[Sample]:
                 continue
             label = record.get("label")
             text = record.get("text")
-            if label in (0, 1) and isinstance(text, str) and text:
+            persona_id = record.get("persona_id")
+            if persona_id and persona_id != expected_persona:
+                skipped += 1
+                continue
+            if label in (0, 1) and isinstance(text, str) and text and persona_id == expected_persona:
                 samples.append(Sample(text=text, label=int(label)))
             else:
                 typer.echo(f"Warning: line {line_no} missing label/text, skipping")
-    return samples
+    if not samples:
+        raise typer.BadParameter(
+            f"No labeled samples matched persona_id '{expected_persona}'. "
+            "Ensure the dataset includes persona-specific labels."
+        )
+    return samples, skipped
 
 
 def _build_vocabulary(samples: list[Sample]) -> dict[str, int]:
