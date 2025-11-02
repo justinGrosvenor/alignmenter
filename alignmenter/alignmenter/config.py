@@ -53,6 +53,30 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_BUDGET"),
     )
+    judge_budget_usd: Optional[float] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_BUDGET_USD"),
+    )
+    judge_price_per_1k_input: Optional[float] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT"),
+    )
+    judge_price_per_1k_output: Optional[float] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT"),
+    )
+    judge_estimated_tokens_per_call: Optional[int] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL"),
+    )
+    judge_estimated_prompt_tokens_per_call: Optional[int] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_PROMPT_TOKENS"),
+    )
+    judge_estimated_completion_tokens_per_call: Optional[int] = Field(
+        default=None,
+        validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_COMPLETION_TOKENS"),
+    )
 
 
 @lru_cache(maxsize=1)

@@ -150,7 +150,7 @@ def compute_diffs(primary: dict, compare: dict) -> dict:
         for key, value in primary_result.items():
             comp_value = compare_result.get(key)
             if isinstance(value, (int, float)) and isinstance(comp_value, (int, float)):
-                diff_values[key] = round(comp_value - value, 3)
+                diff_values[key] = round(value - comp_value, 3)
         if diff_values:
             diffs[scorer_id] = diff_values
     return diffs

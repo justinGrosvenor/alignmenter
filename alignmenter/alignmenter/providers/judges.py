@@ -45,6 +45,14 @@ class OpenAIJudge(JudgeProvider):
             ],
         )
         content = response.output_text or ""
+        usage_payload = None
+        usage = getattr(response, "usage", None)
+        if usage is not None:
+            usage_payload = {
+                "prompt_tokens": getattr(usage, "prompt_tokens", None),
+                "completion_tokens": getattr(usage, "completion_tokens", None),
+                "total_tokens": getattr(usage, "total_tokens", None),
+            }
         try:
             data = json.loads(content)
             score = float(data.get("score", 0.0))
@@ -52,7 +60,11 @@ class OpenAIJudge(JudgeProvider):
         except (json.JSONDecodeError, TypeError, ValueError):
             score = 0.0
             notes = content.strip()
-        return {"score": max(0.0, min(1.0, score)), "notes": notes}
+        return {
+            "score": max(0.0, min(1.0, score)),
+            "notes": notes,
+            "usage": usage_payload,
+        }
 
 
 class CachedJudgeProvider(JudgeProvider):

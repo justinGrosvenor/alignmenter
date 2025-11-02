@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import typer
 
@@ -26,6 +26,7 @@ app.add_typer(dataset_app, name="dataset")
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+PACKAGE_NAME = PACKAGE_ROOT.name
 CONFIGS_DIR = PACKAGE_ROOT / "configs"
 PERSONA_DIR = CONFIGS_DIR / "persona"
 DATASETS_DIR = PACKAGE_ROOT / "datasets"
@@ -40,9 +41,13 @@ def _resolve_path(candidate: str | Path) -> Path:
     path = Path(candidate)
     if path.exists():
         return path
-    fallback = PACKAGE_ROOT / path
-    if fallback.exists():
-        return fallback
+    if not path.is_absolute():
+        normalized = path
+        if normalized.parts and normalized.parts[0] == PACKAGE_NAME:
+            normalized = Path(*normalized.parts[1:])
+        fallback = PACKAGE_ROOT / normalized
+        if fallback.exists():
+            return fallback
     raise typer.BadParameter(f"Path not found: {candidate}")
 
 
@@ -93,8 +98,29 @@ def run(
         if judge_budget is not None
         else config_options.get("judge_budget", settings.judge_budget)
     )
+    judge_cost = _build_judge_cost_config(config_options, settings)
     run_id = config_options.get("run_id", "alignmenter_run")
     include_raw = config_options.get("include_raw")
+
+    projected_cost = None
+    if judge_identifier and judge_cost.get("budget_usd") and judge_cost.get("cost_per_call_estimate"):
+        assistant_turns = _count_assistant_turns(dataset_path)
+        projected_cost = assistant_turns * judge_cost["cost_per_call_estimate"]
+        if projected_cost > judge_cost["budget_usd"]:
+            typer.secho(
+                (
+                    f"Projected judge spend ${projected_cost:.2f} exceeds budget ${judge_cost['budget_usd']:.2f}."
+                    " Continue?"
+                ),
+                fg=typer.colors.YELLOW,
+            )
+            if not typer.confirm("Proceed with potential overage?", default=False):
+                raise typer.Exit(code=1)
+        else:
+            typer.secho(
+                f"Projected judge spend ${projected_cost:.2f} across {assistant_turns} calls.",
+                fg=typer.colors.BLUE,
+            )
 
     config = RunConfig(
         model=model_identifier,
@@ -118,6 +144,7 @@ def run(
             keyword_path=keywords_path,
             judge=judge_provider.evaluate if judge_provider else None,
             judge_budget=judge_budget,
+            cost_config=judge_cost,
         ),
         StabilityScorer(**scorer_kwargs),
     ]
@@ -130,6 +157,7 @@ def run(
                 keyword_path=keywords_path,
                 judge=judge_provider.evaluate if judge_provider else None,
                 judge_budget=judge_budget,
+                cost_config=judge_cost,
             ),
             StabilityScorer(**scorer_kwargs),
         ]
@@ -415,6 +443,77 @@ def dataset_lint(
     typer.echo(
         f"Dataset lint passed ({len(records)} records, personas: {', '.join(sorted(persona_ids)) or 'none'})"
     )
+
+
+def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[str, float]:
+    def _coerce_float(value: object) -> Optional[float]:
+        try:
+            if value is None or value == "":
+                return None
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    def _coerce_int(value: object) -> Optional[int]:
+        try:
+            if value is None or value == "":
+                return None
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
+    cost = {
+        "budget_usd": _coerce_float(options.get("judge_budget_usd") or settings.judge_budget_usd),
+        "price_per_1k_input": _coerce_float(
+            options.get("judge_price_per_1k_input") or settings.judge_price_per_1k_input
+        ),
+        "price_per_1k_output": _coerce_float(
+            options.get("judge_price_per_1k_output") or settings.judge_price_per_1k_output
+        ),
+        "estimated_tokens_per_call": _coerce_int(
+            options.get("judge_estimated_tokens_per_call") or settings.judge_estimated_tokens_per_call
+        ),
+        "estimated_prompt_tokens_per_call": _coerce_int(
+            options.get("judge_estimated_prompt_tokens_per_call")
+            or settings.judge_estimated_prompt_tokens_per_call
+        ),
+        "estimated_completion_tokens_per_call": _coerce_int(
+            options.get("judge_estimated_completion_tokens_per_call")
+            or settings.judge_estimated_completion_tokens_per_call
+        ),
+    }
+
+    cost["cost_per_call_estimate"] = _estimate_cost_per_call(cost)
+    return {key: value for key, value in cost.items() if value is not None}
+
+
+def _estimate_cost_per_call(cost: dict[str, float]) -> Optional[float]:
+    price_in = cost.get("price_per_1k_input")
+    price_out = cost.get("price_per_1k_output")
+    prompt_tokens = cost.get("estimated_prompt_tokens_per_call")
+    completion_tokens = cost.get("estimated_completion_tokens_per_call")
+    total_tokens = cost.get("estimated_tokens_per_call")
+
+    if prompt_tokens is None and completion_tokens is None:
+        prompt_tokens = total_tokens
+        completion_tokens = total_tokens
+
+    cost_total = 0.0
+    has_cost = False
+    if prompt_tokens and price_in:
+        cost_total += (prompt_tokens / 1000.0) * price_in
+        has_cost = True
+    if completion_tokens and price_out:
+        cost_total += (completion_tokens / 1000.0) * price_out
+        has_cost = True
+    return round(cost_total, 6) if has_cost else None
+
+
+def _count_assistant_turns(path: Path) -> int:
+    from alignmenter.utils.io import read_jsonl
+
+    records = read_jsonl(path)
+    return sum(1 for record in records if record.get("role") == "assistant" and record.get("text"))
 
 
 if __name__ == "__main__":

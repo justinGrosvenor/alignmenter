@@ -8,12 +8,19 @@ import random
 import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
+from typing import Iterable, Optional, Sequence, Tuple
 
 from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 from alignmenter.utils import load_yaml
 
 TOKEN_PATTERN = re.compile(r"[\w']+")
+
+
+@dataclass
+class TraitModel:
+    bias: float
+    token_weights: dict[str, float]
+    phrase_weights: dict[str, float]
 
 
 @dataclass
@@ -24,6 +31,7 @@ class PersonaProfile:
     trait_positive: set[str]
     trait_negative: set[str]
     weights: dict[str, float]
+    trait_model: Optional[TraitModel] = None
 
 
 @dataclass
@@ -105,9 +113,9 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
     }
     trait_negative = avoided.copy()
 
-    weights = coerce_weights(
+    calibration_weights, trait_model = load_calibration(
         persona_path.with_suffix(".traits.json"),
-        {"style": 0.6, "traits": 0.25, "lexicon": 0.15},
+        default_weights={"style": 0.6, "traits": 0.25, "lexicon": 0.15},
     )
 
     return PersonaProfile(
@@ -116,7 +124,8 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
         exemplars=exemplar_vectors,
         trait_positive=trait_positive,
         trait_negative=trait_negative,
-        weights=weights,
+        weights=calibration_weights,
+        trait_model=trait_model,
     )
 
 
@@ -125,7 +134,7 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
 def score_turn(text: str, tokens: list[str], profile: PersonaProfile, embedder: EmbeddingProvider) -> AuthenticityTurn:
     vector = normalize_vector(embedder.embed([text])[0])
     style_sim = style_similarity(vector, profile.exemplars)
-    traits_score = traits_score_from_tokens(tokens, profile)
+    traits_score = traits_probability(text, tokens, profile)
     lex_score = lexicon_score(tokens, profile)
     combined = (
         profile.weights["style"] * style_sim
@@ -172,6 +181,21 @@ def style_similarity(vector: Sequence[float], exemplars: list[list[float]]) -> f
     return max(0.0, min(1.0, sum(sims) / len(sims)))
 
 
+def traits_probability(text: str, tokens: Iterable[str], profile: PersonaProfile) -> float:
+    if profile.trait_model:
+        token_set = set(tokens)
+        logit = profile.trait_model.bias
+        for token in token_set:
+            logit += profile.trait_model.token_weights.get(token, 0.0)
+        lowered = text.lower()
+        for phrase, weight in profile.trait_model.phrase_weights.items():
+            if phrase in lowered:
+                logit += weight
+        return sigmoid(logit)
+
+    return traits_score_from_tokens(tokens, profile)
+
+
 def traits_score_from_tokens(tokens: Iterable[str], profile: PersonaProfile) -> float:
     token_set = set(tokens)
     positives = len(token_set & profile.preferred) + len(token_set & profile.trait_positive)
@@ -204,19 +228,69 @@ def bootstrap_ci(random_gen: random.Random, scores: list[float], iterations: int
 
 # shared utilities
 
-def coerce_weights(calibration_path: Path, default: dict[str, float]) -> dict[str, float]:
+def load_calibration(
+    calibration_path: Path, default_weights: dict[str, float]
+) -> tuple[dict[str, float], Optional[TraitModel]]:
     if not calibration_path.exists():
-        return default
+        return default_weights, None
     try:
         calibration = json.loads(calibration_path.read_text())
     except json.JSONDecodeError:
-        return default
-    values = [calibration.get("style_weight"), calibration.get("traits_weight"), calibration.get("lexicon_weight")]
-    if not all(isinstance(weight, (int, float)) for weight in values):
-        return default
-    total = sum(values) or 1.0
-    keys = ("style", "traits", "lexicon")
-    return {key: value / total for key, value in zip(keys, values)}
+        return default_weights, None
+
+    weights: dict[str, float] = default_weights
+
+    if isinstance(calibration, dict):
+        raw_weights = calibration.get("weights") if isinstance(calibration.get("weights"), dict) else None
+        if raw_weights:
+            mapped = {
+                key: float(raw_weights.get(key, default_weights[key]))
+                for key in default_weights
+                if isinstance(raw_weights.get(key, default_weights[key]), (int, float))
+            }
+            total = sum(mapped.values()) or 1.0
+            weights = {key: value / total for key, value in mapped.items()}
+        else:
+            values = [calibration.get("style_weight"), calibration.get("traits_weight"), calibration.get("lexicon_weight")]
+            if all(isinstance(weight, (int, float)) for weight in values):
+                total = sum(values) or 1.0
+                keys = ("style", "traits", "lexicon")
+                weights = {key: value / total for key, value in zip(keys, values)}
+
+        trait_model = _parse_trait_model(calibration)
+        return weights, trait_model
+
+    return weights, None
+
+
+def _parse_trait_model(calibration: dict) -> Optional[TraitModel]:
+    model_data = calibration.get("trait_model")
+    if isinstance(model_data, dict):
+        bias = float(model_data.get("bias", 0.0))
+        token_weights = {
+            token.lower(): float(weight)
+            for token, weight in (model_data.get("token_weights") or {}).items()
+            if isinstance(weight, (int, float))
+        }
+        phrase_weights = {
+            phrase.lower(): float(weight)
+            for phrase, weight in (model_data.get("phrase_weights") or {}).items()
+            if isinstance(weight, (int, float))
+        }
+        return TraitModel(bias=bias, token_weights=token_weights, phrase_weights=phrase_weights)
+
+    # legacy keys
+    token_weights = calibration.get("trait_weights")
+    if isinstance(token_weights, dict):
+        bias = float(calibration.get("trait_bias", 0.0))
+        normalized = {
+            token.lower(): float(weight)
+            for token, weight in token_weights.items()
+            if isinstance(weight, (int, float))
+        }
+        return TraitModel(bias=bias, token_weights=normalized, phrase_weights={})
+
+    return None
 
 
 def iter_assistant_text(sessions: Iterable) -> Iterable[str]:

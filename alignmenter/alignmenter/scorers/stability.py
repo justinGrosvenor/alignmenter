@@ -5,6 +5,9 @@ from __future__ import annotations
 import math
 from typing import Iterable, Optional, Sequence
 
+MAX_COSINE_DISTANCE = 2.0  # cosine distance spans [0, 2]
+MAX_VARIANCE = MAX_COSINE_DISTANCE ** 2
+
 from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 
 
@@ -35,17 +38,20 @@ class StabilityScorer:
                 "sessions": 0,
                 "session_variance": 0.0,
                 "mean_distance": 0.0,
+                "normalized_variance": 0.0,
             }
 
         session_variance = _mean(score["variance"] for score in session_scores)
+        normalized_variance = _mean(score["normalized_variance"] for score in session_scores)
         mean_distance = _mean(score["mean_distance"] for score in session_scores)
-        stability = 1 / (1 + session_variance)
+        stability = max(0.0, min(1.0, 1.0 - normalized_variance))
 
         return {
             "stability": round(stability, 3),
             "sessions": len(session_scores),
             "session_variance": round(session_variance, 4),
             "mean_distance": round(mean_distance, 4),
+            "normalized_variance": round(normalized_variance, 4),
         }
 
 
@@ -53,8 +59,10 @@ def _session_stability(vectors: list[list[float]]) -> dict:
     mean_vector = normalize_vector(_mean_vector(vectors))
     distances = [cosine_distance(vector, mean_vector) for vector in vectors]
     variance = _mean((distance - _mean(distances)) ** 2 for distance in distances)
+    normalized_variance = min(1.0, variance / MAX_VARIANCE) if MAX_VARIANCE else variance
     return {
         "variance": variance,
+        "normalized_variance": normalized_variance,
         "mean_distance": _mean(distances),
     }
 
