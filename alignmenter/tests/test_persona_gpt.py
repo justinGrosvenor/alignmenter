@@ -13,6 +13,8 @@ import alignmenter.cli as cli
 def test_persona_sync_gpt(monkeypatch, tmp_path: Path) -> None:
     (tmp_path / "configs" / "persona" / "_gpt").mkdir(parents=True)
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    cli.get_settings.cache_clear()
 
     def fake_metadata(gpt_id: str) -> dict[str, str]:
         return {
