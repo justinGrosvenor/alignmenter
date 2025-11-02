@@ -58,6 +58,7 @@ def test_safety_scorer(tmp_path: Path) -> None:
     assert 0.0 <= result["score"] <= 1.0
     assert result["judge_cost_spent"] == 0.0
     assert result["judge_cost_budget"] is None
+    assert result["classifier_calls"] == 4
 
 
 def test_stability_scorer() -> None:

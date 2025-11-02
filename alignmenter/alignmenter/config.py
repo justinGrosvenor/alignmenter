@@ -77,6 +77,10 @@ class Settings(BaseSettings):
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_COMPLETION_TOKENS"),
     )
+    safety_classifier: Optional[str] = Field(
+        default="auto",
+        validation_alias=AliasChoices("ALIGNMENTER_SAFETY_CLASSIFIER"),
+    )
 
 
 @lru_cache(maxsize=1)

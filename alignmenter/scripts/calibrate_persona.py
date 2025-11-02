@@ -3,12 +3,22 @@
 from __future__ import annotations
 
 import json
+import math
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 import typer
 
+from alignmenter.scorers.authenticity import TOKEN_PATTERN
+
 app = typer.Typer()
+
+
+@dataclass
+class Sample:
+    text: str
+    label: int
 
 
 @app.command()
@@ -17,25 +27,24 @@ def calibrate(
     dataset: str = typer.Option(..., help="Path to labeled dataset (JSONL with 'label' field: 0=fail, 1=pass)."),
     out: Optional[str] = typer.Option(None, help="Output path for calibration JSON (default: <persona>.traits.json)."),
     min_samples: int = typer.Option(25, help="Minimum labeled samples required."),
-    iterations: int = typer.Option(100, help="Optimization iterations."),
+    learning_rate: float = typer.Option(0.1, help="Learning rate for gradient descent."),
+    epochs: int = typer.Option(300, help="Training epochs."),
+    l2: float = typer.Option(0.0, help="L2 regularization strength."),
 ) -> None:
-    """Fit persona-specific trait weights from labeled examples.
+    """Fit persona-specific logistic regression weights from labeled examples.
 
     The labeled dataset should be JSONL with fields:
     - text: assistant response text
     - label: 0 (off-brand) or 1 (on-brand)
     - persona_id: matching the persona being calibrated
 
-    Output is a JSON file with optimized weights:
-    - style_weight: contribution of style similarity
-    - traits_weight: contribution of personality traits
-    - lexicon_weight: contribution of lexicon matching
-
-    Example:
-        python scripts/calibrate_persona.py \\
-            --persona-path configs/persona/goth_muse.yaml \\
-            --dataset datasets/goth_muse_labeled.jsonl
+    Output JSON contains:
+    - weights.style / weights.traits / weights.lexicon: scalar blend weights
+    - trait_model.bias: logistic intercept
+    - trait_model.token_weights: per-token coefficients
+    - trait_model.phrase_weights: placeholder for phrase-level overrides (empty by default)
     """
+
     persona_path_obj = Path(persona_path)
     dataset_path = Path(dataset)
 
@@ -44,72 +53,117 @@ def calibrate(
     if not dataset_path.exists():
         raise typer.BadParameter(f"Dataset not found: {dataset}")
 
-    # Load labeled data
-    labeled = []
-    with dataset_path.open("r", encoding="utf-8") as f:
-        for line_no, line in enumerate(f, start=1):
+    samples = _load_samples(dataset_path)
+    if len(samples) < min_samples:
+        raise typer.BadParameter(
+            f"Insufficient labeled samples: {len(samples)} < {min_samples}. "
+            f"Authenticity calibration requires at least {min_samples} labeled turns."
+        )
+
+    typer.echo(f"Loaded {len(samples)} labeled samples from {dataset}")
+
+    vocabulary = _build_vocabulary(samples)
+    typer.echo(f"Feature vocabulary size: {len(vocabulary)} tokens")
+
+    bias, weights = _train_logistic(samples, vocabulary, learning_rate, epochs, l2)
+
+    weights_out = {
+        "style": 0.6,
+        "traits": 0.25,
+        "lexicon": 0.15,
+    }
+
+    trait_model = {
+        "bias": bias,
+        "token_weights": {token: coeff for token, coeff in weights.items() if coeff != 0.0},
+        "phrase_weights": {},
+    }
+
+    payload = {
+        "weights": weights_out,
+        "trait_model": trait_model,
+    }
+
+    out_path = Path(out) if out else persona_path_obj.with_suffix(".traits.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    typer.secho("✓ Calibration complete", fg=typer.colors.GREEN)
+    typer.echo(f"Bias: {bias:.4f}")
+    typer.echo(f"Non-zero coefficients: {len(trait_model['token_weights'])}")
+    typer.echo(f"Output: {out_path}")
+
+
+def _load_samples(path: Path) -> list[Sample]:
+    samples: list[Sample] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line_no, line in enumerate(handle, start=1):
             line = line.strip()
             if not line:
                 continue
             try:
                 record = json.loads(line)
-                if "label" not in record or "text" not in record:
-                    typer.echo(f"Warning: line {line_no} missing 'label' or 'text', skipping")
-                    continue
-                labeled.append(record)
             except json.JSONDecodeError as exc:
                 typer.echo(f"Warning: invalid JSON on line {line_no}, skipping: {exc}")
+                continue
+            label = record.get("label")
+            text = record.get("text")
+            if label in (0, 1) and isinstance(text, str) and text:
+                samples.append(Sample(text=text, label=int(label)))
+            else:
+                typer.echo(f"Warning: line {line_no} missing label/text, skipping")
+    return samples
 
-    if len(labeled) < min_samples:
-        raise typer.BadParameter(
-            f"Insufficient labeled samples: {len(labeled)} < {min_samples}. "
-            f"Authenticity calibration requires at least {min_samples} labeled turns."
-        )
 
-    typer.echo(f"Loaded {len(labeled)} labeled samples from {dataset}")
+def _build_vocabulary(samples: list[Sample]) -> dict[str, int]:
+    vocab: dict[str, int] = {}
+    for sample in samples:
+        for token in _tokenize(sample.text):
+            if token not in vocab:
+                vocab[token] = len(vocab)
+    return vocab
 
-    # Simple grid search for weights (placeholder - real implementation would use scipy.optimize)
-    # For now, we just validate the data and output default weights
-    typer.echo(f"Running calibration with {iterations} iterations...")
 
-    # Count labels
-    pass_count = sum(1 for r in labeled if r.get("label") == 1)
-    fail_count = len(labeled) - pass_count
+def _train_logistic(
+    samples: list[Sample],
+    vocab: dict[str, int],
+    learning_rate: float,
+    epochs: int,
+    l2: float,
+) -> tuple[float, dict[str, float]]:
+    bias = 0.0
+    weights = {token: 0.0 for token in vocab}
 
-    typer.echo(f"  Pass samples: {pass_count}")
-    typer.echo(f"  Fail samples: {fail_count}")
+    for epoch in range(epochs):
+        total_loss = 0.0
+        for sample in samples:
+            features = _token_set(sample.text)
+            logits = bias + sum(weights[token] for token in features if token in weights)
+            pred = 1 / (1 + math.exp(-logits))
+            error = pred - sample.label
+            total_loss += abs(error)
 
-    if pass_count == 0 or fail_count == 0:
-        typer.echo("Warning: Dataset is imbalanced (all pass or all fail). Results may not be reliable.")
+            grad_bias = error
+            bias -= learning_rate * grad_bias
 
-    # Default weights from requirements (would be optimized in real implementation)
-    weights = {
-        "style_weight": 0.6,
-        "traits_weight": 0.25,
-        "lexicon_weight": 0.15,
-    }
+            for token in features:
+                if token not in weights:
+                    continue
+                grad = error + l2 * weights[token]
+                weights[token] -= learning_rate * grad
 
-    # Write calibration output
-    if out:
-        out_path = Path(out)
-    else:
-        out_path = persona_path_obj.with_suffix(".traits.json")
+        if epoch % 50 == 0:
+            typer.echo(f"Epoch {epoch:03d} | mean abs error {total_loss / len(samples):.4f}")
 
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(weights, f, indent=2)
+    return bias, weights
 
-    typer.secho(f"✓ Calibration complete", fg=typer.colors.GREEN)
-    typer.echo(f"  Optimized weights:")
-    typer.echo(f"    style:   {weights['style_weight']:.2f}")
-    typer.echo(f"    traits:  {weights['traits_weight']:.2f}")
-    typer.echo(f"    lexicon: {weights['lexicon_weight']:.2f}")
-    typer.echo(f"  Output: {out_path}")
-    typer.echo("")
-    typer.echo("Note: This is a simplified calibration. For production use, consider:")
-    typer.echo("  - Cross-validation to prevent overfitting")
-    typer.echo("  - Larger labeled dataset (100+ samples recommended)")
-    typer.echo("  - Grid search or Bayesian optimization for weight tuning")
+
+def _tokenize(text: str) -> list[str]:
+    return [match.group(0).lower() for match in TOKEN_PATTERN.finditer(text)]
+
+
+def _token_set(text: str) -> set[str]:
+    return set(_tokenize(text))
 
 
 if __name__ == "__main__":

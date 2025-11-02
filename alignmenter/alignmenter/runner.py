@@ -182,7 +182,7 @@ def build_scorecards(primary: dict, compare: dict, diff: dict) -> list[dict]:
 
     config = {
         "authenticity": ("mean", "Authenticity Score"),
-        "safety": ("violation_rate", "Safety Violation Rate"),
+        "safety": ("score", "Safety Score"),
         "stability": ("stability", "Stability"),
     }
 

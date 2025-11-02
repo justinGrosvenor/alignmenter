@@ -31,7 +31,7 @@ class PersonaProfile:
     trait_positive: set[str]
     trait_negative: set[str]
     weights: dict[str, float]
-    trait_model: Optional[TraitModel] = None
+    trait_model: TraitModel
 
 
 @dataclass
@@ -118,6 +118,11 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
         default_weights={"style": 0.6, "traits": 0.25, "lexicon": 0.15},
     )
 
+    if trait_model is None:
+        token_weights = {token: 1.0 for token in trait_positive}
+        token_weights.update({token: -1.0 for token in trait_negative})
+        trait_model = TraitModel(bias=0.0, token_weights=token_weights, phrase_weights={})
+
     return PersonaProfile(
         preferred=preferred,
         avoided=avoided,
@@ -182,25 +187,15 @@ def style_similarity(vector: Sequence[float], exemplars: list[list[float]]) -> f
 
 
 def traits_probability(text: str, tokens: Iterable[str], profile: PersonaProfile) -> float:
-    if profile.trait_model:
-        token_set = set(tokens)
-        logit = profile.trait_model.bias
-        for token in token_set:
-            logit += profile.trait_model.token_weights.get(token, 0.0)
-        lowered = text.lower()
-        for phrase, weight in profile.trait_model.phrase_weights.items():
-            if phrase in lowered:
-                logit += weight
-        return sigmoid(logit)
-
-    return traits_score_from_tokens(tokens, profile)
-
-
-def traits_score_from_tokens(tokens: Iterable[str], profile: PersonaProfile) -> float:
     token_set = set(tokens)
-    positives = len(token_set & profile.preferred) + len(token_set & profile.trait_positive)
-    negatives = len(token_set & profile.avoided) + len(token_set & profile.trait_negative)
-    return sigmoid(positives - negatives)
+    logit = profile.trait_model.bias
+    for token in token_set:
+        logit += profile.trait_model.token_weights.get(token, 0.0)
+    lowered = text.lower()
+    for phrase, weight in profile.trait_model.phrase_weights.items():
+        if phrase in lowered:
+            logit += weight
+    return sigmoid(logit)
 
 
 def lexicon_score(tokens: list[str], profile: PersonaProfile) -> float:

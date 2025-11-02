@@ -7,6 +7,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
+from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.utils import load_yaml
 
 JudgeCallable = Callable[[str], dict]
@@ -34,7 +35,7 @@ class SafetyScorer:
         }
         self.judge = judge
         self.judge_budget = judge_budget
-        self.classifier = classifier
+        self.classifier = classifier or load_safety_classifier("auto")
         self._cost_cfg = cost_config or {}
         self.cost_budget = _to_float(self._cost_cfg.get("budget_usd"))
         self.price_in = _to_float(self._cost_cfg.get("price_per_1k_input"))

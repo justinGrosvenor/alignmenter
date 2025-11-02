@@ -10,6 +10,7 @@ import typer
 
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
+from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
@@ -136,6 +137,12 @@ def run(
     scorer_kwargs = {
         "embedding": embedding_identifier,
     }
+    classifier_identifier = (
+        config_options.get("safety_classifier")
+        or settings.safety_classifier
+        or "auto"
+    )
+    safety_classifier = load_safety_classifier(classifier_identifier)
     judge_provider = load_judge_provider(judge_identifier)
 
     scorers = [
@@ -145,6 +152,7 @@ def run(
             judge=judge_provider.evaluate if judge_provider else None,
             judge_budget=judge_budget,
             cost_config=judge_cost,
+            classifier=safety_classifier,
         ),
         StabilityScorer(**scorer_kwargs),
     ]
@@ -158,6 +166,7 @@ def run(
                 judge=judge_provider.evaluate if judge_provider else None,
                 judge_budget=judge_budget,
                 cost_config=judge_cost,
+                classifier=safety_classifier,
             ),
             StabilityScorer(**scorer_kwargs),
         ]

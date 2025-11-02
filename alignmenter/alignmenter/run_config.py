@@ -74,6 +74,8 @@ def load_run_options(path: Path) -> dict[str, Any]:
             options["judge_estimated_prompt_tokens_per_call"] = judge_section.get("estimated_prompt_tokens_per_call")
         if judge_section.get("estimated_completion_tokens_per_call") is not None:
             options["judge_estimated_completion_tokens_per_call"] = judge_section.get("estimated_completion_tokens_per_call")
+        if judge_section.get("offline_classifier"):
+            options["safety_classifier"] = judge_section.get("offline_classifier")
 
     if options.get("judge_provider") is None and data.get("judge_provider"):
         options["judge_provider"] = data.get("judge_provider")
@@ -87,6 +89,12 @@ def load_run_options(path: Path) -> dict[str, Any]:
     ):
         if options.get(alias) is None and data.get(key) is not None:
             options[alias] = data.get(key)
+
+    safety_section = data.get("scorers", {}).get("safety", {})
+    if isinstance(safety_section, dict) and safety_section.get("offline_classifier") and options.get("safety_classifier") is None:
+        options["safety_classifier"] = safety_section.get("offline_classifier")
+    if options.get("safety_classifier") is None and data.get("safety_classifier"):
+        options["safety_classifier"] = data.get("safety_classifier")
 
     report = data.get("report", {})
     if isinstance(report, dict):
