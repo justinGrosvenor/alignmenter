@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 import typer
+import yaml
 
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
@@ -52,6 +53,122 @@ def _resolve_path(candidate: str | Path) -> Path:
             return fallback
     raise typer.BadParameter(f"Path not found: {candidate}")
 
+
+@app.command()
+def init(
+    env_path: Path = typer.Option(
+        Path(".env"),
+        help="Location for the environment file Alignmenter reads (defaults to project .env).",
+    ),
+    config_path: Path = typer.Option(
+        CONFIGS_DIR / "run.yaml",
+        help="Path for a starter run configuration YAML.",
+    ),
+) -> None:
+    """Interactively configure provider credentials and defaults."""
+
+    typer.secho("Alignmenter setup", fg=typer.colors.CYAN, bold=True)
+    typer.echo("Answer a few questions to wire up providers, budgets, and defaults.")
+
+    env_path = env_path if env_path.is_absolute() else PROJECT_ROOT / env_path
+    config_path = config_path if config_path.is_absolute() else PROJECT_ROOT / config_path
+
+    settings = get_settings()
+    env_entries = _load_env(env_path)
+
+    use_openai = typer.confirm(
+        "Configure OpenAI access?", default=bool(env_entries.get("OPENAI_API_KEY") or settings.openai_api_key)
+    )
+
+    openai_key = ""
+    if use_openai:
+        openai_key = typer.prompt(
+            "OpenAI API key",
+            default=env_entries.get("OPENAI_API_KEY") or settings.openai_api_key or "",
+            show_default=False,
+        ).strip()
+
+    default_model = typer.prompt(
+        "Default chat model (provider:model)",
+        default=settings.default_model or env_entries.get("ALIGNMENTER_DEFAULT_MODEL", "openai:gpt-4o-mini"),
+    ).strip()
+
+    embedding_default = env_entries.get("ALIGNMENTER_EMBEDDING_PROVIDER") or settings.embedding_provider or "hashed"
+    embedding_provider = typer.prompt(
+        "Embedding provider",
+        default=embedding_default,
+    ).strip()
+
+    use_judge = typer.confirm(
+        "Enable safety judge?",
+        default=bool(env_entries.get("ALIGNMENTER_JUDGE_PROVIDER") or settings.judge_provider),
+    )
+
+    judge_provider = None
+    judge_budget_calls: Optional[int] = None
+    judge_budget_usd: Optional[float] = None
+    judge_price_in: Optional[float] = None
+    judge_price_out: Optional[float] = None
+    judge_tokens: Optional[int] = None
+
+    if use_judge:
+        judge_provider = typer.prompt(
+            "Judge provider (provider:model)",
+            default=env_entries.get("ALIGNMENTER_JUDGE_PROVIDER")
+            or settings.judge_provider
+            or "openai:gpt-4o-mini",
+        ).strip()
+        judge_budget_calls = _prompt_optional_int(
+            "Maximum judge calls per run (blank for none)",
+            env_entries.get("ALIGNMENTER_JUDGE_BUDGET") or settings.judge_budget,
+        )
+        judge_budget_usd = _prompt_optional_float(
+            "Judge budget in USD (blank for none)",
+            env_entries.get("ALIGNMENTER_JUDGE_BUDGET_USD") or settings.judge_budget_usd,
+        )
+        judge_price_in = _prompt_optional_float(
+            "Price per 1K prompt tokens (USD)",
+            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT") or settings.judge_price_per_1k_input,
+        )
+        judge_price_out = _prompt_optional_float(
+            "Price per 1K completion tokens (USD)",
+            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT") or settings.judge_price_per_1k_output,
+        )
+        judge_tokens = _prompt_optional_int(
+            "Estimated tokens per judge call",
+            env_entries.get("ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL")
+            or settings.judge_estimated_tokens_per_call,
+        )
+
+    env_updates: dict[str, Optional[str]] = {
+        "OPENAI_API_KEY": openai_key if openai_key else None,
+        "ALIGNMENTER_DEFAULT_MODEL": default_model or None,
+        "ALIGNMENTER_EMBEDDING_PROVIDER": embedding_provider or None,
+        "ALIGNMENTER_JUDGE_PROVIDER": judge_provider or None,
+        "ALIGNMENTER_JUDGE_BUDGET": str(judge_budget_calls) if judge_budget_calls is not None else None,
+        "ALIGNMENTER_JUDGE_BUDGET_USD": _format_float(judge_budget_usd),
+        "ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT": _format_float(judge_price_in),
+        "ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT": _format_float(judge_price_out),
+        "ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL": str(judge_tokens) if judge_tokens is not None else None,
+    }
+
+    _write_env(env_path, env_updates, existing=env_entries)
+
+    _write_run_config(
+        config_path,
+        model=default_model,
+        embedding=embedding_provider,
+        judge_provider=judge_provider,
+        judge_budget=judge_budget_calls,
+        judge_budget_usd=judge_budget_usd,
+        judge_price_in=judge_price_in,
+        judge_price_out=judge_price_out,
+        judge_tokens=judge_tokens,
+    )
+
+    typer.secho(f"✓ Environment updated -> {env_path}", fg=typer.colors.GREEN)
+    typer.secho(f"✓ Run config written -> {config_path}", fg=typer.colors.GREEN)
+    typer.echo("Next: run `alignmenter run --config {}`".format(_relpath(config_path)))
 
 @app.command()
 def run(
@@ -456,6 +573,122 @@ def dataset_lint(
     typer.echo(
         f"Dataset lint passed ({len(records)} records, personas: {', '.join(sorted(persona_ids)) or 'none'})"
     )
+
+
+def _load_env(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    entries: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        entries[key.strip()] = value.strip()
+    return entries
+
+
+def _write_env(path: Path, updates: dict[str, Optional[str]], *, existing: dict[str, str]) -> None:
+    merged = dict(existing)
+    for key, value in updates.items():
+        if value is None or value == "":
+            merged.pop(key, None)
+        else:
+            merged[key] = value
+
+    lines = ["# Alignmenter environment configuration"]
+    for key in sorted(merged):
+        lines.append(f"{key}={merged[key]}")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_run_config(
+    path: Path,
+    *,
+    model: str,
+    embedding: str,
+    judge_provider: Optional[str],
+    judge_budget: Optional[int],
+    judge_budget_usd: Optional[float],
+    judge_price_in: Optional[float],
+    judge_price_out: Optional[float],
+    judge_tokens: Optional[int],
+) -> None:
+    dataset_default = DATASETS_DIR / "demo_conversations.jsonl"
+    persona_default = PERSONA_DIR / "default.yaml"
+    reports_dir = PROJECT_ROOT / "reports"
+
+    safety_section: dict[str, Any] = {"offline_classifier": "auto"}
+    if judge_provider:
+        judge_cfg: dict[str, Any] = {"provider": judge_provider}
+        if judge_budget is not None:
+            judge_cfg["budget"] = judge_budget
+        if judge_budget_usd is not None:
+            judge_cfg["budget_usd"] = float(judge_budget_usd)
+        if judge_price_in is not None:
+            judge_cfg["price_per_1k_input"] = float(judge_price_in)
+        if judge_price_out is not None:
+            judge_cfg["price_per_1k_output"] = float(judge_price_out)
+        if judge_tokens is not None:
+            judge_cfg["estimated_tokens_per_call"] = judge_tokens
+        safety_section["judge"] = judge_cfg
+
+    config = {
+        "run_id": "alignmenter_run",
+        "model": model,
+        "dataset": _relpath(dataset_default),
+        "persona": _relpath(persona_default),
+        "keywords": _relpath(SAFETY_KEYWORDS),
+        "embedding": embedding,
+        "scorers": {"safety": safety_section},
+        "report": {"out_dir": _relpath(reports_dir), "include_raw": True},
+    }
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        yaml.safe_dump(config, handle, sort_keys=False)
+
+
+def _relpath(path: Path) -> str:
+    path = path if path.is_absolute() else (PROJECT_ROOT / path)
+    try:
+        return path.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _format_float(value: Optional[float]) -> Optional[str]:
+    if value is None:
+        return None
+    return (f"{value:.6f}".rstrip("0").rstrip("."))
+
+
+def _prompt_optional_int(message: str, default: Optional[Any]) -> Optional[int]:
+    default_str = "" if default in (None, "") else str(default)
+    while True:
+        raw = typer.prompt(message, default=default_str)
+        raw = raw.strip()
+        if not raw:
+            return None
+        try:
+            return int(raw)
+        except ValueError:
+            typer.secho("Please enter an integer or leave blank.", fg=typer.colors.RED)
+
+
+def _prompt_optional_float(message: str, default: Optional[Any]) -> Optional[float]:
+    default_str = "" if default in (None, "") else str(default)
+    while True:
+        raw = typer.prompt(message, default=default_str)
+        raw = raw.strip()
+        if not raw:
+            return None
+        try:
+            return float(raw)
+        except ValueError:
+            typer.secho("Please enter a number or leave blank.", fg=typer.colors.RED)
 
 
 def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[str, float]:

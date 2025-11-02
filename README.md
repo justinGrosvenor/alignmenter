@@ -37,7 +37,7 @@ cd alignmenter
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
-cp .env.example .env  # add provider API keys and defaults
+alignmenter init  # collect API keys, judge budgets, and create a starter config
 alignmenter --help
 
 # useful commands
