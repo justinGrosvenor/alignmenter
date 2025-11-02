@@ -59,6 +59,7 @@ jobs:
       && github.repository == 'justinGrosvenor/alignmenter'
     env:
       MARKETING_BUCKET: ${{ secrets.MARKETING_BUCKET }}
+      CLOUDFRONT_DISTRO: ${{ secrets.CLOUDFRONT_DISTRO }}
     defaults:
       run:
         working-directory: marketing
@@ -92,8 +93,8 @@ jobs:
           fi
           aws s3 sync ./out "s3://$BUCKET" --delete
       - name: Invalidate CloudFront cache
-        if: ${{ github.event_name == 'push' && env.MARKETING_BUCKET != '' && secrets.CLOUDFRONT_DISTRO != '' }}
+        if: ${{ github.event_name == 'push' && env.MARKETING_BUCKET != '' && env.CLOUDFRONT_DISTRO != '' }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id "${{ secrets.CLOUDFRONT_DISTRO }}" \
+            --distribution-id "$CLOUDFRONT_DISTRO" \
             --paths "/*"
