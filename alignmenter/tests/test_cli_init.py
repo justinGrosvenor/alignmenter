@@ -71,7 +71,7 @@ def test_init_creates_env_and_config(tmp_path: Path, monkeypatch) -> None:
 
     config_payload = yaml.safe_load((tmp_path / "configs/init_run.yaml").read_text())
     assert config_payload["model"] == "openai-gpt:gpt://brand-voice-chef"
-    assert config_payload["dataset"] == "datasets/demo_conversations.jsonl"
+    assert config_payload["dataset"] == "../datasets/demo_conversations.jsonl"
     safety = config_payload["scorers"]["safety"]
     assert safety["judge"]["provider"] == "openai:gpt-4o-mini"
     assert safety["judge"]["budget"] == 10

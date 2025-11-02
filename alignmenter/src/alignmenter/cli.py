@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any, Optional
 
@@ -12,6 +13,7 @@ import yaml
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
 from alignmenter.providers.classifiers import load_safety_classifier
+from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
@@ -70,8 +72,9 @@ def init(
     typer.secho("Alignmenter setup", fg=typer.colors.CYAN, bold=True)
     typer.echo("Answer a few questions to wire up providers, budgets, and defaults.")
 
-    env_path = env_path if env_path.is_absolute() else PROJECT_ROOT / env_path
-    config_path = config_path if config_path.is_absolute() else PROJECT_ROOT / config_path
+    cwd = Path.cwd()
+    env_path = env_path if env_path.is_absolute() else cwd / env_path
+    config_path = config_path if config_path.is_absolute() else cwd / config_path
 
     settings = get_settings()
     env_entries = _load_env(env_path)
@@ -183,7 +186,8 @@ def init(
 
     typer.secho(f"✓ Environment updated -> {env_path}", fg=typer.colors.GREEN)
     typer.secho(f"✓ Run config written -> {config_path}", fg=typer.colors.GREEN)
-    typer.echo("Next: run `alignmenter run --config {}`".format(_relpath(config_path)))
+    display_path = _relative_to_cwd(config_path)
+    typer.echo(f"Next: run `alignmenter run --config {display_path}`")
 
 @app.command()
 def run(
@@ -267,6 +271,7 @@ def run(
     )
 
     embedding_identifier = embedding or config_options.get("embedding") or settings.embedding_provider
+    persona_path = _sync_custom_gpt(model_identifier, persona_path)
     scorer_kwargs = {
         "embedding": embedding_identifier,
     }
@@ -506,6 +511,27 @@ def persona_export(
     typer.echo(f"Exported {len(assistant_turns)} turns to {out} ({export_format})")
 
 
+@persona_app.command("sync-gpt")
+def persona_sync_gpt(
+    gpt_id: str = typer.Argument(..., help="Custom GPT identifier (gpt://...)"),
+    out: Optional[Path] = typer.Option(None, "--out", help="Where to write the synced persona YAML."),
+    force: bool = typer.Option(False, "--force", help="Overwrite the target file if it exists."),
+) -> None:
+    """Pull instructions from a Custom GPT into a persona pack."""
+
+    model_identifier = f"openai-gpt:{gpt_id}"
+    target = out if out is not None else _default_gpt_persona_path(gpt_id)
+    target = target if target.is_absolute() else Path.cwd() / target
+    persona_path = _sync_custom_gpt(
+        model_identifier,
+        default_persona=PERSONA_DIR / "default.yaml",
+        output_path=target,
+        force=force,
+        silent=False,
+    )
+    typer.secho(f"✓ Persona synced to {persona_path}", fg=typer.colors.GREEN)
+
+
 @dataset_app.command("lint")
 def dataset_lint(
     path: Path = typer.Argument(..., help="Dataset JSONL file to validate."),
@@ -634,6 +660,7 @@ def _write_run_config(
     dataset_default = DATASETS_DIR / "demo_conversations.jsonl"
     persona_default = PERSONA_DIR / "default.yaml"
     reports_dir = PROJECT_ROOT / "reports"
+    base_dir = path.parent
 
     safety_section: dict[str, Any] = {"offline_classifier": "auto"}
     if judge_provider:
@@ -653,12 +680,12 @@ def _write_run_config(
     config = {
         "run_id": "alignmenter_run",
         "model": model,
-        "dataset": _relpath(dataset_default),
-        "persona": _relpath(persona_default),
-        "keywords": _relpath(SAFETY_KEYWORDS),
+        "dataset": _relpath_for_config(dataset_default, base_dir),
+        "persona": _relpath_for_config(persona_default, base_dir),
+        "keywords": _relpath_for_config(SAFETY_KEYWORDS, base_dir),
         "embedding": embedding,
         "scorers": {"safety": safety_section},
-        "report": {"out_dir": _relpath(reports_dir), "include_raw": True},
+        "report": {"out_dir": _relpath_for_config(reports_dir, base_dir), "include_raw": True},
     }
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -672,6 +699,16 @@ def _relpath(path: Path) -> str:
         return path.relative_to(PROJECT_ROOT).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+def _relpath_for_config(target: Path, base_dir: Path) -> str:
+    target_abs = target if target.is_absolute() else PROJECT_ROOT / target
+    base_abs = base_dir if base_dir.is_absolute() else PROJECT_ROOT / base_dir
+    try:
+        return target_abs.relative_to(base_abs).as_posix()
+    except ValueError:
+        rel = os.path.relpath(target_abs, base_abs)
+        return Path(rel).as_posix()
 
 
 def _format_float(value: Optional[float]) -> Optional[str]:
@@ -775,6 +812,136 @@ def _count_assistant_turns(path: Path) -> int:
 
     records = read_jsonl(path)
     return sum(1 for record in records if record.get("role") == "assistant" and record.get("text"))
+
+
+def _relative_to_cwd(path: Path) -> str:
+    try:
+        return path.relative_to(Path.cwd()).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _default_gpt_persona_path(gpt_id: str) -> Path:
+    slug = _slugify(gpt_id.replace("gpt://", ""))
+    return (CONFIGS_DIR / "persona" / "_gpt" / f"{slug}.yaml")
+
+
+def _sync_custom_gpt(
+    model_identifier: str,
+    default_persona: Path,
+    *,
+    output_path: Optional[Path] = None,
+    force: bool = False,
+    silent: bool = True,
+) -> Path:
+    if not model_identifier.startswith("openai-gpt:"):
+        return default_persona
+
+    try:
+        _, gpt_id = parse_provider_model(model_identifier)
+    except ValueError:
+        return default_persona
+
+    settings = get_settings()
+    if not settings.openai_api_key:
+        if not silent:
+            typer.secho(
+                "Skipping Custom GPT sync: OPENAI_API_KEY is not configured.",
+                fg=typer.colors.YELLOW,
+            )
+        return default_persona
+
+    target_path = output_path or _default_gpt_persona_path(gpt_id)
+    if target_path.exists() and not force:
+        if not silent:
+            typer.secho(f"Using existing synced persona: {target_path}", fg=typer.colors.BLUE)
+        return target_path
+
+    metadata = _fetch_custom_gpt_metadata(gpt_id)
+    if not metadata:
+        if not silent:
+            typer.secho(
+                "Unable to retrieve GPT metadata; falling back to provided persona.",
+                fg=typer.colors.YELLOW,
+            )
+        return default_persona
+
+    persona_doc = _persona_from_gpt_metadata(metadata)
+    _ensure_parent(target_path)
+    with target_path.open("w", encoding="utf-8") as handle:
+        yaml.safe_dump(persona_doc, handle, sort_keys=False)
+
+    if not silent:
+        typer.secho(f"Synced GPT persona -> {target_path}", fg=typer.colors.GREEN)
+
+    return target_path
+
+
+def _fetch_custom_gpt_metadata(gpt_id: str) -> dict[str, Any]:
+    try:
+        provider = OpenAICustomGPTProvider(gpt_id)
+    except RuntimeError as exc:
+        typer.secho(str(exc), fg=typer.colors.RED)
+        return {}
+
+    client = getattr(provider, "_client", None)
+    gpts = getattr(client, "gpts", None)
+    if gpts is None:
+        typer.secho(
+            "OpenAI client does not expose GPT metadata APIs; update openai package to use Custom GPT sync.",
+            fg=typer.colors.YELLOW,
+        )
+        return {}
+
+    try:
+        gpt = gpts.retrieve(gpt_id)
+    except Exception as exc:  # pragma: no cover - network failure
+        typer.secho(f"Failed to retrieve GPT metadata: {exc}", fg=typer.colors.YELLOW)
+        return {}
+
+    instructions = _coerce_attr(gpt, "instructions") or ""
+    name = _coerce_attr(gpt, "name") or gpt_id.split("/")[-1]
+    starters: list[str] = []
+    for starter in _coerce_attr(gpt, "conversation_starters") or []:
+        text = starter
+        if isinstance(starter, dict):
+            text = starter.get("message") or starter.get("text") or starter.get("content")
+            if isinstance(text, dict):
+                text = text.get("content") or text.get("text")
+        if text:
+            starters.append(str(text))
+
+    return {
+        "id": gpt_id,
+        "name": name,
+        "instructions": instructions,
+        "conversation_starters": starters,
+    }
+
+
+def _persona_from_gpt_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
+    gpt_id = metadata.get("id", "custom_gpt")
+    slug = _slugify(gpt_id.replace("gpt://", ""))
+    instructions = metadata.get("instructions") or ""
+    conversation_starters = metadata.get("conversation_starters") or []
+    if not conversation_starters and instructions:
+        conversation_starters = [line.strip() for line in instructions.splitlines() if line.strip()][:2]
+
+    return {
+        "id": f"{slug}_gpt",
+        "display_name": metadata.get("name", slug.replace("_", " ").title()),
+        "source": {"type": "openai_gpt", "id": gpt_id},
+        "exemplars": conversation_starters,
+        "lexicon": {"preferred": [], "avoid": []},
+        "style_rules": {"instructions": instructions},
+        "brand_notes": instructions,
+    }
+
+
+def _coerce_attr(obj: Any, name: str) -> Any:
+    if isinstance(obj, dict):
+        return obj.get(name)
+    return getattr(obj, name, None)
 
 
 if __name__ == "__main__":

@@ -193,6 +193,7 @@ alignmenter persona scaffold --name "Acme Voice"
 alignmenter persona export --dataset datasets/demo_conversations.jsonl --out annotation.csv
 alignmenter dataset lint datasets/demo_conversations.jsonl
 alignmenter run --config alignmenter/configs/demo_config.yaml
+alignmenter persona sync-gpt gpt://brand/voice --out configs/persona/_gpt/brand.yaml
 ```
 
 Run configs (`configs/*.yaml`) support the following keys:

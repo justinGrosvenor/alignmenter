@@ -21,3 +21,8 @@ npm run start
 ```
 
 Deployable via Vercel, Netlify, or any Node-friendly host.
+
+### Analytics
+
+The site loads Google Analytics automatically when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is defined.
+For the hosted version we use `G-3733FD2K8Q` (stream ID 12827493090). Set your own measurement ID in deployment environments if you prefer a different property.

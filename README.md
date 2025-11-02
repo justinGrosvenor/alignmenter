@@ -49,7 +49,16 @@ alignmenter persona export \
 alignmenter dataset lint datasets/demo_conversations.jsonl --strict
 alignmenter run --model openai-gpt:brand-voice --config configs/init_run.yaml
 alignmenter run --config alignmenter/configs/demo_config.yaml
+# Sync Custom GPT instructions into a persona pack
+alignmenter persona sync-gpt gpt://brand/voice --out configs/persona/_gpt/brand.yaml
 ```
+
+### First Run (2 minutes)
+
+1. `alignmenter init` – answers a short wizard that captures API keys, judge budgets, and writes `configs/run.yaml`.
+2. `alignmenter run --config configs/run.yaml` – executes the authenticity/safety/stability pipeline using your settings.
+3. (Optional) `alignmenter persona sync-gpt gpt://your-gpt-id` – pulls Custom GPT instructions into a persona pack so authenticity scores reflect the GPT’s voice.
+4. (Optional) `python -m alignmenter.scripts.run_openai_demo` – kicks off a one-off OpenAI-backed run using the config generated during `init`.
 
 Environment configuration is handled via `.env` + [pydantic-settings](alignmenter/alignmenter/config.py). Notable variables:
 
