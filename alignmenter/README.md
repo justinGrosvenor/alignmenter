@@ -46,7 +46,7 @@ pip install -e .[dev]
 pip install -e .[dev,safety]
 ```
 
-> **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](docs/offline_safety.md) for details.
+> **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](../docs/offline_safety.md) for details.
 
 ### Run Your First Evaluation
 
@@ -115,7 +115,7 @@ Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 - **CLI-first**: Simple commands for evaluation, calibration, reporting
 - **YAML configuration**: Declarative persona packs and run configs
 - **Python API**: Programmatic access for custom workflows
-- **Comprehensive tests**: 32+ unit tests with pytest
+- **Comprehensive tests**: 69+ unit tests with pytest
 - **Type safety**: Full type hints throughout
 
 ## Architecture
