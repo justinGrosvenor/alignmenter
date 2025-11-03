@@ -22,6 +22,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
+safety = ["transformers>=4.30.0"]
 
 [project.scripts]
 alignmenter = "alignmenter.cli:app"

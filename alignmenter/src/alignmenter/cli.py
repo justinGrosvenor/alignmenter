@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any, Optional
@@ -622,7 +623,10 @@ def run(
     report_path = run_dir / "index.html"
     target = report_path if report_path.exists() else run_dir
     typer.echo(f"Report written to: {_humanize_path(target)}")
-    typer.echo(f"Open in browser: alignmenter report --path {_humanize_path(run_dir)}")
+    if sys.stdin.isatty() and sys.stdout.isatty():
+        _offer_report_open(run_dir)
+    else:
+        typer.echo(f"Open in browser: alignmenter report --path {_humanize_path(run_dir)}")
 
 
 @app.command()
@@ -1546,6 +1550,18 @@ def _safe_read_json(path: Path) -> dict[str, Any]:
 
 def _format_score_value(value: float) -> str:
     return f"{value:.2f}"
+
+
+def _offer_report_open(run_dir: Path) -> None:
+    report_html = run_dir / "index.html"
+    if not report_html.exists():
+        return
+    if typer.confirm("Open the report in your browser now?", default=False):
+        try:
+            typer.launch(str(report_html))
+        except Exception as exc:  # pragma: no cover
+            typer.secho(f"Failed to launch browser automatically: {exc}", fg=typer.colors.YELLOW)
+            typer.echo(f"Run manually: alignmenter report --path {_humanize_path(run_dir)}")
 
 
 if __name__ == "__main__":

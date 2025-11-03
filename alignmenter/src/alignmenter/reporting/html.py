@@ -11,6 +11,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <head>
     <meta charset=\"utf-8\" />
     <title>Alignmenter Report - {run_id}</title>
+    <link rel=\"icon\" type=\"image/png\" href=\"favicon.png\">
     <style>
       body {{ font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif; background: #0f172a; color: #e2e8f0; margin: 0; padding: 32px; }}
       h1, h2 {{ color: #22d3ee; }}
@@ -21,12 +22,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       .meta {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }}
       .meta div {{ background: #1e293b; padding: 12px; border-radius: 8px; }}
       .report-card {{ background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 16px; padding: 0; box-shadow: 0 20px 60px rgba(14,74,104,0.4); border: 1px solid #334155; max-width: 1200px; margin: 0 auto; }}
-      .report-card-header {{ background: linear-gradient(135deg, #22d3ee 0%, #0ea5e9 100%); padding: 32px 40px; border-radius: 16px 16px 0 0; color: #0a0e1a; }}
-      .report-card-title {{ margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: #0a0e1a; }}
+      .report-card-header {{ background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 32px 40px; border-radius: 16px 16px 0 0; border-bottom: 2px solid #22d3ee; }}
+      .report-card-header-content {{ display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }}
+      .report-logo {{ height: 48px; width: auto; }}
+      .report-card-title {{ margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; color: #22d3ee; }}
       .report-info-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }}
-      .report-info-item {{ background: rgba(15, 23, 42, 0.3); padding: 12px 16px; border-radius: 8px; }}
-      .report-info-label {{ font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(10, 14, 26, 0.7); margin-bottom: 4px; font-weight: 600; }}
-      .report-info-value {{ font-size: 1rem; font-weight: 700; color: #0a0e1a; }}
+      .report-info-item {{ background: rgba(34, 211, 238, 0.05); padding: 12px 16px; border-radius: 8px; border: 1px solid rgba(34, 211, 238, 0.1); }}
+      .report-info-label {{ font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 4px; font-weight: 600; }}
+      .report-info-value {{ font-size: 1rem; font-weight: 700; color: #e2e8f0; }}
       .report-card-body {{ padding: 40px; }}
       .overall-grade {{ text-align: center; margin-bottom: 32px; padding: 24px; background: rgba(34, 211, 238, 0.05); border-radius: 12px; border: 2px solid rgba(34, 211, 238, 0.2); }}
       .overall-grade-label {{ font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }}
@@ -66,7 +69,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       .calibration-item {{ background: #0f172a; padding: 12px; border-radius: 6px; }}
       .calibration-item strong {{ color: #22d3ee; display: block; margin-bottom: 4px; }}
       .reproducibility-section {{ background: #1e293b; padding: 16px; border-radius: 8px; }}
-      .reproducibility-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }}
+      .reproducibility-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 12px; margin-top: 12px; }}
+      .reproducibility-grid > div {{ overflow-wrap: break-word; word-break: break-all; }}
       .export-buttons {{ margin-top: 8px; }}
       .export-btn {{ background: #1e293b; color: #22d3ee; border: 1px solid #22d3ee; padding: 6px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; margin-right: 8px; font-size: 0.85rem; }}
       .export-btn:hover {{ background: #22d3ee; color: #0f172a; }}
@@ -217,6 +221,23 @@ class HTMLReporter:
 
         path = Path(run_dir) / "index.html"
         path.write_text(html, encoding="utf-8")
+
+        # Copy logo and favicon to report directory
+        import shutil
+        assets_dir = Path(__file__).parent.parent.parent.parent.parent / "assets"
+
+        # Copy logo
+        logo_source = assets_dir / "alignmenter-transparent.png"
+        if logo_source.exists():
+            logo_dest = Path(run_dir) / "logo.png"
+            shutil.copy2(logo_source, logo_dest)
+
+        # Copy favicon (use the transparent icon version)
+        favicon_source = assets_dir / "alignmenter-transparent.png"
+        if favicon_source.exists():
+            favicon_dest = Path(run_dir) / "favicon.png"
+            shutil.copy2(favicon_source, favicon_dest)
+
         return path
 
 
@@ -382,7 +403,10 @@ def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:
     <section>
         <div class="report-card">
             <div class="report-card-header">
-                <h1 class="report-card-title">Alignmenter Report Card</h1>
+                <div class="report-card-header-content">
+                    <img src="logo.png" alt="Alignmenter" class="report-logo" onerror="this.style.display='none'">
+                    <h1 class="report-card-title">Alignmenter Report Card</h1>
+                </div>
                 {run_info}
             </div>
             <div class="report-card-body">

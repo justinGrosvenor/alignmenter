@@ -32,10 +32,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://alignmenter.com/og-image.png",
+        url: "https://alignmenter.com/alignmenter-banner.png",
         width: 1200,
         height: 630,
-        alt: "Alignmenter brand voice and safety dashboard",
+        alt: "Alignmenter - Persona-aligned evaluation for conversational AI",
       },
     ],
   },
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
       "Open-source testing tool for AI behavior. Check brand voice, safety, and stability in minutes.",
     creator: "@alignmenter",
     site: "@alignmenter",
-    images: ["https://alignmenter.com/og-image.png"],
+    images: ["https://alignmenter.com/alignmenter-banner.png"],
   },
 };
 

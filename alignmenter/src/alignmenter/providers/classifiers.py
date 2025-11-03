@@ -27,6 +27,14 @@ def load_safety_classifier(identifier: Optional[str]) -> ClassifierFn:
             "distilled-safety-roberta classifier requested but transformers is not available."
         )
 
+    # auto mode: try distilled-safety-roberta, fall back to heuristic
+    if spec == "auto":
+        classifier = _load_distilled_roberta()
+        if classifier is not None:
+            return classifier
+        # transformers not available, use heuristic fallback
+        return _heuristic_classifier
+
     # fallback heuristic
     return _heuristic_classifier
 
