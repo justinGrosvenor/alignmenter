@@ -167,10 +167,10 @@ Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 
 ## Documentation
 
-- **[Persona Annotation Guide](docs/persona_annotation.md)**: How to label data and calibrate trait models
-- **[Offline Safety Classifier](docs/offline_safety.md)**: Using distilled-safety-roberta without API calls
+- **[Persona Annotation Guide](../docs/persona_annotation.md)**: How to label data and calibrate trait models
+- **[Offline Safety Classifier](../docs/offline_safety.md)**: Using distilled-safety-roberta without API calls
 - **[Datasets README](datasets/README.md)**: Data provenance, licensing, and anonymization
-- **[Requirements](docs/alignmenter_requirements.md)**: Full product specification
+- **[Requirements](../docs/alignmenter_requirements.md)**: Full product specification
 
 ## Usage Examples
 
