@@ -123,7 +123,7 @@ Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Alignmenter CLI                          │
-│  alignmenter run / report / calibrate / bootstrap / sanitize   │
+│  alignmenter run / report / calibrate / bootstrap / sanitize    │
 └─────────────────────────────────────────────────────────────────┘
                                │
                                ▼
