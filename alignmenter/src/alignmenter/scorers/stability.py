@@ -5,10 +5,10 @@ from __future__ import annotations
 import math
 from typing import Iterable, Optional, Sequence
 
+from alignmenter.providers.embeddings import load_embedding_provider
+
 MAX_COSINE_DISTANCE = 2.0  # cosine distance spans [0, 2]
 MAX_VARIANCE = MAX_COSINE_DISTANCE ** 2
-
-from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 
 
 class StabilityScorer:
