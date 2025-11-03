@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../assets/alignmenter-banner-transparent.png" alt="Alignmenter" width="800">
+  <img src="../assets/alignmenter-banner.png" alt="Alignmenter" width="800">
 </p>
 
 <p align="center">
