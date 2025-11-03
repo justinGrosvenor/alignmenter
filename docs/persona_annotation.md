@@ -4,7 +4,7 @@ Use this template when gathering labeled examples for Authenticity calibration:
 
 | Field | Description |
 | --- | --- |
-| Persona ID | Matches `configs/persona/<name>.yaml` |
+| Persona ID | Matches `alignmenter/configs/persona/<name>.yaml` |
 | Turn Text | Assistant response evaluated |
 | Pass/Fail | 1 if on-voice, 0 if off-voice |
 | Notes | Rationale, references to lexicon/style rules |

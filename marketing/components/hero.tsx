@@ -23,7 +23,7 @@ export function Hero() {
 
         <p className="mx-auto max-w-2xl text-lg sm:text-xl text-slate-300 leading-relaxed px-4">
           Check if your AI sounds like your brand, stays safe, and behaves consistently.
-          Works with your custom GPTs, hosted APIs, and local models. Get detailed reports in minutes, not days.
+          Bring your Custom GPT voice, hosted APIs, and local models. Get detailed reports in minutes, not days.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 px-4">

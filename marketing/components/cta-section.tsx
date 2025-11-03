@@ -64,10 +64,10 @@ export function CTASection() {
 
               <div className="space-y-1">
                 <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-signal">
-                  Custom GPTs
+                  Custom GPT voices
                 </div>
                 <div className="text-xs sm:text-sm text-slate-400">
-                  Plug in your GPT Builder voice
+                  Bring your GPT Builder instructions
                 </div>
               </div>
             </div>

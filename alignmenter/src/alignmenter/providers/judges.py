@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover
     OpenAI = None  # type: ignore
 
 from alignmenter.providers.base import JudgeProvider, parse_provider_model
+from alignmenter.config import get_settings
 
 
 class OpenAIJudge(JudgeProvider):
@@ -22,7 +23,12 @@ class OpenAIJudge(JudgeProvider):
     def __init__(self, model: str, client: Optional[OpenAI] = None) -> None:
         if OpenAI is None:
             raise RuntimeError("The 'openai' package is required for OpenAI judges.")
-        api_key = os.getenv("OPENAI_API_KEY")
+        settings = get_settings()
+        api_key = settings.openai_api_key or os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "OPENAI_API_KEY is required for the safety judge. Set it via the environment or disable the judge."
+            )
         self.model = model
         self._client = client or OpenAI(api_key=api_key)
 

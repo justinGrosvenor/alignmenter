@@ -41,6 +41,10 @@ export function CLIPreview() {
               <span className="text-slate-300">alignmenter init</span>
             </div>
 
+            <div className="pl-5 text-slate-500 text-[11px] sm:text-xs">
+              # optional: `alignmenter import gpt --instructions brand.txt --out alignmenter/configs/persona/brand.yaml`
+            </div>
+
             <div className="flex items-start gap-2">
               <span className="text-signal flex-shrink-0">$</span>
               <span className="text-slate-300 break-all">
@@ -48,18 +52,12 @@ export function CLIPreview() {
               </span>
             </div>
 
-            <div className="text-slate-500 pl-3 sm:pl-4 space-y-1">
-              <div className="flex items-center gap-2">
-                <svg className="w-3 h-3 sm:w-4 sm:h-4 text-signal animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span className="text-xs sm:text-sm">Loading dataset: 60 turns across 10 sessions</span>
-              </div>
-              <div className="text-signal text-xs sm:text-sm">✓ Brand voice score: 0.83 (range: 0.79-0.87)</div>
-              <div className="text-signal text-xs sm:text-sm">✓ Safety score: 0.95</div>
-              <div className="text-signal text-xs sm:text-sm">✓ Consistency score: 0.88</div>
-              <div className="text-slate-400 text-xs sm:text-sm break-all">
+            <div className="pl-3 sm:pl-4 space-y-1 text-xs sm:text-sm">
+              <div className="text-slate-400">Loading dataset: 60 turns across 10 sessions</div>
+              <div className="text-emerald-300">✓ Brand voice score: 0.83 (range: 0.79-0.87)</div>
+              <div className="text-emerald-300">✓ Safety score: 0.95</div>
+              <div className="text-emerald-300">✓ Consistency score: 0.88</div>
+              <div className="text-slate-400 break-all">
                 Report written to: <span className="text-blue-400">reports/2025-10-31_14-23/index.html</span>
               </div>
             </div>
@@ -71,9 +69,7 @@ export function CLIPreview() {
               </span>
             </div>
 
-            <div className="text-slate-500 pl-3 sm:pl-4 text-xs sm:text-sm">
-              <span className="text-emerald-400">✓</span> Opening report in browser...
-            </div>
+            <div className="pl-3 sm:pl-4 text-xs sm:text-sm text-slate-400">Opening report in browser...</div>
           </div>
 
           {/* Decorative gradient */}
@@ -82,26 +78,26 @@ export function CLIPreview() {
 
         {/* Feature callouts */}
         <div className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 px-4">
-            <div className="text-center space-y-1 sm:space-y-2">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                &lt; 5 min
-              </div>
-              <div className="text-xs sm:text-sm text-slate-400">
-                Test runtime on your laptop
-              </div>
+          <div className="text-center space-y-1 sm:space-y-2">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+              &lt; 5 min
             </div>
-
-            <div className="text-center space-y-1 sm:space-y-2">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
-                Custom GPT ready
-              </div>
-              <div className="text-xs sm:text-sm text-slate-400">
-                OpenAI, Anthropic, local, GPT Builder
-              </div>
+            <div className="text-xs sm:text-sm text-slate-400">
+              Test runtime on your laptop
             </div>
+          </div>
 
-            <div className="text-center space-y-1 sm:space-y-2">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+          <div className="text-center space-y-1 sm:space-y-2">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
+              Custom GPT ready
+            </div>
+            <div className="text-xs sm:text-sm text-slate-400">
+              OpenAI, Anthropic, local, GPT Builder
+            </div>
+          </div>
+
+          <div className="text-center space-y-1 sm:space-y-2">
+            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
               100% local
             </div>
             <div className="text-xs sm:text-sm text-slate-400">

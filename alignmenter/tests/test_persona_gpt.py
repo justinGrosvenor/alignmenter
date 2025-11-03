@@ -16,13 +16,16 @@ def test_persona_sync_gpt(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
     cli.get_settings.cache_clear()
 
-    def fake_metadata(gpt_id: str) -> dict[str, str]:
-        return {
-            "id": gpt_id,
-            "name": "Brand Voice",
-            "instructions": "Keep responses warm and concise.",
-            "conversation_starters": ["Tell me about the brand tone."],
-        }
+    def fake_metadata(gpt_id: str, api_key: str | None):
+        return (
+            {
+                "id": gpt_id,
+                "name": "Brand Voice",
+                "instructions": "Keep responses warm and concise.",
+                "conversation_starters": ["Tell me about the brand tone."],
+            },
+            None,
+        )
 
     monkeypatch.setattr(cli, "_fetch_custom_gpt_metadata", fake_metadata)
 

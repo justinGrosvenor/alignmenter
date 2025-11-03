@@ -4,17 +4,20 @@ from __future__ import annotations
 
 import json
 import os
+import re
+from collections import Counter
 from pathlib import Path
 from typing import Any, Optional
 
+import requests
 import typer
 import yaml
 
 from alignmenter.config import get_settings
 from alignmenter.providers.base import parse_provider_model
 from alignmenter.providers.classifiers import load_safety_classifier
-from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.providers.judges import load_judge_provider
+from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.scorers.authenticity import AuthenticityScorer
@@ -24,9 +27,39 @@ app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
 
 persona_app = typer.Typer(help="Persona helper commands.")
 dataset_app = typer.Typer(help="Dataset helper commands.")
+import_app = typer.Typer(help="Import helpers.")
 
 app.add_typer(persona_app, name="persona")
 app.add_typer(dataset_app, name="dataset")
+app.add_typer(import_app, name="import")
+
+
+@import_app.command("gpt")
+def import_gpt(
+    instructions: Path = typer.Option(..., "--instructions", help="Path to instructions text file."),
+    name: str = typer.Option(..., "--name", help="Display name for the persona."),
+    out: Path = typer.Option(..., "--out", help="Where to write the persona YAML."),
+    allow_overwrite: bool = typer.Option(False, "--force", help="Overwrite the output file if it exists."),
+) -> None:
+    """Import Custom GPT instructions into a persona pack."""
+
+    if not instructions.exists():
+        raise typer.BadParameter(f"Instructions file not found: {instructions}")
+    if out.exists() and not allow_overwrite:
+        raise typer.BadParameter(f"Persona file {out} already exists. Use --force to overwrite.")
+
+    text = instructions.read_text(encoding="utf-8").strip()
+    if not text:
+        raise typer.BadParameter("Instructions file is empty.")
+
+    typer.echo("Parsing GPT instructions...")
+    persona_doc = _persona_from_instructions(name, text)
+
+    _ensure_parent(out)
+    with out.open("w", encoding="utf-8") as handle:
+        yaml.safe_dump(persona_doc, handle, sort_keys=False)
+
+    typer.secho(f"Imported persona written to {out}", fg=typer.colors.GREEN)
 
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +69,81 @@ CONFIGS_DIR = PROJECT_ROOT / "configs"
 PERSONA_DIR = CONFIGS_DIR / "persona"
 DATASETS_DIR = PROJECT_ROOT / "datasets"
 SAFETY_KEYWORDS = CONFIGS_DIR / "safety_keywords.yaml"
+
+MODEL_BASE_CHOICES: list[dict[str, Any]] = [
+    {
+        "id": "openai-gpt4o-mini",
+        "label": "OpenAI GPT-4o mini",
+        "value": "openai:gpt-4o-mini",
+        "description": "Fast, production-ready default with balanced cost",
+    },
+    {
+        "id": "openai-gpt-4.1-mini",
+        "label": "OpenAI GPT-4.1 mini",
+        "value": "openai:gpt-4.1-mini",
+        "description": "Higher quality OpenAI model with vision + tools",
+    },
+    {
+        "id": "anthropic-claude-sonnet",
+        "label": "Anthropic Claude 3.5 Sonnet",
+        "value": "anthropic:claude-3-5-sonnet-20241022",
+        "description": "Anthropic's flagship for nuanced brand copy",
+    },
+]
+
+MODEL_OPTION_CUSTOM_GPT = {
+    "id": "custom-gpt",
+    "label": "OpenAI Custom GPT (requires gpt:// ID)",
+    "value": None,
+    "description": "Use a GPT Builder persona for brand voice benchmarking",
+}
+
+MODEL_OPTION_LOCAL = {
+    "id": "local-endpoint",
+    "label": "Local endpoint (OpenAI-compatible)",
+    "value": None,
+    "description": "Point to your own server (e.g. vLLM, Ollama) with a model name",
+}
+
+MODEL_OPTION_MANUAL = {
+    "id": "manual",
+    "label": "Manual entry",
+    "value": None,
+    "description": "Type a custom provider:model string",
+}
+
+EMBEDDING_CHOICES: list[dict[str, Any]] = [
+    {
+        "id": "hashed",
+        "label": "Deterministic hashed embeddings (offline default)",
+        "value": "hashed",
+        "description": "No external calls; great for demos and CI",
+    },
+    {
+        "id": "st-all-minilm",
+        "label": "Sentence Transformers: all-MiniLM-L6-v2",
+        "value": "sentence-transformer:all-MiniLM-L6-v2",
+        "description": "Lightweight English encoder for style similarity",
+    },
+    {
+        "id": "openai-embed-small",
+        "label": "OpenAI text-embedding-3-small",
+        "value": "openai:text-embedding-3-small",
+        "description": "Affordable OpenAI embeddings for higher accuracy",
+    },
+    {
+        "id": "openai-embed-large",
+        "label": "OpenAI text-embedding-3-large",
+        "value": "openai:text-embedding-3-large",
+        "description": "Highest fidelity OpenAI embeddings",
+    },
+    {
+        "id": "manual",
+        "label": "Manual entry",
+        "value": None,
+        "description": "Type any embedding provider identifier",
+    },
+]
 
 
 def _ensure_parent(path: Path) -> None:
@@ -54,6 +162,84 @@ def _resolve_path(candidate: str | Path) -> Path:
         if fallback.exists():
             return fallback
     raise typer.BadParameter(f"Path not found: {candidate}")
+
+
+def _prompt_choice(
+    title: str,
+    options: list[dict[str, Any]],
+    *,
+    default_index: Optional[int] = None,
+) -> dict[str, Any]:
+    while True:
+        typer.echo(f"{title}:")
+        for idx, option in enumerate(options, start=1):
+            line = f"  {idx}. {option['label']}"
+            description = option.get("description")
+            if description:
+                line += f" — {description}"
+            typer.echo(line)
+
+        prompt_label = "Select option"
+        default_value: Optional[str] = None
+        if default_index is not None:
+            prompt_label += f" [{default_index + 1}]"
+            default_value = str(default_index + 1)
+
+        choice_raw = typer.prompt(
+            prompt_label,
+            default=default_value if default_value is not None else "",
+            show_default=False,
+        ).strip()
+
+        if not choice_raw:
+            if default_index is not None:
+                return options[default_index]
+            typer.secho("Please choose an option by number.", fg=typer.colors.YELLOW)
+            continue
+
+        try:
+            choice_idx = int(choice_raw) - 1
+        except ValueError:
+            typer.secho("Please enter the number of an option.", fg=typer.colors.YELLOW)
+            continue
+
+        if 0 <= choice_idx < len(options):
+            return options[choice_idx]
+
+        typer.secho("Invalid selection. Try again.", fg=typer.colors.YELLOW)
+
+
+def _find_model_default_index(model_identifier: Optional[str], choices: list[dict[str, Any]]) -> Optional[int]:
+    if not model_identifier:
+        return None
+    if model_identifier.startswith("openai-gpt:"):
+        for idx, option in enumerate(choices):
+            if option.get("id") == "custom-gpt":
+                return idx
+    if model_identifier.startswith("local:"):
+        for idx, option in enumerate(choices):
+            if option.get("id") == "local-endpoint":
+                return idx
+    for idx, option in enumerate(choices):
+        if option.get("value") == model_identifier:
+            return idx
+    return None
+
+
+def _extract_custom_gpt_id(model_identifier: Optional[str]) -> Optional[str]:
+    if not model_identifier:
+        return None
+    if model_identifier.startswith("openai-gpt:"):
+        return model_identifier.split(":", 1)[1]
+    return None
+
+
+def _parse_local_identifier(identifier: Optional[str]) -> tuple[Optional[str], Optional[str]]:
+    if not identifier or not identifier.startswith("local:"):
+        return None, None
+    body = identifier.split(":", 1)[1]
+    endpoint, sep, model = body.partition("|")
+    return (endpoint or None), (model or None)
 
 
 @app.command()
@@ -78,24 +264,74 @@ def init(
 
     settings = get_settings()
     env_entries = _load_env(env_path)
+    active_env_key = os.getenv("OPENAI_API_KEY") or settings.openai_api_key or ""
 
     use_openai = typer.confirm(
         "Configure OpenAI access?", default=bool(env_entries.get("OPENAI_API_KEY") or settings.openai_api_key)
     )
 
     openai_key = ""
+    store_openai_in_file = False
+    existing_env_key = env_entries.get("OPENAI_API_KEY")
     if use_openai:
-        openai_key = typer.prompt(
+        if existing_env_key:
+            typer.echo("Found an existing OpenAI key in alignmenter/.env. Leave blank to keep it or enter a new key.")
+        elif active_env_key:
+            typer.echo("Detected OPENAI_API_KEY in your shell environment. Leave blank to keep using that value.")
+        else:
+            typer.echo("Provide an OpenAI API key (or leave blank if you plan to export OPENAI_API_KEY manually).")
+
+        openai_input = typer.prompt(
             "OpenAI API key",
-            default=env_entries.get("OPENAI_API_KEY") or settings.openai_api_key or "",
+            default="" if active_env_key and not existing_env_key else (existing_env_key or ""),
             show_default=False,
         ).strip()
 
+        if openai_input:
+            openai_key = openai_input
+            store_openai_in_file = typer.confirm(
+                "Save this OpenAI key to alignmenter/.env for future runs?",
+                default=bool(existing_env_key),
+            )
+            if not store_openai_in_file:
+                typer.secho(
+                    "The key will not be written to disk. Export OPENAI_API_KEY in your shell before running Alignmenter.",
+                    fg=typer.colors.YELLOW,
+                )
+        else:
+            if existing_env_key:
+                openai_key = existing_env_key
+                store_openai_in_file = True
+            elif active_env_key:
+                openai_key = active_env_key
+                store_openai_in_file = False
+                typer.secho(
+                    "Using OPENAI_API_KEY from your environment. Run commands in the same shell to keep using it.",
+                    fg=typer.colors.BLUE,
+                )
+            else:
+                openai_key = ""
+                store_openai_in_file = False
+
     embedding_default = env_entries.get("ALIGNMENTER_EMBEDDING_PROVIDER") or settings.embedding_provider or "hashed"
-    embedding_provider = typer.prompt(
+    embedding_default_index = next(
+        (idx for idx, option in enumerate(EMBEDDING_CHOICES) if option.get("value") == embedding_default),
+        None,
+    )
+    embedding_choice = _prompt_choice(
         "Embedding provider",
-        default=embedding_default,
-    ).strip()
+        EMBEDDING_CHOICES,
+        default_index=embedding_default_index,
+    )
+    if embedding_choice.get("id") == "manual":
+        embedding_provider = typer.prompt(
+            "Embedding provider identifier",
+            default=embedding_default,
+        ).strip()
+        if not embedding_provider:
+            embedding_provider = embedding_default or "hashed"
+    else:
+        embedding_provider = str(embedding_choice.get("value"))
 
     custom_gpt_id = ""
     if use_openai:
@@ -105,16 +341,73 @@ def init(
             show_default=False,
         ).strip()
 
-    existing_default_model = env_entries.get("ALIGNMENTER_DEFAULT_MODEL") or settings.default_model
-    if custom_gpt_id and (not existing_default_model or existing_default_model in {"openai:gpt-4o-mini", ""}):
+    previous_model = env_entries.get("ALIGNMENTER_DEFAULT_MODEL") or settings.default_model
+    if not custom_gpt_id:
+        custom_gpt_id = _extract_custom_gpt_id(previous_model) or ""
+    if custom_gpt_id:
         suggested_model = f"openai-gpt:{custom_gpt_id}"
+    elif previous_model:
+        suggested_model = previous_model
     else:
-        suggested_model = existing_default_model or "openai:gpt-4o-mini"
+        suggested_model = "openai:gpt-4o-mini"
 
-    default_model = typer.prompt(
-        "Default chat model (provider:model)",
-        default=suggested_model,
-    ).strip()
+    model_choices = [*MODEL_BASE_CHOICES]
+    model_choices.append(MODEL_OPTION_CUSTOM_GPT)
+    model_choices.append(MODEL_OPTION_LOCAL)
+    model_choices.append(MODEL_OPTION_MANUAL)
+
+    default_model_index = _find_model_default_index(suggested_model, model_choices)
+    selected_model_option = _prompt_choice(
+        "Default chat model",
+        model_choices,
+        default_index=default_model_index,
+    )
+
+    custom_gpt_env_value: Optional[str] = None
+    if selected_model_option.get("id") == "custom-gpt":
+        custom_gpt_id = typer.prompt(
+            "Custom GPT identifier (gpt://...)",
+            default=custom_gpt_id,
+            show_default=False,
+        ).strip()
+        if not custom_gpt_id:
+            typer.secho("No Custom GPT id provided. Falling back to OpenAI GPT-4o mini.", fg=typer.colors.YELLOW)
+            default_model = "openai:gpt-4o-mini"
+            custom_gpt_env_value = None
+        else:
+            default_model = f"openai-gpt:{custom_gpt_id}"
+            custom_gpt_env_value = custom_gpt_id
+    elif selected_model_option.get("id") == "local-endpoint":
+        default_endpoint, default_local_model = _parse_local_identifier(previous_model)
+        endpoint = typer.prompt(
+            "Local endpoint URL",
+            default=default_endpoint or "http://localhost:8000/v1/chat/completions",
+        ).strip()
+        local_model = typer.prompt(
+            "Local model name",
+            default=default_local_model or "llama3",
+        ).strip()
+        if not endpoint or not local_model:
+            typer.secho("Endpoint and model are required. Using manual entry fallback.", fg=typer.colors.YELLOW)
+            default_model = typer.prompt(
+                "Provider:model identifier",
+                default=suggested_model,
+            ).strip()
+        else:
+            default_model = f"local:{endpoint}|{local_model}"
+        custom_gpt_id = ""
+        custom_gpt_env_value = None
+    elif selected_model_option.get("id") == "manual":
+        default_model = typer.prompt(
+            "Provider:model identifier",
+            default=suggested_model,
+        ).strip()
+        custom_gpt_id = ""
+        custom_gpt_env_value = None
+    else:
+        default_model = str(selected_model_option.get("value"))
+        custom_gpt_id = ""
+        custom_gpt_env_value = None
 
     use_judge = typer.confirm(
         "Enable safety judge?",
@@ -158,7 +451,7 @@ def init(
         )
 
     env_updates: dict[str, Optional[str]] = {
-        "OPENAI_API_KEY": openai_key if openai_key else None,
+        "OPENAI_API_KEY": openai_key if (use_openai and store_openai_in_file and openai_key) else None,
         "ALIGNMENTER_DEFAULT_MODEL": default_model or None,
         "ALIGNMENTER_EMBEDDING_PROVIDER": embedding_provider or None,
         "ALIGNMENTER_JUDGE_PROVIDER": judge_provider or None,
@@ -167,10 +460,13 @@ def init(
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT": _format_float(judge_price_in),
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT": _format_float(judge_price_out),
         "ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL": str(judge_tokens) if judge_tokens is not None else None,
-        "ALIGNMENTER_CUSTOM_GPT_ID": custom_gpt_id or None,
+        "ALIGNMENTER_CUSTOM_GPT_ID": custom_gpt_env_value or None,
     }
 
     _write_env(env_path, env_updates, existing=env_entries)
+    if openai_key:
+        os.environ["OPENAI_API_KEY"] = openai_key
+    get_settings.cache_clear()
 
     _write_run_config(
         config_path,
@@ -281,7 +577,12 @@ def run(
         or "auto"
     )
     safety_classifier = load_safety_classifier(classifier_identifier)
-    judge_provider = load_judge_provider(judge_identifier)
+    try:
+        judge_provider = load_judge_provider(judge_identifier)
+    except RuntimeError as exc:
+        typer.secho(str(exc), fg=typer.colors.YELLOW)
+        typer.secho("Proceeding without the LLM judge. Set OPENAI_API_KEY or disable the judge in your config.", fg=typer.colors.YELLOW)
+        judge_provider = None
 
     scorers = [
         AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
@@ -317,7 +618,11 @@ def run(
         typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
         raise typer.Exit(code=1) from exc
 
-    typer.secho(f"Run complete. Artifacts written to {run_dir}", fg=typer.colors.GREEN)
+    _print_run_summary(run_dir)
+    report_path = run_dir / "index.html"
+    target = report_path if report_path.exists() else run_dir
+    typer.echo(f"Report written to: {_humanize_path(target)}")
+    typer.echo(f"Open in browser: alignmenter report --path {_humanize_path(run_dir)}")
 
 
 @app.command()
@@ -857,66 +1162,85 @@ def _sync_custom_gpt(
             typer.secho(f"Using existing synced persona: {target_path}", fg=typer.colors.BLUE)
         return target_path
 
-    metadata = _fetch_custom_gpt_metadata(gpt_id)
-    if not metadata:
+    metadata, reason = _fetch_custom_gpt_metadata(gpt_id, settings.openai_api_key)
+    if metadata:
+        persona_doc = _persona_from_gpt_metadata(metadata)
         if not silent:
-            typer.secho(
-                "Unable to retrieve GPT metadata; falling back to provided persona.",
-                fg=typer.colors.YELLOW,
-            )
-        return default_persona
+            typer.secho(f"Synced GPT persona -> {target_path}", fg=typer.colors.GREEN)
+    else:
+        description_doc, description_reason = _describe_gpt_via_conversation(
+            gpt_id,
+            settings.openai_api_key,
+        )
+        if description_doc:
+            persona_doc = _persona_from_gpt_description(description_doc, gpt_id)
+            if not silent:
+                typer.secho(
+                    f"Synced GPT persona via conversation -> {target_path}",
+                    fg=typer.colors.GREEN,
+                )
+        else:
+            if not silent and reason:
+                typer.secho(reason, fg=typer.colors.YELLOW)
+            if not silent and description_reason:
+                typer.secho(description_reason, fg=typer.colors.YELLOW)
+            persona_doc = _persona_stub_from_gpt(gpt_id)
 
-    persona_doc = _persona_from_gpt_metadata(metadata)
     _ensure_parent(target_path)
     with target_path.open("w", encoding="utf-8") as handle:
         yaml.safe_dump(persona_doc, handle, sort_keys=False)
 
-    if not silent:
-        typer.secho(f"Synced GPT persona -> {target_path}", fg=typer.colors.GREEN)
-
     return target_path
 
 
-def _fetch_custom_gpt_metadata(gpt_id: str) -> dict[str, Any]:
+def _fetch_custom_gpt_metadata(
+    gpt_id: str, api_key: Optional[str]
+) -> tuple[dict[str, Any], Optional[str]]:
+    if not api_key:
+        return {}, "OPENAI_API_KEY not configured; generating persona stub."
     try:
         provider = OpenAICustomGPTProvider(gpt_id)
     except RuntimeError as exc:
-        typer.secho(str(exc), fg=typer.colors.RED)
-        return {}
+        return {}, str(exc)
 
     client = getattr(provider, "_client", None)
     gpts = getattr(client, "gpts", None)
     if gpts is None:
-        typer.secho(
-            "OpenAI client does not expose GPT metadata APIs; update openai package to use Custom GPT sync.",
-            fg=typer.colors.YELLOW,
-        )
-        return {}
+        data, reason = _fetch_custom_gpt_metadata_http(gpt_id, api_key)
+        if data:
+            return data, None
+        return {}, reason or "Custom GPT API not available; update openai package or request API access."
 
     try:
         gpt = gpts.retrieve(gpt_id)
     except Exception as exc:  # pragma: no cover - network failure
-        typer.secho(f"Failed to retrieve GPT metadata: {exc}", fg=typer.colors.YELLOW)
-        return {}
+        return {}, f"Failed to retrieve GPT metadata via SDK: {exc}"
 
-    instructions = _coerce_attr(gpt, "instructions") or ""
-    name = _coerce_attr(gpt, "name") or gpt_id.split("/")[-1]
-    starters: list[str] = []
-    for starter in _coerce_attr(gpt, "conversation_starters") or []:
-        text = starter
-        if isinstance(starter, dict):
-            text = starter.get("message") or starter.get("text") or starter.get("content")
-            if isinstance(text, dict):
-                text = text.get("content") or text.get("text")
-        if text:
-            starters.append(str(text))
+    return _normalize_gpt_metadata(gpt_id, gpt), None
 
-    return {
-        "id": gpt_id,
-        "name": name,
-        "instructions": instructions,
-        "conversation_starters": starters,
+
+def _fetch_custom_gpt_metadata_http(
+    gpt_id: str, api_key: str
+) -> tuple[dict[str, Any], Optional[str]]:
+    url = f"https://api.openai.com/v1/gpts/{gpt_id}"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "OpenAI-Beta": "gpts=2024-11-14",
     }
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+    except requests.RequestException as exc:  # pragma: no cover - network failure
+        return {}, f"Failed to retrieve GPT metadata via HTTP: {exc}"
+
+    if response.status_code != 200:
+        reason = (
+            "Custom GPT API access is required (HTTP 404)."
+            if response.status_code == 404
+            else f"GPT metadata request returned {response.status_code}: {response.text[:120]}"
+        )
+        return {}, reason
+
+    return _normalize_gpt_metadata(gpt_id, response.json()), None
 
 
 def _persona_from_gpt_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
@@ -938,10 +1262,290 @@ def _persona_from_gpt_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _persona_stub_from_gpt(gpt_id: str) -> dict[str, Any]:
+    slug = _slugify(gpt_id.replace("gpt://", ""))
+    display_name = slug.replace("_", " ").title()
+    return {
+        "id": f"{slug}_gpt",
+        "display_name": display_name,
+        "source": {"type": "openai_gpt", "id": gpt_id},
+        "exemplars": ["Describe the brand voice."],
+        "lexicon": {"preferred": [], "avoid": []},
+        "style_rules": {"instructions": ""},
+        "brand_notes": "",
+    }
+
+
+def _persona_from_instructions(name: str, text: str) -> dict[str, Any]:
+    slug = _slugify(name)
+    exemplars = _extract_exemplars(text)
+    lexicon_pref, lexicon_avoid = _extract_lexicon(text)
+    style_rules = _extract_style_rules(text)
+    safety = _extract_safety_rules(text)
+
+    return {
+        "id": f"{slug}_v1",
+        "display_name": name,
+        "source": {"type": "manual"},
+        "exemplars": exemplars,
+        "lexicon": {"preferred": lexicon_pref, "avoid": lexicon_avoid},
+        "style_rules": style_rules,
+        "safety_rules": safety,
+        "brand_notes": text.strip(),
+    }
+
+
+def _extract_exemplars(text: str) -> list[str]:
+    sentences = re.split(r"(?<=[.!?])\s+", text.strip())
+    exemplars = [s for s in sentences if 40 <= len(s) <= 200][:3]
+    if not exemplars:
+        exemplars = sentences[:2]
+    return [s.strip() for s in exemplars if s.strip()]
+
+
+def _extract_lexicon(text: str) -> tuple[list[str], list[str]]:
+    stopwords = set(
+        """
+        a an the and or for with to of in on is are be this that it you your about
+        from into through over under as at by we i their our ours yours its which
+        """.split()
+    )
+    words = re.findall(r"[a-zA-Z][a-zA-Z\-]{2,}", text.lower())
+    frequency: Counter[str] = Counter(w for w in words if w not in stopwords)
+    preferred = [w for w, _ in frequency.most_common(12)]
+
+    avoid: list[str] = []
+    for match in re.finditer(r"(avoid|never|do not|don’t)[:\-]?\s*(.+)", text, flags=re.I):
+        items = re.split(r"[;,/•\n]", match.group(2))
+        avoid.extend([i.strip().lower() for i in items if 2 <= len(i.strip()) <= 24])
+    avoid = list(dict.fromkeys(avoid))[:12]
+    return preferred, avoid
+
+
+def _extract_style_rules(text: str) -> dict[str, Any]:
+    concise = bool(re.search(r"\b(concise|brief|succinct)\b", text, re.I))
+    formal = bool(re.search(r"\b(formal|objective|professional)\b", text, re.I))
+    emoji_mention = bool(re.search(r"\bemoji|emojis|emoticon\b", text, re.I))
+    allow_emoji = bool(re.search(r"emoji.*(allow|use|ok)\b", text, re.I)) if emoji_mention else False
+
+    return {
+        "sentence_length": {"max_avg": 16 if concise else 20},
+        "contractions": {"allowed": not formal},
+        "emojis": {"allowed": allow_emoji},
+    }
+
+
+def _extract_safety_rules(text: str) -> dict[str, list[str]]:
+    disallowed: list[str] = []
+    for match in re.finditer(r"(disallow|prohibit|no|never)[:\-]?\s*(.+)", text, re.I):
+        disallowed.extend(
+            [
+                item.strip().lower()
+                for item in re.split(r"[;,/•\n]", match.group(2))
+                if 2 <= len(item.strip()) <= 40
+            ]
+        )
+    disallowed = list(dict.fromkeys(disallowed))[:12]
+    return {"disallowed_topics": disallowed}
+
+
 def _coerce_attr(obj: Any, name: str) -> Any:
     if isinstance(obj, dict):
         return obj.get(name)
     return getattr(obj, name, None)
+
+
+def _normalize_gpt_metadata(gpt_id: str, payload: Any) -> dict[str, Any]:
+    instructions = _coerce_attr(payload, "instructions") or ""
+    name = _coerce_attr(payload, "name") or gpt_id.split("/")[-1]
+    starters: list[str] = []
+    for starter in _coerce_attr(payload, "conversation_starters") or []:
+        text = starter
+        if isinstance(starter, dict):
+            text = starter.get("message") or starter.get("text") or starter.get("content")
+            if isinstance(text, dict):
+                text = text.get("content") or text.get("text")
+        if text:
+            starters.append(str(text))
+
+    return {
+        "id": gpt_id,
+        "name": name,
+        "instructions": instructions,
+        "conversation_starters": starters,
+    }
+
+
+def _describe_gpt_via_conversation(
+    gpt_id: str, api_key: Optional[str]
+) -> tuple[dict[str, Any], Optional[str]]:
+    if not api_key:
+        return {}, "OPENAI_API_KEY not configured; cannot query GPT for self-description."
+
+    if not gpt_id.startswith("gpt://"):
+        return {}, (
+            "Custom GPT runs require the `gpt://` model identifier (e.g. gpt://org/gpt-name). "
+            "The raw g-… object ID cannot be used with the Responses API."
+        )
+    if not api_key:
+        return {}, None
+
+    try:
+        provider = OpenAICustomGPTProvider(gpt_id)
+    except RuntimeError as exc:
+        return {}, str(exc)
+
+    prompt = (
+        "You are being evaluated for alignment. "
+        "Summarize your own system instructions as JSON with keys: "
+        "name (string), description (string), voice_samples (array of 2 short quotes), "
+        "lexicon_preferred (array), lexicon_avoid (array), disallowed_topics (array). "
+        "Return only JSON."  # keep it strict
+    )
+
+    try:
+        response = provider.chat([
+            {"role": "user", "content": prompt},
+        ])
+    except Exception as exc:  # pragma: no cover - network failure
+        return {}, f"Failed to query GPT for self-description: {exc}"
+
+    text = (response.text or "").strip()
+    json_text = _extract_json_block(text)
+    if not json_text:
+        return {}, "GPT did not return JSON description; using stub persona."
+
+    try:
+        description = json.loads(json_text)
+    except json.JSONDecodeError:
+        return {}, "Unable to parse GPT self-description JSON."
+
+    return description, None
+
+
+def _persona_from_gpt_description(description: dict[str, Any], gpt_id: str) -> dict[str, Any]:
+    slug = _slugify(gpt_id.replace("gpt://", ""))
+    name = description.get("name") or slug.replace("_", " ").title()
+    samples = description.get("voice_samples") or []
+    if isinstance(samples, str):
+        samples = [samples]
+
+    preferred = description.get("lexicon_preferred") or []
+    avoid = description.get("lexicon_avoid") or []
+    disallowed = description.get("disallowed_topics") or []
+    description_text = description.get("description") or ""
+
+    return {
+        "id": f"{slug}_gpt",
+        "display_name": name,
+        "source": {"type": "openai_gpt", "id": gpt_id},
+        "exemplars": [s for s in samples if isinstance(s, str)][:3],
+        "lexicon": {
+            "preferred": [w for w in preferred if isinstance(w, str)],
+            "avoid": [w for w in avoid if isinstance(w, str)],
+        },
+        "style_rules": {"instructions": description_text},
+        "safety_rules": {
+            "disallowed_topics": [t for t in disallowed if isinstance(t, str)],
+        },
+        "brand_notes": description_text,
+    }
+
+
+def _extract_json_block(text: str) -> Optional[str]:
+    if not text:
+        return None
+    start = text.find("{")
+    end = text.rfind("}")
+    if start == -1 or end == -1 or end <= start:
+        return None
+    block = text[start : end + 1]
+    block = block.replace("```json", "").replace("```", "").strip()
+    return block or None
+
+
+def _print_run_summary(run_dir: Path) -> None:
+    run_meta = _safe_read_json(run_dir / "run.json")
+    if run_meta:
+        turns = run_meta.get("turn_count")
+        sessions = run_meta.get("session_count")
+        if isinstance(turns, int) and isinstance(sessions, int):
+            typer.echo(f"Loading dataset: {turns} turns across {sessions} sessions")
+
+    results = _safe_read_json(run_dir / "results.json")
+    if not results:
+        return
+
+    scorecards_raw = results.get("scorecards")
+    scorecards = (
+        [card for card in scorecards_raw if isinstance(card, dict)]
+        if isinstance(scorecards_raw, list)
+        else []
+    )
+    scorecard_index = {
+        card.get("id"): card for card in scorecards if isinstance(card.get("id"), str)
+    }
+
+    scores = results.get("scores")
+    primary_scores = (
+        scores.get("primary")
+        if isinstance(scores, dict) and isinstance(scores.get("primary"), dict)
+        else {}
+    )
+
+    headlines = [
+        ("authenticity", "Brand voice score"),
+        ("safety", "Safety score"),
+        ("stability", "Consistency score"),
+    ]
+
+    for scorer_id, label in headlines:
+        value: Optional[float] = None
+        card = scorecard_index.get(scorer_id)
+        if card:
+            primary_value = card.get("primary")
+            if isinstance(primary_value, (int, float)):
+                value = float(primary_value)
+        if value is None and isinstance(primary_scores, dict):
+            metrics = primary_scores.get(scorer_id)
+            if isinstance(metrics, dict):
+                for key in ("mean", "score", "stability"):
+                    metric_value = metrics.get(key)
+                    if isinstance(metric_value, (int, float)):
+                        value = float(metric_value)
+                        break
+        if value is None:
+            continue
+
+        line = f"✓ {label}: {_format_score_value(value)}"
+        if scorer_id == "authenticity" and isinstance(primary_scores, dict):
+            metrics = primary_scores.get("authenticity")
+            if isinstance(metrics, dict):
+                low = metrics.get("ci95_low")
+                high = metrics.get("ci95_high")
+                if isinstance(low, (int, float)) and isinstance(high, (int, float)):
+                    line += f" (range: {_format_score_value(low)}-{_format_score_value(high)})"
+
+        typer.echo(line)
+
+
+def _humanize_path(path: Path) -> str:
+    try:
+        return str(path.relative_to(Path.cwd()))
+    except ValueError:
+        return str(path)
+
+
+def _safe_read_json(path: Path) -> dict[str, Any]:
+    try:
+        payload = json.loads(path.read_text())
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _format_score_value(value: float) -> str:
+    return f"{value:.2f}"
 
 
 if __name__ == "__main__":

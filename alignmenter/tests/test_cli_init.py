@@ -35,15 +35,20 @@ def test_init_creates_env_and_config(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setattr(cli, "SAFETY_KEYWORDS", tmp_path / "configs" / "safety_keywords.yaml")
 
     monkeypatch.setattr(config, "PROJECT_ROOT", tmp_path)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    cli.get_settings.cache_clear()
+    config.get_settings.cache_clear()
 
     runner = CliRunner()
     input_data = "\n".join(
         [
             "y",  # configure OpenAI
             "sk-test",  # api key
-            "sentence-transformer:all-MiniLM-L6-v2",  # embedding provider
+            "y",  # save key to .env
+            "2",  # choose sentence-transformer embeddings
             "gpt://brand-voice-chef",  # custom GPT id
             "",  # accept default model (derived from GPT id)
+            "",  # confirm Custom GPT selection
             "y",  # enable judge
             "openai:gpt-4o-mini",  # judge provider
             "10",  # judge budget
@@ -77,3 +82,42 @@ def test_init_creates_env_and_config(tmp_path: Path, monkeypatch) -> None:
     assert safety["judge"]["budget"] == 10
     assert safety["judge"]["budget_usd"] == 5.0
     assert safety["judge"]["estimated_tokens_per_call"] == 900
+
+
+def test_init_can_skip_storing_openai_key(tmp_path: Path, monkeypatch) -> None:
+    _prep_project(tmp_path)
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(cli, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(cli, "CONFIGS_DIR", tmp_path / "configs")
+    monkeypatch.setattr(cli, "PERSONA_DIR", tmp_path / "configs" / "persona")
+    monkeypatch.setattr(cli, "DATASETS_DIR", tmp_path / "datasets")
+    monkeypatch.setattr(cli, "SAFETY_KEYWORDS", tmp_path / "configs" / "safety_keywords.yaml")
+
+    monkeypatch.setattr(config, "PROJECT_ROOT", tmp_path)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    cli.get_settings.cache_clear()
+    config.get_settings.cache_clear()
+
+    runner = CliRunner()
+    input_data = "\n".join(
+        [
+            "y",  # configure OpenAI
+            "sk-test",  # api key
+            "n",  # do not store
+            "",  # accept default hashed embedding
+            "",  # custom GPT id
+            "",  # accept default chat model
+            "n",  # disable judge
+        ]
+    ) + "\n"
+
+    result = runner.invoke(
+        cli.app,
+        ["init", "--env-path", ".env", "--config-path", "configs/run.yaml"],
+        input=input_data,
+    )
+
+    assert result.exit_code == 0, result.stdout
+    env_text = (tmp_path / ".env").read_text()
+    assert "OPENAI_API_KEY" not in env_text

@@ -58,13 +58,13 @@ Applied ML engineers, product/brand owners, and researchers who need transparent
 - **Then** produces side-by-side aggregates and CSV deltas
 
 ### S3: Custom Persona Pack
-- **When** `alignmenter run --persona configs/persona/goth_muse.yaml`
+- **When** `alignmenter run --persona alignmenter/configs/persona/goth_muse.yaml`
 - **Then** Authenticity uses exemplars and lexicon from that pack
 
 ### S4: Custom GPT Voice
-- **Given** a saved GPT Builder ID (`gpt://.../brand-voice-chef`) and OpenAI API key
-- **When** `alignmenter run --model openai-gpt:brand-voice-chef`
-- **Then** Alignmenter calls the GPT responses API, syncs the GPT instructions into a temporary persona pack, and scores authenticity/safety/stability against that branded voice
+- **Given** a Custom GPT’s exported instructions file (or an OpenAI workspace with Custom GPT metadata API access)
+- **When** the team runs `alignmenter import gpt --instructions instructions.txt --out alignmenter/configs/persona/brand_voice.yaml` to materialize the persona pack and then executes `alignmenter run --model openai-gpt:brand-voice-chef`
+- **Then** Alignmenter uses that persona pack to score authenticity/safety/stability against the GPT’s branded voice. When API access is available, `alignmenter persona sync-gpt gpt://...` automates the import step but must gracefully fall back to the manual workflow if metadata calls return 403/404.
 
 ### S5: Local Model
 - **When** `alignmenter run --model local:http://localhost:8000/v1/chat/completions`
@@ -74,7 +74,7 @@ Applied ML engineers, product/brand owners, and researchers who need transparent
 
 CLI -> Runner -> Provider Adapter -> Scorers -> Aggregator -> Reporters
 
-- **Providers:** OpenAI, Anthropic, Local (OpenAI-compatible), Custom GPTs via `openai-gpt:<gpt_id>` identifiers
+- **Providers:** OpenAI, Anthropic, Local (OpenAI-compatible), Custom GPTs via `openai-gpt:<gpt_id>` identifiers (requires either manual persona import or OpenAI’s gated metadata access)
 - **Scorers:** Authenticity, Safety, Stability
 - **Reporters:** JSON + HTML
 - **Datasets:** Small conversation packs
@@ -112,8 +112,8 @@ safety_rules:
   brand_notes: "elegant, no camp"
 ```
 
-- **Starter template**: ship `configs/persona/default.yaml` as a neutral voice for teams without a brand pack. A `alignmenter persona scaffold --name "Acme"` helper populates display name, exemplar scaffold, and lexicon prompts.
-- **Generation guidance**: optionally call `openai:gpt-4o-mini` with a company brief to request exemplars; the command saves drafts to `configs/persona/generated/` for review before activation. Use `alignmenter persona export --format labelstudio` when preparing batches for Label Studio review.
+- **Starter template**: ship `alignmenter/configs/persona/default.yaml` as a neutral voice for teams without a brand pack. A `alignmenter persona scaffold --name "Acme"` helper populates display name, exemplar scaffold, and lexicon prompts.
+- **Generation guidance**: optionally call `openai:gpt-4o-mini` with a company brief to request exemplars; the command saves drafts to `alignmenter/configs/persona/generated/` for review before activation. Use `alignmenter persona export --format labelstudio` when preparing batches for Label Studio review.
 
 ### 8.3 Run Config (YAML)
 ```yaml
@@ -122,13 +122,13 @@ dataset: datasets/demo_conversations.jsonl
 providers:
   primary: openai:gpt-4o-mini
   compare: anthropic:claude-3-5
-persona_pack: configs/persona/goth_muse.yaml
+persona_pack: alignmenter/configs/persona/goth_muse.yaml
 scorers:
   authenticity:
     embedding_model: intfloat/e5-small-v2
     threshold_warn: 0.72
   safety:
-    keyword_lists: configs/safety_keywords.yaml
+    keyword_lists: alignmenter/configs/safety_keywords.yaml
     judge:
       enabled: true
       provider: openai:gpt-4o-mini
@@ -164,7 +164,7 @@ Formula:
 
 ### 9.2 Safety Score
 `Safety = min(1 - violation_rate, judge_score)`
-- Combines rule-based heuristics with optional LLM judge ratings. Judge prompts stored in `configs/judges/safety_prompt.txt` and versioned.
+- Combines rule-based heuristics with optional LLM judge ratings. Judge prompts stored in `alignmenter/configs/judges/safety_prompt.txt` and versioned.
 - Offline fallback enables a `distilled_safety_roberta` classifier when budgets or connectivity restrict LLM judging.
 - Open-source fallback model sourced from Hugging Face (e.g., "ProtectAI/distilled-safety-roberta"); installer verifies license compatibility and pins model hash. Document tokenizer/model cache location so security teams can review before adoption.
 - Agreement target >= 0.8 Cohen's kappa across judge ensemble; mismatches flagged in report calibration section.
@@ -186,23 +186,26 @@ Formula:
 ### CLI
 ```bash
 alignmenter init
-alignmenter run --model openai:gpt-4o-mini --dataset datasets/demo.jsonl --persona configs/persona/goth_muse.yaml --out reports/
+alignmenter run --model openai:gpt-4o-mini --dataset datasets/demo.jsonl --persona alignmenter/configs/persona/goth_muse.yaml --out reports/
 alignmenter run --model openai:gpt-4o-mini --compare anthropic:claude-3-5
 alignmenter report --last
 alignmenter persona scaffold --name "Acme Voice"
 alignmenter persona export --dataset datasets/demo_conversations.jsonl --out annotation.csv
+alignmenter import gpt --name "Brand Voice" --instructions instructions.txt --out alignmenter/configs/persona/brand_voice.yaml
 alignmenter dataset lint datasets/demo_conversations.jsonl
 alignmenter run --config alignmenter/configs/demo_config.yaml
-alignmenter persona sync-gpt gpt://brand/voice --out configs/persona/_gpt/brand.yaml
+alignmenter persona sync-gpt gpt://brand/voice --out alignmenter/configs/persona/_gpt/brand.yaml
 ```
 
-Run configs (`configs/*.yaml`) support the following keys:
+Run configs (`alignmenter/configs/*.yaml`) support the following keys:
 
 - `model`, `compare_model`, `run_id`
 - `dataset`, `persona`, `keywords` (paths resolve relative to the config file)
 - `embedding` (e.g., `sentence-transformer:all-MiniLM-L6-v2`)
 - `judge.provider` / `judge.budget`
 - `report.out_dir`, `report.include_raw`
+
+`alignmenter init` should offer to write provider credentials to `alignmenter/.env`; when teams decline, they must export the corresponding environment variables (e.g. `OPENAI_API_KEY`) before running the CLI.
 
 ### Provider Interface
 ```python

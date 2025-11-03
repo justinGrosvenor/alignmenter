@@ -46,21 +46,25 @@ alignmenter persona export \
   --dataset datasets/demo_conversations.jsonl \
   --format labelstudio \
   --out annotation_tasks.json
+alignmenter import gpt \
+  --name "AlignmenterGPT" \
+  --instructions gpt_instructions.txt \
+  --out alignmenter/configs/persona/alignmentergpt.yaml
 alignmenter dataset lint datasets/demo_conversations.jsonl --strict
-alignmenter run --model openai-gpt:brand-voice --config configs/init_run.yaml
+alignmenter run --model openai-gpt:brand-voice --config alignmenter/configs/init_run.yaml
 alignmenter run --config alignmenter/configs/demo_config.yaml
-# Sync Custom GPT instructions into a persona pack
-alignmenter persona sync-gpt gpt://brand/voice --out configs/persona/_gpt/brand.yaml
+# Sync Custom GPT metadata via API access (see notes below)
+alignmenter persona sync-gpt gpt://brand/voice --out alignmenter/configs/persona/_gpt/brand.yaml
 ```
 
 ### First Run (2 minutes)
 
-1. `alignmenter init` – answers a short wizard that captures API keys, judge budgets, and writes `configs/run.yaml`.
-2. `alignmenter run --config configs/run.yaml` – executes the authenticity/safety/stability pipeline using your settings.
-3. (Optional) `alignmenter persona sync-gpt gpt://your-gpt-id` – pulls Custom GPT instructions into a persona pack so authenticity scores reflect the GPT’s voice.
+1. `alignmenter init` – answers a short wizard that captures API keys (with the option to skip writing them to disk), surfaces curated chat-model/embedding choices, sets judge budgets, and writes `alignmenter/configs/run.yaml`.
+2. `alignmenter run --config alignmenter/configs/run.yaml` – executes the authenticity/safety/stability pipeline using your settings.
+3. (Optional) `alignmenter import gpt --instructions gpt_instructions.txt --out configs/persona/your_gpt.yaml` – paste your GPT Builder instructions into a text file and Alignmenter will create a persona pack from it. If your OpenAI workspace has Custom GPT API access, `alignmenter persona sync-gpt gpt://your-gpt-id` still works and skips the copy/paste step.
 4. (Optional) `python -m alignmenter.scripts.run_openai_demo` – kicks off a one-off OpenAI-backed run using the config generated during `init`.
 
-Environment configuration is handled via `.env` + [pydantic-settings](alignmenter/alignmenter/config.py). Notable variables:
+Environment configuration is handled via `.env` + [pydantic-settings](alignmenter/src/alignmenter/config.py). Alignmenter always prefers real environment variables (e.g. `export OPENAI_API_KEY=...`); during `alignmenter init` you can opt in to saving secrets to `alignmenter/.env` for convenience. Notable variables:
 
 - `OPENAI_API_KEY`, `ANTHROPIC_API_KEY` – enable hosted chat/judge providers.
 - `ALIGNMENTER_EMBEDDING_PROVIDER` – e.g. `sentence-transformer:all-MiniLM-L6-v2`.
@@ -68,6 +72,12 @@ Environment configuration is handled via `.env` + [pydantic-settings](alignmente
 - `ALIGNMENTER_DEFAULT_MODEL`, `ALIGNMENTER_DEFAULT_DATASET` – CLI fallback values when flags are omitted.
 
 Run tests with `pytest` from the `alignmenter/` directory (virtualenv required).
+
+### Custom GPT Importer Notes
+
+- The `alignmenter import gpt` command expects a plaintext export of your GPT’s "Instructions" (and optional knowledge bullets). Alignmenter extracts exemplars, lexicon hints, and safety rules automatically, creating a persona pack you can edit by hand.
+- OpenAI’s Custom GPT metadata API is currently gated. When API access is unavailable, `alignmenter persona sync-gpt gpt://...` will fall back to the importer workflow and prompt you to supply the instructions file instead of failing silently.
+- Once a persona pack exists, reference it in `configs/run.yaml` or via `--persona` to score authenticity against that GPT’s voice.
 
 ## Contributing
 

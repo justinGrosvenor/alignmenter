@@ -148,6 +148,7 @@ def test_run_command(tmp_path: Path) -> None:
     assert results_path.exists()
     payload = json.loads(results_path.read_text())
     assert payload.get("scorecards")
+    assert "Open in browser:" in result.output
 
 
 def test_run_command_with_compare(tmp_path: Path) -> None:
@@ -176,7 +177,10 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
     )
 
     assert result.exit_code == 0, result.output
-    assert "Run complete" in result.output
+    assert "Loading dataset:" in result.output
+    assert "Brand voice score" in result.output
+    assert "Report written to:" in result.output
+    assert "Open in browser:" in result.output
 
 
 def test_run_command_invalid_model() -> None:
