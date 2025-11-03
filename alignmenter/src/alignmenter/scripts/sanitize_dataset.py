@@ -159,7 +159,7 @@ def sanitize(
         sanitized_records.append(sanitized_record)
 
     # Report
-    typer.secho(f"✓ Sanitization complete", fg=typer.colors.GREEN)
+    typer.secho("✓ Sanitization complete", fg=typer.colors.GREEN)
     typer.echo(f"  Records processed: {len(records)}")
     typer.echo(f"  Total PII instances: {total_pii}")
     for pii_type, count in pii_stats.items():

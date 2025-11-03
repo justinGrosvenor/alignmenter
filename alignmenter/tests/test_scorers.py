@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Sequence
 
 from alignmenter.scorers.authenticity import (
     AuthenticityScorer,
@@ -219,7 +218,6 @@ def test_stability_single_session() -> None:
 
 def test_authenticity_with_calibrated_weights(tmp_path: Path) -> None:
     """Test authenticity scorer with custom calibrated weights."""
-    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
     calibration_path = tmp_path / "test.traits.json"
 
     calibration = {

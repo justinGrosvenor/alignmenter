@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from subprocess import CalledProcessError, run
-from typing import Optional
 
 DEFAULT_CONFIG = Path("configs/openai_demo.yaml")
 
