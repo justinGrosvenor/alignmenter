@@ -197,6 +197,8 @@ alignmenter run --config alignmenter/configs/demo_config.yaml
 alignmenter persona sync-gpt gpt://brand/voice --out alignmenter/configs/persona/_gpt/brand.yaml
 ```
 
+`alignmenter run` regenerates assistant turns via the configured provider before scoring. Teams that want to score pre-recorded transcripts can pass `--no-generate` to reuse the dataset verbatim.
+
 Run configs (`alignmenter/configs/*.yaml`) support the following keys:
 
 - `model`, `compare_model`, `run_id`

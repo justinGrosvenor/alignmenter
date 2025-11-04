@@ -54,11 +54,14 @@ pip install -e .[dev,safety]
 # Set API key (for embedding and judge models)
 export OPENAI_API_KEY="your-key-here"
 
-# Run evaluation on demo dataset
+# Run evaluation on demo dataset (regenerates transcripts via the provider)
 alignmenter run \
   --model openai:gpt-4o-mini \
   --dataset datasets/demo_conversations.jsonl \
   --persona configs/persona/default.yaml
+
+# Reuse existing transcripts without hitting the provider
+alignmenter run --config configs/run.yaml --no-generate
 
 # View interactive HTML report
 alignmenter report --last

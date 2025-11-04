@@ -21,6 +21,7 @@ def test_cli_run_uses_run_config_file(tmp_path: Path) -> None:
             "run",
             "--config", str(config_path),
             "--out", str(tmp_path),
+            "--no-generate",
         ],
     )
 

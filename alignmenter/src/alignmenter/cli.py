@@ -8,13 +8,14 @@ import re
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 import requests
 import typer
 import yaml
 
 from alignmenter.config import get_settings
+from alignmenter.providers import load_chat_provider
 from alignmenter.providers.base import parse_provider_model
 from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
@@ -500,6 +501,11 @@ def run(
     embedding: Optional[str] = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
     judge: Optional[str] = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
     judge_budget: Optional[int] = typer.Option(None, help="Maximum LLM judge calls per run."),
+    generate_transcripts: bool = typer.Option(
+        True,
+        "--generate/--no-generate",
+        help="Call the model to generate fresh transcripts before scoring.",
+    ),
 ) -> None:
     """Execute an evaluation run."""
 
@@ -537,10 +543,18 @@ def run(
     run_id = config_options.get("run_id", "alignmenter_run")
     include_raw = config_options.get("include_raw")
 
+    assistant_turns_cache: Optional[int] = None
+
+    def _assistant_turns() -> int:
+        nonlocal assistant_turns_cache
+        if assistant_turns_cache is None:
+            assistant_turns_cache = _count_assistant_turns(dataset_path)
+        return assistant_turns_cache
+
     projected_cost = None
     if judge_identifier and judge_cost.get("budget_usd") and judge_cost.get("cost_per_call_estimate"):
-        assistant_turns = _count_assistant_turns(dataset_path)
-        projected_cost = assistant_turns * judge_cost["cost_per_call_estimate"]
+        turns_for_cost = _assistant_turns()
+        projected_cost = turns_for_cost * judge_cost["cost_per_call_estimate"]
         if projected_cost > judge_cost["budget_usd"]:
             typer.secho(
                 (
@@ -553,7 +567,7 @@ def run(
                 raise typer.Exit(code=1)
         else:
             typer.secho(
-                f"Projected judge spend ${projected_cost:.2f} across {assistant_turns} calls.",
+                f"Projected judge spend ${projected_cost:.2f} across {turns_for_cost} calls.",
                 fg=typer.colors.BLUE,
             )
 
@@ -569,6 +583,38 @@ def run(
 
     embedding_identifier = embedding or config_options.get("embedding") or settings.embedding_provider
     persona_path = _sync_custom_gpt(model_identifier, persona_path)
+    provider = None
+    compare_provider_obj = None
+    regenerate = generate_transcripts
+    if regenerate:
+        try:
+            provider = load_chat_provider(model_identifier)
+        except Exception as exc:  # noqa: BLE001 - surface friendly guidance
+            typer.secho(
+                f"Unable to initialise provider '{model_identifier}': {exc}",
+                fg=typer.colors.YELLOW,
+            )
+            typer.secho(
+                "Falling back to recorded transcripts. Re-run with --generate after configuring credentials.",
+                fg=typer.colors.YELLOW,
+            )
+            regenerate = False
+
+        if regenerate and compare_identifier:
+            try:
+                compare_provider_obj = load_chat_provider(str(compare_identifier))
+            except Exception as exc:  # noqa: BLE001 - surface friendly guidance
+                typer.secho(
+                    f"Unable to initialise compare provider '{compare_identifier}': {exc}",
+                    fg=typer.colors.YELLOW,
+                )
+                typer.secho(
+                    "Falling back to recorded transcripts for both models.",
+                    fg=typer.colors.YELLOW,
+                )
+                regenerate = False
+                compare_provider_obj = None
+
     scorer_kwargs = {
         "embedding": embedding_identifier,
     }
@@ -611,13 +657,33 @@ def run(
             StabilityScorer(**scorer_kwargs),
         ]
 
-    runner = Runner(config=config, scorers=scorers, compare_scorers=compare_scorers)
+    primary_progress = _ProgressReporter(
+        total=_assistant_turns() if regenerate else 0,
+        label=f"Generating transcripts ({model_identifier})",
+    )
+    compare_progress = _ProgressReporter(
+        total=_assistant_turns() if regenerate and compare_identifier else 0,
+        label=f"Generating transcripts (compare: {compare_identifier})",
+    )
 
-    try:
-        run_dir = runner.execute()
-    except Exception as exc:  # noqa: BLE001 - present friendly message
-        typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
-        raise typer.Exit(code=1) from exc
+    with primary_progress as primary_cb, compare_progress as compare_cb:
+        runner = Runner(
+            config=config,
+            scorers=scorers,
+            compare_scorers=compare_scorers,
+            provider=provider,
+            compare_provider=compare_provider_obj,
+            generate_transcripts=regenerate,
+            compare_generate=regenerate,
+            progress_callback=primary_cb,
+            compare_progress_callback=compare_cb,
+        )
+
+        try:
+            run_dir = runner.execute()
+        except Exception as exc:  # noqa: BLE001 - present friendly message
+            typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
+            raise typer.Exit(code=1) from exc
 
     _print_run_summary(run_dir)
     report_path = run_dir / "index.html"
@@ -1128,6 +1194,32 @@ def _relative_to_cwd(path: Path) -> str:
         return path.relative_to(Path.cwd()).as_posix()
     except ValueError:
         return path.as_posix()
+
+
+class _ProgressReporter:
+    """Wrap Typer's progress bar to expose a simple callback."""
+
+    def __init__(self, *, total: int, label: str) -> None:
+        self.total = max(0, total)
+        self.label = label
+        self._manager: Optional[Any] = None
+        self._bar: Optional[Any] = None
+
+    def __enter__(self) -> Callable[[int], None]:
+        if self.total > 0:
+            self._manager = typer.progressbar(length=self.total, label=self.label)
+            self._bar = self._manager.__enter__()
+        return self.advance
+
+    def __exit__(self, exc_type, exc, tb) -> None:  # noqa: D401 - Typer handles teardown
+        if self._manager is not None:
+            self._manager.__exit__(exc_type, exc, tb)
+        self._manager = None
+        self._bar = None
+
+    def advance(self, step: int = 1) -> None:
+        if self._bar is not None and step:
+            self._bar.update(step)
 
 
 def _default_gpt_persona_path(gpt_id: str) -> Path:
