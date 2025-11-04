@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Optional
 
@@ -514,161 +515,46 @@ def run(
     if config:
         config_path = _resolve_path(config)
         config_options = load_run_options(config_path)
-
-    model_identifier = model or config_options.get("model") or settings.default_model
-
-    try:
-        parse_provider_model(model_identifier)
-    except ValueError as exc:
-        raise typer.BadParameter(str(exc)) from exc
-
-    dataset_candidate = dataset or config_options.get("dataset") or settings.default_dataset
-    persona_candidate = persona or config_options.get("persona") or settings.default_persona
-    keywords_candidate = keywords or config_options.get("keywords") or settings.default_keywords
-    out_candidate = out or config_options.get("report_out_dir") or "reports/"
-
-    dataset_path = _resolve_path(dataset_candidate)
-    persona_path = _resolve_path(persona_candidate)
-    keywords_path = _resolve_path(keywords_candidate)
-    out_dir = Path(out_candidate)
-
-    compare_identifier = compare if compare is not None else config_options.get("compare_model")
-    judge_identifier = judge or config_options.get("judge_provider") or settings.judge_provider
-    judge_budget = (
-        judge_budget
-        if judge_budget is not None
-        else config_options.get("judge_budget", settings.judge_budget)
-    )
-    judge_cost = _build_judge_cost_config(config_options, settings)
-    run_id = config_options.get("run_id", "alignmenter_run")
-    include_raw = config_options.get("include_raw")
-
-    assistant_turns_cache: Optional[int] = None
-
-    def _assistant_turns() -> int:
-        nonlocal assistant_turns_cache
-        if assistant_turns_cache is None:
-            assistant_turns_cache = _count_assistant_turns(dataset_path)
-        return assistant_turns_cache
-
-    projected_cost = None
-    if judge_identifier and judge_cost.get("budget_usd") and judge_cost.get("cost_per_call_estimate"):
-        turns_for_cost = _assistant_turns()
-        projected_cost = turns_for_cost * judge_cost["cost_per_call_estimate"]
-        if projected_cost > judge_cost["budget_usd"]:
-            typer.secho(
-                (
-                    f"Projected judge spend ${projected_cost:.2f} exceeds budget ${judge_cost['budget_usd']:.2f}."
-                    " Continue?"
-                ),
-                fg=typer.colors.YELLOW,
-            )
-            if not typer.confirm("Proceed with potential overage?", default=False):
-                raise typer.Exit(code=1)
-        else:
-            typer.secho(
-                f"Projected judge spend ${projected_cost:.2f} across {turns_for_cost} calls.",
-                fg=typer.colors.BLUE,
-            )
-
-    config = RunConfig(
-        model=model_identifier,
-        dataset_path=dataset_path,
-        persona_path=persona_path,
-        compare_model=compare_identifier,
-        report_out_dir=out_dir,
-        run_id=run_id,
-        include_raw=bool(include_raw) if include_raw is not None else True,
+    inputs, run_config = _prepare_run_inputs(
+        settings=settings,
+        config_options=config_options,
+        model=model,
+        dataset=dataset,
+        persona=persona,
+        keywords=keywords,
+        out=out,
+        compare=compare,
+        judge=judge,
+        judge_budget=judge_budget,
+        embedding=embedding,
     )
 
-    embedding_identifier = embedding or config_options.get("embedding") or settings.embedding_provider
-    persona_path = _sync_custom_gpt(model_identifier, persona_path)
-    provider = None
-    compare_provider_obj = None
-    regenerate = generate_transcripts
-    if regenerate:
-        try:
-            provider = load_chat_provider(model_identifier)
-        except Exception as exc:  # noqa: BLE001 - surface friendly guidance
-            typer.secho(
-                f"Unable to initialise provider '{model_identifier}': {exc}",
-                fg=typer.colors.YELLOW,
-            )
-            typer.secho(
-                "Falling back to recorded transcripts. Re-run with --generate after configuring credentials.",
-                fg=typer.colors.YELLOW,
-            )
-            regenerate = False
+    assistant_turns = _lazy_assistant_turn_counter(inputs.dataset_path)
+    _maybe_warn_about_cost(inputs, assistant_turns)
 
-        if regenerate and compare_identifier:
-            try:
-                compare_provider_obj = load_chat_provider(str(compare_identifier))
-            except Exception as exc:  # noqa: BLE001 - surface friendly guidance
-                typer.secho(
-                    f"Unable to initialise compare provider '{compare_identifier}': {exc}",
-                    fg=typer.colors.YELLOW,
-                )
-                typer.secho(
-                    "Falling back to recorded transcripts for both models.",
-                    fg=typer.colors.YELLOW,
-                )
-                regenerate = False
-                compare_provider_obj = None
-
-    scorer_kwargs = {
-        "embedding": embedding_identifier,
-    }
-    classifier_identifier = (
-        config_options.get("safety_classifier")
-        or settings.safety_classifier
-        or "auto"
+    regenerate, provider, compare_provider_obj = _initialise_providers(
+        inputs.model_identifier,
+        inputs.compare_identifier,
+        generate_transcripts,
     )
-    safety_classifier = load_safety_classifier(classifier_identifier)
-    try:
-        judge_provider = load_judge_provider(judge_identifier)
-    except RuntimeError as exc:
-        typer.secho(str(exc), fg=typer.colors.YELLOW)
-        typer.secho("Proceeding without the LLM judge. Set OPENAI_API_KEY or disable the judge in your config.", fg=typer.colors.YELLOW)
-        judge_provider = None
 
-    scorers = [
-        AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
-        SafetyScorer(
-            keyword_path=keywords_path,
-            judge=judge_provider.evaluate if judge_provider else None,
-            judge_budget=judge_budget,
-            cost_config=judge_cost,
-            classifier=safety_classifier,
-        ),
-        StabilityScorer(**scorer_kwargs),
-    ]
-
-    compare_scorers = None
-    if compare_identifier:
-        compare_scorers = [
-            AuthenticityScorer(persona_path=persona_path, **scorer_kwargs),
-            SafetyScorer(
-                keyword_path=keywords_path,
-                judge=judge_provider.evaluate if judge_provider else None,
-                judge_budget=judge_budget,
-                cost_config=judge_cost,
-                classifier=safety_classifier,
-            ),
-            StabilityScorer(**scorer_kwargs),
-        ]
-
-    primary_progress = _ProgressReporter(
-        total=_assistant_turns() if regenerate else 0,
-        label=f"Generating transcripts ({model_identifier})",
+    safety_classifier = load_safety_classifier(inputs.classifier_identifier)
+    judge_provider = _initialise_judge_provider(inputs.judge_identifier)
+    scorers, compare_scorers = _build_scorers_for_run(
+        inputs,
+        safety_classifier=safety_classifier,
+        judge_provider=judge_provider,
     )
-    compare_progress = _ProgressReporter(
-        total=_assistant_turns() if regenerate and compare_identifier else 0,
-        label=f"Generating transcripts (compare: {compare_identifier})",
+
+    primary_progress, compare_progress = _build_progress_managers(
+        inputs,
+        regenerate,
+        assistant_turns,
     )
 
     with primary_progress as primary_cb, compare_progress as compare_cb:
         runner = Runner(
-            config=config,
+            config=run_config,
             scorers=scorers,
             compare_scorers=compare_scorers,
             provider=provider,
@@ -1220,6 +1106,250 @@ class _ProgressReporter:
     def advance(self, step: int = 1) -> None:
         if self._bar is not None and step:
             self._bar.update(step)
+
+
+@dataclass
+class RunInputs:
+    """Resolved configuration for `alignmenter run`."""
+
+    model_identifier: str
+    compare_identifier: Optional[str]
+    dataset_path: Path
+    persona_path: Path
+    keywords_path: Path
+    out_dir: Path
+    run_id: str
+    include_raw: bool
+    embedding_identifier: Optional[str]
+    judge_identifier: Optional[str]
+    judge_budget: Optional[int]
+    judge_cost: dict[str, float | int]
+    classifier_identifier: str
+
+
+def _prepare_run_inputs(
+    *,
+    settings: Any,
+    config_options: dict[str, object],
+    model: Optional[str],
+    dataset: Optional[str],
+    persona: Optional[str],
+    keywords: Optional[str],
+    out: Optional[str],
+    compare: Optional[str],
+    judge: Optional[str],
+    judge_budget: Optional[int],
+    embedding: Optional[str],
+) -> tuple[RunInputs, RunConfig]:
+    model_identifier = model or config_options.get("model") or settings.default_model
+    try:
+        parse_provider_model(model_identifier)
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+
+    dataset_candidate = dataset or config_options.get("dataset") or settings.default_dataset
+    persona_candidate = persona or config_options.get("persona") or settings.default_persona
+    keywords_candidate = keywords or config_options.get("keywords") or settings.default_keywords
+    out_candidate = out or config_options.get("report_out_dir") or "reports/"
+
+    dataset_path = _resolve_path(dataset_candidate)
+    persona_path = _resolve_path(persona_candidate)
+    keywords_path = _resolve_path(keywords_candidate)
+    out_dir = Path(out_candidate)
+
+    compare_identifier = compare if compare is not None else config_options.get("compare_model")
+    judge_identifier = judge or config_options.get("judge_provider") or settings.judge_provider
+    resolved_judge_budget = (
+        judge_budget
+        if judge_budget is not None
+        else config_options.get("judge_budget", settings.judge_budget)
+    )
+    judge_cost = _build_judge_cost_config(config_options, settings)
+    run_id = config_options.get("run_id", "alignmenter_run")
+    include_raw = config_options.get("include_raw")
+    embedding_identifier = (
+        embedding or config_options.get("embedding") or settings.embedding_provider
+    )
+    classifier_identifier = (
+        config_options.get("safety_classifier")
+        or settings.safety_classifier
+        or "auto"
+    )
+
+    persona_path = _sync_custom_gpt(model_identifier, persona_path)
+
+    run_config = RunConfig(
+        model=model_identifier,
+        dataset_path=dataset_path,
+        persona_path=persona_path,
+        compare_model=compare_identifier,
+        report_out_dir=out_dir,
+        run_id=run_id,
+        include_raw=bool(include_raw) if include_raw is not None else True,
+    )
+
+    inputs = RunInputs(
+        model_identifier=model_identifier,
+        compare_identifier=compare_identifier,
+        dataset_path=dataset_path,
+        persona_path=persona_path,
+        keywords_path=keywords_path,
+        out_dir=out_dir,
+        run_id=run_id,
+        include_raw=run_config.include_raw,
+        embedding_identifier=embedding_identifier,
+        judge_identifier=judge_identifier,
+        judge_budget=resolved_judge_budget,
+        judge_cost=judge_cost,
+        classifier_identifier=classifier_identifier,
+    )
+
+    return inputs, run_config
+
+
+def _lazy_assistant_turn_counter(dataset_path: Path) -> Callable[[], int]:
+    cached: Optional[int] = None
+
+    def _inner() -> int:
+        nonlocal cached
+        if cached is None:
+            cached = _count_assistant_turns(dataset_path)
+        return cached
+
+    return _inner
+
+
+def _maybe_warn_about_cost(inputs: RunInputs, turn_counter: Callable[[], int]) -> None:
+    cost_estimate = inputs.judge_cost.get("cost_per_call_estimate")
+    budget = inputs.judge_cost.get("budget_usd")
+    if not inputs.judge_identifier or cost_estimate is None or budget is None:
+        return
+
+    try:
+        estimate_value = float(cost_estimate)
+        budget_value = float(budget)
+    except (TypeError, ValueError):
+        return
+
+    turns = turn_counter()
+    projected_cost = turns * estimate_value
+    if projected_cost > budget_value:
+        typer.secho(
+            (
+                f"Projected judge spend ${projected_cost:.2f} exceeds budget ${budget_value:.2f}."
+                " Continue?"
+            ),
+            fg=typer.colors.YELLOW,
+        )
+        if not typer.confirm("Proceed with potential overage?", default=False):
+            raise typer.Exit(code=1)
+    else:
+        typer.secho(
+            f"Projected judge spend ${projected_cost:.2f} across {turns} calls.",
+            fg=typer.colors.BLUE,
+        )
+
+
+def _initialise_providers(
+    model_identifier: str,
+    compare_identifier: Optional[str],
+    regenerate: bool,
+) -> tuple[bool, Optional[Any], Optional[Any]]:
+    provider = None
+    compare_provider = None
+
+    if not regenerate:
+        return False, provider, compare_provider
+
+    try:
+        provider = load_chat_provider(model_identifier)
+    except Exception as exc:  # noqa: BLE001 - surface friendly guidance
+        typer.secho(
+            f"Unable to initialise provider '{model_identifier}': {exc}",
+            fg=typer.colors.YELLOW,
+        )
+        typer.secho(
+            "Falling back to recorded transcripts. Re-run with --generate after configuring credentials.",
+            fg=typer.colors.YELLOW,
+        )
+        return False, None, None
+
+    if compare_identifier:
+        try:
+            compare_provider = load_chat_provider(str(compare_identifier))
+        except Exception as exc:  # noqa: BLE001 - surface friendly guidance
+            typer.secho(
+                f"Unable to initialise compare provider '{compare_identifier}': {exc}",
+                fg=typer.colors.YELLOW,
+            )
+            typer.secho(
+                "Falling back to recorded transcripts for both models.",
+                fg=typer.colors.YELLOW,
+            )
+            return False, provider, None
+
+    return True, provider, compare_provider
+
+
+def _initialise_judge_provider(judge_identifier: Optional[str]):
+    if not judge_identifier:
+        return None
+    try:
+        return load_judge_provider(judge_identifier)
+    except RuntimeError as exc:
+        typer.secho(str(exc), fg=typer.colors.YELLOW)
+        typer.secho(
+            "Proceeding without the LLM judge. Set OPENAI_API_KEY or disable the judge in your config.",
+            fg=typer.colors.YELLOW,
+        )
+        return None
+
+
+def _build_scorers_for_run(
+    inputs: RunInputs,
+    *,
+    safety_classifier: Any,
+    judge_provider: Optional[Any],
+) -> tuple[list[Any], Optional[list[Any]]]:
+    scorer_kwargs = {"embedding": inputs.embedding_identifier}
+    judge_callable = judge_provider.evaluate if judge_provider else None
+
+    def _bundle() -> list[Any]:
+        return [
+            AuthenticityScorer(persona_path=inputs.persona_path, **scorer_kwargs),
+            SafetyScorer(
+                keyword_path=inputs.keywords_path,
+                judge=judge_callable,
+                judge_budget=inputs.judge_budget,
+                cost_config=inputs.judge_cost,
+                classifier=safety_classifier,
+            ),
+            StabilityScorer(**scorer_kwargs),
+        ]
+
+    scorers = _bundle()
+    compare_scorers = _bundle() if inputs.compare_identifier else None
+    return scorers, compare_scorers
+
+
+def _build_progress_managers(
+    inputs: RunInputs,
+    regenerate: bool,
+    turn_counter: Callable[[], int],
+) -> tuple[_ProgressReporter, _ProgressReporter]:
+    primary_total = turn_counter() if regenerate else 0
+    compare_total = (
+        turn_counter() if regenerate and inputs.compare_identifier else 0
+    )
+    primary = _ProgressReporter(
+        total=primary_total,
+        label=f"Generating transcripts ({inputs.model_identifier})",
+    )
+    compare = _ProgressReporter(
+        total=compare_total,
+        label=f"Generating transcripts (compare: {inputs.compare_identifier or 'secondary'})",
+    )
+    return primary, compare
 
 
 def _default_gpt_persona_path(gpt_id: str) -> Path:
