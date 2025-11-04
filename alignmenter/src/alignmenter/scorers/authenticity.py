@@ -215,17 +215,24 @@ def lexicon_score(tokens: list[str], profile: PersonaProfile) -> float:
     return max(0.0, min(1.0, 0.5 + balance / 2))
 
 
-def bootstrap_ci(random_gen: random.Random, scores: list[float], iterations: int = 200) -> tuple[Optional[float], Optional[float]]:
+def bootstrap_ci(
+    random_gen: random.Random,
+    scores: list[float],
+    iterations: int = 200,
+    alpha: float = 0.05,
+) -> tuple[Optional[float], Optional[float]]:
     if len(scores) < 2:
         return None, None
+
     samples = []
     for _ in range(iterations):
         resample = [random_gen.choice(scores) for _ in scores]
         samples.append(mean(resample))
+
     samples.sort()
-    lower = samples[int(0.025 * len(samples))]
-    upper = samples[int(0.975 * len(samples)) - 1]
-    return lower, upper
+    lower_idx = int((alpha / 2) * len(samples))
+    upper_idx = max(lower_idx, int((1 - alpha / 2) * len(samples)) - 1)
+    return samples[lower_idx], samples[upper_idx]
 
 
 # shared utilities
@@ -312,7 +319,7 @@ def tokenize(text: str) -> list[str]:
 def normalize_vector(vector: Sequence[float]) -> list[float]:
     norm = math.sqrt(sum(value * value for value in vector))
     if not norm:
-        return list(vector)
+        return [0.0 for _ in vector]
     return [value / norm for value in vector]
 
 

@@ -233,8 +233,9 @@ def group_sessions(records: Iterable[dict]) -> list[Session]:
     sessions: dict[str, list[dict]] = {}
     for record in records:
         session_id = record.get("session_id")
-        if not session_id:
+        if not isinstance(session_id, str) or not session_id.strip():
             raise ValueError("Dataset record missing 'session_id'.")
+        session_id = session_id.strip()
         sessions.setdefault(session_id, []).append(record)
 
     grouped: list[Session] = []

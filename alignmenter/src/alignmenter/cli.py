@@ -893,9 +893,9 @@ def _load_env(path: Path) -> dict[str, str]:
     entries: dict[str, str] = {}
     for line in path.read_text(encoding="utf-8").splitlines():
         stripped = line.strip()
-        if not stripped or stripped.startswith("#") or "=" not in line:
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
             continue
-        key, value = line.split("=", 1)
+        key, value = stripped.split("=", 1)
         entries[key.strip()] = value.strip()
     return entries
 

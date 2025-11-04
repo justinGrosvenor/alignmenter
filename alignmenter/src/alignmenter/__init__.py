@@ -6,9 +6,25 @@ import os
 # Default to disabling parallel threads unless the user explicitly overrides it.
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
-from .cli import app  # re-export for convenience
 from .config import get_settings
 
 __version__ = "0.0.4"
+__all__ = ["get_settings", "__version__", "app"]
 
-__all__ = ["app", "get_settings", "__version__"]
+
+class _AppProxy:
+    """Lazily import the Typer app when first accessed."""
+
+    def _resolve(self):
+        from .cli import app as cli_app
+
+        return cli_app
+
+    def __call__(self, *args, **kwargs):
+        return self._resolve()(*args, **kwargs)
+
+    def __getattr__(self, item):
+        return getattr(self._resolve(), item)
+
+
+app = _AppProxy()
