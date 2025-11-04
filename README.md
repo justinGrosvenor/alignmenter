@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/alignmenter-banner.png" alt="Alignmenter" width="800">
+  <img src="https://raw.githubusercontent.com/justinGrosvenor/alignmenter/main/assets/alignmenter-banner.png" alt="Alignmenter" width="800">
 </p>
 
 <p align="center">
