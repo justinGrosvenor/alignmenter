@@ -8,7 +8,7 @@ import random
 import re
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Iterable, Optional, Sequence, Tuple
+from typing import Iterable, Optional, Sequence
 
 import logging
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Iterable, Optional
+from typing import Optional
 
 try:  # pragma: no cover
     from sentence_transformers import SentenceTransformer

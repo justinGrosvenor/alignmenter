@@ -383,7 +383,6 @@ def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:
 
         if has_compare:
             if compare_val is not None:
-                compare_class = _get_grade_class(compare_val)
                 compare_letter = _get_grade_letter(compare_val)
                 row += f'<td class="compare-cell">{compare_letter} {_format_scorecard_value(compare_val)}</td>'
             else:
@@ -616,7 +615,6 @@ def _render_reproducibility_section(summary: dict[str, Any]) -> str:
 def _render_charts(scores: dict[str, Any]) -> str:
     """Render score visualizations using Chart.js."""
     # Collect main metrics
-    metrics = {}
     metric_labels = []
     metric_values = []
 

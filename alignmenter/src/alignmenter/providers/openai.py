@@ -123,7 +123,9 @@ def _extract_usage(response: Any) -> Optional[dict[str, Any]]:
     if isinstance(usage, dict):
         getter = usage.get
     else:
-        getter = lambda key, default=None: getattr(usage, key, default)
+
+        def getter(key: str, default: int | None = None) -> int | None:
+            return getattr(usage, key, default)
     return {
         "prompt_tokens": getter("prompt_tokens"),
         "completion_tokens": getter("completion_tokens"),
