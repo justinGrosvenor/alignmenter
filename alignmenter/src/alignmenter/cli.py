@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shutil
 import sys
 from collections import Counter
 from dataclasses import dataclass
@@ -65,12 +66,16 @@ def import_gpt(
     typer.secho(f"Imported persona written to {out}", fg=typer.colors.GREEN)
 
 
-PACKAGE_ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = PACKAGE_ROOT.parent
+PACKAGE_ROOT = Path(__file__).resolve().parent
+SOURCE_ROOT = PACKAGE_ROOT.parent  # e.g., .../site-packages or repo /src
+REPO_ROOT = SOURCE_ROOT.parent if SOURCE_ROOT.name == "src" else SOURCE_ROOT
 PACKAGE_NAME = PACKAGE_ROOT.name
-CONFIGS_DIR = PROJECT_ROOT / "configs"
+PROJECT_ROOT = REPO_ROOT
+
+DATA_DIR = PACKAGE_ROOT / "data"
+CONFIGS_DIR = DATA_DIR / "configs"
 PERSONA_DIR = CONFIGS_DIR / "persona"
-DATASETS_DIR = PROJECT_ROOT / "datasets"
+DATASETS_DIR = DATA_DIR / "datasets"
 SAFETY_KEYWORDS = CONFIGS_DIR / "safety_keywords.yaml"
 
 MODEL_BASE_CHOICES: list[dict[str, Any]] = [
@@ -161,9 +166,11 @@ def _resolve_path(candidate: str | Path) -> Path:
         normalized = path
         if normalized.parts and normalized.parts[0] == PACKAGE_NAME:
             normalized = Path(*normalized.parts[1:])
-        fallback = PROJECT_ROOT / normalized
-        if fallback.exists():
-            return fallback
+        search_roots = [DATA_DIR, REPO_ROOT]
+        for root in search_roots:
+            fallback = root / normalized
+            if fallback.exists():
+                return fallback
     raise typer.BadParameter(f"Path not found: {candidate}")
 
 
@@ -252,7 +259,7 @@ def init(
         help="Location for the environment file Alignmenter reads (defaults to project .env).",
     ),
     config_path: Path = typer.Option(
-        CONFIGS_DIR / "run.yaml",
+        Path("configs/run.yaml"),
         help="Path for a starter run configuration YAML.",
     ),
 ) -> None:
@@ -667,7 +674,10 @@ def persona_scaffold(
     """Generate a starter persona YAML template."""
 
     slug = _slugify(name)
-    target = out or PERSONA_DIR / f"{slug}.yaml"
+    default_dir = Path("configs/persona")
+    target = out or (default_dir / f"{slug}.yaml")
+    if not target.is_absolute():
+        target = Path.cwd() / target
     _ensure_parent(target)
 
     if target.exists() and not force:
@@ -920,8 +930,24 @@ def _write_run_config(
 ) -> None:
     dataset_default = DATASETS_DIR / "demo_conversations.jsonl"
     persona_default = PERSONA_DIR / "default.yaml"
-    reports_dir = PROJECT_ROOT / "reports"
+    keywords_default = SAFETY_KEYWORDS
+
     base_dir = path.parent
+    reports_dir = (base_dir / ".." / "reports").resolve()
+
+    dataset_workspace = (base_dir.parent / "datasets" / dataset_default.name).resolve()
+    persona_workspace = (base_dir / "persona" / persona_default.name).resolve()
+    keywords_workspace = (base_dir / keywords_default.name).resolve()
+
+    for source, destination in [
+        (dataset_default, dataset_workspace),
+        (persona_default, persona_workspace),
+        (keywords_default, keywords_workspace),
+    ]:
+        if destination.exists():
+            continue
+        _ensure_parent(destination)
+        shutil.copy2(source, destination)
 
     safety_section: dict[str, Any] = {"offline_classifier": "auto"}
     if judge_provider:
@@ -941,9 +967,9 @@ def _write_run_config(
     config = {
         "run_id": "alignmenter_run",
         "model": model,
-        "dataset": _relpath_for_config(dataset_default, base_dir),
-        "persona": _relpath_for_config(persona_default, base_dir),
-        "keywords": _relpath_for_config(SAFETY_KEYWORDS, base_dir),
+        "dataset": _relpath_for_config(dataset_workspace, base_dir),
+        "persona": _relpath_for_config(persona_workspace, base_dir),
+        "keywords": _relpath_for_config(keywords_workspace, base_dir),
         "embedding": embedding,
         "scorers": {"safety": safety_section},
         "report": {"out_dir": _relpath_for_config(reports_dir, base_dir), "include_raw": True},
@@ -954,17 +980,15 @@ def _write_run_config(
         yaml.safe_dump(config, handle, sort_keys=False)
 
 
-def _relpath(path: Path) -> str:
-    path = path if path.is_absolute() else (PROJECT_ROOT / path)
-    try:
-        return path.relative_to(PROJECT_ROOT).as_posix()
-    except ValueError:
-        return path.as_posix()
-
-
 def _relpath_for_config(target: Path, base_dir: Path) -> str:
-    target_abs = target if target.is_absolute() else PROJECT_ROOT / target
-    base_abs = base_dir if base_dir.is_absolute() else PROJECT_ROOT / base_dir
+    target_abs = Path(target)
+    if not target_abs.is_absolute():
+        target_abs = (Path.cwd() / target_abs).resolve()
+    else:
+        target_abs = target_abs.resolve()
+
+    base_abs = Path(base_dir)
+    base_abs = base_abs.resolve()
     try:
         return target_abs.relative_to(base_abs).as_posix()
     except ValueError:
@@ -1354,7 +1378,8 @@ def _build_progress_managers(
 
 def _default_gpt_persona_path(gpt_id: str) -> Path:
     slug = _slugify(gpt_id.replace("gpt://", ""))
-    return (CONFIGS_DIR / "persona" / "_gpt" / f"{slug}.yaml")
+    default_dir = Path("configs/persona/_gpt")
+    return (Path.cwd() / default_dir / f"{slug}.yaml").resolve()
 
 
 def _sync_custom_gpt(

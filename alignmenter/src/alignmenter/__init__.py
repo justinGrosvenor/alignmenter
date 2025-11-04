@@ -9,4 +9,6 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 from .cli import app  # re-export for convenience
 from .config import get_settings
 
-__all__ = ["app", "get_settings"]
+__version__ = "0.0.1"
+
+__all__ = ["app", "get_settings", "__version__"]

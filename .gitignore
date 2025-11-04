@@ -11,3 +11,5 @@ marketing/.env.local
 .idea/
 *.egg-info/
 reports/
+dist/
+build/

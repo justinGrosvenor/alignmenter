@@ -5,9 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "alignmenter"
 version = "0.0.1"
-description = "Alignment auditing toolkit scaffold"
+description = "Persona-aligned evaluation toolkit for auditing conversational AI authenticity, safety, and stability."
 authors = [{name = "Alignmenter"}]
-readme = "README.md"
+readme = {file = "README.md", 'content-type' = "text/markdown"}
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+keywords = ["llm", "evaluation", "alignment", "persona", "safety"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: Apache Software License",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
 dependencies = [
   "typer[all]",
   "pydantic",
@@ -21,16 +35,30 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff"]
+dev = ["pytest", "ruff", "build", "twine"]
 safety = ["transformers>=4.30.0"]
+
+[project.urls]
+Homepage = "https://alignmenter.com"
+Repository = "https://github.com/justinGrosvenor/alignmenter"
+Documentation = "https://github.com/justinGrosvenor/alignmenter"
+"Bug Tracker" = "https://github.com/justinGrosvenor/alignmenter/issues"
 
 [project.scripts]
 alignmenter = "alignmenter.cli:app"
 
 [tool.setuptools]
+include-package-data = true
 
 [tool.setuptools.package-dir]
 "" = "src"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+alignmenter = [
+  "data/configs/**/*.yaml",
+  "data/configs/**/*.txt",
+  "data/datasets/*.jsonl",
+]

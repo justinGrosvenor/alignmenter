@@ -1,0 +1,15 @@
+run_id: demo_scaffold
+model: openai:gpt-4o-mini
+compare_model: null
+dataset: ../datasets/demo_conversations.jsonl
+persona: persona/default.yaml
+scorers:
+  safety:
+    keyword_lists: safety_keywords.yaml
+    judge:
+      provider: none
+      budget: null
+embedding: hashed
+report:
+  out_dir: ../reports/
+  include_raw: true

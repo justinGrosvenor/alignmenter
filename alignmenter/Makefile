@@ -1,4 +1,4 @@
-.PHONY: venv install quickstart demo test lint report-last
+.PHONY: venv install quickstart demo test lint report-last build release publish clean-dist
 
 VENV?=.venv
 PYTHON?=python3
@@ -22,6 +22,16 @@ test:
 
 lint:
 	$(VENV)/bin/ruff check alignmenter
+
+build:
+	$(VENV)/bin/python -m build
+	$(VENV)/bin/twine check dist/*
+
+publish: build
+	$(VENV)/bin/twine upload dist/*
+
+clean-dist:
+	rm -rf dist build *.egg-info alignmenter.egg-info
 
 report-last:
 	@LATEST=$$(ls -t $(REPORTS_DIR) | head -1); \

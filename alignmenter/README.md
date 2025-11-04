@@ -46,6 +46,14 @@ pip install -e .[dev]
 pip install -e .[dev,safety]
 ```
 
+### Install from PyPI
+
+```bash
+pip install alignmenter
+alignmenter init
+alignmenter run --config configs/run.yaml --no-generate
+```
+
 > **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](../docs/offline_safety.md) for details.
 
 ### Run Your First Evaluation

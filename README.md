@@ -62,6 +62,14 @@ pip install -e .[dev]
 pip install -e .[dev,safety]
 ```
 
+### Install from PyPI
+
+```bash
+pip install alignmenter
+alignmenter init
+alignmenter run --config configs/run.yaml --no-generate
+```
+
 ### Run Your First Evaluation
 
 ```bash
