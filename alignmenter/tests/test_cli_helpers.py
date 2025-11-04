@@ -138,6 +138,7 @@ def test_run_command(tmp_path: Path) -> None:
             str(keywords),
             "--out",
             str(tmp_path),
+            "--no-generate",
         ],
     )
 
@@ -173,6 +174,7 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
             str(keywords),
             "--out",
             str(tmp_path),
+            "--no-generate",
         ],
     )
 

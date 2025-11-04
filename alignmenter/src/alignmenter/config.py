@@ -16,7 +16,11 @@ PROJECT_ROOT = PACKAGE_ROOT.parent.parent
 class Settings(BaseSettings):
     """Runtime configuration for Alignmenter."""
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore", case_sensitive=False)
+    model_config = SettingsConfigDict(
+        env_file=(PROJECT_ROOT / ".env", PROJECT_ROOT.parent / ".env"),
+        extra="ignore",
+        case_sensitive=False,
+    )
     openai_api_key: Optional[str] = Field(
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "ALIGNMENTER_OPENAI_API_KEY"),
