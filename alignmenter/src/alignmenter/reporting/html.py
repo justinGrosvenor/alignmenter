@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -47,6 +47,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       .grade-table tbody td:last-child {{ border-right: 1px solid #334155; border-radius: 0 8px 8px 0; }}
       .metric-name {{ font-weight: 600; color: #e2e8f0; font-size: 1.1rem; }}
       .grade-cell {{ text-align: center; }}
+      .threshold-note {{ font-size: 0.75rem; margin-top: 6px; color: #94a3b8; display: block; }}
       .grade-badge {{ display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; }}
       .grade-badge.pass {{ background: rgba(74, 222, 128, 0.15); color: #4ade80; border: 2px solid rgba(74, 222, 128, 0.3); }}
       .grade-badge.warn {{ background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 2px solid rgba(251, 191, 36, 0.3); }}
@@ -118,11 +119,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <button class="export-btn" onclick="downloadCSV(window.scoresDataCSV, 'scores.csv')">Download CSV</button>
       </div>
       {score_tables}
-      {charts_section}
     </section>
+    {scenario_breakdown}
+    {persona_breakdown}
+    {charts_section}
     {reproducibility_section}
     <section>
-      <h2>Turn-Level Explorer</h2>
+      <h2>Turn Explorer</h2>
       {turn_preview}
     </section>
     <script>
@@ -195,7 +198,10 @@ class HTMLReporter:
                     table += safety_details
             score_blocks.append(table)
 
-        turn_preview = _render_turn_preview(sessions)
+        analytics = extras.get("analytics") if isinstance(extras, dict) else None
+
+        scenario_section, persona_section = _render_breakdown_sections(analytics)
+        turn_preview = _render_turn_preview(sessions, analytics)
         calibration_section = _render_calibration_section(primary)
         reproducibility_section = _render_reproducibility_section(summary)
         charts_section = _render_charts(primary)
@@ -212,6 +218,8 @@ class HTMLReporter:
             scorecard_block=scorecard_block,
             score_tables="".join(score_blocks) or "<p>No scores computed.</p>",
             turn_preview=turn_preview,
+            scenario_breakdown=scenario_section,
+            persona_breakdown=persona_section,
             calibration_section=calibration_section,
             reproducibility_section=reproducibility_section,
             charts_section=charts_section,
@@ -371,15 +379,28 @@ def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:
         diff_val = card.get("diff")
 
         # Determine grade class
-        grade_class = _get_grade_class(primary_val)
+        status = card.get("status")
+        grade_class = _get_grade_class(primary_val, status)
         letter = _get_grade_letter(primary_val)
 
         row = '<tr>'
         row += f'<td><span class="metric-name">{card.get("label", card.get("id", "Metric").title())}</span></td>'
+        warn_threshold = card.get("warn")
+        fail_threshold = card.get("fail")
+        threshold_note = ""
+        if warn_threshold is not None or fail_threshold is not None:
+            details = []
+            if warn_threshold is not None:
+                details.append(f"Warn &lt; {warn_threshold}")
+            if fail_threshold is not None:
+                details.append(f"Fail &lt; {fail_threshold}")
+            if details:
+                threshold_note = f"<div class='muted threshold-note'>{' | '.join(details)}</div>"
+
         row += f'<td class="grade-cell"><div class="grade-badge {grade_class}">'
         row += f'<span class="grade-letter">{letter}</span>'
         row += f'<span class="grade-score">{_format_scorecard_value(primary_val)}</span>'
-        row += '</div></td>'
+        row += f'</div>{threshold_note}</td>'
 
         if has_compare:
             if compare_val is not None:
@@ -422,8 +443,10 @@ def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:
     """
 
 
-def _get_grade_class(score: Any) -> str:
+def _get_grade_class(score: Any, status: Optional[str] = None) -> str:
     """Get CSS class for grade styling."""
+    if status in {"pass", "warn", "fail"}:
+        return status
     if not isinstance(score, (int, float)):
         return ""
     if score >= 0.8:
@@ -456,43 +479,140 @@ def _format_scorecard_value(value: Any) -> str:
     return str(value)
 
 
-def _render_turn_preview(sessions: list) -> str:
+def _render_breakdown_sections(analytics: Any) -> tuple[str, str]:
+    scenarios_html = _render_breakdown_table("Scenario Breakdown", analytics.get("scenarios") if isinstance(analytics, dict) else {})
+    personas_html = _render_breakdown_table("Persona Breakdown", analytics.get("personas") if isinstance(analytics, dict) else {})
+    return scenarios_html, personas_html
+
+
+def _render_breakdown_table(title: str, items: Any) -> str:
+    if not isinstance(items, dict) or not items:
+        return ""
+
     rows = []
-    for session in sessions[:3]:
-        turns = getattr(session, "turns", None)
-        if turns is None and hasattr(session, "get"):
-            turns = session.get("turns", [])
-        if turns is None:
-            turns = []
-        for turn in turns[:4]:
-            text = turn.get("text", "")
-            if len(text) > 160:
-                text = text[:157] + "…"
-            if hasattr(session, "session_id"):
-                session_id = getattr(session, "session_id")
-            elif hasattr(session, "get"):
-                session_id = session.get("session_id", "")
-            else:
-                session_id = ""
-            rows.append(
-                """
-                <tr>
-                  <td><code>{session_id}</code></td>
-                  <td>{role}</td>
-                  <td>{text}</td>
-                </tr>
-                """.format(
-                    session_id=session_id,
-                    role=turn.get("role", ""),
-                    text=text or "<span class='muted'>(empty)</span>",
-                )
-            )
-    if not rows:
-        return "<p class='muted'>No turn data available.</p>"
+    for name, payload in items.items():
+        if not isinstance(payload, dict):
+            continue
+        scores = payload.get("scores", {}) if isinstance(payload.get("scores"), dict) else {}
+        auth = _breakdown_score(scores, "authenticity", "mean")
+        safety = _breakdown_score(scores, "safety", "score")
+        stability = _breakdown_score(scores, "stability", "stability")
+        risk_candidates = [v for v in (auth, safety, stability) if v is not None]
+        risk = min(risk_candidates) if risk_candidates else None
+        css_class = _get_score_class(risk) if risk is not None else ""
+        rows.append(
+            {
+                "name": name,
+                "sessions": payload.get("sessions", 0),
+                "turns": payload.get("turns", 0),
+                "auth": auth,
+                "safety": safety,
+                "stability": stability,
+                "risk": risk if risk is not None else 1.0,
+                "class": css_class,
+            }
+        )
+
+    rows.sort(key=lambda item: item["risk"])
+
+    body = []
+    for row in rows:
+        body.append(
+            "<tr>"
+            f"<td>{row['name']}</td>"
+            f"<td>{row['sessions']}</td>"
+            f"<td>{row['turns']}</td>"
+            f"<td class='{row['class'] or ''}'>{_format_score_value(row['auth'])}</td>"
+            f"<td class='{row['class'] or ''}'>{_format_score_value(row['safety'])}</td>"
+            f"<td class='{row['class'] or ''}'>{_format_score_value(row['stability'])}</td>"
+            "</tr>"
+        )
+
     return (
-        "<table class='turn-table'><thead><tr><th>Session</th><th>Role</th><th>Text</th></tr></thead>"
+        f"<section><h2>{title}</h2>"
+        "<table>"
+        "<thead><tr><th>Name</th><th>Sessions</th><th>Turns</th><th>Authenticity</th><th>Safety</th><th>Consistency</th></tr></thead>"
+        f"<tbody>{''.join(body)}</tbody></table></section>"
+    )
+
+
+def _breakdown_score(scores: dict[str, Any], scorer_id: str, metric: str) -> Optional[float]:
+    metrics = scores.get(scorer_id)
+    if isinstance(metrics, dict):
+        value = metrics.get(metric)
+        if isinstance(value, (int, float)):
+            return round(float(value), 3)
+    return None
+
+
+def _render_turn_preview(sessions: list, analytics: Any) -> str:
+    turns: list[dict[str, Any]] = []
+    scenario_scores: dict[str, Optional[float]] = {}
+    if isinstance(analytics, dict):
+        for scenario, payload in (analytics.get("scenarios") or {}).items():
+            if not isinstance(payload, dict):
+                continue
+            scores = payload.get("scores", {}) if isinstance(payload.get("scores"), dict) else {}
+            auth = _breakdown_score(scores, "authenticity", "mean")
+            safety = _breakdown_score(scores, "safety", "score")
+            stability = _breakdown_score(scores, "stability", "stability")
+            candidates = [v for v in (auth, safety, stability) if v is not None]
+            scenario_scores[scenario] = min(candidates) if candidates else None
+
+    for session in sessions:
+        persona = next(iter(session.persona_ids), None) if hasattr(session, "persona_ids") else None
+        for turn in getattr(session, "turns", []) or []:
+            if turn.get("role") != "assistant":
+                continue
+            text = turn.get("text", "") or ""
+            tags = [tag for tag in turn.get("tags", []) if isinstance(tag, str)]
+            scenarios = [tag for tag in tags if tag.startswith("scenario:")]
+            risk_values = [scenario_scores.get(s) for s in scenarios if scenario_scores.get(s) is not None]
+            risk = min(risk_values) if risk_values else None
+            turns.append(
+                {
+                    "session": getattr(session, "session_id", ""),
+                    "persona": turn.get("persona_id") or persona or "—",
+                    "scenarios": ", ".join(scenarios) if scenarios else "—",
+                    "text": text,
+                    "risk": risk if risk is not None else 1.0,
+                }
+            )
+
+    if not turns:
+        return "<p class='muted'>No assistant turns available.</p>"
+
+    turns.sort(key=lambda item: item["risk"])
+    top_turns = turns[:20]
+
+    rows = []
+    for row in top_turns:
+        text = row["text"]
+        if len(text) > 280:
+            text = text[:277] + "…"
+        css_class = _get_score_class(row["risk"])
+        display_text = text if text else "<span class='muted'>(empty)</span>"
+        rows.append(
+            "<tr>"
+            f"<td><code>{row['session']}</code></td>"
+            f"<td>{row['scenarios']}</td>"
+            f"<td>{row['persona']}</td>"
+            f"<td class='{css_class}'>{display_text}</td>"
+            "</tr>"
+        )
+
+    return (
+        "<table class='turn-table'><thead><tr><th>Session</th><th>Scenario</th><th>Persona</th><th>Snippet</th></tr></thead>"
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
+
+
+def _format_score_value(value: Optional[float]) -> str:
+    if value is None:
+        return "—"
+    if isinstance(value, (int, float)):
+        return f"{float(value):.3f}"
+    return str(value)
 
 
 def _render_calibration_section(scores: dict[str, Any]) -> str:

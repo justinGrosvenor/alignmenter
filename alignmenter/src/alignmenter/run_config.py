@@ -103,4 +103,29 @@ def load_run_options(path: Path) -> dict[str, Any]:
         if report.get("include_raw") is not None:
             options["include_raw"] = bool(report.get("include_raw"))
 
+    thresholds: dict[str, dict[str, float]] = {}
+
+    def _store_threshold(scorer: str, key: str, value: Any) -> None:
+        try:
+            if value is None or value == "":
+                return
+            thresholds.setdefault(scorer, {})[key] = float(value)
+        except (TypeError, ValueError):
+            pass
+
+    if isinstance(data.get("thresholds"), dict):
+        for scorer, config in data["thresholds"].items():
+            if isinstance(config, dict):
+                _store_threshold(scorer, "warn", config.get("warn"))
+                _store_threshold(scorer, "fail", config.get("fail"))
+
+    for scorer in ("authenticity", "safety", "stability"):
+        section = data.get("scorers", {}).get(scorer, {})
+        if isinstance(section, dict):
+            _store_threshold(scorer, "warn", section.get("threshold_warn"))
+            _store_threshold(scorer, "fail", section.get("threshold_fail"))
+
+    if thresholds:
+        options["thresholds"] = thresholds
+
     return options

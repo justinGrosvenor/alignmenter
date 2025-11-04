@@ -38,6 +38,8 @@ class Session:
 
     session_id: str
     turns: List[dict]
+    persona_ids: set[str]
+    scenario_tags: set[str]
 
 
 class Runner:
@@ -56,6 +58,7 @@ class Runner:
         compare_generate: Optional[bool] = None,
         progress_callback: Optional[Callable[[int], None]] = None,
         compare_progress_callback: Optional[Callable[[int], None]] = None,
+        thresholds: Optional[dict[str, dict[str, float]]] = None,
     ) -> None:
         self.config = config
         self.scorers = list(scorers)
@@ -71,6 +74,10 @@ class Runner:
         self.compare_progress_callback = (
             compare_progress_callback if self.compare_generate else None
         )
+        self.thresholds = thresholds or {}
+        self.latest_results: Optional[dict[str, Any]] = None
+        self.threshold_results: dict[str, dict[str, Any]] = {}
+        self.analytics: dict[str, Any] = {}
 
     def execute(self) -> Path:
         """Execute an evaluation run and return the artifact directory."""
@@ -101,11 +108,21 @@ class Runner:
         primary_scores = self._run_scorers(self.scorers, primary_sessions)
         score_results: dict[str, Any] = {"primary": primary_scores}
 
+        threshold_eval = self._evaluate_thresholds(primary_scores)
+        if threshold_eval:
+            score_results["thresholds"] = threshold_eval
+            self.threshold_results = threshold_eval
+
         compare_scores: dict[str, Any] = {}
         if self.compare_scorers and compare_sessions is not None:
             compare_scores = self._run_scorers(self.compare_scorers, compare_sessions)
             score_results["compare"] = compare_scores
             score_results["diff"] = compute_diffs(primary_scores, compare_scores)
+
+        analytics = self._build_breakdowns(primary_sessions, self.scorers)
+        if analytics:
+            score_results["analytics"] = analytics
+            self.analytics = analytics
 
         run_at = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
         run_dir = prepare_run_directory(self.config.report_out_dir, run_at, self.config.run_id)
@@ -144,6 +161,9 @@ class Runner:
             "transcripts": transcript_info,
         }
 
+        if threshold_eval:
+            run_summary["thresholds"] = threshold_eval
+
         usage_summary: dict[str, dict[str, int]] = {}
         if primary_usage:
             usage_summary["primary"] = {"model": self.config.model, **primary_usage}
@@ -153,21 +173,38 @@ class Runner:
             run_summary["usage"] = usage_summary
 
         write_json(run_dir / "run.json", run_summary)
-        scorecards = build_scorecards(primary_scores, compare_scores, score_results.get("diff", {}))
-        write_json(run_dir / "results.json", {"scores": score_results, "scorecards": scorecards})
+        scorecards = build_scorecards(
+            primary_scores,
+            compare_scores,
+            score_results.get("diff", {}),
+            thresholds=threshold_eval,
+        )
+        results_payload = {"scores": score_results, "scorecards": scorecards}
+        write_json(run_dir / "results.json", results_payload)
+
+        if analytics:
+            write_json(run_dir / "analytics.json", analytics)
 
         aggregates = build_aggregates(score_results)
         write_json(run_dir / "aggregates.json", aggregates)
 
         for reporter in self.reporters:
-            reporter.write(run_dir, run_summary, score_results, primary_sessions, scorecards=scorecards)
+            reporter.write(
+                run_dir,
+                run_summary,
+                score_results,
+                primary_sessions,
+                scorecards=scorecards,
+                analytics=analytics,
+            )
 
         if self.config.include_raw:
             write_json(
                 run_dir / "raw.json",
-                {"sessions": [session.__dict__ for session in primary_sessions]},
+                {"sessions": [_serialize_session(session) for session in primary_sessions]},
             )
 
+        self.latest_results = score_results
         return run_dir
 
     def _run_scorers(self, scorers: Iterable, sessions: list[Session]) -> dict:
@@ -175,6 +212,80 @@ class Runner:
         for scorer in scorers:
             results[scorer.id] = scorer.score(sessions)
         return results
+
+    def _evaluate_thresholds(self, primary_scores: dict) -> dict[str, dict[str, Any]]:
+        if not self.thresholds:
+            return {}
+
+        evaluations: dict[str, dict[str, Any]] = {}
+        for scorer_id, config in self.thresholds.items():
+            metric_info = THRESHOLD_METRICS.get(scorer_id)
+            if not metric_info:
+                continue
+
+            metric_key, higher_is_better = metric_info
+            metrics = primary_scores.get(scorer_id)
+            value = _extract_metric(metrics, metric_key)
+            if value is None:
+                continue
+
+            warn_threshold = _safe_float(config.get("warn") or config.get("threshold_warn"))
+            fail_threshold = _safe_float(config.get("fail") or config.get("threshold_fail"))
+
+            status = "pass"
+            if fail_threshold is not None:
+                if higher_is_better and value < fail_threshold:
+                    status = "fail"
+                elif not higher_is_better and value > fail_threshold:
+                    status = "fail"
+            if status != "fail" and warn_threshold is not None:
+                if higher_is_better and value < warn_threshold:
+                    status = "warn"
+                elif not higher_is_better and value > warn_threshold:
+                    status = "warn"
+
+            evaluations[scorer_id] = {
+                "metric": metric_key,
+                "value": round(value, 3),
+                "warn": warn_threshold,
+                "fail": fail_threshold,
+                "status": status,
+            }
+
+        return evaluations
+
+    def _build_breakdowns(
+        self, sessions: list[Session], scorers: Iterable
+    ) -> dict[str, Any]:
+        breakdowns: dict[str, Any] = {"scenarios": {}, "personas": {}}
+
+        scenario_groups: dict[str, list[Session]] = {}
+        persona_groups: dict[str, list[Session]] = {}
+
+        for session in sessions:
+            for scenario in session.scenario_tags:
+                scenario_groups.setdefault(scenario, []).append(session)
+            for persona in session.persona_ids:
+                persona_groups.setdefault(persona, []).append(session)
+
+        def summarize(group: list[Session]) -> dict[str, Any]:
+            if not group:
+                return {}
+            subset = list(group)
+            scores = self._run_scorers(scorers, subset)
+            return {
+                "sessions": len(subset),
+                "turns": sum(len(session.turns) for session in subset),
+                "scores": scores,
+            }
+
+        for scenario, group in sorted(scenario_groups.items()):
+            breakdowns["scenarios"][scenario] = summarize(group)
+
+        for persona, group in sorted(persona_groups.items()):
+            breakdowns["personas"][persona] = summarize(group)
+
+        return breakdowns
 
     def _prepare_transcripts(
         self,
@@ -231,6 +342,9 @@ def group_sessions(records: Iterable[dict]) -> list[Session]:
     """Group flat dataset records into ordered sessions."""
 
     sessions: dict[str, list[dict]] = {}
+    persona_map: dict[str, set[str]] = {}
+    scenario_map: dict[str, set[str]] = {}
+
     for record in records:
         session_id = record.get("session_id")
         if not isinstance(session_id, str) or not session_id.strip():
@@ -238,10 +352,27 @@ def group_sessions(records: Iterable[dict]) -> list[Session]:
         session_id = session_id.strip()
         sessions.setdefault(session_id, []).append(record)
 
+        persona_id = record.get("persona_id")
+        if isinstance(persona_id, str) and persona_id.strip():
+            persona_map.setdefault(session_id, set()).add(persona_id.strip())
+
+        tags = record.get("tags") or []
+        if isinstance(tags, list):
+            for tag in tags:
+                if isinstance(tag, str) and tag.startswith("scenario:"):
+                    scenario_map.setdefault(session_id, set()).add(tag)
+
     grouped: list[Session] = []
     for session_id, turns in sessions.items():
         ordered = sorted(turns, key=lambda item: item.get("turn_index", 0))
-        grouped.append(Session(session_id=session_id, turns=ordered))
+        grouped.append(
+            Session(
+                session_id=session_id,
+                turns=ordered,
+                persona_ids=persona_map.get(session_id, set()),
+                scenario_tags=scenario_map.get(session_id, set()),
+            )
+        )
 
     grouped.sort(key=lambda session: session.session_id)
     return grouped
@@ -295,7 +426,13 @@ def build_aggregates(score_results: dict) -> dict:
     return {"aggregates": aggregates}
 
 
-def build_scorecards(primary: dict, compare: dict, diff: dict) -> list[dict]:
+def build_scorecards(
+    primary: dict,
+    compare: dict,
+    diff: dict,
+    *,
+    thresholds: Optional[dict[str, dict[str, Any]]] = None,
+) -> list[dict]:
     """Create scorecard summaries for headline metrics."""
 
     config = {
@@ -330,6 +467,10 @@ def build_scorecards(primary: dict, compare: dict, diff: dict) -> list[dict]:
             if diff_value is not None:
                 card["diff"] = diff_value
 
+        if thresholds and scorer_id in thresholds:
+            card["status"] = thresholds[scorer_id].get("status")
+            card["warn"] = thresholds[scorer_id].get("warn")
+            card["fail"] = thresholds[scorer_id].get("fail")
         scorecards.append(card)
 
     return scorecards
@@ -341,6 +482,24 @@ def _extract_metric(metrics: Optional[dict], key: str) -> Optional[float]:
         if isinstance(value, (int, float)):
             return float(value)
     return None
+
+
+def _serialize_session(session: Session) -> dict[str, Any]:
+    return {
+        "session_id": session.session_id,
+        "turns": session.turns,
+        "persona_ids": sorted(session.persona_ids),
+        "scenario_tags": sorted(session.scenario_tags),
+    }
+
+
+def _safe_float(value: Any) -> Optional[float]:
+    try:
+        if value is None or value == "":
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _group_records(records: Iterable[dict[str, Any]]) -> Dict[str, List[dict[str, Any]]]:
@@ -409,3 +568,8 @@ def _safe_int(value: Any) -> int:
         return int(str(value))
     except (ValueError, TypeError):
         return 0
+THRESHOLD_METRICS: dict[str, tuple[str, bool]] = {
+    "authenticity": ("mean", True),
+    "safety": ("score", True),
+    "stability": ("stability", True),
+}

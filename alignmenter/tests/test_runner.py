@@ -100,6 +100,37 @@ def test_runner_with_real_scorers_produces_scorecards(tmp_path: Path) -> None:
 
     assert scorecards, "scorecards should be populated"
     assert any(card["id"] == "safety" for card in scorecards)
+    analytics = results.get("scores", {}).get("analytics", {})
+    assert "scenarios" in analytics
+    assert "personas" in analytics
+
+
+def test_runner_threshold_evaluation(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2]
+    base = root / "alignmenter"
+
+    config = RunConfig(
+        model="openai:gpt-4o-mini",
+        dataset_path=base / "datasets" / "demo_conversations.jsonl",
+        persona_path=base / "configs" / "persona" / "default.yaml",
+        report_out_dir=tmp_path,
+        run_id="threshold-test",
+    )
+
+    thresholds = {"authenticity": {"fail": 0.99}, "safety": {"warn": 0.5}}
+    scorers = [
+        AuthenticityScorer(persona_path=config.persona_path, embedding="hashed"),
+        SafetyScorer(keyword_path=base / "configs" / "safety_keywords.yaml"),
+        StabilityScorer(embedding="hashed"),
+    ]
+
+    runner = Runner(config=config, scorers=scorers, thresholds=thresholds)
+    run_dir = runner.execute()
+
+    results = json.loads((run_dir / "results.json").read_text())
+    threshold_data = results.get("scores", {}).get("thresholds", {})
+    assert threshold_data["authenticity"]["status"] == "fail"
+    assert threshold_data["safety"]["status"] in {"pass", "warn", "fail"}
 
 
 class StubProvider:

@@ -118,6 +118,37 @@ def test_dataset_lint_strict(tmp_path: Path) -> None:
     assert "Dataset lint passed" in result.output
 
 
+def test_dataset_sanitize_command(tmp_path: Path) -> None:
+    dataset = tmp_path / "dataset.jsonl"
+    dataset.write_text(
+        json.dumps({
+            "session_id": "s1",
+            "turn_index": 1,
+            "role": "assistant",
+            "text": "Contact me at test@example.com",
+            "tags": [],
+            "persona_id": "demo_v1",
+        })
+        + "\n",
+        encoding="utf-8",
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "dataset",
+            "sanitize",
+            str(dataset),
+            "--dry-run",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Total PII instances" in result.output
+    assert "[DRY RUN]" in result.output
+
+
 def test_run_command(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2] / "alignmenter"
     dataset = root / "datasets" / "demo_conversations.jsonl"
@@ -183,6 +214,41 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
     assert "Brand voice score" in result.output
     assert "Report written to:" in result.output
     assert "Open in browser:" in result.output
+
+
+def test_run_command_threshold_failure(tmp_path: Path) -> None:
+    root = Path(__file__).resolve().parents[2] / "alignmenter"
+    config_path = tmp_path / "config.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "run_id: threshold",
+                "model: openai:gpt-4o-mini",
+                f"dataset: {root / 'datasets' / 'demo_conversations.jsonl'}",
+                f"persona: {root / 'configs' / 'persona' / 'default.yaml'}",
+                f"keywords: {root / 'configs' / 'safety_keywords.yaml'}",
+                "scorers:",
+                "  authenticity:",
+                "    threshold_fail: 0.99",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    runner = CliRunner()
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            "--config",
+            str(config_path),
+            "--no-generate",
+        ],
+    )
+
+    assert result.exit_code == 2
+    assert "✗" in result.output
 
 
 def test_run_command_invalid_model() -> None:

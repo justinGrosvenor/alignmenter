@@ -87,6 +87,9 @@ alignmenter run --config configs/run.yaml --no-generate
 
 # View interactive report
 alignmenter report --last
+
+# Sanitize a dataset (dry run shows sample output)
+alignmenter dataset sanitize datasets/demo_conversations.jsonl --dry-run
 ```
 
 **Output:**

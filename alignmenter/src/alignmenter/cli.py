@@ -23,6 +23,7 @@ from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.run_config import load_run_options
+from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.safety import SafetyScorer
@@ -570,6 +571,7 @@ def run(
             compare_generate=regenerate,
             progress_callback=primary_cb,
             compare_progress_callback=compare_cb,
+            thresholds=inputs.thresholds,
         )
 
         try:
@@ -578,7 +580,8 @@ def run(
             typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
             raise typer.Exit(code=1) from exc
 
-    _print_run_summary(run_dir)
+    threshold_eval = getattr(runner, "threshold_results", {})
+    _print_run_summary(run_dir, thresholds=threshold_eval)
     report_path = run_dir / "index.html"
     target = report_path if report_path.exists() else run_dir
     typer.echo(f"Report written to: {_humanize_path(target)}")
@@ -586,6 +589,9 @@ def run(
         _offer_report_open(run_dir)
     else:
         typer.echo(f"Open in browser: alignmenter report --path {_humanize_path(run_dir)}")
+
+    if threshold_eval and any(info.get("status") == "fail" for info in threshold_eval.values()):
+        raise typer.Exit(code=2)
 
 
 @app.command()
@@ -887,6 +893,50 @@ def dataset_lint(
     )
 
 
+@dataset_app.command("sanitize")
+def dataset_sanitize(
+    path: Path = typer.Argument(..., help="Path to input dataset (JSONL)."),
+    out: Optional[Path] = typer.Option(None, "--out", help="Output path (default: <input>_sanitized.jsonl)."),
+    in_place: bool = typer.Option(False, "--in-place", help="Overwrite the input file."),
+    use_hashing: bool = typer.Option(True, help="Use stable hashes for replacements instead of generic placeholders."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Show sanitization results without writing output."),
+) -> None:
+    input_path = path if path.is_absolute() else (Path.cwd() / path)
+
+    output_override: Optional[Path] = None
+    if out:
+        output_override = out if out.is_absolute() else (Path.cwd() / out)
+
+    try:
+        stats = sanitize_dataset_file(
+            path=input_path,
+            out=output_override,
+            in_place=in_place,
+            use_hashing=use_hashing,
+            dry_run=dry_run,
+        )
+    except FileNotFoundError:
+        raise typer.BadParameter(f"Dataset not found: {input_path}")
+
+    typer.secho("✓ Sanitization complete", fg=typer.colors.GREEN)
+    typer.echo(f"  Records processed: {stats['records']}")
+    typer.echo(f"  Total PII instances: {stats['total_pii']}")
+    for pii_type, count in stats["pii"].items():
+        if count:
+            typer.echo(f"    {pii_type}: {count}")
+
+    output_path = stats["output_path"]
+    if stats["dry_run"]:
+        typer.secho("\n[DRY RUN] Would write to:", fg=typer.colors.YELLOW)
+        typer.echo(f"  {output_path}")
+        if stats["sample"]:
+            typer.echo("\nSample sanitized records (first 3):")
+            for record in stats["sample"]:
+                typer.echo(json.dumps(record, indent=2))
+    else:
+        typer.echo(f"  Output: {output_path}")
+
+
 def _load_env(path: Path) -> dict[str, str]:
     if not path.exists():
         return {}
@@ -1000,6 +1050,15 @@ def _format_float(value: Optional[float]) -> Optional[str]:
     if value is None:
         return None
     return (f"{value:.6f}".rstrip("0").rstrip("."))
+
+
+def _safe_float(value: object) -> Optional[float]:
+    try:
+        if value is None or value == "":
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _prompt_optional_int(message: str, default: Optional[Any]) -> Optional[int]:
@@ -1149,6 +1208,7 @@ class RunInputs:
     judge_budget: Optional[int]
     judge_cost: dict[str, float | int]
     classifier_identifier: str
+    thresholds: dict[str, dict[str, float]]
 
 
 def _prepare_run_inputs(
@@ -1200,6 +1260,22 @@ def _prepare_run_inputs(
         or "auto"
     )
 
+    raw_thresholds = config_options.get("thresholds") or {}
+    thresholds: dict[str, dict[str, float]] = {}
+    if isinstance(raw_thresholds, dict):
+        for scorer, cfg in raw_thresholds.items():
+            if not isinstance(cfg, dict):
+                continue
+            warn = _safe_float(cfg.get("warn") or cfg.get("threshold_warn"))
+            fail = _safe_float(cfg.get("fail") or cfg.get("threshold_fail"))
+            scoped: dict[str, float] = {}
+            if warn is not None:
+                scoped["warn"] = warn
+            if fail is not None:
+                scoped["fail"] = fail
+            if scoped:
+                thresholds[scorer] = scoped
+
     persona_path = _sync_custom_gpt(model_identifier, persona_path)
 
     run_config = RunConfig(
@@ -1226,6 +1302,7 @@ def _prepare_run_inputs(
         judge_budget=resolved_judge_budget,
         judge_cost=judge_cost,
         classifier_identifier=classifier_identifier,
+        thresholds=thresholds,
     )
 
     return inputs, run_config
@@ -1715,17 +1792,21 @@ def _extract_json_block(text: str) -> Optional[str]:
     return block or None
 
 
-def _print_run_summary(run_dir: Path) -> None:
+def _print_run_summary(
+    run_dir: Path, *, thresholds: Optional[dict[str, dict[str, Any]]] = None
+) -> dict[str, dict[str, Any]]:
     run_meta = _safe_read_json(run_dir / "run.json")
     if run_meta:
         turns = run_meta.get("turn_count")
         sessions = run_meta.get("session_count")
         if isinstance(turns, int) and isinstance(sessions, int):
             typer.echo(f"Loading dataset: {turns} turns across {sessions} sessions")
+        if thresholds is None and isinstance(run_meta.get("thresholds"), dict):
+            thresholds = run_meta.get("thresholds")
 
     results = _safe_read_json(run_dir / "results.json")
     if not results:
-        return
+        return thresholds or {}
 
     scorecards_raw = results.get("scorecards")
     scorecards = (
@@ -1750,6 +1831,16 @@ def _print_run_summary(run_dir: Path) -> None:
         ("stability", "Consistency score"),
     ]
 
+    threshold_info = thresholds or {}
+    for card in scorecards:
+        status = card.get("status")
+        if status and card.get("id") not in threshold_info:
+            threshold_info[card.get("id")] = {
+                "status": status,
+                "warn": card.get("warn"),
+                "fail": card.get("fail"),
+            }
+
     for scorer_id, label in headlines:
         value: Optional[float] = None
         card = scorecard_index.get(scorer_id)
@@ -1768,7 +1859,16 @@ def _print_run_summary(run_dir: Path) -> None:
         if value is None:
             continue
 
-        line = f"✓ {label}: {_format_score_value(value)}"
+        info = threshold_info.get(scorer_id, {}) if isinstance(threshold_info, dict) else {}
+        status = info.get("status", "pass")
+        symbol = {"pass": "✓", "warn": "⚠", "fail": "✗"}.get(status, "✓")
+        color = {
+            "pass": typer.colors.GREEN,
+            "warn": typer.colors.YELLOW,
+            "fail": typer.colors.RED,
+        }.get(status, typer.colors.GREEN)
+
+        line = f"{label}: {_format_score_value(value)}"
         if scorer_id == "authenticity" and isinstance(primary_scores, dict):
             metrics = primary_scores.get("authenticity")
             if isinstance(metrics, dict):
@@ -1776,8 +1876,20 @@ def _print_run_summary(run_dir: Path) -> None:
                 high = metrics.get("ci95_high")
                 if isinstance(low, (int, float)) and isinstance(high, (int, float)):
                     line += f" (range: {_format_score_value(low)}-{_format_score_value(high)})"
+        warn_threshold = info.get("warn")
+        fail_threshold = info.get("fail")
+        if warn_threshold is not None or fail_threshold is not None:
+            details = []
+            if warn_threshold is not None:
+                details.append(f"warn<{warn_threshold}")
+            if fail_threshold is not None:
+                details.append(f"fail<{fail_threshold}")
+            if details:
+                line += f" [{', '.join(details)}]"
 
-        typer.echo(line)
+        typer.secho(f"{symbol} {line}", fg=color)
+
+    return threshold_info if isinstance(threshold_info, dict) else {}
 
 
 def _humanize_path(path: Path) -> str:

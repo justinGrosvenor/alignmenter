@@ -73,6 +73,9 @@ alignmenter run --config configs/run.yaml --no-generate
 
 # View interactive HTML report
 alignmenter report --last
+
+# Sanitize a dataset in-place or to a new file
+alignmenter dataset sanitize datasets/demo_conversations.jsonl --out datasets/demo_sanitized.jsonl
 ```
 
 **Output:**
