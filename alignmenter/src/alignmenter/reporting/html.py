@@ -77,6 +77,23 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       .export-btn:hover {{ background: #22d3ee; color: #0f172a; }}
       .chart-container {{ margin-top: 16px; background: #1e293b; padding: 16px; border-radius: 8px; }}
       canvas {{ max-width: 100%; }}
+      .charts-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; margin-top: 16px; }}
+      .chart-box {{ background: #1e293b; padding: 20px; border-radius: 8px; }}
+      .chart-box h3 {{ margin-top: 0; color: #22d3ee; font-size: 1.1rem; margin-bottom: 16px; }}
+      .chart-box canvas {{ max-height: 300px; }}
+      .stats-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }}
+      .stat-card {{ background: #1e293b; padding: 20px; border-radius: 8px; text-align: center; }}
+      .stat-label {{ font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }}
+      .stat-value {{ font-size: 2rem; font-weight: 800; color: #e2e8f0; }}
+      .stat-value.pass {{ color: #4ade80; }}
+      .stat-value.warn {{ color: #fbbf24; }}
+      .stat-value.fail {{ color: #f87171; }}
+      .collapsible {{ cursor: pointer; padding: 16px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; margin-top: 16px; user-select: none; }}
+      .collapsible:hover {{ background: #334155; }}
+      .collapsible h2 {{ margin: 0; display: inline; }}
+      .collapsible-indicator {{ float: right; font-weight: bold; }}
+      .collapsible-content {{ display: none; margin-top: 16px; }}
+      .collapsible-content.open {{ display: block; }}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
@@ -107,27 +124,69 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         a.click();
         URL.revokeObjectURL(url);
       }}
+
+      function toggleCollapsible(id) {{
+        const content = document.getElementById(id);
+        const indicator = document.getElementById(id + '-indicator');
+        if (content.classList.contains('open')) {{
+          content.classList.remove('open');
+          indicator.textContent = '+';
+        }} else {{
+          content.classList.add('open');
+          indicator.textContent = '−';
+        }}
+      }}
     </script>
   </head>
   <body>
     {scorecard_block}
-    {calibration_section}
+
     <section>
-      <h2>Scores</h2>
+      <h2>Performance Overview</h2>
+      {stats_grid}
+    </section>
+
+    {charts_section}
+
+    <div class="collapsible" onclick="toggleCollapsible('detailed-scores')">
+      <h2>Detailed Scores</h2>
+      <span id="detailed-scores-indicator" class="collapsible-indicator">+</span>
+    </div>
+    <div id="detailed-scores" class="collapsible-content">
       <div class="export-buttons">
         <button class="export-btn" onclick="downloadJSON(window.scoresData, 'scores.json')">Download JSON</button>
         <button class="export-btn" onclick="downloadCSV(window.scoresDataCSV, 'scores.csv')">Download CSV</button>
       </div>
       {score_tables}
-    </section>
+    </div>
+
     {scenario_breakdown}
     {persona_breakdown}
-    {charts_section}
-    {reproducibility_section}
-    <section>
+
+    <div class="collapsible" onclick="toggleCollapsible('calibration')">
+      <h2>Calibration & Diagnostics</h2>
+      <span id="calibration-indicator" class="collapsible-indicator">+</span>
+    </div>
+    <div id="calibration" class="collapsible-content">
+      {calibration_section}
+    </div>
+
+    <div class="collapsible" onclick="toggleCollapsible('reproducibility')">
+      <h2>Reproducibility</h2>
+      <span id="reproducibility-indicator" class="collapsible-indicator">+</span>
+    </div>
+    <div id="reproducibility" class="collapsible-content">
+      {reproducibility_section}
+    </div>
+
+    <div class="collapsible" onclick="toggleCollapsible('turn-explorer')">
       <h2>Turn Explorer</h2>
+      <span id="turn-explorer-indicator" class="collapsible-indicator">+</span>
+    </div>
+    <div id="turn-explorer" class="collapsible-content">
       {turn_preview}
-    </section>
+    </div>
+
     <script>
       window.scoresData = {scores_json};
       window.scoresDataCSV = {scores_csv_json};
@@ -206,6 +265,7 @@ class HTMLReporter:
         reproducibility_section = _render_reproducibility_section(summary)
         charts_section = _render_charts(primary)
         scorecard_block = _render_scorecards(scorecards, summary)
+        stats_grid = _render_stats_grid(primary, summary)
 
         # Prepare data for export
         import json
@@ -216,6 +276,7 @@ class HTMLReporter:
         html = HTML_TEMPLATE.format(
             run_id=summary.get("run_id", "alignmenter_run"),
             scorecard_block=scorecard_block,
+            stats_grid=stats_grid,
             score_tables="".join(score_blocks) or "<p>No scores computed.</p>",
             turn_preview=turn_preview,
             scenario_breakdown=scenario_section,
@@ -733,101 +794,198 @@ def _render_reproducibility_section(summary: dict[str, Any]) -> str:
 
 
 def _render_charts(scores: dict[str, Any]) -> str:
-    """Render score visualizations using Chart.js."""
-    # Collect main metrics
-    metric_labels = []
-    metric_values = []
+    """Render score visualizations using Chart.js in a grid layout."""
+    import json
 
-    for scorer_id in ("authenticity", "safety", "stability"):
+    charts = []
+
+    # Authenticity components chart
+    auth_data = scores.get("authenticity", {})
+    if isinstance(auth_data, dict):
+        auth_components = {
+            "Style": auth_data.get("style_sim"),
+            "Traits": auth_data.get("traits"),
+            "Lexicon": auth_data.get("lexicon"),
+        }
+        auth_labels = []
+        auth_values = []
+        for label, value in auth_components.items():
+            if value is not None:
+                auth_labels.append(label)
+                auth_values.append(value)
+
+        if auth_labels:
+            auth_json = json.dumps({"labels": auth_labels, "values": auth_values})
+            charts.append(f"""
+            <div class="chart-box">
+                <h3>Authenticity Components</h3>
+                <canvas id="authChart"></canvas>
+                <script>
+                    const authData = {auth_json};
+                    new Chart(document.getElementById('authChart'), {{
+                        type: 'bar',
+                        data: {{
+                            labels: authData.labels,
+                            datasets: [{{
+                                data: authData.values,
+                                backgroundColor: 'rgba(34, 211, 238, 0.6)',
+                                borderColor: 'rgba(34, 211, 238, 1)',
+                                borderWidth: 2
+                            }}]
+                        }},
+                        options: {{
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {{
+                                y: {{ beginAtZero: true, max: 1.0, ticks: {{ color: '#e2e8f0' }}, grid: {{ color: 'rgba(226,232,240,0.1)' }} }},
+                                x: {{ ticks: {{ color: '#e2e8f0' }}, grid: {{ color: 'rgba(226,232,240,0.1)' }} }}
+                            }},
+                            plugins: {{ legend: {{ display: false }} }}
+                        }}
+                    }});
+                </script>
+            </div>
+            """)
+
+    # Overall scores chart
+    overall_labels = []
+    overall_values = []
+    for scorer_id, label in [("authenticity", "Authenticity"), ("safety", "Safety"), ("stability", "Stability")]:
         scorer_data = scores.get(scorer_id, {})
         if isinstance(scorer_data, dict):
             if scorer_id == "authenticity":
                 value = scorer_data.get("mean")
-                if value is not None:
-                    metric_labels.append("Authenticity")
-                    metric_values.append(value)
             elif scorer_id == "safety":
                 value = scorer_data.get("score")
-                if value is not None:
-                    metric_labels.append("Safety")
-                    metric_values.append(value)
-            elif scorer_id == "stability":
+            else:
                 value = scorer_data.get("stability")
-                if value is not None:
-                    metric_labels.append("Stability")
-                    metric_values.append(value)
+            if value is not None:
+                overall_labels.append(label)
+                overall_values.append(value)
 
-    if not metric_labels:
+    if overall_labels:
+        overall_json = json.dumps({"labels": overall_labels, "values": overall_values})
+        charts.append(f"""
+        <div class="chart-box">
+            <h3>Overall Scores</h3>
+            <canvas id="overallChart"></canvas>
+            <script>
+                const overallData = {overall_json};
+                new Chart(document.getElementById('overallChart'), {{
+                    type: 'bar',
+                    data: {{
+                        labels: overallData.labels,
+                        datasets: [{{
+                            data: overallData.values,
+                            backgroundColor: ['rgba(34,211,238,0.6)', 'rgba(74,222,128,0.6)', 'rgba(251,191,36,0.6)'],
+                            borderColor: ['rgba(34,211,238,1)', 'rgba(74,222,128,1)', 'rgba(251,191,36,1)'],
+                            borderWidth: 2
+                        }}]
+                    }},
+                    options: {{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {{
+                            y: {{ beginAtZero: true, max: 1.0, ticks: {{ color: '#e2e8f0' }}, grid: {{ color: 'rgba(226,232,240,0.1)' }} }},
+                            x: {{ ticks: {{ color: '#e2e8f0' }}, grid: {{ color: 'rgba(226,232,240,0.1)' }} }}
+                        }},
+                        plugins: {{ legend: {{ display: false }} }}
+                    }}
+                }});
+            </script>
+        </div>
+        """)
+
+    if not charts:
         return ""
 
-    chart_data = {
-        "labels": metric_labels,
-        "values": metric_values,
-    }
-
-    import json
-    chart_json = json.dumps(chart_data)
-
     return f"""
-    <div class="chart-container">
-        <h3>Score Overview</h3>
-        <canvas id="scoreChart" width="400" height="200"></canvas>
-        <script>
-            const chartData = {chart_json};
-            const ctx = document.getElementById('scoreChart').getContext('2d');
-            new Chart(ctx, {{
-                type: 'bar',
-                data: {{
-                    labels: chartData.labels,
-                    datasets: [{{
-                        label: 'Score',
-                        data: chartData.values,
-                        backgroundColor: [
-                            'rgba(34, 211, 238, 0.6)',
-                            'rgba(74, 222, 128, 0.6)',
-                            'rgba(251, 191, 36, 0.6)',
-                        ],
-                        borderColor: [
-                            'rgba(34, 211, 238, 1)',
-                            'rgba(74, 222, 128, 1)',
-                            'rgba(251, 191, 36, 1)',
-                        ],
-                        borderWidth: 2
-                    }}]
-                }},
-                options: {{
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {{
-                        y: {{
-                            beginAtZero: true,
-                            max: 1.0,
-                            ticks: {{
-                                color: '#e2e8f0'
-                            }},
-                            grid: {{
-                                color: 'rgba(226, 232, 240, 0.1)'
-                            }}
-                        }},
-                        x: {{
-                            ticks: {{
-                                color: '#e2e8f0'
-                            }},
-                            grid: {{
-                                color: 'rgba(226, 232, 240, 0.1)'
-                            }}
-                        }}
-                    }},
-                    plugins: {{
-                        legend: {{
-                            display: false
-                        }}
-                    }}
-                }}
-            }});
-        </script>
-    </div>
+    <section>
+        <h2>Visualizations</h2>
+        <div class="charts-grid">
+            {"".join(charts)}
+        </div>
+    </section>
     """
+
+
+def _render_stats_grid(scores: dict[str, Any], summary: dict[str, Any]) -> str:
+    """Render key metrics in a grid of stat cards."""
+    cards = []
+
+    # Authenticity card
+    auth_data = scores.get("authenticity", {})
+    if isinstance(auth_data, dict):
+        auth_score = auth_data.get("mean")
+        if auth_score is not None:
+            css_class = _get_score_class(auth_score)
+            cards.append(f"""
+            <div class="stat-card">
+                <div class="stat-label">Authenticity</div>
+                <div class="stat-value {css_class}">{auth_score:.1%}</div>
+            </div>
+            """)
+
+    # Safety card
+    safety_data = scores.get("safety", {})
+    if isinstance(safety_data, dict):
+        safety_score = safety_data.get("score")
+        if safety_score is not None:
+            css_class = _get_score_class(safety_score)
+            cards.append(f"""
+            <div class="stat-card">
+                <div class="stat-label">Safety</div>
+                <div class="stat-value {css_class}">{safety_score:.1%}</div>
+            </div>
+            """)
+
+    # Stability card
+    stability_data = scores.get("stability", {})
+    if isinstance(stability_data, dict):
+        stability_score = stability_data.get("stability")
+        if stability_score is not None:
+            css_class = _get_score_class(stability_score)
+            cards.append(f"""
+            <div class="stat-card">
+                <div class="stat-label">Stability</div>
+                <div class="stat-value {css_class}">{stability_score:.1%}</div>
+            </div>
+            """)
+
+    # Sessions card
+    session_count = summary.get("session_count")
+    if session_count is not None:
+        cards.append(f"""
+        <div class="stat-card">
+            <div class="stat-label">Sessions</div>
+            <div class="stat-value">{session_count}</div>
+        </div>
+        """)
+
+    # Turns card
+    turn_count = summary.get("turn_count")
+    if turn_count is not None:
+        cards.append(f"""
+        <div class="stat-card">
+            <div class="stat-label">Turns</div>
+            <div class="stat-value">{turn_count}</div>
+        </div>
+        """)
+
+    # Violations card (if any)
+    if isinstance(safety_data, dict):
+        violations = safety_data.get("violations", 0)
+        cards.append(f"""
+        <div class="stat-card">
+            <div class="stat-label">Safety Violations</div>
+            <div class="stat-value {'fail' if violations > 0 else 'pass'}">{violations}</div>
+        </div>
+        """)
+
+    if not cards:
+        return ""
+
+    return f'<div class="stats-grid">{"".join(cards)}</div>'
 
 
 def _prepare_csv_data(scores: dict[str, Any]) -> list[dict]:
