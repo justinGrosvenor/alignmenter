@@ -304,7 +304,7 @@ def test_lexicon_scoring_edge_cases() -> None:
         exemplars=[],
         trait_positive=set(),
         trait_negative=set(),
-        weights={"style": 0.6, "traits": 0.25, "lexicon": 0.15},
+        weights={"style": 0.3, "traits": 0.3, "lexicon": 0.4},
         trait_model=empty_trait_model,
     )
     assert lexicon_score([], profile) == 0.5
@@ -557,9 +557,9 @@ def test_persona_profile_minimal(tmp_path: Path) -> None:
     assert len(profile.preferred) == 0
     assert len(profile.avoided) == 0
     assert len(profile.exemplars) == 1  # Default fallback
-    assert profile.weights["style"] == 0.6
-    assert profile.weights["traits"] == 0.25
-    assert profile.weights["lexicon"] == 0.15
+    assert profile.weights["style"] == 0.3
+    assert profile.weights["traits"] == 0.3
+    assert profile.weights["lexicon"] == 0.4
 
 
 def test_persona_profile_with_lexicon(tmp_path: Path) -> None:
