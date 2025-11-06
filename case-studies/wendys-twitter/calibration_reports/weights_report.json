@@ -1,0 +1,83 @@
+{
+  "best_weights": {
+    "style": 0.5,
+    "traits": 0.4,
+    "lexicon": 0.1
+  },
+  "metrics": {
+    "roc_auc": 0.785,
+    "f1": 0.676,
+    "correlation": 0.479
+  },
+  "confusion_matrix": {
+    "true_negative": 40,
+    "false_positive": 32,
+    "false_negative": 15,
+    "true_positive": 49
+  },
+  "num_examples": 136,
+  "grid_step": 0.1,
+  "combinations_evaluated": 66,
+  "top_5_alternatives": [
+    {
+      "weights": {
+        "style": 0.5,
+        "traits": 0.4,
+        "lexicon": 0.1
+      },
+      "metrics": {
+        "roc_auc": 0.7848307291666666,
+        "f1": 0.6758620689655173,
+        "correlation": 0.47851859443718536
+      }
+    },
+    {
+      "weights": {
+        "style": 0.6,
+        "traits": 0.3,
+        "lexicon": 0.1
+      },
+      "metrics": {
+        "roc_auc": 0.7843967013888888,
+        "f1": 0.7142857142857143,
+        "correlation": 0.4752932798022472
+      }
+    },
+    {
+      "weights": {
+        "style": 0.6,
+        "traits": 0.2,
+        "lexicon": 0.2
+      },
+      "metrics": {
+        "roc_auc": 0.7839626736111112,
+        "f1": 0.7230769230769231,
+        "correlation": 0.47946825163725426
+      }
+    },
+    {
+      "weights": {
+        "style": 0.5,
+        "traits": 0.3,
+        "lexicon": 0.2
+      },
+      "metrics": {
+        "roc_auc": 0.7826605902777778,
+        "f1": 0.7175572519083969,
+        "correlation": 0.47937254801441836
+      }
+    },
+    {
+      "weights": {
+        "style": 0.7,
+        "traits": 0.1,
+        "lexicon": 0.2
+      },
+      "metrics": {
+        "roc_auc": 0.780490451388889,
+        "f1": 0.7142857142857143,
+        "correlation": 0.4708726139540916
+      }
+    }
+  ]
+}

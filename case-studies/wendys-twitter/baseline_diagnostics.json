@@ -1,0 +1,76 @@
+{
+  "validation_metrics": {
+    "roc_auc": 0.733,
+    "f1": 0.594,
+    "correlation": 0.425,
+    "optimal_threshold": 0.28,
+    "optimal_f1": 0.676
+  },
+  "score_distributions": {
+    "on_brand": {
+      "mean": 0.468,
+      "std": 0.177,
+      "median": 0.469,
+      "count": 64
+    },
+    "off_brand": {
+      "mean": 0.323,
+      "std": 0.131,
+      "median": 0.268,
+      "count": 72
+    }
+  },
+  "error_analysis": {
+    "false_positives": [
+      {
+        "text": "Many chains offer breakfast options now. We're proud of our breakfast menu and the unique items we b",
+        "score": 0.65
+      },
+      {
+        "text": "Our breakfast menu offers a variety of delicious options! Popular choices include the Breakfast Baco",
+        "score": 0.684
+      },
+      {
+        "text": "Both options are delicious! The Spicy Chicken features our signature spicy breading, while the Class",
+        "score": 0.573
+      },
+      {
+        "text": "sounds like a you problem tbh, we're a burger place not a salad bar \ud83d\udc80",
+        "score": 0.566
+      },
+      {
+        "text": "if a frosty is the solution to your problems your problems must not be that serious \ud83d\ude2d",
+        "score": 0.516
+      }
+    ],
+    "false_negatives": [
+      {
+        "text": "not being able to add a frosty IS a crisis actually. try closing the app and reopening? if that does",
+        "score": 0.437
+      },
+      {
+        "text": "ngl this is unacceptable and we need to fix this. which location? DM us so we can 1) get you sauce a",
+        "score": 0.45
+      },
+      {
+        "text": "okay 20 minutes is way too long and you shouldn't have to wait like that. can you tell the crew your",
+        "score": 0.276
+      },
+      {
+        "text": "47 pickles when you asked for zero is actually impressive in the worst way \ud83d\udc80 DM us where this happen",
+        "score": 0.3
+      },
+      {
+        "text": "this is the energy we love to see \ud83d\udd25 which location so we can shout them out?",
+        "score": 0.287
+      }
+    ],
+    "num_false_positives": 7,
+    "num_false_negatives": 34
+  },
+  "data_split": {
+    "train_size": 0,
+    "validation_size": 136,
+    "train_split": 0.0
+  }
+}
