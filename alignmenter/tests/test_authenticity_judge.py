@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from dataclasses import dataclass
 
 import pytest
 
@@ -17,7 +16,8 @@ class MockJudgeProvider:
 
     name = "mock"
 
-    def __init__(self, mock_response: dict | None = None):
+    def __init__(self, mock_response: dict | None = None, model: str | None = None):
+        self.model = model  # For pricing calculations
         self.mock_response = mock_response or {
             "score": 0.8,
             "notes": json.dumps({
@@ -203,10 +203,10 @@ def test_authenticity_judge_cost_tracking():
     assert judge.total_cost == pytest.approx(0.015, rel=1e-6)
 
     summary = judge.get_cost_summary()
-    assert summary["calls_made"] == 3
-    assert summary["total_cost"] == pytest.approx(0.015, rel=1e-6)
-    assert summary["cost_per_call"] == 0.005
-    assert summary["average_cost"] == pytest.approx(0.005, rel=1e-6)
+    assert summary.calls_made == 3
+    assert summary.total_cost == pytest.approx(0.015, rel=1e-6)
+    assert summary.cost_per_call == 0.005
+    assert summary.average_cost == pytest.approx(0.005, rel=1e-6)
 
 
 def test_authenticity_judge_exception_handling():
@@ -356,3 +356,58 @@ This assessment reflects the overall brand alignment.""",
     assert len(analysis.strengths) == 2
     assert len(analysis.weaknesses) == 1
     assert analysis.suggestion == "Tighten up the language"
+
+
+def test_real_cost_calculation_with_usage():
+    """Test that real costs are calculated from token usage when available."""
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
+
+    # Mock response with realistic token counts for gpt-4o-mini
+    mock_response = {
+        "score": 0.8,
+        "notes": json.dumps({
+            "score": 8,
+            "reasoning": "Good alignment.",
+            "strengths": ["Clear"],
+            "weaknesses": [],
+            "suggestion": None,
+            "context_appropriate": True,
+        }),
+        "usage": {
+            "prompt_tokens": 1000,
+            "completion_tokens": 200,
+            "total_tokens": 1200,
+        },
+    }
+
+    # Test with gpt-4o-mini pricing: $0.15 per 1M input, $0.60 per 1M output
+    mock_provider = MockJudgeProvider(mock_response, model="gpt-4o-mini")
+    judge = AuthenticityJudge(
+        persona_path=persona_path,
+        judge_provider=mock_provider,
+        cost_per_call=0.005,  # This should be overridden by real calculation
+    )
+
+    turns = _sample_session_turns()
+    analysis = judge.evaluate_session(session_id="test-cost", turns=turns)
+
+    # Expected cost: (1000 / 1M * $0.15) + (200 / 1M * $0.60)
+    # = $0.00015 + $0.00012 = $0.00027
+    expected_cost = (1000 / 1_000_000) * 0.15 + (200 / 1_000_000) * 0.60
+    assert analysis.cost == pytest.approx(expected_cost, rel=1e-6)
+    assert judge.total_cost == pytest.approx(expected_cost, rel=1e-6)
+
+    # Test with model not in pricing table - should fall back to estimate
+    mock_provider_unknown = MockJudgeProvider(mock_response, model="unknown-model")
+    judge_unknown = AuthenticityJudge(
+        persona_path=persona_path,
+        judge_provider=mock_provider_unknown,
+        cost_per_call=0.005,
+    )
+
+    analysis_unknown = judge_unknown.evaluate_session(
+        session_id="test-unknown", turns=turns
+    )
+
+    # Should fall back to flat estimate
+    assert analysis_unknown.cost == 0.005

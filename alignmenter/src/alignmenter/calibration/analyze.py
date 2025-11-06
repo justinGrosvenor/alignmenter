@@ -112,7 +112,9 @@ def analyze_scenario_performance(
 
         # Calculate average score
         scenario_scores = [session_scores[s["session_id"]] for s in samples]
-        avg_score = sum(scenario_scores) / len(scenario_scores) if scenario_scores else 0.5
+        avg_score = (
+            sum(scenario_scores) / len(scenario_scores) if scenario_scores else 0.5
+        )
 
         # Judge samples
         judge_results = []
@@ -142,12 +144,19 @@ def analyze_scenario_performance(
             "avg_score": round(avg_score, 3),
             "sessions_in_scenario": len(scenario_sessions),
             "sessions_judged": len(judge_results),
-            "judge_avg_score": round(sum(judge_scores) / len(judge_scores), 1) if judge_scores else None,
+            "judge_avg_score": (
+                round(sum(judge_scores) / len(judge_scores), 1)
+                if judge_scores
+                else None
+            ),
             "common_strengths": _top_items(all_strengths, 3),
             "common_weaknesses": _top_items(all_weaknesses, 3),
         }
 
-        print(f"  {scenario_tag}: {len(judge_results)} sessions judged, avg score {avg_score:.2f}")
+        print(
+            f"  {scenario_tag}: {len(judge_results)} sessions judged, "
+            f"avg score {avg_score:.2f}"
+        )
 
     # Get cost summary
     cost_summary = auth_judge.get_cost_summary()
@@ -158,8 +167,8 @@ def analyze_scenario_performance(
         "total_scenarios": len(by_scenario),
         "total_sessions_judged": total_judged,
         "judge_cost": {
-            "total_cost": round(cost_summary["total_cost"], 4),
-            "calls_made": cost_summary["calls_made"],
+            "total_cost": round(cost_summary.total_cost, 4),
+            "calls_made": cost_summary.calls_made,
         },
     }
 
@@ -168,8 +177,8 @@ def analyze_scenario_performance(
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"✓ Scenario analysis complete")
-    print(f"  Total cost: ${cost_summary['total_cost']:.3f}")
+    print("✓ Scenario analysis complete")
+    print(f"  Total cost: ${cost_summary.total_cost:.3f}")
 
     return report
 

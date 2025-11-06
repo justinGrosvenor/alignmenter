@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 from typing import Optional
 
-import numpy as np
 
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.providers.judges import load_judge_provider
@@ -89,7 +88,10 @@ def diagnose_calibration_errors(
                 "true_label": label,
             })
 
-    print(f"Found {len(false_positives)} false positives, {len(false_negatives)} false negatives")
+    print(
+        f"Found {len(false_positives)} false positives, "
+        f"{len(false_negatives)} false negatives"
+    )
 
     if len(false_positives) + len(false_negatives) == 0:
         print("✓ No errors found - calibration is perfect!")
@@ -165,8 +167,8 @@ def diagnose_calibration_errors(
         "total_errors": len(false_positives) + len(false_negatives),
         "errors_analyzed": len(analyzed_fps) + len(analyzed_fns),
         "judge_cost": {
-            "total_cost": round(cost_summary["total_cost"], 4),
-            "calls_made": cost_summary["calls_made"],
+            "total_cost": round(cost_summary.total_cost, 4),
+            "calls_made": cost_summary.calls_made,
         },
     }
 
@@ -175,7 +177,7 @@ def diagnose_calibration_errors(
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"✓ Analysis complete")
-    print(f"  Total cost: ${cost_summary['total_cost']:.3f}")
+    print("✓ Analysis complete")
+    print(f"  Total cost: ${cost_summary.total_cost:.3f}")
 
     return report

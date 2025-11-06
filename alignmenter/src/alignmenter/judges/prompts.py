@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-AUTHENTICITY_JUDGE_SCENARIO_PROMPT = """You are evaluating whether an AI assistant maintains a consistent brand voice across a conversation.
+AUTHENTICITY_JUDGE_SCENARIO_PROMPT = """You are evaluating whether an AI \
+assistant maintains a consistent brand voice across a conversation.
 
 # Brand Voice Definition
 
@@ -30,7 +31,8 @@ AUTHENTICITY_JUDGE_SCENARIO_PROMPT = """You are evaluating whether an AI assista
 
 # Evaluation Task
 
-Rate the assistant's overall brand voice consistency in this conversation on a scale of 0-10:
+Rate the assistant's overall brand voice consistency in this conversation \
+on a scale of 0-10:
 
 **0-3: Completely off-brand**
 - Wrong tone (too formal/casual for brand)
@@ -104,11 +106,23 @@ def format_authenticity_prompt(
     tone_str = ", ".join(persona_tone) if persona_tone else "Not specified"
 
     # Format preferred/avoided words
-    preferred_str = "\n".join(f"- {word}" for word in preferred_words) if preferred_words else "- (None specified)"
-    avoided_str = "\n".join(f"- {word}" for word in avoided_words) if avoided_words else "- (None specified)"
+    preferred_str = (
+        "\n".join(f"- {word}" for word in preferred_words)
+        if preferred_words
+        else "- (None specified)"
+    )
+    avoided_str = (
+        "\n".join(f"- {word}" for word in avoided_words)
+        if avoided_words
+        else "- (None specified)"
+    )
 
     # Format exemplars
-    exemplars_str = "\n".join(f'- "{ex}"' for ex in exemplars) if exemplars else "- (None specified)"
+    exemplars_str = (
+        "\n".join(f'- "{ex}"' for ex in exemplars)
+        if exemplars
+        else "- (None specified)"
+    )
 
     # Format conversation turns
     turns_str = ""

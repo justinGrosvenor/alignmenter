@@ -15,6 +15,63 @@ from .prompts import format_authenticity_prompt
 LOGGER = logging.getLogger(__name__)
 
 
+# Pricing per 1M tokens (input, output) in USD
+# Prices as of January 2025
+PRICING_TABLE = {
+    # OpenAI models
+    "gpt-4o": (2.50, 10.00),
+    "gpt-4o-mini": (0.15, 0.60),
+    "gpt-4-turbo": (10.00, 30.00),
+    "gpt-4-turbo-preview": (10.00, 30.00),
+    "gpt-4": (30.00, 60.00),
+    # Anthropic models
+    "claude-3-5-sonnet-20241022": (3.00, 15.00),
+    "claude-3-5-sonnet-20240620": (3.00, 15.00),
+    "claude-3-5-haiku-20241022": (0.80, 4.00),
+    "claude-3-opus-20240229": (15.00, 75.00),
+    "claude-3-sonnet-20240229": (3.00, 15.00),
+    "claude-3-haiku-20240307": (0.25, 1.25),
+}
+
+
+def extract_json_from_text(text: str) -> str:
+    """Extract JSON string from text that may contain markdown blocks or prose.
+
+    Handles:
+    - Raw JSON: {"score": 8, ...}
+    - Markdown code block: ```json\n{...}\n```
+    - Prose-wrapped JSON: "Here's my analysis: {...}"
+
+    Args:
+        text: Raw text possibly containing JSON
+
+    Returns:
+        Extracted JSON string
+
+    Raises:
+        ValueError: If no JSON object found in text
+    """
+    text = text.strip()
+
+    # First, try to extract from markdown code blocks
+    if "```json" in text:
+        start = text.find("```json") + 7
+        end = text.find("```", start)
+        return text[start:end].strip()
+    elif "```" in text:
+        start = text.find("```") + 3
+        end = text.find("```", start)
+        return text[start:end].strip()
+
+    # If no code block, try to find JSON object
+    json_start = text.find("{")
+    if json_start == -1:
+        raise ValueError("No JSON object found in response")
+
+    # Return from first brace to end (will be validated by json.loads)
+    return text[json_start:]
+
+
 @dataclass
 class JudgeAnalysis:
     """LLM judge analysis of a scenario."""
@@ -28,6 +85,16 @@ class JudgeAnalysis:
     context_appropriate: bool
     calibrated_score: Optional[float] = None  # For comparison
     cost: Optional[float] = None  # API cost for this call
+
+
+@dataclass
+class JudgeCostSummary:
+    """Summary of LLM judge API costs."""
+
+    total_cost: float
+    calls_made: int
+    cost_per_call: float
+    average_cost: float
 
 
 class AuthenticityJudge:
@@ -69,7 +136,9 @@ class AuthenticityJudge:
         else:
             self.persona_tone = []
 
-        self.persona_formality = voice.get("formality") or style_rules.get("formality", "Not specified")
+        self.persona_formality = (
+            voice.get("formality") or style_rules.get("formality", "Not specified")
+        )
 
         # Extract lexicon (can be at top level or under voice)
         lexicon = persona.get("lexicon", voice.get("lexicon", {}))
@@ -158,11 +227,6 @@ class AuthenticityJudge:
     ) -> JudgeAnalysis:
         """Parse the JSON response from the judge.
 
-        Handles multiple formats:
-        - Raw JSON: {"score": 8, ...}
-        - Markdown code block: ```json\n{...}\n```
-        - Prose-wrapped JSON: "Here's my analysis: {...}"
-
         Args:
             session_id: Session identifier
             response_text: Raw response text from judge
@@ -173,32 +237,16 @@ class AuthenticityJudge:
             Parsed JudgeAnalysis
         """
         try:
-            # Try to extract JSON from the response
-            text = response_text.strip()
+            # Extract JSON from response (handles markdown, prose, etc.)
+            json_str = extract_json_from_text(response_text)
 
-            # First, try to extract from markdown code blocks
-            if "```json" in text:
-                start = text.find("```json") + 7
-                end = text.find("```", start)
-                text = text[start:end].strip()
-            elif "```" in text:
-                start = text.find("```") + 3
-                end = text.find("```", start)
-                text = text[start:end].strip()
-
-            # Try to parse as complete JSON
+            # Parse JSON with fallback for incomplete objects
             try:
-                data = json.loads(text)
+                data = json.loads(json_str)
             except json.JSONDecodeError:
-                # If that fails, search for the first JSON object in the text
-                # This handles cases where LLMs wrap JSON in explanatory prose
-                json_start = text.find("{")
-                if json_start == -1:
-                    raise ValueError("No JSON object found in response")
-
-                # Use JSONDecoder to extract the first complete JSON object
+                # Use JSONDecoder for partial JSON extraction
                 decoder = json.JSONDecoder()
-                data, _ = decoder.raw_decode(text, json_start)
+                data, _ = decoder.raw_decode(json_str)
 
             score = float(data.get("score", 5.0))
             reasoning = data.get("reasoning", "No reasoning provided")
@@ -246,31 +294,68 @@ class AuthenticityJudge:
             )
 
     def _calculate_cost(self, usage: Optional[dict]) -> float:
-        """Calculate cost from usage data.
+        """Calculate cost from usage data using provider-specific pricing.
 
         Args:
             usage: Usage dict with prompt_tokens, completion_tokens
 
         Returns:
-            Estimated cost in USD
+            Actual or estimated cost in USD
         """
         if not usage:
+            LOGGER.debug("No usage data - using flat estimate: $%.4f", self.cost_per_call)
             return self.cost_per_call
 
-        # This is a simplified cost calculation
-        # Real implementation should use provider-specific pricing
-        # For now, just return the estimate
-        return self.cost_per_call
+        # Get model name from provider
+        model_name = getattr(self.judge_provider, "model", None)
+        if not model_name:
+            LOGGER.debug(
+                "Provider has no model attribute - using flat estimate: $%.4f",
+                self.cost_per_call,
+            )
+            return self.cost_per_call
 
-    def get_cost_summary(self) -> dict:
+        # Look up pricing
+        pricing = PRICING_TABLE.get(model_name)
+        if not pricing:
+            LOGGER.warning(
+                "No pricing data for model '%s' - using flat estimate: $%.4f",
+                model_name,
+                self.cost_per_call,
+            )
+            return self.cost_per_call
+
+        # Calculate real cost from token counts
+        input_price_per_million, output_price_per_million = pricing
+        prompt_tokens = usage.get("prompt_tokens", 0)
+        completion_tokens = usage.get("completion_tokens", 0)
+
+        cost = (
+            (prompt_tokens / 1_000_000) * input_price_per_million
+            + (completion_tokens / 1_000_000) * output_price_per_million
+        )
+
+        LOGGER.debug(
+            "Cost for %s: %d input + %d output tokens = $%.4f",
+            model_name,
+            prompt_tokens,
+            completion_tokens,
+            cost,
+        )
+
+        return cost
+
+    def get_cost_summary(self) -> JudgeCostSummary:
         """Get summary of judge costs.
 
         Returns:
-            Dict with total_cost, calls_made, cost_per_call
+            JudgeCostSummary with cost metrics
         """
-        return {
-            "total_cost": self.total_cost,
-            "calls_made": self.calls_made,
-            "cost_per_call": self.cost_per_call,
-            "average_cost": self.total_cost / self.calls_made if self.calls_made > 0 else 0.0,
-        }
+        return JudgeCostSummary(
+            total_cost=self.total_cost,
+            calls_made=self.calls_made,
+            cost_per_call=self.cost_per_call,
+            average_cost=(
+                self.total_cost / self.calls_made if self.calls_made > 0 else 0.0
+            ),
+        )

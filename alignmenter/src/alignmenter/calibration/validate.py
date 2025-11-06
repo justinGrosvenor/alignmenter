@@ -344,8 +344,8 @@ def _run_judge_analysis(
     return {
         "sessions_judged": len(judge_results),
         "agreement_rate": round(agreement_rate, 3),
-        "total_cost": round(cost_summary["total_cost"], 4),
-        "average_cost_per_call": round(cost_summary["average_cost"], 4),
+        "total_cost": round(cost_summary.total_cost, 4),
+        "average_cost_per_call": round(cost_summary.average_cost, 4),
         "sample_rate": sample_rate,
         "strategy": strategy,
         "judge_provider": judge_provider,
