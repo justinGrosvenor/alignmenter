@@ -7,12 +7,6 @@ import pytest
 
 from alignmenter.providers.judges import OpenAIJudge, AnthropicJudge
 
-try:
-    from anthropic import Anthropic
-    HAS_ANTHROPIC = True
-except ImportError:
-    HAS_ANTHROPIC = False
-
 
 class MockOpenAIClient:
     """Mock OpenAI client for testing."""
@@ -112,7 +106,6 @@ def test_openai_judge_returns_raw_json():
     assert parsed["suggestion"] == "Add more signal and baseline terminology"
 
 
-@pytest.mark.skipif(not HAS_ANTHROPIC, reason="anthropic package not installed")
 def test_anthropic_judge_returns_raw_json():
     """Test that Anthropic judge returns raw JSON in notes field."""
     # Mock response with full authenticity judge format

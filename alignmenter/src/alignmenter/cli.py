@@ -1064,8 +1064,12 @@ def calibrate_validate(
     embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
     train_split: float = typer.Option(0.8, "--train-split", help="Fraction of data for training"),
     seed: int = typer.Option(42, "--seed", help="Random seed for splitting"),
+    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge_sample: float = typer.Option(0.0, "--judge-sample", help="Fraction of sessions to judge (0.0-1.0)"),
+    judge_strategy: str = typer.Option("stratified", "--judge-strategy", help="Sampling strategy: random, stratified, errors, extremes"),
+    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
-    """Validate calibration and generate diagnostics."""
+    """Validate calibration and generate diagnostics with optional LLM judge analysis."""
     from alignmenter.calibration.validate import validate_calibration
 
     try:
@@ -1076,8 +1080,89 @@ def calibrate_validate(
             embedding_provider=embedding,
             train_split=train_split,
             seed=seed,
+            judge_provider=judge,
+            judge_sample_rate=judge_sample,
+            judge_strategy=judge_strategy,
+            judge_budget=judge_budget,
         )
         # Results already printed by validate_calibration
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("diagnose-errors")
+def calibrate_diagnose_errors(
+    labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
+    output: Path = typer.Option(..., "--output", help="Path to output error analysis JSON"),
+    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
+) -> None:
+    """Diagnose calibration errors using LLM judge analysis.
+
+    Analyzes false positives and false negatives from calibration,
+    providing explanations for why the model misclassified certain examples.
+    """
+    from alignmenter.calibration.diagnose import diagnose_calibration_errors
+
+    if not judge:
+        typer.secho("✗ Error: --judge is required for error diagnosis", fg=typer.colors.RED, err=True)
+        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        raise typer.Exit(1)
+
+    try:
+        report = diagnose_calibration_errors(
+            labeled_path=labeled,
+            persona_path=persona,
+            output_path=output,
+            embedding_provider=embedding,
+            judge_provider=judge,
+            judge_budget=judge_budget,
+        )
+        typer.secho(f"✓ Error analysis written to {output}", fg=typer.colors.GREEN)
+        typer.echo(f"Found {len(report.get('false_positives', []))} false positives, {len(report.get('false_negatives', []))} false negatives")
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("analyze-scenarios")
+def analyze_scenarios(
+    dataset: Path = typer.Option(..., "--dataset", help="Path to conversation dataset JSONL"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
+    output: Path = typer.Option(..., "--output", help="Path to output scenario analysis JSON"),
+    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    per_scenario: int = typer.Option(3, "--per-scenario", help="Number of sessions to judge per scenario tag"),
+    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
+) -> None:
+    """Analyze performance across different scenario types using LLM judge.
+
+    Groups sessions by scenario tag and judges a sample from each,
+    providing insights into which scenarios perform well or poorly.
+    """
+    from alignmenter.calibration.analyze import analyze_scenario_performance
+
+    if not judge:
+        typer.secho("✗ Error: --judge is required for scenario analysis", fg=typer.colors.RED, err=True)
+        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        raise typer.Exit(1)
+
+    try:
+        report = analyze_scenario_performance(
+            dataset_path=dataset,
+            persona_path=persona,
+            output_path=output,
+            embedding_provider=embedding,
+            judge_provider=judge,
+            samples_per_scenario=per_scenario,
+            judge_budget=judge_budget,
+        )
+        typer.secho(f"✓ Scenario analysis written to {output}", fg=typer.colors.GREEN)
+        scenarios = report.get("scenario_performance", {})
+        typer.echo(f"Analyzed {len(scenarios)} scenario types")
     except Exception as e:
         typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
         raise typer.Exit(1)

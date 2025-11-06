@@ -657,48 +657,74 @@ if judge_config.enabled:
 **Deliverables:**
 - ✅ Scenario selection algorithms (random, stratified, errors, extremes, on_failure)
 - ✅ Cost estimation function
-- ⏳ CLI flags for sample rate and strategy (pending)
-- ⏳ Budget guardrails (pending)
+- ✅ CLI flags for sample rate and strategy
+- ✅ Budget guardrails
 
 **Files:**
 - ✅ `src/alignmenter/calibration/sampling.py` (new - includes all 6 strategies + cost estimation)
-- ⏳ `src/alignmenter/cli.py` (to be updated)
+- ✅ `src/alignmenter/cli.py` (updated in Phase 3)
 
-### Phase 3: Diagnostic Commands
-
-**Deliverables:**
-- [x] `calibrate validate --judge-sample`
-- [x] `calibrate diagnose-errors`
-- [x] `analyze-scenarios`
-
-**Files:**
-- `src/alignmenter/calibration/validate.py` (updated)
-- `src/alignmenter/calibration/diagnose.py` (new)
-- `src/alignmenter/calibration/analyze.py` (new)
-
-### Phase 4: Reporting Integration
+### Phase 3: Diagnostic Commands ✅ COMPLETE
 
 **Deliverables:**
-- [x] HTML report section for judge analysis
-- [x] JSON export of judge results
-- [x] Agreement metrics (judge vs calibration)
+- ✅ `calibrate validate --judge-sample` - Added judge support to existing validate command
+- ✅ `calibrate diagnose-errors` - New command for error analysis with LLM judge
+- ✅ `analyze-scenarios` - New command for scenario performance analysis
+- ✅ Budget guardrails and sampling integration
 
 **Files:**
-- `src/alignmenter/reporting/html_report.py` (updated)
-- `src/alignmenter/reporting/templates/judge_analysis.html` (new)
+- ✅ `src/alignmenter/cli.py` (updated - added judge parameters and 2 new commands)
+- ✅ `src/alignmenter/calibration/validate.py` (updated - added _run_judge_analysis helper)
+- ✅ `src/alignmenter/calibration/diagnose.py` (new)
+- ✅ `src/alignmenter/calibration/analyze.py` (new)
 
-### Phase 5: Documentation & Testing
+### Phase 4: Reporting Integration ✅ COMPLETE
 
 **Deliverables:**
-- [x] User guide: when to use judge
-- [x] Cost estimation examples
-- [x] Unit tests for judge + sampling
-- [x] Integration tests with mock LLM
+- ✅ HTML report section for judge analysis with collapsible UI
+- ✅ JSON export of judge results
+- ✅ Agreement metrics (judge vs calibration)
+- ✅ Cost tracking and visualization
+- ✅ Disagreements table with reasoning
 
 **Files:**
-- `docs/llm_judge_authenticity.md` (this doc)
-- `tests/test_authenticity_judge.py` (new)
-- `tests/test_sampling.py` (new)
+- ✅ `src/alignmenter/reporting/html.py` (updated - added `_render_judge_analysis_section`)
+- ✅ `src/alignmenter/reporting/json_out.py` (updated - exports judge_analysis)
+
+**Features Added:**
+- Collapsible "LLM Judge Analysis" section in HTML reports
+- Summary stats: sessions judged, agreement rate, total cost
+- Judge configuration details (provider, strategy, sample rate)
+- Disagreements table showing calibrated vs judge scores with reasoning
+- Color-coded agreement rate (green ≥85%, yellow ≥70%, red <70%)
+- Full judge data exported to report.json for programmatic access
+
+### Phase 5: Documentation & Testing ✅ COMPLETE
+
+**Deliverables:**
+- ✅ Design document with use cases and examples
+- ✅ Cost estimation tables and comparisons
+- ✅ Unit tests for judge + sampling (23 tests)
+- ✅ Integration tests with mock providers (4 tests)
+- ✅ CLI command documentation
+- ⏳ User guide and tutorials (in design doc)
+- ⏳ Example workflows (in design doc)
+
+**Files:**
+- ✅ `docs/llm_judge_authenticity.md` (this doc - comprehensive design)
+- ✅ `tests/test_authenticity_judge.py` (new - 9 tests)
+- ✅ `tests/test_sampling.py` (new - 14 tests)
+- ✅ `tests/test_judge_providers.py` (new - 4 tests)
+
+**Test Coverage:**
+- AuthenticityJudge initialization and configuration
+- Session evaluation and score parsing
+- JSON and markdown response handling
+- Error handling and fallbacks
+- Cost tracking and budget management
+- All 6 sampling strategies
+- Judge provider compatibility (OpenAI & Anthropic)
+- Backward compatibility with SafetyScorer
 
 ---
 

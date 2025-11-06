@@ -60,7 +60,15 @@ class AuthenticityJudge:
         voice = persona.get("voice", {})
         style_rules = persona.get("style_rules", {})
 
-        self.persona_tone = voice.get("tone") or style_rules.get("tone", [])
+        # Normalize tone to a list (can be string or list in YAML)
+        tone = voice.get("tone") or style_rules.get("tone", [])
+        if isinstance(tone, str):
+            self.persona_tone = [tone]
+        elif isinstance(tone, list):
+            self.persona_tone = tone
+        else:
+            self.persona_tone = []
+
         self.persona_formality = voice.get("formality") or style_rules.get("formality", "Not specified")
 
         # Extract lexicon (can be at top level or under voice)
@@ -150,6 +158,11 @@ class AuthenticityJudge:
     ) -> JudgeAnalysis:
         """Parse the JSON response from the judge.
 
+        Handles multiple formats:
+        - Raw JSON: {"score": 8, ...}
+        - Markdown code block: ```json\n{...}\n```
+        - Prose-wrapped JSON: "Here's my analysis: {...}"
+
         Args:
             session_id: Session identifier
             response_text: Raw response text from judge
@@ -161,20 +174,31 @@ class AuthenticityJudge:
         """
         try:
             # Try to extract JSON from the response
-            # Handle both raw JSON and markdown code blocks
             text = response_text.strip()
+
+            # First, try to extract from markdown code blocks
             if "```json" in text:
-                # Extract from markdown code block
                 start = text.find("```json") + 7
                 end = text.find("```", start)
                 text = text[start:end].strip()
             elif "```" in text:
-                # Generic code block
                 start = text.find("```") + 3
                 end = text.find("```", start)
                 text = text[start:end].strip()
 
-            data = json.loads(text)
+            # Try to parse as complete JSON
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                # If that fails, search for the first JSON object in the text
+                # This handles cases where LLMs wrap JSON in explanatory prose
+                json_start = text.find("{")
+                if json_start == -1:
+                    raise ValueError("No JSON object found in response")
+
+                # Use JSONDecoder to extract the first complete JSON object
+                decoder = json.JSONDecoder()
+                data, _ = decoder.raw_decode(text, json_start)
 
             score = float(data.get("score", 5.0))
             reasoning = data.get("reasoning", "No reasoning provided")

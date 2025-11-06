@@ -21,9 +21,13 @@ def validate_calibration(
     embedding_provider: Optional[str] = None,
     train_split: float = 0.8,
     seed: int = 42,
+    judge_provider: Optional[str] = None,
+    judge_sample_rate: float = 0.0,
+    judge_strategy: str = "stratified",
+    judge_budget: Optional[int] = None,
 ) -> dict:
     """
-    Validate calibration using train/validation split.
+    Validate calibration using train/validation split with optional LLM judge analysis.
 
     Args:
         labeled_path: Path to labeled JSONL data
@@ -32,6 +36,10 @@ def validate_calibration(
         embedding_provider: Embedding provider (default: sentence-transformer)
         train_split: Fraction of data for training (default: 0.8)
         seed: Random seed for splitting
+        judge_provider: Optional LLM judge provider (e.g., "anthropic:claude-3-5-sonnet-20241022")
+        judge_sample_rate: Fraction of validation sessions to judge (0.0-1.0)
+        judge_strategy: Sampling strategy (random, stratified, errors, extremes)
+        judge_budget: Maximum number of judge API calls
 
     Returns:
         Diagnostics report with metrics and analysis
@@ -154,6 +162,24 @@ def validate_calibration(
                 "score": round(score, 3),
             })
 
+    # Optional judge analysis
+    judge_analysis = None
+    if judge_provider and judge_sample_rate > 0:
+        print(f"\n Running LLM judge on {judge_sample_rate:.0%} of validation set...")
+        judge_analysis = _run_judge_analysis(
+            val_data=val_data,
+            val_scores=val_scores,
+            persona_path=persona_path,
+            judge_provider=judge_provider,
+            sample_rate=judge_sample_rate,
+            strategy=judge_strategy,
+            budget=judge_budget,
+        )
+        if judge_analysis:
+            print(f"  Judged {judge_analysis['sessions_judged']} sessions")
+            print(f"  Agreement rate: {judge_analysis.get('agreement_rate', 0.0):.2%}")
+            print(f"  Total cost: ${judge_analysis.get('total_cost', 0.0):.3f}")
+
     # Build report
     report = {
         "validation_metrics": {
@@ -190,6 +216,10 @@ def validate_calibration(
         },
     }
 
+    # Add judge analysis if available
+    if judge_analysis:
+        report["judge_analysis"] = judge_analysis
+
     # Write output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
@@ -207,6 +237,119 @@ def validate_calibration(
     print(f"  Output: {output_path}")
 
     return report
+
+
+def _run_judge_analysis(
+    val_data: list[dict],
+    val_scores: list[float],
+    persona_path: Path,
+    judge_provider: str,
+    sample_rate: float,
+    strategy: str,
+    budget: Optional[int],
+) -> Optional[dict]:
+    """Run LLM judge analysis on validation sessions."""
+    from dataclasses import dataclass
+    from alignmenter.providers.judges import load_judge_provider
+    from alignmenter.judges.authenticity_judge import AuthenticityJudge
+    from alignmenter.calibration.sampling import select_scenarios_for_judge
+
+    # Load judge provider
+    judge = load_judge_provider(judge_provider)
+    if not judge:
+        print("  Warning: Could not load judge provider")
+        return None
+
+    # Create sessions with scores
+    @dataclass
+    class MockSession:
+        session_id: str
+        turns: list[dict]
+        scenario_tags: set[str]
+        authenticity_score: float
+
+    sessions = []
+    for i, (example, score) in enumerate(zip(val_data, val_scores)):
+        sessions.append(
+            MockSession(
+                session_id=f"val_{i}",
+                turns=[
+                    {"role": "user", "text": "validation prompt"},
+                    {"role": "assistant", "text": example["text"]},
+                ],
+                scenario_tags=set(),
+                authenticity_score=score,
+            )
+        )
+
+    # Select sessions to judge
+    selected = select_scenarios_for_judge(
+        sessions=sessions,
+        sample_rate=sample_rate,
+        strategy=strategy,
+    )
+
+    # Apply budget if specified
+    if budget and len(selected) > budget:
+        selected = selected[:budget]
+
+    if not selected:
+        print("  Warning: No sessions selected for judging")
+        return None
+
+    # Initialize authenticity judge
+    auth_judge = AuthenticityJudge(
+        persona_path=persona_path,
+        judge_provider=judge,
+        cost_per_call=0.003,  # Estimate
+    )
+
+    # Judge selected sessions
+    judge_results = []
+    agreements = 0
+    for session in selected:
+        try:
+            analysis = auth_judge.evaluate_session(
+                session_id=session.session_id,
+                turns=session.turns,
+                calibrated_score=session.authenticity_score,
+            )
+            judge_results.append(analysis)
+
+            # Check agreement (judge score 0-10, calibrated score 0-1)
+            # Convert judge score to 0-1 range
+            judge_normalized = analysis.score / 10.0
+            calibrated = session.authenticity_score
+
+            # Agreement if both above/below 0.5 threshold
+            judge_prediction = 1 if judge_normalized >= 0.5 else 0
+            calibrated_prediction = 1 if calibrated >= 0.5 else 0
+            if judge_prediction == calibrated_prediction:
+                agreements += 1
+
+        except Exception as e:
+            print(f"  Warning: Judge failed for {session.session_id}: {e}")
+            continue
+
+    if not judge_results:
+        return None
+
+    # Calculate agreement rate
+    agreement_rate = agreements / len(judge_results) if judge_results else 0.0
+
+    # Get cost summary
+    cost_summary = auth_judge.get_cost_summary()
+
+    # Build analysis summary
+    return {
+        "sessions_judged": len(judge_results),
+        "agreement_rate": round(agreement_rate, 3),
+        "total_cost": round(cost_summary["total_cost"], 4),
+        "average_cost_per_call": round(cost_summary["average_cost"], 4),
+        "sample_rate": sample_rate,
+        "strategy": strategy,
+        "judge_provider": judge_provider,
+    }
 
 
 def _convert_to_sessions(examples: list[dict]) -> list[dict]:

@@ -286,3 +286,73 @@ def test_judge_analysis_dataclass():
     assert analysis.context_appropriate is True
     assert analysis.calibrated_score == 0.72
     assert analysis.cost == 0.004
+
+
+def test_persona_tone_string_normalization(tmp_path):
+    """Test that persona tone is normalized to list when provided as string."""
+    # Create a test persona with tone as a string (not a list)
+    persona_content = """
+id: test_string_tone
+description: Test persona with string tone
+voice:
+  tone: formal
+  formality: business
+lexicon:
+  preferred: [signal, baseline]
+  avoid: [lol, bro]
+exemplars:
+  - "Our baseline approach prioritizes signal clarity."
+"""
+    persona_path = tmp_path / "test_persona.yaml"
+    persona_path.write_text(persona_content)
+
+    mock_provider = MockJudgeProvider()
+    judge = AuthenticityJudge(
+        persona_path=persona_path,
+        judge_provider=mock_provider,
+    )
+
+    # Should normalize string to list
+    assert isinstance(judge.persona_tone, list)
+    assert judge.persona_tone == ["formal"]
+
+    # Verify it works in prompt formatting
+    turns = _sample_session_turns()
+    analysis = judge.evaluate_session(session_id="test-tone", turns=turns)
+    assert analysis.score == 8.0
+
+
+def test_parse_prose_wrapped_json():
+    """Test parsing JSON wrapped in explanatory prose."""
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
+    mock_response = {
+        "score": 0.7,
+        "notes": """I've analyzed this conversation and here are my findings:
+
+{
+  "score": 7,
+  "reasoning": "Mostly on-brand with some areas for improvement.",
+  "strengths": ["Uses preferred vocabulary", "Professional tone"],
+  "weaknesses": ["Could be more concise"],
+  "suggestion": "Tighten up the language",
+  "context_appropriate": true
+}
+
+This assessment reflects the overall brand alignment.""",
+        "usage": {"prompt_tokens": 450, "completion_tokens": 90},
+    }
+    mock_provider = MockJudgeProvider(mock_response)
+    judge = AuthenticityJudge(
+        persona_path=persona_path,
+        judge_provider=mock_provider,
+    )
+
+    turns = _sample_session_turns()
+    analysis = judge.evaluate_session(session_id="test-prose", turns=turns)
+
+    # Should successfully extract JSON despite surrounding prose
+    assert analysis.score == 7.0
+    assert "Mostly on-brand" in analysis.reasoning
+    assert len(analysis.strengths) == 2
+    assert len(analysis.weaknesses) == 1
+    assert analysis.suggestion == "Tighten up the language"

@@ -28,6 +28,12 @@ class JSONReporter:
         scorecards = extras.get("scorecards")
         if scorecards:
             payload["scorecards"] = scorecards
+
+        # Add judge analysis if available
+        judge_analysis = extras.get("judge_analysis")
+        if judge_analysis:
+            payload["judge_analysis"] = judge_analysis
+
         path = Path(run_dir) / "report.json"
         write_json(path, payload)
         return path
