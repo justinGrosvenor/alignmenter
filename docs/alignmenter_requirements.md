@@ -162,6 +162,19 @@ Formula:
 - **Calibration**: Every persona pack includes at least 25 labelled turns (pass/fail). Authenticity CI bands derived from bootstrap resampling with fixed seed.
 - **Sourcing guidance**: Recommended workflow—start with internal brand guidelines, draft 10 exemplar prompts per persona, collect 30-40 human-reviewed responses (pass/fail labels). Provide a `docs/persona_annotation.md` template describing tone traits, disallowed phrases, and review rubric. Offer `alignmenter persona export --format csv` to prep annotation batches for tools like Label Studio.
 
+#### 9.1.1 LLM Judge for Authenticity (Optional)
+- **Purpose**: Qualitative analysis of brand voice alignment with human-readable reasoning to complement quantitative scores.
+- **Judge providers**: OpenAI (gpt-4o) or Anthropic (claude-3-5-sonnet) models evaluate full conversation sessions.
+- **Output format**: JSON with score (0-10), reasoning, strengths, weaknesses, suggestion, and context_appropriate flag.
+- **Sampling strategies**: Cost-optimized selection with 6 strategies (random, stratified, errors, extremes, on_failure, custom).
+- **Integration**: Judge analysis appears in HTML reports and JSON exports; validation commands support `--judge` flag.
+- **Cost control**: Budget guardrails (`--judge-budget`) and sampling rates (`--judge-sample`) prevent runaway spending.
+- **Diagnostic commands**:
+  - `alignmenter calibrate validate --judge openai:gpt-4o` - Validate with judge analysis
+  - `alignmenter calibrate diagnose-errors --judge openai:gpt-4o` - Analyze false positives/negatives
+  - `alignmenter analyze-scenarios --judge openai:gpt-4o` - Per-scenario performance breakdown
+- **Design**: See `docs/llm_judge_authenticity.md` for full specification.
+
 ### 9.2 Safety Score
 `Safety = min(1 - violation_rate, judge_score)`
 - Combines rule-based heuristics with optional LLM judge ratings. Judge prompts stored in `alignmenter/configs/judges/safety_prompt.txt` and versioned.
@@ -195,6 +208,16 @@ alignmenter import gpt --name "Brand Voice" --instructions instructions.txt --ou
 alignmenter dataset lint datasets/demo_conversations.jsonl
 alignmenter run --config alignmenter/configs/demo_config.yaml
 alignmenter persona sync-gpt gpt://brand/voice --out alignmenter/configs/persona/_gpt/brand.yaml
+
+# Calibration commands
+alignmenter calibrate generate --dataset datasets/demo.jsonl --persona configs/persona/default.yaml --output calibration_data/candidates.jsonl
+alignmenter calibrate label --input calibration_data/candidates.jsonl --persona configs/persona/default.yaml --output calibration_data/labeled.jsonl
+alignmenter calibrate bounds --labeled calibration_data/labeled.jsonl --persona configs/persona/default.yaml --output reports/bounds.json
+alignmenter calibrate optimize --labeled calibration_data/labeled.jsonl --persona configs/persona/default.yaml --output reports/weights.json
+alignmenter calibrate validate --labeled calibration_data/labeled.jsonl --persona configs/persona/default.yaml --output reports/diagnostics.json
+alignmenter calibrate validate --judge openai:gpt-4o --judge-sample 0.2 --judge-strategy stratified --judge-budget 100
+alignmenter calibrate diagnose-errors --labeled calibration_data/labeled.jsonl --persona configs/persona/default.yaml --judge openai:gpt-4o --output reports/errors.json
+alignmenter analyze-scenarios --dataset datasets/demo.jsonl --persona configs/persona/default.yaml --judge openai:gpt-4o --output reports/scenarios.json
 ```
 
 `alignmenter run` regenerates assistant turns via the configured provider before scoring. Teams that want to score pre-recorded transcripts can pass `--no-generate` to reuse the dataset verbatim.

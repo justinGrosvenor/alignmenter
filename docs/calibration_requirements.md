@@ -102,42 +102,46 @@ Design a calibration system to optimize persona scoring parameters (component we
 ├── alignmenter/                     # Main package (shipped)
 │   ├── src/alignmenter/
 │   │   ├── scorers/
+│   │   ├── calibration/             # Calibration modules (CLI commands)
+│   │   │   ├── generate.py          # Bootstrap from demo data
+│   │   │   ├── label.py             # Interactive labeling tool
+│   │   │   ├── bounds.py            # Compute normalization bounds
+│   │   │   ├── optimize.py          # Grid search for component weights
+│   │   │   ├── validate.py          # Test calibration quality
+│   │   │   ├── diagnose.py          # Error analysis with LLM judge
+│   │   │   ├── analyze.py           # Scenario performance analysis
+│   │   │   └── sampling.py          # Judge sampling strategies
 │   │   └── scripts/
 │   │       └── calibrate_persona.py  # Existing trait model trainer
 │   ├── configs/
 │   │   └── persona/
 │   │       ├── default.yaml
 │   │       └── default.traits.json   # Calibration output
-│   └── datasets/
-│       └── demo_conversations.jsonl
+│   ├── datasets/
+│   │   └── demo_conversations.jsonl
+│   └── tests/
+│       ├── test_authenticity_judge.py
+│       ├── test_sampling.py
+│       └── test_judge_providers.py
 │
-├── calibration/                     # Calibration toolkit (NOT shipped)
-│   ├── calibration-requirements.md  # This document
-│   ├── README.md                    # User guide
-│   ├── data/                        # Calibration datasets
-│   │   ├── labeled/
-│   │   │   ├── default_v1_labeled.jsonl
-│   │   │   └── validation_split.jsonl
-│   │   ├── unlabeled/
-│   │   │   └── candidates_for_labeling.jsonl
-│   │   └── metadata/
-│   │       └── labeling_guidelines.md
-│   ├── scripts/
-│   │   ├── generate_candidates.py    # Bootstrap from demo data
-│   │   ├── label_data.py             # Interactive labeling tool
-│   │   ├── estimate_bounds.py        # Compute normalization bounds
-│   │   ├── optimize_weights.py       # Grid search for component weights
-│   │   └── validate_calibration.py   # Test calibration quality
-│   ├── notebooks/
-│   │   ├── 01_explore_scores.ipynb   # EDA on score distributions
-│   │   ├── 02_calibration_demo.ipynb # End-to-end walkthrough
-│   │   └── 03_diagnostics.ipynb      # Calibration quality metrics
+├── docs/                            # Documentation (NOT shipped)
+│   ├── alignmenter_requirements.md  # Main requirements
+│   ├── calibration_requirements.md  # This document
+│   ├── calibration_guide.md         # User guide
+│   ├── llm_judge_authenticity.md    # Judge design doc
+│   ├── persona_annotation.md        # Annotation guidelines
+│   └── offline_safety.md            # Safety classifier doc
+│
+├── calibration_data/                # User's calibration datasets (gitignored)
+│   ├── labeled/
+│   │   ├── default_v1_labeled.jsonl
+│   │   └── validation_split.jsonl
+│   ├── unlabeled/
+│   │   └── candidates_for_labeling.jsonl
 │   └── reports/
-│       └── calibration_{persona}_{timestamp}/
-│           ├── bounds_report.json
-│           ├── weights_report.json
-│           ├── diagnostics.html
-│           └── figures/
+│       ├── bounds_report.json
+│       ├── weights_report.json
+│       └── diagnostics.json
 ```
 
 ### Data Flow
@@ -148,12 +152,12 @@ Design a calibration system to optimize persona scoring parameters (component we
 │                                                                 │
 │  demo_conversations.jsonl                                       │
 │         │                                                       │
-│         ├─> generate_candidates.py                             │
+│         ├─> alignmenter calibrate generate                     │
 │         │   • Sample diverse responses                         │
 │         │   • Include edge cases (brand_trap, safety_trap)     │
 │         │   • Output: unlabeled/candidates.jsonl               │
 │         │                                                       │
-│         └─> label_data.py (interactive)                        │
+│         └─> alignmenter calibrate label (interactive)          │
 │             • Show response + persona context                  │
 │             • Ask: "On-brand (1) or off-brand (0)?"            │
 │             • Output: labeled/default_v1_labeled.jsonl         │
@@ -164,7 +168,7 @@ Design a calibration system to optimize persona scoring parameters (component we
 │                                                                 │
 │  labeled/default_v1_labeled.jsonl                               │
 │         │                                                       │
-│         └─> estimate_bounds.py                                 │
+│         └─> alignmenter calibrate bounds                       │
 │             • Compute raw style_sim for all examples           │
 │             • Compute percentiles (5th, 95th)                  │
 │             • Compute stability variance (if multi-turn)       │
@@ -184,7 +188,7 @@ Design a calibration system to optimize persona scoring parameters (component we
 │                                                                 │
 │  labeled/default_v1_labeled.jsonl + bounds_report.json          │
 │         │                                                       │
-│         └─> optimize_weights.py                                │
+│         └─> alignmenter calibrate optimize                     │
 │             • Score each example with different weight combos  │
 │             • Try grid: style ∈ [0.1, 0.3, 0.5, 0.7, 0.9]      │
 │             •           traits ∈ [0.1, 0.3, 0.5, 0.7, 0.9]     │
@@ -243,11 +247,22 @@ Design a calibration system to optimize persona scoring parameters (component we
 │                                                                 │
 │  labeled/validation_split.jsonl (held-out 20%)                  │
 │         │                                                       │
-│         └─> validate_calibration.py                            │
+│         └─> alignmenter calibrate validate                     │
 │             • Score with calibrated parameters                 │
 │             • Compute metrics on held-out set                  │
+│             • Optional: LLM judge analysis (--judge)           │
 │             • Generate diagnostics report                      │
-│             • Output: diagnostics.html + figures/              │
+│             • Output: diagnostics.json                         │
+│                                                                 │
+│         └─> alignmenter calibrate diagnose-errors (optional)   │
+│             • Analyze false positives/negatives with judge     │
+│             • Provide human-readable reasoning for errors      │
+│             • Output: error_analysis.json                      │
+│                                                                 │
+│         └─> alignmenter analyze-scenarios (optional)           │
+│             • Per-scenario performance breakdown               │
+│             • Judge samples from each scenario type            │
+│             • Output: scenario_performance.json                │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -578,47 +593,63 @@ def optimize_weights(labeled_data, persona, embedder):
 
 ```bash
 # 1. Generate candidate responses for labeling
-python calibration/scripts/generate_candidates.py \
-  --input alignmenter/datasets/demo_conversations.jsonl \
+alignmenter calibrate generate \
+  --dataset datasets/demo_conversations.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/data/unlabeled/candidates.jsonl \
+  --output calibration_data/unlabeled/candidates.jsonl \
   --strategy diverse  # sample diverse scenarios
 
 # 2. Label examples interactively
-python calibration/scripts/label_data.py \
-  --input calibration/data/unlabeled/candidates.jsonl \
+alignmenter calibrate label \
+  --input calibration_data/unlabeled/candidates.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/data/labeled/default_v1_labeled.jsonl
+  --output calibration_data/labeled/default_v1_labeled.jsonl
 
 # 3. Estimate normalization bounds
-python calibration/scripts/estimate_bounds.py \
-  --labeled calibration/data/labeled/default_v1_labeled.jsonl \
+alignmenter calibrate bounds \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/reports/bounds_report.json
+  --output calibration_data/reports/bounds_report.json
 
 # 4. Optimize component weights
-python calibration/scripts/optimize_weights.py \
-  --labeled calibration/data/labeled/default_v1_labeled.jsonl \
+alignmenter calibrate optimize \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
   --persona configs/persona/default.yaml \
-  --bounds calibration/reports/bounds_report.json \
-  --output calibration/reports/weights_report.json
+  --bounds calibration_data/reports/bounds_report.json \
+  --output calibration_data/reports/weights_report.json
 
 # 5. Train trait model (existing script)
 python -m alignmenter.scripts.calibrate_persona \
   --persona-path configs/persona/default.yaml \
-  --dataset calibration/data/labeled/default_v1_labeled.jsonl \
+  --dataset calibration_data/labeled/default_v1_labeled.jsonl \
   --out configs/persona/default.traits.json
 
 # 6. Merge calibration results (manual for now)
 # Combine bounds_report.json + weights_report.json into default.traits.json
 
 # 7. Validate calibration
-python calibration/scripts/validate_calibration.py \
-  --labeled calibration/data/labeled/default_v1_labeled.jsonl \
+alignmenter calibrate validate \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/reports/diagnostics.html
+  --output calibration_data/reports/diagnostics.json
 
-# 8. Re-run evaluation
+# 8. Optional: Run LLM judge analysis
+alignmenter calibrate validate \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
+  --persona configs/persona/default.yaml \
+  --judge openai:gpt-4o \
+  --judge-sample 0.2 \
+  --judge-strategy stratified \
+  --output calibration_data/reports/diagnostics_with_judge.json
+
+# 9. Optional: Diagnose specific errors
+alignmenter calibrate diagnose-errors \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
+  --persona configs/persona/default.yaml \
+  --judge openai:gpt-4o \
+  --output calibration_data/reports/error_analysis.json
+
+# 10. Re-run evaluation
 alignmenter run --config configs/run.yaml
 ```
 
@@ -626,22 +657,25 @@ alignmenter run --config configs/run.yaml
 
 ```bash
 # 1. Add more labeled examples
-python calibration/scripts/label_data.py \
-  --input calibration/data/unlabeled/new_candidates.jsonl \
+alignmenter calibrate label \
+  --input calibration_data/unlabeled/new_candidates.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/data/labeled/default_v1_labeled.jsonl \
+  --output calibration_data/labeled/default_v1_labeled.jsonl \
   --append  # add to existing labeled data
 
 # 2. Re-run calibration
-python calibration/scripts/optimize_weights.py \
-  --labeled calibration/data/labeled/default_v1_labeled.jsonl \
+alignmenter calibrate optimize \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
   --persona configs/persona/default.yaml \
-  --output calibration/reports/weights_report_v2.json
+  --output calibration_data/reports/weights_report_v2.json
 
-# 3. Compare v1 vs v2 calibration
-python calibration/scripts/compare_calibrations.py \
-  --baseline calibration/reports/weights_report.json \
-  --new calibration/reports/weights_report_v2.json
+# 3. Validate updated calibration with judge
+alignmenter calibrate validate \
+  --labeled calibration_data/labeled/default_v1_labeled.jsonl \
+  --persona configs/persona/default.yaml \
+  --judge openai:gpt-4o \
+  --judge-strategy on_failure \
+  --output calibration_data/reports/diagnostics_v2.json
 ```
 
 ---

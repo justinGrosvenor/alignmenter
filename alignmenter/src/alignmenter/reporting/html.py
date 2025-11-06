@@ -171,6 +171,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       {calibration_section}
     </div>
 
+    {judge_analysis_section}
+
     <div class="collapsible" onclick="toggleCollapsible('reproducibility')">
       <h2>Reproducibility</h2>
       <span id="reproducibility-indicator" class="collapsible-indicator">+</span>
@@ -262,6 +264,7 @@ class HTMLReporter:
         scenario_section, persona_section = _render_breakdown_sections(analytics)
         turn_preview = _render_turn_preview(sessions, analytics)
         calibration_section = _render_calibration_section(primary)
+        judge_analysis_section = _render_judge_analysis_section(extras)
         reproducibility_section = _render_reproducibility_section(summary)
         charts_section = _render_charts(primary)
         scorecard_block = _render_scorecards(scorecards, summary)
@@ -282,6 +285,7 @@ class HTMLReporter:
             scenario_breakdown=scenario_section,
             persona_breakdown=persona_section,
             calibration_section=calibration_section,
+            judge_analysis_section=judge_analysis_section,
             reproducibility_section=reproducibility_section,
             charts_section=charts_section,
             scores_json=scores_json,
@@ -997,3 +1001,124 @@ def _prepare_csv_data(scores: dict[str, Any]) -> list[dict]:
             row.update(metrics)
             rows.append(row)
     return rows
+
+
+def _render_judge_analysis_section(extras: dict[str, Any]) -> str:
+    """Render LLM judge analysis section if available."""
+    judge_data = extras.get("judge_analysis") if isinstance(extras, dict) else None
+
+    if not judge_data:
+        return ""
+
+    # Build collapsible section
+    sessions_judged = judge_data.get("sessions_judged", 0)
+    if sessions_judged == 0:
+        return ""
+
+    agreement_rate = judge_data.get("agreement_rate", 0.0)
+    total_cost = judge_data.get("total_cost", 0.0)
+    strategy = judge_data.get("strategy", "unknown")
+    provider = judge_data.get("judge_provider", "unknown")
+
+    # Color code agreement rate
+    if agreement_rate >= 0.85:
+        agreement_class = "pass"
+    elif agreement_rate >= 0.70:
+        agreement_class = "warn"
+    else:
+        agreement_class = "fail"
+
+    # Build summary stats
+    summary_html = f"""
+    <div class="stats-grid" style="margin-bottom: 20px;">
+        <div class="stat-card">
+            <div class="stat-label">Sessions Judged</div>
+            <div class="stat-value">{sessions_judged}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Agreement Rate</div>
+            <div class="stat-value {agreement_class}">{agreement_rate:.1%}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Cost</div>
+            <div class="stat-value">${total_cost:.3f}</div>
+        </div>
+    </div>
+    """
+
+    # Build config info
+    config_html = f"""
+    <div class="calibration-section">
+        <h3>Judge Configuration</h3>
+        <div class="calibration-grid">
+            <div class="calibration-item">
+                <strong>Provider</strong>
+                <code>{provider}</code>
+            </div>
+            <div class="calibration-item">
+                <strong>Strategy</strong>
+                <code>{strategy}</code>
+            </div>
+            <div class="calibration-item">
+                <strong>Sample Rate</strong>
+                <code>{judge_data.get('sample_rate', 'N/A')}</code>
+            </div>
+        </div>
+    </div>
+    """
+
+    # Build disagreements section if available
+    disagreements_html = ""
+    disagreements = judge_data.get("disagreements", [])
+    if disagreements:
+        rows = []
+        for item in disagreements[:10]:  # Limit to top 10
+            session_id = item.get("session_id", "unknown")
+            calibrated_score = item.get("calibrated_score", 0.0)
+            judge_score = item.get("judge_score", 0.0)
+            reasoning = item.get("judge_reasoning", "No reasoning provided")
+
+            rows.append(f"""
+            <tr>
+                <td><code>{session_id}</code></td>
+                <td>{calibrated_score:.2f}</td>
+                <td>{judge_score:.1f}/10</td>
+                <td style="font-size: 0.9rem; color: #94a3b8;">{reasoning[:200]}...</td>
+            </tr>
+            """)
+
+        disagreements_html = f"""
+        <div style="margin-top: 20px;">
+            <h3>Judge Disagreements</h3>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 12px;">
+                Cases where LLM judge disagreed with calibrated scores (showing up to 10)
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Session</th>
+                        <th>Calibrated</th>
+                        <th>Judge</th>
+                        <th>Reasoning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {"".join(rows)}
+                </tbody>
+            </table>
+        </div>
+        """
+
+    # Combine all parts
+    content = summary_html + config_html + disagreements_html
+
+    # Wrap in collapsible section
+    return f"""
+    <div class="collapsible" onclick="toggleCollapsible('judge-analysis')">
+      <h2>LLM Judge Analysis</h2>
+      <span id="judge-analysis-indicator" class="collapsible-indicator">+</span>
+    </div>
+    <div id="judge-analysis" class="collapsible-content">
+      {content}
+    </div>
+    """

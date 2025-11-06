@@ -256,7 +256,6 @@ examples:
 - ✅ PII sanitization tools
 
 ### Upcoming (v0.1.0)
-- [ ] Web dashboard for team collaboration
 - [ ] Hosted evaluation pipelines (CI/CD SaaS)
 - [ ] Multi-language support (non-English personas)
 - [ ] Real-time monitoring and alerts
@@ -327,10 +326,6 @@ black src/ tests/
 # - Add tests for new features
 # - Update documentation
 ```
-
-See **[CONTRIBUTING.md](CONTRIBUTING.md)** for detailed guidelines.
-
----
 
 ## Community
 

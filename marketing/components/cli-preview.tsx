@@ -70,6 +70,23 @@ export function CLIPreview() {
             </div>
 
             <div className="pl-3 sm:pl-4 text-xs sm:text-sm text-slate-400">Opening report in browser...</div>
+
+            <div className="pl-5 text-slate-500 text-[11px] sm:text-xs pt-3">
+              # optionally add qualitative analysis with LLM judges
+            </div>
+
+            <div className="flex items-start gap-2">
+              <span className="text-signal flex-shrink-0">$</span>
+              <span className="text-slate-300 break-all">
+                alignmenter calibrate validate --judge openai:gpt-4o --judge-sample 0.2
+              </span>
+            </div>
+
+            <div className="pl-3 sm:pl-4 space-y-1 text-xs sm:text-sm">
+              <div className="text-slate-400">Analyzing 12 sessions with LLM judge...</div>
+              <div className="text-emerald-300">✓ Agreement rate: 87.5%</div>
+              <div className="text-slate-400">Total cost: $0.032</div>
+            </div>
           </div>
 
           {/* Decorative gradient */}

@@ -448,4 +448,4 @@ Ideas for improving the calibration toolkit:
 - [ ] Bayesian optimization integration
 - [ ] Scenario-specific calibration helpers
 
-See `calibration/calibration-requirements.md` for full design docs.
+See `docs/calibration_requirements.md` for full design docs.

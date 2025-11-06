@@ -332,7 +332,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Alignmenter
-        run: pip install -e .
+        run: pip install alignmenter
 
       - name: Run Evaluation
         env:
