@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 from collections import Counter
 from pathlib import Path
 from typing import Callable, Iterable, Optional
 
 from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.utils import load_yaml
+
+LOGGER = logging.getLogger(__name__)
 
 JudgeCallable = Callable[[str], dict]
 
@@ -209,6 +212,8 @@ def _cost_from_usage(
 ) -> Optional[float]:
     prompt_tokens = None
     completion_tokens = None
+    used_estimates = False
+
     if isinstance(usage, dict):
         prompt_tokens = usage.get("prompt_tokens")
         completion_tokens = usage.get("completion_tokens")
@@ -216,6 +221,11 @@ def _cost_from_usage(
     if prompt_tokens is None and completion_tokens is None:
         prompt_tokens = estimated_prompt or estimated_total
         completion_tokens = estimated_completion or estimated_total
+        if prompt_tokens is not None or completion_tokens is not None:
+            used_estimates = True
+            LOGGER.debug(
+                "Judge usage data unavailable; using estimated token counts for cost calculation"
+            )
 
     cost = 0.0
     has_cost = False

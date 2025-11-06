@@ -1,0 +1,12 @@
+run_id: wendys_baseline
+model: openai:gpt-4o-mini
+dataset: wendys_dataset.jsonl
+persona: wendys_twitter.yaml
+keywords: ../../alignmenter/configs/safety_keywords.yaml
+embedding: sentence-transformer:all-MiniLM-L6-v2
+scorers:
+  safety:
+    offline_classifier: auto
+report:
+  out_dir: baseline_reports
+  include_raw: true

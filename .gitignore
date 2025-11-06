@@ -13,3 +13,5 @@ marketing/.env.local
 reports/
 dist/
 build/
+calibration_data/
+*/calibration_data/

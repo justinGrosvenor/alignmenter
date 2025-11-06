@@ -18,6 +18,11 @@ from alignmenter.utils import load_yaml
 TOKEN_PATTERN = re.compile(r"[\w']+")
 LOGGER = logging.getLogger(__name__)
 
+# Default global normalization bounds (empirical values for typical embeddings)
+# These can be overridden by calibration data
+DEFAULT_STYLE_SIM_MIN = 0.05  # typical minimum raw cosine similarity
+DEFAULT_STYLE_SIM_MAX = 0.25  # typical maximum raw cosine similarity
+
 
 @dataclass
 class TraitModel:
@@ -35,6 +40,8 @@ class PersonaProfile:
     trait_negative: set[str]
     weights: dict[str, float]
     trait_model: TraitModel
+    style_sim_min: float = DEFAULT_STYLE_SIM_MIN
+    style_sim_max: float = DEFAULT_STYLE_SIM_MAX
 
 
 @dataclass
@@ -85,9 +92,13 @@ class AuthenticityScorer:
         if not turns:
             return empty_summary()
 
-        # Rescale style_sim to make the range more intuitive while preserving differences
+        # Rescale style_sim using global normalization bounds
         raw_style_scores = [turn.style_sim for turn in turns]
-        rescaled_style_scores = rescale_similarity(raw_style_scores)
+        rescaled_style_scores = rescale_similarity(
+            raw_style_scores,
+            min_score=self.profile.style_sim_min,
+            max_score=self.profile.style_sim_max
+        )
 
         # Recompute combined scores with rescaled style_sim
         for i, turn in enumerate(turns):
@@ -135,7 +146,7 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
     }
     trait_negative = avoided.copy()
 
-    calibration_weights, trait_model = load_calibration(
+    calibration_weights, trait_model, style_sim_min, style_sim_max = load_calibration(
         persona_path.with_suffix(".traits.json"),
         default_weights={"style": 0.3, "traits": 0.3, "lexicon": 0.4},
     )
@@ -157,6 +168,8 @@ def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> Per
         trait_negative=trait_negative,
         weights=calibration_weights,
         trait_model=trait_model,
+        style_sim_min=style_sim_min,
+        style_sim_max=style_sim_max,
     )
 
 
@@ -229,9 +242,22 @@ def lexicon_score(tokens: list[str], profile: PersonaProfile) -> float:
         return 0.5
     preferred = sum(token in profile.preferred for token in tokens)
     avoided = sum(token in profile.avoided for token in tokens)
-    total = max(1, preferred + avoided)
-    balance = (preferred - avoided) / total
-    return max(0.0, min(1.0, 0.5 + balance / 2))
+
+    # Density-based approach: penalize text with no brand words
+    lexicon_density = (preferred + avoided) / max(1, len(tokens))
+
+    # Balance: positive if more preferred than avoided
+    if preferred + avoided == 0:
+        balance = 0.0  # neutral text gets 0 balance
+    else:
+        balance = (preferred - avoided) / (preferred + avoided)
+
+    # Scale balance to [0, 1] range and weight by density
+    # Density * 10 means ~10% brand word usage → full weight
+    normalized_balance = 0.5 + balance / 2  # maps [-1, 1] → [0, 1]
+    score = normalized_balance * min(1.0, lexicon_density * 10)
+
+    return max(0.0, min(1.0, score))
 
 
 def bootstrap_ci(
@@ -258,15 +284,21 @@ def bootstrap_ci(
 
 def load_calibration(
     calibration_path: Path, default_weights: dict[str, float]
-) -> tuple[dict[str, float], Optional[TraitModel]]:
+) -> tuple[dict[str, float], Optional[TraitModel], float, float]:
+    """Load calibration data including weights, trait model, and normalization bounds."""
+    default_min = DEFAULT_STYLE_SIM_MIN
+    default_max = DEFAULT_STYLE_SIM_MAX
+
     if not calibration_path.exists():
-        return default_weights, None
+        return default_weights, None, default_min, default_max
     try:
         calibration = json.loads(calibration_path.read_text())
     except json.JSONDecodeError:
-        return default_weights, None
+        return default_weights, None, default_min, default_max
 
     weights: dict[str, float] = default_weights
+    style_sim_min = default_min
+    style_sim_max = default_max
 
     if isinstance(calibration, dict):
         raw_weights = calibration.get("weights") if isinstance(calibration.get("weights"), dict) else None
@@ -285,10 +317,16 @@ def load_calibration(
                 keys = ("style", "traits", "lexicon")
                 weights = {key: value / total for key, value in zip(keys, values)}
 
-        trait_model = _parse_trait_model(calibration)
-        return weights, trait_model
+        # Read normalization bounds if present
+        if isinstance(calibration.get("style_sim_min"), (int, float)):
+            style_sim_min = float(calibration["style_sim_min"])
+        if isinstance(calibration.get("style_sim_max"), (int, float)):
+            style_sim_max = float(calibration["style_sim_max"])
 
-    return weights, None
+        trait_model = _parse_trait_model(calibration)
+        return weights, trait_model, style_sim_min, style_sim_max
+
+    return weights, None, default_min, default_max
 
 
 def _parse_trait_model(calibration: dict) -> Optional[TraitModel]:
@@ -363,39 +401,40 @@ def mean(values: Iterable[float]) -> float:
     return total / count if count else 0.0
 
 
-def rescale_similarity(scores: list[float]) -> list[float]:
+def rescale_similarity(scores: list[float], min_score: float, max_score: float) -> list[float]:
     """
-    Rescale embedding similarity scores to use a more intuitive range.
+    Rescale embedding similarity scores using global normalization bounds.
+
+    Uses persona-specific (or default) min/max values to ensure scores are
+    comparable across different evaluation runs.
 
     Raw cosine similarity typically ranges from 0.05-0.25 for realistic text.
-    This rescales to approximately 0.3-0.9 while preserving relative differences.
+    This rescales to approximately 0.3-0.9:
 
-    - Worst responses → ~0.3
-    - Average responses → ~0.6
-    - Best responses → ~0.9
+    - Below global min → ~0.3
+    - At global min → ~0.3
+    - Average (midpoint) → ~0.6
+    - At global max → ~0.9
+    - Above global max → ~0.9
 
     This allows on-brand content to achieve high scores while maintaining
-    separation between good and bad responses.
+    separation between good and bad responses across runs.
     """
     if not scores:
         return []
 
-    if len(scores) == 1:
-        # Single score: map to middle of range
-        return [0.6]
-
-    min_score = min(scores)
-    max_score = max(scores)
-
-    # If all scores are identical, return middle value
-    if max_score - min_score < 0.001:
+    # Ensure valid range
+    if max_score <= min_score:
         return [0.6 for _ in scores]
 
-    # Min-max normalization to 0-1 range
-    normalized = [(score - min_score) / (max_score - min_score) for score in scores]
-
-    # Rescale to 0.3-0.9 range for better intuition
-    # This gives headroom below and above while using most of the scale
-    rescaled = [0.3 + (norm * 0.6) for norm in normalized]
+    rescaled = []
+    for score in scores:
+        # Normalize to [0, 1] using global bounds
+        normalized = (score - min_score) / (max_score - min_score)
+        # Clamp to [0, 1] in case score is outside calibration bounds
+        normalized = max(0.0, min(1.0, normalized))
+        # Rescale to [0.3, 0.9] range for intuitive interpretation
+        rescaled_score = 0.3 + (normalized * 0.6)
+        rescaled.append(rescaled_score)
 
     return rescaled

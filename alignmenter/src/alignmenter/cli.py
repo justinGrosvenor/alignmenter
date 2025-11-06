@@ -33,10 +33,12 @@ app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
 persona_app = typer.Typer(help="Persona helper commands.")
 dataset_app = typer.Typer(help="Dataset helper commands.")
 import_app = typer.Typer(help="Import helpers.")
+calibrate_app = typer.Typer(help="Calibration toolkit for optimizing persona parameters.")
 
 app.add_typer(persona_app, name="persona")
 app.add_typer(dataset_app, name="dataset")
 app.add_typer(import_app, name="import")
+app.add_typer(calibrate_app, name="calibrate")
 
 
 @import_app.command("gpt")
@@ -935,6 +937,150 @@ def dataset_sanitize(
                 typer.echo(json.dumps(record, indent=2))
     else:
         typer.echo(f"  Output: {output_path}")
+
+
+# Calibration Commands
+
+
+@calibrate_app.command("generate")
+def calibrate_generate(
+    dataset: Path = typer.Option(..., "--dataset", help="Path to input JSONL dataset"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
+    output: Path = typer.Option(..., "--output", help="Path to output unlabeled candidates JSONL"),
+    num_samples: int = typer.Option(50, "--num-samples", help="Number of candidates to generate"),
+    strategy: str = typer.Option("diverse", "--strategy", help="Sampling strategy: diverse, random, edge_cases"),
+    seed: int = typer.Option(42, "--seed", help="Random seed for reproducibility"),
+) -> None:
+    """Generate candidate responses for labeling from existing dataset."""
+    from alignmenter.calibration.generate import generate_candidates
+
+    try:
+        result = generate_candidates(
+            dataset_path=dataset,
+            persona_path=persona,
+            output_path=output,
+            num_samples=num_samples,
+            strategy=strategy,
+            seed=seed,
+        )
+        typer.secho(f"✓ Generated {result['total_candidates']} candidates", fg=typer.colors.GREEN)
+        typer.echo(f"  Strategy: {result['strategy']}")
+        typer.echo(f"  Output: {result['output_path']}")
+        typer.echo(f"\nScenario distribution:")
+        for scenario, count in sorted(result['scenario_distribution'].items()):
+            typer.echo(f"  {scenario}: {count}")
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("label")
+def calibrate_label(
+    input: Path = typer.Option(..., "--input", help="Path to unlabeled candidates JSONL"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
+    output: Path = typer.Option(..., "--output", help="Path to output labeled JSONL"),
+    append: bool = typer.Option(False, "--append", help="Append to existing labeled data"),
+    labeler: Optional[str] = typer.Option(None, "--labeler", help="Name of person labeling"),
+) -> None:
+    """Interactively label responses for calibration."""
+    from alignmenter.calibration.label import label_data
+
+    try:
+        stats = label_data(
+            input_path=input,
+            persona_path=persona,
+            output_path=output,
+            append=append,
+            labeler=labeler,
+        )
+        # Stats already printed by label_data
+    except KeyboardInterrupt:
+        typer.echo("\nLabeling interrupted by user")
+        raise typer.Exit(0)
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("bounds")
+def calibrate_bounds(
+    labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
+    output: Path = typer.Option(..., "--output", help="Path to output bounds report JSON"),
+    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    percentile_low: float = typer.Option(5.0, "--percentile-low", help="Lower percentile for min bound"),
+    percentile_high: float = typer.Option(95.0, "--percentile-high", help="Upper percentile for max bound"),
+) -> None:
+    """Estimate normalization bounds from labeled data."""
+    from alignmenter.calibration.bounds import estimate_bounds
+
+    try:
+        report = estimate_bounds(
+            labeled_path=labeled,
+            persona_path=persona,
+            output_path=output,
+            embedding_provider=embedding,
+            percentile_low=percentile_low,
+            percentile_high=percentile_high,
+        )
+        # Results already printed by estimate_bounds
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("optimize")
+def calibrate_optimize(
+    labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
+    output: Path = typer.Option(..., "--output", help="Path to output weights report JSON"),
+    bounds: Optional[Path] = typer.Option(None, "--bounds", help="Path to bounds report JSON"),
+    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    grid_step: float = typer.Option(0.1, "--grid-step", help="Grid search step size"),
+) -> None:
+    """Optimize component weights using grid search."""
+    from alignmenter.calibration.optimize import optimize_weights
+
+    try:
+        report = optimize_weights(
+            labeled_path=labeled,
+            persona_path=persona,
+            output_path=output,
+            bounds_path=bounds,
+            embedding_provider=embedding,
+            grid_step=grid_step,
+        )
+        # Results already printed by optimize_weights
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
+
+
+@calibrate_app.command("validate")
+def calibrate_validate(
+    labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
+    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
+    output: Path = typer.Option(..., "--output", help="Path to output diagnostics report JSON"),
+    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    train_split: float = typer.Option(0.8, "--train-split", help="Fraction of data for training"),
+    seed: int = typer.Option(42, "--seed", help="Random seed for splitting"),
+) -> None:
+    """Validate calibration and generate diagnostics."""
+    from alignmenter.calibration.validate import validate_calibration
+
+    try:
+        report = validate_calibration(
+            labeled_path=labeled,
+            persona_path=persona,
+            output_path=output,
+            embedding_provider=embedding,
+            train_split=train_split,
+            seed=seed,
+        )
+        # Results already printed by validate_calibration
+    except Exception as e:
+        typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1)
 
 
 def _load_env(path: Path) -> dict[str, str]:

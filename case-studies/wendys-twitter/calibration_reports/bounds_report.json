@@ -1,0 +1,22 @@
+{
+  "style_sim_min": 0.1401,
+  "style_sim_max": 0.4523,
+  "style_sim_mean": 0.2695,
+  "style_sim_std": 0.1154,
+  "style_sim_median": 0.2425,
+  "percentile_low": 5.0,
+  "percentile_high": 95.0,
+  "num_examples": 235,
+  "on_brand_style": {
+    "mean": 0.3177,
+    "std": 0.1403,
+    "median": 0.2725,
+    "count": 64
+  },
+  "off_brand_style": {
+    "mean": 0.2402,
+    "std": 0.0729,
+    "median": 0.2272,
+    "count": 72
+  }
+}

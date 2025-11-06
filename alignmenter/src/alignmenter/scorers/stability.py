@@ -7,8 +7,10 @@ from typing import Iterable, Optional, Sequence
 
 from alignmenter.providers.embeddings import load_embedding_provider
 
-MAX_COSINE_DISTANCE = 2.0  # cosine distance spans [0, 2]
-MAX_VARIANCE = MAX_COSINE_DISTANCE ** 2
+# Default global normalization bounds (empirical values for typical embeddings)
+# These can be overridden via __init__ parameters or calibration data
+DEFAULT_VARIANCE_MIN = 0.01  # typical minimum variance for stable sessions
+DEFAULT_VARIANCE_MAX = 0.50  # typical maximum variance for unstable sessions
 
 
 class StabilityScorer:
@@ -16,9 +18,18 @@ class StabilityScorer:
 
     id = "stability"
 
-    def __init__(self, *, embedding: Optional[str] = None, min_turns: int = 2) -> None:
+    def __init__(
+        self,
+        *,
+        embedding: Optional[str] = None,
+        min_turns: int = 2,
+        variance_min: float = DEFAULT_VARIANCE_MIN,
+        variance_max: float = DEFAULT_VARIANCE_MAX,
+    ) -> None:
         self.embedder = load_embedding_provider(embedding)
         self.min_turns = min_turns
+        self.variance_min = variance_min
+        self.variance_max = variance_max
 
     def score(self, sessions: Iterable) -> dict:
         session_scores = []
@@ -41,6 +52,18 @@ class StabilityScorer:
                 "normalized_variance": 0.0,
             }
 
+        # Use global normalization bounds instead of within-batch normalization
+        raw_variances = [score["variance"] for score in session_scores]
+        rescaled_variances = _rescale_variance(
+            raw_variances,
+            min_variance=self.variance_min,
+            max_variance=self.variance_max
+        )
+
+        # Update session scores with rescaled variances
+        for i, score in enumerate(session_scores):
+            score["normalized_variance"] = rescaled_variances[i]
+
         session_variance = _mean(score["variance"] for score in session_scores)
         normalized_variance = _mean(score["normalized_variance"] for score in session_scores)
         mean_distance = _mean(score["mean_distance"] for score in session_scores)
@@ -56,15 +79,64 @@ class StabilityScorer:
 
 
 def _session_stability(vectors: list[list[float]]) -> dict:
+    """
+    Compute stability metrics for a single session.
+
+    Measures variance of cosine distances from the session mean embedding.
+    Uses population variance (dividing by n) rather than sample variance (n-1).
+
+    Note: For small sessions (2-3 turns), population variance tends to slightly
+    underestimate the true variance compared to sample variance with Bessel's
+    correction. However, since we apply empirical rescaling across sessions,
+    this bias is consistent and does not affect relative comparisons.
+    """
     mean_vector = normalize_vector(_mean_vector(vectors))
     distances = [cosine_distance(vector, mean_vector) for vector in vectors]
     variance = _mean((distance - _mean(distances)) ** 2 for distance in distances)
-    normalized_variance = min(1.0, variance / MAX_VARIANCE) if MAX_VARIANCE else variance
+    # Normalized variance will be computed at batch level using empirical rescaling
     return {
         "variance": variance,
-        "normalized_variance": normalized_variance,
+        "normalized_variance": variance,  # placeholder, will be rescaled in score()
         "mean_distance": _mean(distances),
     }
+
+
+def _rescale_variance(variances: list[float], min_variance: float, max_variance: float) -> list[float]:
+    """
+    Rescale variance values using global normalization bounds.
+
+    Uses default (or calibrated) min/max values to ensure scores are
+    comparable across different evaluation runs.
+
+    Raw variance typically ranges from 0.01-0.5 for realistic text.
+    This rescales to approximately 0.1-0.9 to improve discriminative power:
+
+    - Below global min → ~0.1 → stability ~0.9
+    - At global min → ~0.1 → stability ~0.9
+    - Average (midpoint) → ~0.5 → stability ~0.5
+    - At global max → ~0.9 → stability ~0.1
+    - Above global max → ~0.9 → stability ~0.1
+
+    This allows the full stability scale to be utilized across runs.
+    """
+    if not variances:
+        return []
+
+    # Ensure valid range
+    if max_variance <= min_variance:
+        return [0.5 for _ in variances]
+
+    rescaled = []
+    for var in variances:
+        # Normalize to [0, 1] using global bounds
+        normalized = (var - min_variance) / (max_variance - min_variance)
+        # Clamp to [0, 1] in case variance is outside calibration bounds
+        normalized = max(0.0, min(1.0, normalized))
+        # Rescale to [0.1, 0.9] range for better discriminative power
+        rescaled_var = 0.1 + (normalized * 0.8)
+        rescaled.append(rescaled_var)
+
+    return rescaled
 
 
 def normalize_vector(vector: Sequence[float]) -> list[float]:
