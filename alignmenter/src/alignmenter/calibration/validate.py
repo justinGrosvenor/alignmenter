@@ -8,6 +8,7 @@ from typing import Optional
 
 import numpy as np
 from sklearn.metrics import roc_auc_score, f1_score, precision_recall_curve, roc_curve
+from sklearn.model_selection import train_test_split
 
 from alignmenter.scorers.authenticity import AuthenticityScorer
 
@@ -51,14 +52,31 @@ def validate_calibration(
             f"Need at least 10 labeled examples for validation, got {len(labeled_data)}"
         )
 
-    # Split into train/validation
-    indices = np.random.permutation(len(labeled_data))
-    train_size = int(len(labeled_data) * train_split)
-    train_indices = set(indices[:train_size])
-    val_indices = set(indices[train_size:])
+    # Extract labels for stratification
+    labels = [item["label"] for item in labeled_data]
 
-    train_data = [labeled_data[i] for i in train_indices]
-    val_data = [labeled_data[i] for i in val_indices]
+    # Check if we have both classes
+    unique_labels = set(labels)
+    if len(unique_labels) < 2:
+        raise ValueError(
+            f"Dataset must contain both on-brand (1) and off-brand (0) examples. "
+            f"Found only: {unique_labels}"
+        )
+
+    # Stratified split to ensure both classes in train/validation
+    if train_split > 0.0 and train_split < 1.0:
+        train_data, val_data = train_test_split(
+            labeled_data,
+            train_size=train_split,
+            stratify=labels,
+            random_state=seed
+        )
+    elif train_split == 0.0:
+        train_data = []
+        val_data = labeled_data
+    else:
+        train_data = labeled_data
+        val_data = []
 
     print(f"Train set: {len(train_data)} examples")
     print(f"Validation set: {len(val_data)} examples")
@@ -80,6 +98,15 @@ def validate_calibration(
         result = scorer.score(session)
         val_scores.append(result.get("mean", 0.5))
         val_labels.append(example["label"])
+
+    # Guard against single-class validation set
+    unique_val_labels = set(val_labels)
+    if len(unique_val_labels) < 2:
+        raise ValueError(
+            f"Validation set contains only one class: {unique_val_labels}. "
+            f"Cannot compute ROC-AUC or precision-recall metrics. "
+            f"Try using a larger dataset or adjusting train_split."
+        )
 
     # Compute metrics
     val_auc = roc_auc_score(val_labels, val_scores)
