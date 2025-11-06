@@ -54,7 +54,7 @@ alignmenter init
 alignmenter run --config configs/run.yaml --no-generate
 ```
 
-> **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](../docs/offline_safety.md) for details.
+> **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md) for details.
 
 ### Run Your First Evaluation
 
@@ -181,10 +181,10 @@ Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 
 ## Documentation
 
-- **[Persona Annotation Guide](../docs/persona_annotation.md)**: How to label data and calibrate trait models
-- **[Offline Safety Classifier](../docs/offline_safety.md)**: Using distilled-safety-roberta without API calls
-- **[Datasets README](datasets/README.md)**: Data provenance, licensing, and anonymization
-- **[Requirements](../docs/alignmenter_requirements.md)**: Full product specification
+- **[Persona Annotation Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md)**: How to label data and calibrate trait models
+- **[Offline Safety Classifier](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md)**: Using distilled-safety-roberta without API calls
+- **[Datasets README](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/datasets/README.md)**: Data provenance, licensing, and anonymization
+- **[Requirements](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/alignmenter_requirements.md)**: Full product specification
 
 ## Usage Examples
 
@@ -431,9 +431,9 @@ If you use Alignmenter in research, please cite:
 
 ## Support
 
-- **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/alignmenter/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/alignmenter/discussions)
+- **Documentation**: [docs/](https://github.com/justinGrosvenor/alignmenter/tree/main/docs)
+- **Issues**: [GitHub Issues](https://github.com/justinGrosvenor/alignmenter/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/justinGrosvenor/alignmenter/discussions)
 
 ---
 

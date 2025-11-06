@@ -101,7 +101,7 @@ Loading dataset: 60 turns across 10 sessions
 Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 ```
 
-See **[alignmenter/README.md](alignmenter/README.md)** for comprehensive documentation, API usage, and examples.
+See **[alignmenter/README.md](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** for comprehensive documentation, API usage, and examples.
 
 ---
 
@@ -151,18 +151,18 @@ The core evaluation toolkit lives in **`alignmenter/`**:
 ## Documentation
 
 ### Getting Started
-- **[Complete CLI Guide](alignmenter/README.md)** - Installation, usage, API reference
-- **[Quickstart Tutorial](alignmenter/README.md#quickstart)** - Run your first evaluation in 2 minutes
+- **[Complete CLI Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** - Installation, usage, API reference
+- **[Quickstart Tutorial](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#quickstart)** - Run your first evaluation in 2 minutes
 
 ### Deep Dives
-- **[Persona Annotation Workflow](docs/persona_annotation.md)** - How to label data and train trait models
-- **[Offline Safety Classifier](docs/offline_safety.md)** - Using distilled-safety-roberta without API calls
-- **[Dataset Management](alignmenter/datasets/README.md)** - Provenance, licensing, anonymization
+- **[Persona Annotation Workflow](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md)** - How to label data and train trait models
+- **[Offline Safety Classifier](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md)** - Using distilled-safety-roberta without API calls
+- **[Dataset Management](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/datasets/README.md)** - Provenance, licensing, anonymization
 
 ### Reference
-- **[Product Requirements](docs/alignmenter_requirements.md)** - Full specification
-- **[Competitive Analysis](docs/competitive_landscape.md)** - vs OpenAI Evals, LangSmith, Arize Phoenix
-- **[Architecture Diagram](alignmenter/README.md#architecture)** - System design overview
+- **[Product Requirements](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/alignmenter_requirements.md)** - Full specification
+- **[Competitive Analysis](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/competitive_landscape.md)** - vs OpenAI Evals, LangSmith, Arize Phoenix
+- **[Architecture Diagram](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#architecture)** - System design overview
 
 ---
 
@@ -369,12 +369,12 @@ See [LICENSE](LICENSE) for the full text.
 ## Support
 
 ### Documentation
-- **[Complete Guide](alignmenter/README.md)** - Comprehensive CLI documentation
-- **[API Reference](alignmenter/src/alignmenter/)** - Python package reference
-- **[Examples](alignmenter/README.md#usage-examples)** - Common workflows
+- **[Complete Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** - Comprehensive CLI documentation
+- **[API Reference](https://github.com/justinGrosvenor/alignmenter/tree/main/alignmenter/src/alignmenter)** - Python package reference
+- **[Examples](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#usage-examples)** - Common workflows
 
 ### Get Help
-- **Issues**: [GitHub Issues](https://github.com/yourusername/alignmenter/issues)
+- **Issues**: [GitHub Issues](https://github.com/justinGrosvenor/alignmenter/issues)
 - **Email**: support@alignmenter.com
 - **Enterprise Support**: Contact sales@alignmenter.com
 

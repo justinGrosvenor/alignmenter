@@ -294,4 +294,4 @@ Once you've calibrated your persona:
 3. **Iterate**: Re-calibrate as your brand voice evolves
 4. **Document**: Keep annotation guidelines up to date
 
-For questions or issues, see the [main README](../README.md) or file an issue on GitHub.
+For questions or issues, see the [main README](https://github.com/justinGrosvenor/alignmenter/blob/main/README.md) or file an issue on GitHub.

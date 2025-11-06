@@ -234,7 +234,7 @@ Alignmenter is **purpose-built for persona alignment** in conversational AI. Whi
 For teams shipping AI copilots, chat experiences, or branded assistants, Alignmenter provides the specialized evaluation toolkit that generic frameworks lack.
 
 **Next Steps:**
-- [Install Alignmenter](../README.md#quickstart)
-- [Define your persona pack](../alignmenter/configs/persona/)
-- [Run your first evaluation](../README.md#run-your-first-evaluation)
-- [Compare with your current evaluation stack](../README.md#usage-examples)
+- [Install Alignmenter](https://github.com/justinGrosvenor/alignmenter/blob/main/README.md#quickstart)
+- [Define your persona pack](https://github.com/justinGrosvenor/alignmenter/tree/main/alignmenter/configs/persona)
+- [Run your first evaluation](https://github.com/justinGrosvenor/alignmenter/blob/main/README.md#run-your-first-evaluation)
+- [Compare with your current evaluation stack](https://github.com/justinGrosvenor/alignmenter/blob/main/README.md#usage-examples)

@@ -372,7 +372,7 @@ For calibration datasets:
    # Should be roughly 40-60% positive
    ```
 
-See [docs/persona_annotation.md](../docs/persona_annotation.md) for comprehensive annotation guidelines.
+See [docs/persona_annotation.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md) for comprehensive annotation guidelines.
 
 ## Dataset Quality Checks
 
@@ -599,20 +599,20 @@ To contribute a dataset to Alignmenter:
 
 ## Resources
 
-- **Annotation guide**: [docs/persona_annotation.md](../docs/persona_annotation.md)
+- **Annotation guide**: [docs/persona_annotation.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md)
 - **Bootstrap script**: `scripts/bootstrap_dataset.py`
 - **Sanitization script**: `scripts/sanitize_dataset.py`
 - **Quality validation**: `scripts/validate_dataset.py`
-- **Main README**: [../README.md](../README.md)
+- **Main README**: [README.md](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)
 
 ## Support
 
 For questions about datasets:
 
-- **Documentation**: Check [docs/](../docs/)
+- **Documentation**: Check [docs/](https://github.com/justinGrosvenor/alignmenter/tree/main/docs)
 - **Examples**: See `datasets/demo_conversations.jsonl`
-- **Issues**: File at [GitHub Issues](https://github.com/yourusername/alignmenter/issues)
+- **Issues**: File at [GitHub Issues](https://github.com/justinGrosvenor/alignmenter/issues)
 
 ## License
 
-Datasets in this repository are licensed under **Apache License 2.0** unless otherwise noted. See [LICENSE](../LICENSE) for details.
+Datasets in this repository are licensed under **Apache License 2.0** unless otherwise noted. See [LICENSE](https://github.com/justinGrosvenor/alignmenter/blob/main/LICENSE) for details.
