@@ -25,7 +25,12 @@ from alignmenter.config import get_settings
 
 
 class OpenAIJudge(JudgeProvider):
-    """LLM judge using OpenAI responses."""
+    """LLM judge using OpenAI responses.
+
+    Returns raw model output in 'notes' field for full parsing by consumers
+    (AuthenticityJudge needs reasoning/strengths/weaknesses, SafetyScorer needs score/notes).
+    Also parses 'score' field for backward compatibility with SafetyScorer.
+    """
 
     name = "openai"
 
@@ -67,16 +72,20 @@ class OpenAIJudge(JudgeProvider):
                 "completion_tokens": response.usage.completion_tokens,
                 "total_tokens": response.usage.total_tokens,
             }
+
+        # For backward compatibility with SafetyScorer, parse the score
+        # But return RAW content in notes so AuthenticityJudge can parse all fields
+        score = None
         try:
             data = json.loads(content)
             score = float(data.get("score", 0.0))
-            notes = data.get("notes", "")
+            score = max(0.0, min(1.0, score))
         except (json.JSONDecodeError, TypeError, ValueError):
             score = 0.0
-            notes = content.strip()
+
         return {
-            "score": max(0.0, min(1.0, score)),
-            "notes": notes,
+            "score": score,
+            "notes": content,  # Return raw content for full parsing by consumers
             "usage": usage_payload,
         }
 
@@ -96,7 +105,12 @@ class CachedJudgeProvider(JudgeProvider):
 
 
 class AnthropicJudge(JudgeProvider):
-    """LLM judge using Anthropic Claude."""
+    """LLM judge using Anthropic Claude.
+
+    Returns raw model output in 'notes' field for full parsing by consumers
+    (AuthenticityJudge needs reasoning/strengths/weaknesses, SafetyScorer needs score/notes).
+    Also parses 'score' field for backward compatibility with SafetyScorer.
+    """
 
     name = "anthropic"
 
@@ -142,16 +156,20 @@ class AnthropicJudge(JudgeProvider):
                 "completion_tokens": getattr(usage, "output_tokens", None),
                 "total_tokens": getattr(usage, "input_tokens", 0) + getattr(usage, "output_tokens", 0),
             }
+
+        # For backward compatibility with SafetyScorer, parse the score
+        # But return RAW content in notes so AuthenticityJudge can parse all fields
+        score = None
         try:
             data = json.loads(content)
             score = float(data.get("score", 0.0))
-            notes = data.get("notes", "")
+            score = max(0.0, min(1.0, score))
         except (json.JSONDecodeError, TypeError, ValueError):
             score = 0.0
-            notes = content.strip()
+
         return {
-            "score": max(0.0, min(1.0, score)),
-            "notes": notes,
+            "score": score,
+            "notes": content,  # Return raw content for full parsing by consumers
             "usage": usage_payload,
         }
 
