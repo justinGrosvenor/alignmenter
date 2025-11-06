@@ -3,14 +3,15 @@ const metrics = [
     name: "Authenticity",
     tagline: "Does it sound like your brand?",
     description:
-      "Checks if AI responses match your brand&rsquo;s voice and personality. Compares writing style, tone, and word choices against examples you provide. Shows confidence scores so you know when something&rsquo;s off.",
+      "Checks if AI responses match your brand&rsquo;s voice and personality. Compares writing style, tone, and word choices against examples you provide. Optional LLM judge adds qualitative analysis with human-readable explanations.",
     formula: "0.6 × style_sim + 0.25 × traits + 0.15 × lexicon",
     features: [
       "Compares writing style to your brand examples",
       "Checks personality traits match your tone",
       "Flags words and phrases that feel off-brand",
+      "Optional LLM judge explains strengths and weaknesses",
+      "Cost-optimized sampling strategies (90% savings)",
       "Syncs instructions from your custom GPTs",
-      "Shows confidence ranges for each score",
     ],
     color: "signal",
   },
