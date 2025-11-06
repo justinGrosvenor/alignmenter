@@ -243,14 +243,15 @@ def lexicon_score(tokens: list[str], profile: PersonaProfile) -> float:
     preferred = sum(token in profile.preferred for token in tokens)
     avoided = sum(token in profile.avoided for token in tokens)
 
-    # Density-based approach: penalize text with no brand words
+    # No brand words at all → neutral score
+    if preferred + avoided == 0:
+        return 0.5
+
+    # Density-based approach: penalize text with few brand words
     lexicon_density = (preferred + avoided) / max(1, len(tokens))
 
     # Balance: positive if more preferred than avoided
-    if preferred + avoided == 0:
-        balance = 0.0  # neutral text gets 0 balance
-    else:
-        balance = (preferred - avoided) / (preferred + avoided)
+    balance = (preferred - avoided) / (preferred + avoided)
 
     # Scale balance to [0, 1] range and weight by density
     # Density * 10 means ~10% brand word usage → full weight
