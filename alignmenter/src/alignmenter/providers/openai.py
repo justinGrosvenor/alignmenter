@@ -107,6 +107,7 @@ class OpenAICustomGPTProvider:
     def tokenizer(self) -> None:
         return None
 
+
 def _extract_content(message: Any) -> str:
     if message is None:
         return ""

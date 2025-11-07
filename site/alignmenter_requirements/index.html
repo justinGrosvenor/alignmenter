@@ -1,0 +1,1651 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+      
+      
+        <meta name="author" content="Justin Grosvenor">
+      
+      
+        <link rel="canonical" href="https://alignmenter.com/alignmenter_requirements/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Alignmenter: Requirements Document - Alignmenter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#alignmenter-requirements-document" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Alignmenter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Alignmenter: Requirements Document
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Alignmenter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/persona/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Persona Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calibration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Safety Checks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/llm-judges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Judges
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0-brand-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      0. Brand &amp; Identity
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Purpose
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Goals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Non-Goals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-primary-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Primary Users
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Success Metrics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-core-scenarios-and-acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Core Scenarios and Acceptance Criteria
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Core Scenarios and Acceptance Criteria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#s1-single-model-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      S1: Single Model Audit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s2-version-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      S2: Version Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s3-custom-persona-pack" class="md-nav__link">
+    <span class="md-ellipsis">
+      S3: Custom Persona Pack
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s4-custom-gpt-voice" class="md-nav__link">
+    <span class="md-ellipsis">
+      S4: Custom GPT Voice
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#s5-local-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      S5: Local Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-system-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. System Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-data-and-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Data and Config
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Data and Config">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-conversation-schema-parquet-or-jsonl" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1 Conversation Schema (Parquet or JSONL)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-persona-pack-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2 Persona Pack (YAML)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-run-config-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.3 Run Config (YAML)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-dataset-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.4 Dataset Hygiene
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-metric-definitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Metric Definitions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Metric Definitions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-authenticity-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1 Authenticity Score
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1 Authenticity Score">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#911-llm-judge-for-authenticity-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1.1 LLM Judge for Authenticity (Optional)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-safety-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2 Safety Score
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-stability-drift-score" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3 Stability (Drift) Score
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-cost-and-latency" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4 Cost and Latency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-judge-cost-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5 Judge Cost Model
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Interfaces
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Interfaces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provider-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Provider Interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scorer-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scorer Interface
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-artifact-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. Artifact Layout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-result-schema-excerpt" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Result Schema (Excerpt)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-demo-dataset" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Demo Dataset
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-report-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      14. Report Specification
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. Integrations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-security-privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      16. Security &amp; Privacy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-licensing" class="md-nav__link">
+    <span class="md-ellipsis">
+      17. Licensing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-performance-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      18. Performance Targets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      19. Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-risks-and-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      20. Risks and Mitigations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="20. Risks and Mitigations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technical-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technical Risks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adoption-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adoption Risks
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-milestones" class="md-nav__link">
+    <span class="md-ellipsis">
+      21. Milestones
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-repo-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      22. Repo Layout
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-makefile-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      23. Makefile Targets
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-roadmap-after-launch" class="md-nav__link">
+    <span class="md-ellipsis">
+      24. Roadmap After Launch
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/alignmenter_requirements.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="alignmenter-requirements-document">Alignmenter: Requirements Document<a class="headerlink" href="#alignmenter-requirements-document" title="Permanent link">&para;</a></h1>
+<h2 id="0-brand-identity">0. Brand &amp; Identity<a class="headerlink" href="#0-brand-identity" title="Permanent link">&para;</a></h2>
+<p><strong>Product Name:</strong> Alignmenter
+<strong>Domain:</strong> <a href="https://alignmenter.com">alignmenter.com</a></p>
+<p><strong>Taglines</strong>
+- "Alignmenter: measure what your model stands for."
+- "The open-source alignment linter for AI."
+- "Quantify tone, trust, and truth."
+- "Alignmenter: audits your AI's authenticity."</p>
+<p><strong>Brand Essence</strong>
+Alignmenter is an open-source evaluation suite for AI systems. It brings the rigor of software linting to AI alignment, quantifying how models behave, communicate, and remain authentic over time.</p>
+<p><strong>Voice and Tone</strong>
+Professional yet transparent. Write with clarity, accountability, and evidence; avoid hype. The brand speaks as a peer to engineers and researchers, not as marketing copy.</p>
+<p><strong>Visual Direction</strong>
+Minimal geometric aesthetics with converging lines forming an <strong>A</strong> shape to symbolize alignment. Neutral palette (grays/whites) with a bright signal-green or electric-blue accent conveying precision and trust.</p>
+<h2 id="1-purpose">1. Purpose<a class="headerlink" href="#1-purpose" title="Permanent link">&para;</a></h2>
+<p>Alignmenter is an open, portable evaluation suite for chatbots and LLM apps. It measures authenticity, safety, and stability so teams can quickly audit model behavior and compare versions. The first release must demo value with a single command and produce a shareable report.</p>
+<h2 id="2-goals">2. Goals<a class="headerlink" href="#2-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Fast demo</strong>: <code>alignmenter demo</code> (or <code>make demo</code>) runs on a small dataset against a chosen model endpoint and outputs an HTML report.</li>
+<li><strong>Portable</strong>: Works with OpenAI, Anthropic, and local vLLM backends.</li>
+<li><strong>Opinionated metrics</strong>: Authenticity (persona alignment), Safety, Stability (drift).</li>
+<li><strong>Reproducibility</strong>: Deterministic dataset, config-driven runs, artifacts saved to disk.</li>
+<li><strong>Extensible</strong>: Plug-in adapters for models, metrics, datasets, and reporters.</li>
+</ul>
+<h2 id="3-non-goals">3. Non-Goals<a class="headerlink" href="#3-non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Hosting or serving models</li>
+<li>Full security certification</li>
+<li>Recreating production observability platforms</li>
+<li>Covering every eval task: focus on the 3 core metrics first</li>
+</ul>
+<h2 id="4-primary-users">4. Primary Users<a class="headerlink" href="#4-primary-users" title="Permanent link">&para;</a></h2>
+<p>Applied ML engineers, product/brand owners, and researchers who need transparent, reproducible behavior audits.</p>
+<h2 id="5-success-metrics">5. Success Metrics<a class="headerlink" href="#5-success-metrics" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Demo runs to completion in under 5 minutes on laptop</li>
+<li>Works on at least two providers</li>
+<li>All three core metrics render with version diff view</li>
+<li>100% of runs produce self-contained <code>reports/&lt;timestamp&gt;/</code> artifacts</li>
+<li>Config-only changes cover common scenarios (no code edits)</li>
+</ul>
+<h2 id="6-core-scenarios-and-acceptance-criteria">6. Core Scenarios and Acceptance Criteria<a class="headerlink" href="#6-core-scenarios-and-acceptance-criteria" title="Permanent link">&para;</a></h2>
+<h3 id="s1-single-model-audit">S1: Single Model Audit<a class="headerlink" href="#s1-single-model-audit" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Given</strong> API key and model name</li>
+<li><strong>When</strong> <code>alignmenter run --model openai:gpt-4o-mini</code></li>
+<li><strong>Then</strong> tool executes 10 short conversations, scores Authenticity, Safety, Stability, and writes <code>reports/&lt;ts&gt;/index.html</code></li>
+</ul>
+<h3 id="s2-version-comparison">S2: Version Comparison<a class="headerlink" href="#s2-version-comparison" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>When</strong> <code>alignmenter run --model openai:gpt-4o-mini --compare anthropic:claude-3-5</code></li>
+<li><strong>Then</strong> produces side-by-side aggregates and CSV deltas</li>
+</ul>
+<h3 id="s3-custom-persona-pack">S3: Custom Persona Pack<a class="headerlink" href="#s3-custom-persona-pack" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>When</strong> <code>alignmenter run --persona alignmenter/configs/persona/goth_muse.yaml</code></li>
+<li><strong>Then</strong> Authenticity uses exemplars and lexicon from that pack</li>
+</ul>
+<h3 id="s4-custom-gpt-voice">S4: Custom GPT Voice<a class="headerlink" href="#s4-custom-gpt-voice" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Given</strong> a Custom GPT’s exported instructions file (or an OpenAI workspace with Custom GPT metadata API access)</li>
+<li><strong>When</strong> the team runs <code>alignmenter import gpt --instructions instructions.txt --out alignmenter/configs/persona/brand_voice.yaml</code> to materialize the persona pack and then executes <code>alignmenter run --model openai-gpt:brand-voice-chef</code></li>
+<li><strong>Then</strong> Alignmenter uses that persona pack to score authenticity/safety/stability against the GPT’s branded voice. When API access is available, <code>alignmenter persona sync-gpt gpt://...</code> automates the import step but must gracefully fall back to the manual workflow if metadata calls return 403/404.</li>
+</ul>
+<h3 id="s5-local-model">S5: Local Model<a class="headerlink" href="#s5-local-model" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>When</strong> <code>alignmenter run --model local:http://localhost:8000/v1/chat/completions</code></li>
+<li><strong>Then</strong> executes locally and logs latency/tokens/cost</li>
+</ul>
+<h2 id="7-system-overview">7. System Overview<a class="headerlink" href="#7-system-overview" title="Permanent link">&para;</a></h2>
+<p>CLI -&gt; Runner -&gt; Provider Adapter -&gt; Scorers -&gt; Aggregator -&gt; Reporters</p>
+<ul>
+<li><strong>Providers:</strong> OpenAI, Anthropic, Local (OpenAI-compatible), Custom GPTs via <code>openai-gpt:&lt;gpt_id&gt;</code> identifiers (requires either manual persona import or OpenAI’s gated metadata access)</li>
+<li><strong>Scorers:</strong> Authenticity, Safety, Stability</li>
+<li><strong>Reporters:</strong> JSON + HTML</li>
+<li><strong>Datasets:</strong> Small conversation packs</li>
+</ul>
+<h2 id="8-data-and-config">8. Data and Config<a class="headerlink" href="#8-data-and-config" title="Permanent link">&para;</a></h2>
+<h3 id="81-conversation-schema-parquet-or-jsonl">8.1 Conversation Schema (Parquet or JSONL)<a class="headerlink" href="#81-conversation-schema-parquet-or-jsonl" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s1&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;turn_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;response text&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;scenario:test&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">&quot;persona_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;goth_muse&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="82-persona-pack-yaml">8.2 Persona Pack (YAML)<a class="headerlink" href="#82-persona-pack-yaml" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">goth_muse_v1</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Goth Muse</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">exemplars</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;soft-voiced,</span><span class="nv"> </span><span class="s">dry</span><span class="nv"> </span><span class="s">humor,</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">little</span><span class="nv"> </span><span class="s">spooky,</span><span class="nv"> </span><span class="s">never</span><span class="nv"> </span><span class="s">saccharine&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;keep</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">brief;</span><span class="nv"> </span><span class="s">prefer</span><span class="nv"> </span><span class="s">concrete</span><span class="nv"> </span><span class="s">words</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">abstractions&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">lexicon</span><span class="p">:</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">preferred</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;sardonic&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;velvet&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;low-light&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;quiet&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ritual&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">avoid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;awesome!!!&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;super</span><span class="nv"> </span><span class="s">excited&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nt">style_rules</span><span class="p">:</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">sentence_length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max_avg</span><span class="p">:</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nt">contractions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">allowed</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">emojis</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">allowed</span><span class="p">:</span><span class="w"> </span><span class="nv">false</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">safety_rules</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">disallowed_topics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;self-harm</span><span class="nv"> </span><span class="s">instructions&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;hate&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nt">brand_notes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;elegant,</span><span class="nv"> </span><span class="s">no</span><span class="nv"> </span><span class="s">camp&quot;</span>
+</code></pre></div>
+<ul>
+<li><strong>Starter template</strong>: ship <code>alignmenter/configs/persona/default.yaml</code> as a neutral voice for teams without a brand pack. A <code>alignmenter persona scaffold --name "Acme"</code> helper populates display name, exemplar scaffold, and lexicon prompts.</li>
+<li><strong>Generation guidance</strong>: optionally call <code>openai:gpt-4o-mini</code> with a company brief to request exemplars; the command saves drafts to <code>alignmenter/configs/persona/generated/</code> for review before activation. Use <code>alignmenter persona export --format labelstudio</code> when preparing batches for Label Studio review.</li>
+</ul>
+<h3 id="83-run-config-yaml">8.3 Run Config (YAML)<a class="headerlink" href="#83-run-config-yaml" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">run_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">demo_gpt4o_vs_claude</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datasets/demo_conversations.jsonl</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">providers</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">primary</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai:gpt-4o-mini</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">compare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic:claude-3-5</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">persona_pack</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter/configs/persona/goth_muse.yaml</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">embedding_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intfloat/e5-small-v2</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">threshold_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.72</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">keyword_lists</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter/configs/safety_keywords.yaml</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai:gpt-4o-mini</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="nt">budget_usd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="nt">price_per_1k_input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.015</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">price_per_1k_output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.06</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="nt">estimated_tokens_per_call</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="nt">max_parallel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="nt">stability</span><span class="p">:</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="nt">window</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="nt">variance_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.12</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="nt">report</span><span class="p">:</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports/</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="nt">include_raw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<h3 id="84-dataset-hygiene">8.4 Dataset Hygiene<a class="headerlink" href="#84-dataset-hygiene" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Default demo set is synthetic. When importing live transcripts, require contributors to run <code>scripts/sanitize_dataset.py</code> to remove PII, replace identifiers with hashed placeholders, and tag consent status in <code>tags</code>.</li>
+<li>Maintain a <code>datasets/README.md</code> outlining provenance, licensing, and anonymization steps for each pack.</li>
+<li>Provide <code>alignmenter dataset lint --path &lt;file&gt;</code> to validate schema, persona coverage, and safety traps before a run. Add <code>--strict</code> when teams need sequential turn checks, role coverage per session, and explicit <code>scenario:*</code> tag enforcement.</li>
+</ul>
+<h2 id="9-metric-definitions">9. Metric Definitions<a class="headerlink" href="#9-metric-definitions" title="Permanent link">&para;</a></h2>
+<h3 id="91-authenticity-score">9.1 Authenticity Score<a class="headerlink" href="#91-authenticity-score" title="Permanent link">&para;</a></h3>
+<p>Formula:
+<code>Auth = 0.6 * style_sim + 0.25 * traits + 0.15 * lexicon</code></p>
+<ul>
+<li><strong>style_sim</strong>: cosine similarity between response embedding and persona exemplars using <code>intfloat/e5-small-v2</code>.</li>
+<li><strong>traits</strong>: fine-tuned logistic regression on labelled persona statements. Traits are calibrated per persona; <code>scripts/calibrate_persona.py</code> fits coefficients against a small QA set and exports JSON weights.</li>
+<li><strong>lexicon</strong>: normalized count difference of preferred vs avoided phrases; uses stemming and case-folding.</li>
+<li><strong>Calibration</strong>: Every persona pack includes at least 25 labelled turns (pass/fail). Authenticity CI bands derived from bootstrap resampling with fixed seed.</li>
+<li><strong>Sourcing guidance</strong>: Recommended workflow—start with internal brand guidelines, draft 10 exemplar prompts per persona, collect 30-40 human-reviewed responses (pass/fail labels). Provide a <code>docs/persona_annotation.md</code> template describing tone traits, disallowed phrases, and review rubric. Offer <code>alignmenter persona export --format csv</code> to prep annotation batches for tools like Label Studio.</li>
+</ul>
+<h4 id="911-llm-judge-for-authenticity-optional">9.1.1 LLM Judge for Authenticity (Optional)<a class="headerlink" href="#911-llm-judge-for-authenticity-optional" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Purpose</strong>: Qualitative analysis of brand voice alignment with human-readable reasoning to complement quantitative scores.</li>
+<li><strong>Judge providers</strong>: OpenAI (gpt-4o) or Anthropic (claude-3-5-sonnet) models evaluate full conversation sessions.</li>
+<li><strong>Output format</strong>: JSON with score (0-10), reasoning, strengths, weaknesses, suggestion, and context_appropriate flag.</li>
+<li><strong>Sampling strategies</strong>: Cost-optimized selection with 6 strategies (random, stratified, errors, extremes, on_failure, custom).</li>
+<li><strong>Integration</strong>: Judge analysis appears in HTML reports and JSON exports; validation commands support <code>--judge</code> flag.</li>
+<li><strong>Cost control</strong>: Budget guardrails (<code>--judge-budget</code>) and sampling rates (<code>--judge-sample</code>) prevent runaway spending.</li>
+<li><strong>Diagnostic commands</strong>:</li>
+<li><code>alignmenter calibrate validate --judge openai:gpt-4o</code> - Validate with judge analysis</li>
+<li><code>alignmenter calibrate diagnose-errors --judge openai:gpt-4o</code> - Analyze false positives/negatives</li>
+<li><code>alignmenter analyze-scenarios --judge openai:gpt-4o</code> - Per-scenario performance breakdown</li>
+<li><strong>Design</strong>: See <code>docs/llm_judge_authenticity.md</code> for full specification.</li>
+</ul>
+<h3 id="92-safety-score">9.2 Safety Score<a class="headerlink" href="#92-safety-score" title="Permanent link">&para;</a></h3>
+<p><code>Safety = min(1 - violation_rate, judge_score)</code>
+- Combines rule-based heuristics with optional LLM judge ratings. Judge prompts stored in <code>alignmenter/configs/judges/safety_prompt.txt</code> and versioned.
+- Offline fallback enables a <code>distilled_safety_roberta</code> classifier when budgets or connectivity restrict LLM judging.
+- Open-source fallback model sourced from Hugging Face (e.g., "ProtectAI/distilled-safety-roberta"); installer verifies license compatibility and pins model hash. Document tokenizer/model cache location so security teams can review before adoption.
+- Agreement target &gt;= 0.8 Cohen's kappa across judge ensemble; mismatches flagged in report calibration section.</p>
+<h3 id="93-stability-drift-score">9.3 Stability (Drift) Score<a class="headerlink" href="#93-stability-drift-score" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Within-session drift: 1 minus normalized variance of response embeddings across turns.</li>
+<li>Across-run drift: cosine difference between responses from two model versions.</li>
+</ul>
+<h3 id="94-cost-and-latency">9.4 Cost and Latency<a class="headerlink" href="#94-cost-and-latency" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Logged per turn if available from provider, else estimated.</li>
+</ul>
+<h3 id="95-judge-cost-model">9.5 Judge Cost Model<a class="headerlink" href="#95-judge-cost-model" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Estimated judge cost per run = <code>num_calls * ((prompt_tokens/1000) * price_per_1k_input + (completion_tokens/1000) * price_per_1k_output)</code>.</li>
+<li>CLI prints projected spend before execution based on <code>estimated_tokens_per_call</code> and dataset size; users confirm when projected cost exceeds <code>judge.budget_usd</code>.</li>
+<li>Budget guardrails halt judging once 90% of <code>judge.budget_usd</code> is consumed; remaining turns fall back to rule-based scores with warning badges in report.</li>
+</ul>
+<h2 id="10-interfaces">10. Interfaces<a class="headerlink" href="#10-interfaces" title="Permanent link">&para;</a></h2>
+<h3 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>alignmenter<span class="w"> </span>init
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--dataset<span class="w"> </span>datasets/demo.jsonl<span class="w"> </span>--persona<span class="w"> </span>alignmenter/configs/persona/goth_muse.yaml<span class="w"> </span>--out<span class="w"> </span>reports/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--compare<span class="w"> </span>anthropic:claude-3-5
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>scaffold<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Acme Voice&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dataset<span class="w"> </span>datasets/demo_conversations.jsonl<span class="w"> </span>--out<span class="w"> </span>annotation.csv
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>alignmenter<span class="w"> </span>import<span class="w"> </span>gpt<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Brand Voice&quot;</span><span class="w"> </span>--instructions<span class="w"> </span>instructions.txt<span class="w"> </span>--out<span class="w"> </span>alignmenter/configs/persona/brand_voice.yaml
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>lint<span class="w"> </span>datasets/demo_conversations.jsonl
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>alignmenter/configs/demo_config.yaml
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>sync-gpt<span class="w"> </span>gpt://brand/voice<span class="w"> </span>--out<span class="w"> </span>alignmenter/configs/persona/_gpt/brand.yaml
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Calibration commands</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span>--dataset<span class="w"> </span>datasets/demo.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--output<span class="w"> </span>calibration_data/candidates.jsonl
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span>--input<span class="w"> </span>calibration_data/candidates.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--output<span class="w"> </span>calibration_data/labeled.jsonl
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span>--labeled<span class="w"> </span>calibration_data/labeled.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--output<span class="w"> </span>reports/bounds.json
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span>--labeled<span class="w"> </span>calibration_data/labeled.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--output<span class="w"> </span>reports/weights.json
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--labeled<span class="w"> </span>calibration_data/labeled.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--output<span class="w"> </span>reports/diagnostics.json
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span>--judge-strategy<span class="w"> </span>stratified<span class="w"> </span>--judge-budget<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span>--labeled<span class="w"> </span>calibration_data/labeled.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--output<span class="w"> </span>reports/errors.json
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>alignmenter<span class="w"> </span>analyze-scenarios<span class="w"> </span>--dataset<span class="w"> </span>datasets/demo.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--output<span class="w"> </span>reports/scenarios.json
+</code></pre></div>
+<p><code>alignmenter run</code> regenerates assistant turns via the configured provider before scoring. Teams that want to score pre-recorded transcripts can pass <code>--no-generate</code> to reuse the dataset verbatim.</p>
+<p>Run configs (<code>alignmenter/configs/*.yaml</code>) support the following keys:</p>
+<ul>
+<li><code>model</code>, <code>compare_model</code>, <code>run_id</code></li>
+<li><code>dataset</code>, <code>persona</code>, <code>keywords</code> (paths resolve relative to the config file)</li>
+<li><code>embedding</code> (e.g., <code>sentence-transformer:all-MiniLM-L6-v2</code>)</li>
+<li><code>judge.provider</code> / <code>judge.budget</code></li>
+<li><code>report.out_dir</code>, <code>report.include_raw</code></li>
+</ul>
+<p><code>alignmenter init</code> should offer to write provider credentials to <code>alignmenter/.env</code>; when teams decline, they must export the corresponding environment variables (e.g. <code>OPENAI_API_KEY</code>) before running the CLI.</p>
+<h3 id="provider-interface">Provider Interface<a class="headerlink" href="#provider-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ChatProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">tokenizer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tokenizer</span><span class="p">]:</span> <span class="o">...</span>
+</code></pre></div>
+<h3 id="scorer-interface">Scorer Interface<a class="headerlink" href="#scorer-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Scorer</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sessions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Session</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ScoreBundle</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<h2 id="11-artifact-layout">11. Artifact Layout<a class="headerlink" href="#11-artifact-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>reports/&lt;timestamp&gt;/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  run.json
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  results.json
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  aggregates.json
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  index.html
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  raw/
+</code></pre></div>
+<h2 id="12-result-schema-excerpt">12. Result Schema (Excerpt)<a class="headerlink" href="#12-result-schema-excerpt" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo_001&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;compare_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic:claude-3-5&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;aggregates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;authenticity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.83</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ci95&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.79</span><span class="p">,</span><span class="w"> </span><span class="mf">0.87</span><span class="p">]},</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">&quot;safety&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">},</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">&quot;stability&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.88</span><span class="p">}</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="13-demo-dataset">13. Demo Dataset<a class="headerlink" href="#13-demo-dataset" title="Permanent link">&para;</a></h2>
+<p>10 sessions with 6 turns each, including brand, tone, and safety traps.</p>
+<ul>
+<li>Synthetic transcripts derived from original prompts in <code>datasets/demo_conversations.jsonl</code>. No third-party data included.</li>
+<li>Import checklist: confirm consent, strip user-identifiable tokens, and record provenance in dataset metadata block.</li>
+<li>Provide <code>scripts/bootstrap_dataset.py</code> to create balanced samples and inject optional adversarial safety turns.</li>
+</ul>
+<h2 id="14-report-specification">14. Report Specification<a class="headerlink" href="#14-report-specification" title="Permanent link">&para;</a></h2>
+<p><strong>Sections:</strong>
+1. Overview
+2. Headline Scores
+3. Version Comparison
+4. Turn-Level Explorer
+5. Cost and Latency
+6. Calibration
+7. Reproducibility</p>
+<p>Each chart independent and exportable. Color-coded pass/warn/fail bands.</p>
+<h2 id="15-integrations">15. Integrations<a class="headerlink" href="#15-integrations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>OpenAI / Anthropic SDKs</li>
+<li>Local OpenAI-compatible endpoints</li>
+<li>Future: LangSmith, Arize Phoenix adapters</li>
+</ul>
+<h2 id="16-security-privacy">16. Security &amp; Privacy<a class="headerlink" href="#16-security-privacy" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Never upload user data by default</li>
+<li>Redact API keys</li>
+<li>Optional PII scrub for logs</li>
+<li><code>.env</code> support for keys</li>
+</ul>
+<h2 id="17-licensing">17. Licensing<a class="headerlink" href="#17-licensing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Code: Apache 2.0</li>
+<li>Datasets: CC-BY 4.0</li>
+<li>Persona packs: open contribution with attribution</li>
+</ul>
+<h2 id="18-performance-targets">18. Performance Targets<a class="headerlink" href="#18-performance-targets" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Demo runtime under 5 minutes on laptop</li>
+<li>Memory under 1 GB</li>
+<li>Retry on network failure</li>
+<li>Graceful budget handling for judges</li>
+</ul>
+<h2 id="19-testing">19. Testing<a class="headerlink" href="#19-testing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Unit tests for scorers</li>
+<li>Provider mocks for CI</li>
+<li>Snapshot tests for HTML reports</li>
+<li><code>make test</code> runs all</li>
+</ul>
+<h2 id="20-risks-and-mitigations">20. Risks and Mitigations<a class="headerlink" href="#20-risks-and-mitigations" title="Permanent link">&para;</a></h2>
+<h3 id="technical-risks">Technical Risks<a class="headerlink" href="#technical-risks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Judge variance:</strong> Average multiple calls with fixed seed. Note that achieving Cohen's kappa &gt;= 0.8 across judge ensemble may be optimistic; budget time for tuning prompts and establishing realistic agreement thresholds.</li>
+<li><strong>Embedding bias:</strong> Allow alternate models, provide calibration script.</li>
+<li><strong>Metric validity:</strong> Publish metric cards and ablations. The Authenticity formula weights (0.6 * style_sim + 0.25 * traits + 0.15 * lexicon) require empirical validation against human brand judgments before hardcoding.</li>
+</ul>
+<h3 id="adoption-risks">Adoption Risks<a class="headerlink" href="#adoption-risks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Differentiation from existing tools:</strong> Many eval frameworks exist (OpenAI Evals, HELM, BIG-bench). Authenticity is novel but narrow. Validate early that target users will invest setup effort (persona packs, 25+ labeled turns per persona) for this metric.</li>
+<li><strong>Competitive positioning:</strong> Maintain a comparison matrix in <code>docs/competitive_landscape.md</code> contrasting Alignmenter against OpenAI Evals, LangSmith, Phoenix. Highlight unique persona authenticity scoring and budget-aware judge flows. Update quarterly as incumbents ship similar features.</li>
+<li><strong>User champion identification:</strong> ML engineers prefer familiar frameworks; brand/product teams may lack embedding/calibration expertise. Identify which persona will champion adoption within target organizations and tailor onboarding accordingly.</li>
+<li><strong>LLM-as-judge concerns:</strong> Using models to evaluate safety introduces its own biases and error modes. Document judge limitations transparently and provide strong rule-based fallbacks.</li>
+<li><strong>Scope clarity:</strong> Stability metrics currently assume text-only conversations without tool calls or multimodal payloads. Explicitly label tool-call/multimodal auditing as post-M3 roadmap to avoid mismatched expectations during pilots.</li>
+</ul>
+<h2 id="21-milestones">21. Milestones<a class="headerlink" href="#21-milestones" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Deliverables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>M0</strong></td>
+<td>CLI + demo dataset + Authenticity v1 + HTML report v0</td>
+</tr>
+<tr>
+<td><strong>M1</strong></td>
+<td>Safety + Stability metrics, JSON output</td>
+</tr>
+<tr>
+<td><strong>M2</strong></td>
+<td>Multi-provider support, version diff view</td>
+</tr>
+<tr>
+<td><strong>M3</strong></td>
+<td>Persona calibration notebook, docs, CI green badge</td>
+</tr>
+</tbody>
+</table>
+<h2 id="22-repo-layout">22. Repo Layout<a class="headerlink" href="#22-repo-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>alignmenter/
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  alignmenter/
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    cli.py
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    runner.py
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    providers/
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>      openai.py
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>      anthropic.py
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>      local.py
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    scorers/
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>      authenticity.py
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>      safety.py
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>      stability.py
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    reports/
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>      html.py
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>      json_out.py
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    utils/
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>      io.py
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>      tokens.py
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>  configs/
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>    persona/goth_muse.yaml
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>    safety_keywords.yaml
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    demo_config.yaml
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>  datasets/
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>    demo_conversations.jsonl
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>  scripts/
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    calibrate_persona.py
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>  tests/
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>  Makefile
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>  pyproject.toml
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>  README.md
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>  LICENSE
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>marketing/
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>  app/
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>  components/
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>  public/
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>  package.json
+</code></pre></div>
+<h2 id="23-makefile-targets">23. Makefile Targets<a class="headerlink" href="#23-makefile-targets" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>make venv
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>make quickstart
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>make demo
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>make test
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>make report-last
+</code></pre></div>
+<h2 id="24-roadmap-after-launch">24. Roadmap After Launch<a class="headerlink" href="#24-roadmap-after-launch" title="Permanent link">&para;</a></h2>
+<ul>
+<li>RAG grounding adapter</li>
+<li>Public leaderboard publishing</li>
+<li>More persona packs and metrics</li>
+<li>LangSmith/Phoenix trace plugins</li>
+<li>Optional telemetry for metric tuning</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/justinGrosvenor/alignmenter" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

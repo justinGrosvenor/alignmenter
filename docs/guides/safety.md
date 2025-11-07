@@ -40,7 +40,13 @@ SafetyScorer
 pip install -e .[safety]
 ```
 
-The safety model will be downloaded automatically on first use (~250MB).
+!!! warning "First-Time Download"
+    The safety model (~82MB) downloads automatically on first use from Hugging Face Hub.
+
+    - **First run**: 10-30 seconds download time
+    - **Subsequent runs**: Instant (cached in `~/.cache/huggingface/`)
+
+    **For CI/CD**: See [CI Caching](#cicd-caching) below to avoid re-downloading on every build.
 
 ### Option 2: Heuristic-Only (Lightweight)
 
@@ -102,13 +108,91 @@ alignmenter run \
   --persona configs/persona/default.yaml
 ```
 
+## CI/CD Caching
+
+To avoid re-downloading the model on every CI run, cache the Hugging Face directory.
+
+### GitHub Actions
+
+```yaml
+- name: Cache Hugging Face models
+  uses: actions/cache@v3
+  with:
+    path: ~/.cache/huggingface
+    key: ${{ runner.os }}-huggingface-${{ hashFiles('**/requirements.txt') }}
+
+- name: Install dependencies
+  run: pip install alignmenter[safety]
+
+- name: Pre-download model (first time only)
+  run: |
+    python -c "from transformers import pipeline; pipeline('text-classification', model='ProtectAI/distilled-safety-roberta')"
+
+- name: Run tests
+  run: alignmenter run --config configs/brand.yaml
+```
+
+### GitLab CI
+
+```yaml
+cache:
+  paths:
+    - .cache/huggingface
+
+before_script:
+  - export HF_HOME=$CI_PROJECT_DIR/.cache/huggingface
+  - pip install alignmenter[safety]
+  - python -c "from transformers import pipeline; pipeline('text-classification', model='ProtectAI/distilled-safety-roberta')"
+```
+
+### CircleCI
+
+```yaml
+- restore_cache:
+    keys:
+      - v1-huggingface-{{ checksum "requirements.txt" }}
+
+- run:
+    name: Install and cache model
+    command: |
+      pip install alignmenter[safety]
+      python -c "from transformers import pipeline; pipeline('text-classification', model='ProtectAI/distilled-safety-roberta')"
+
+- save_cache:
+    key: v1-huggingface-{{ checksum "requirements.txt" }}
+    paths:
+      - ~/.cache/huggingface
+```
+
+### Docker
+
+For containerized builds, add the cache directory to your image:
+
+```dockerfile
+# Dockerfile
+FROM python:3.11-slim
+
+# Install dependencies
+RUN pip install alignmenter[safety]
+
+# Pre-download model during build (one-time)
+RUN python -c "from transformers import pipeline; \
+    pipeline('text-classification', model='ProtectAI/distilled-safety-roberta')"
+
+# Model is now baked into the image
+COPY . /app
+WORKDIR /app
+```
+
+This adds ~120MB to your image but eliminates download time at runtime.
+
 ## Model Details
 
 ### ProtectAI/distilled-safety-roberta
 
 **Source**: [ProtectAI/distilled-safety-roberta](https://huggingface.co/ProtectAI/distilled-safety-roberta)
 
-**Size**: ~250MB
+**Size**: ~82MB (compressed)
 
 **Performance**:
 - **Speed**: ~50-100ms per classification on CPU

@@ -1,0 +1,81 @@
+site_name: Alignmenter
+site_description: Automated testing for AI chatbots - measure brand voice, safety, and consistency
+site_author: Justin Grosvenor
+site_url: https://alignmenter.com
+
+repo_name: justinGrosvenor/alignmenter
+repo_url: https://github.com/justinGrosvenor/alignmenter
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Core Concepts: getting-started/concepts.md
+  - Guides:
+      - Persona Configuration: guides/persona.md
+      - Calibration: guides/calibration.md
+      - Safety Checks: guides/safety.md
+      - LLM Judges: guides/llm-judges.md
+  - Reference:
+      - CLI Commands: reference/cli.md
+      - Metrics: reference/metrics.md
+      - Configuration: reference/config.md
+  - Contributing: contributing.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/justinGrosvenor/alignmenter
