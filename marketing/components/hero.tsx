@@ -79,8 +79,8 @@ export function Hero() {
             <div className="text-xs text-slate-400 mt-0.5">Brand, safety, stability</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-white">&lt; 5 min</div>
-            <div className="text-xs text-slate-400 mt-0.5">Test runtime</div>
+            <div className="text-2xl font-bold text-white">~10 sec</div>
+            <div className="text-xs text-slate-400 mt-0.5">Demo runtime</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-white">Local-first</div>
