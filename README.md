@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
+  <a href="https://docs.alignmenter.com"><strong>📚 Documentation</strong></a> •
   <a href="#overview">Overview</a> •
   <a href="#quickstart">Quickstart</a> •
-  <a href="#repository-structure">Repository</a> •
-  <a href="#documentation">Documentation</a> •
+  <a href="https://docs.alignmenter.com/getting-started/quickstart/">Quick Start Guide</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#license">License</a>
 </p>
@@ -101,7 +101,17 @@ Loading dataset: 60 turns across 10 sessions
 Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 ```
 
-See **[alignmenter/README.md](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** for comprehensive documentation, API usage, and examples.
+## 📚 Documentation
+
+**Full documentation available at [docs.alignmenter.com](https://docs.alignmenter.com)**
+
+Quick links:
+- **[Quick Start Guide](https://docs.alignmenter.com/getting-started/quickstart/)** - Get started in 5 minutes
+- **[Installation](https://docs.alignmenter.com/getting-started/installation/)** - Install and setup
+- **[CLI Reference](https://docs.alignmenter.com/reference/cli/)** - All commands
+- **[Persona Guide](https://docs.alignmenter.com/guides/persona/)** - Configure your brand voice
+- **[LLM Judges](https://docs.alignmenter.com/guides/llm-judges/)** - Qualitative analysis
+- **[Contributing](https://docs.alignmenter.com/contributing/)** - How to contribute
 
 ---
 
@@ -147,22 +157,6 @@ The core evaluation toolkit lives in **`alignmenter/`**:
 | **Personas** | Brand voice definitions (YAML format) |
 
 ---
-
-## Documentation
-
-### Getting Started
-- **[Complete CLI Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** - Installation, usage, API reference
-- **[Quickstart Tutorial](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#quickstart)** - Run your first evaluation in 2 minutes
-
-### Deep Dives
-- **[Persona Annotation Workflow](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md)** - How to label data and train trait models
-- **[Offline Safety Classifier](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md)** - Using distilled-safety-roberta without API calls
-- **[Dataset Management](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/datasets/README.md)** - Provenance, licensing, anonymization
-
-### Reference
-- **[Product Requirements](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/alignmenter_requirements.md)** - Full specification
-- **[Competitive Analysis](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/competitive_landscape.md)** - vs OpenAI Evals, LangSmith, Arize Phoenix
-- **[Architecture Diagram](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#architecture)** - System design overview
 
 ---
 
@@ -364,9 +358,9 @@ See [LICENSE](LICENSE) for the full text.
 ## Support
 
 ### Documentation
-- **[Complete Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md)** - Comprehensive CLI documentation
-- **[API Reference](https://github.com/justinGrosvenor/alignmenter/tree/main/alignmenter/src/alignmenter)** - Python package reference
-- **[Examples](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/README.md#usage-examples)** - Common workflows
+- **[docs.alignmenter.com](https://docs.alignmenter.com)** - Full documentation site
+- **[CLI Reference](https://docs.alignmenter.com/reference/cli/)** - Complete command reference
+- **[Guides](https://docs.alignmenter.com/guides/persona/)** - Step-by-step tutorials
 
 ### Get Help
 - **Issues**: [GitHub Issues](https://github.com/justinGrosvenor/alignmenter/issues)

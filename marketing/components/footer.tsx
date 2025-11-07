@@ -44,22 +44,22 @@ export function Footer() {
             <h4 className="font-semibold text-white mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
             <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-400">
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://docs.alignmenter.com" className="hover:text-signal transition-colors">
                   Documentation
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://docs.alignmenter.com/getting-started/quickstart/" className="hover:text-signal transition-colors">
                   Quick start
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://docs.alignmenter.com/reference/cli/" className="hover:text-signal transition-colors">
                   CLI reference
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
+                <Link href="https://docs.alignmenter.com/guides/persona/" className="hover:text-signal transition-colors">
                   Examples
                 </Link>
               </li>
@@ -81,13 +81,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
-                  Roadmap
+                <Link href="https://docs.alignmenter.com/contributing/" className="hover:text-signal transition-colors">
+                  Contributing
                 </Link>
               </li>
               <li>
-                <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
-                  Contributing
+                <Link href="https://pypi.org/project/alignmenter/" className="hover:text-signal transition-colors">
+                  PyPI
                 </Link>
               </li>
             </ul>

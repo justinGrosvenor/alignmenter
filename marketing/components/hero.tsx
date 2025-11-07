@@ -95,16 +95,22 @@ export function Hero() {
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <Link
-            href="https://github.com/justinGrosvenor/alignmenter"
+            href="https://docs.alignmenter.com"
             className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-black bg-signal hover:bg-signal/90 transition-colors"
+          >
+            Read the Docs →
+          </Link>
+          <Link
+            href="https://github.com/justinGrosvenor/alignmenter"
+            className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-slate-300 border border-slate-700 hover:border-slate-600 hover:bg-slate-900/50 transition-colors"
           >
             View on GitHub →
           </Link>
-          <div className="flex items-center gap-3 text-sm text-slate-400">
-            <span>Open source</span>
-            <span>•</span>
-            <span>Apache 2.0</span>
-          </div>
+        </div>
+        <div className="flex items-center justify-center gap-3 text-sm text-slate-400 mt-4">
+          <span>Open source</span>
+          <span>•</span>
+          <span>Apache 2.0</span>
         </div>
       </div>
     </section>
