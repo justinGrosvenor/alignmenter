@@ -2018,7 +2018,7 @@ def _extract_json_block(text: str) -> Optional[str]:
     end = text.rfind("}")
     if start == -1 or end == -1 or end <= start:
         return None
-    block = text[start : end + 1]
+    block = text[start: end + 1]
     block = block.replace("```json", "").replace("```", "").strip()
     return block or None
 
