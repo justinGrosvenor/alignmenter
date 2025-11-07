@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
+  <a href="https://docs.alignmenter.com"><strong>📚 Documentation</strong></a> •
   <a href="#quickstart">Quickstart</a> •
-  <a href="#features">Features</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#documentation">Documentation</a> •
+  <a href="https://docs.alignmenter.com/getting-started/quickstart/">Quick Start Guide</a> •
+  <a href="https://docs.alignmenter.com/reference/cli/">CLI Reference</a> •
   <a href="#license">License</a>
 </p>
 
@@ -179,12 +179,19 @@ Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
 | **Datasets** | JSONL conversation data | `datasets/` |
 | **Personas** | Brand voice definitions | `configs/persona/` |
 
-## Documentation
+## 📚 Documentation
 
-- **[Persona Annotation Guide](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/persona_annotation.md)**: How to label data and calibrate trait models
-- **[Offline Safety Classifier](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md)**: Using distilled-safety-roberta without API calls
-- **[Datasets README](https://github.com/justinGrosvenor/alignmenter/blob/main/alignmenter/datasets/README.md)**: Data provenance, licensing, and anonymization
-- **[Requirements](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/alignmenter_requirements.md)**: Full product specification
+**Full documentation available at [docs.alignmenter.com](https://docs.alignmenter.com)**
+
+Quick links:
+- **[Quick Start Guide](https://docs.alignmenter.com/getting-started/quickstart/)** - Get started in 5 minutes
+- **[Installation](https://docs.alignmenter.com/getting-started/installation/)** - Install and setup
+- **[CLI Reference](https://docs.alignmenter.com/reference/cli/)** - Complete command reference
+- **[Persona Guide](https://docs.alignmenter.com/guides/persona/)** - Configure your brand voice
+- **[Calibration Guide](https://docs.alignmenter.com/guides/calibration/)** - Advanced calibration workflow
+- **[Safety Guide](https://docs.alignmenter.com/guides/safety/)** - Offline safety classifier
+- **[LLM Judges](https://docs.alignmenter.com/guides/llm-judges/)** - Qualitative analysis
+- **[Contributing](https://docs.alignmenter.com/contributing/)** - How to contribute
 
 ## Usage Examples
 
