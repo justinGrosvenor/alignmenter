@@ -106,6 +106,13 @@ export function Footer() {
             <Link href="https://github.com/justinGrosvenor/alignmenter" className="hover:text-signal transition-colors">
               GitHub
             </Link>
+            <Link href="https://findly.tools" className="hover:opacity-80 transition-opacity">
+              <img
+                src="https://findly.tools/badges/findly-tools-badge-dark.svg"
+                alt="Featured on Findly Tools"
+                className="h-6"
+              />
+            </Link>
           </div>
         </div>
       </div>
