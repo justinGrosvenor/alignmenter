@@ -78,6 +78,10 @@ alignmenter report --last
 alignmenter dataset sanitize datasets/demo_conversations.jsonl --out datasets/demo_sanitized.jsonl
 ```
 
+## Case Studies
+
+- [Wendy's Twitter Voice](../docs/case-studies/wendys-twitter.md) – end-to-end calibration example using the included case-study assets. *(Available when running from the source repo; not included in the PyPI wheel.)*
+
 **Output:**
 ```
 Loading dataset: 60 turns across 10 sessions

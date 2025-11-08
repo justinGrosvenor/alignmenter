@@ -69,6 +69,8 @@ nav:
       - Calibration: guides/calibration.md
       - Safety Checks: guides/safety.md
       - LLM Judges: guides/llm-judges.md
+  - Case Studies:
+      - Wendy's Twitter Voice: case-studies/wendys-twitter.md
   - Reference:
       - CLI Commands: reference/cli.md
       - Metrics: reference/metrics.md
