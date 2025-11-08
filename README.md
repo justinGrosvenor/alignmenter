@@ -92,6 +92,10 @@ alignmenter report --last
 alignmenter dataset sanitize datasets/demo_conversations.jsonl --dry-run
 ```
 
+## Case Studies
+
+- [Wendy's Twitter Voice](docs/case-studies/wendys-twitter.md) – full calibration walkthrough, reproduction steps, and diagnostics for a high-sass social persona. *(Requires installing from this repo so the `case-studies/` assets are present.)*
+
 **Output:**
 ```
 Loading dataset: 60 turns across 10 sessions
