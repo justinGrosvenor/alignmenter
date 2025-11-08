@@ -23,8 +23,10 @@ from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.run_config import load_run_options
-from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
 from alignmenter.runner import RunConfig, Runner
+from alignmenter.scripts import bootstrap_dataset as bootstrap_dataset_script
+from alignmenter.scripts import calibrate_persona as calibrate_persona_script
+from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.safety import SafetyScorer
 from alignmenter.scorers.stability import StabilityScorer
@@ -513,9 +515,9 @@ def run(
     judge: Optional[str] = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
     judge_budget: Optional[int] = typer.Option(None, help="Maximum LLM judge calls per run."),
     generate_transcripts: bool = typer.Option(
-        True,
-        "--generate/--no-generate",
-        help="Call the model to generate fresh transcripts before scoring.",
+        False,
+        "--generate-transcripts",
+        help="Call providers to regenerate assistant turns before scoring (default reuses recorded transcripts).",
     ),
 ) -> None:
     """Execute an evaluation run."""
@@ -542,11 +544,24 @@ def run(
     assistant_turns = _lazy_assistant_turn_counter(inputs.dataset_path)
     _maybe_warn_about_cost(inputs, assistant_turns)
 
+    if not generate_transcripts:
+        typer.secho(
+            "Reusing recorded transcripts (pass --generate-transcripts to call providers).",
+            fg=typer.colors.BLUE,
+        )
+
     regenerate, provider, compare_provider_obj = _initialise_providers(
         inputs.model_identifier,
         inputs.compare_identifier,
         generate_transcripts,
     )
+
+    if generate_transcripts and not regenerate:
+        typer.secho(
+            "✗ Unable to generate transcripts because provider initialization failed. Re-run without --generate-transcripts or configure API keys.",
+            fg=typer.colors.RED,
+        )
+        raise typer.Exit(code=1)
 
     safety_classifier = load_safety_classifier(inputs.classifier_identifier)
     judge_provider = _initialise_judge_provider(inputs.judge_identifier)
@@ -614,6 +629,7 @@ def demo(
         embedding=None,
         judge=None,
         judge_budget=None,
+        generate_transcripts=True,
     )
 
 
@@ -939,6 +955,60 @@ def dataset_sanitize(
         typer.echo(f"  Output: {output_path}")
 
 
+def _run_bootstrap_dataset(
+    source: Optional[Path],
+    out: Path,
+    sessions: int,
+    turns_per_session: int,
+    safety_trap_ratio: float,
+    brand_trap_ratio: float,
+    persona_id: str,
+    seed: int,
+) -> None:
+    try:
+        bootstrap_dataset_script.bootstrap(
+            source=str(source) if source else None,
+            out=str(out),
+            sessions=sessions,
+            turns_per_session=turns_per_session,
+            safety_trap_ratio=safety_trap_ratio,
+            brand_trap_ratio=brand_trap_ratio,
+            persona_id=persona_id,
+            seed=seed,
+        )
+    except typer.Exit as exc:
+        raise exc
+    except Exception as exc:  # noqa: BLE001 - surface friendly error
+        typer.secho(f"✗ Error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1) from exc
+
+
+@dataset_app.command("bootstrap")
+@app.command("bootstrap-dataset")
+def bootstrap_dataset_command(
+    source: Optional[Path] = typer.Option(None, "--source", help="Optional source dataset to augment."),
+    out: Path = typer.Option(..., "--out", help="Output JSONL path for generated data."),
+    sessions: int = typer.Option(10, "--sessions", help="Number of sessions to generate."),
+    turns_per_session: int = typer.Option(6, "--turns-per-session", help="Turns per session (user/assistant alternating)."),
+    safety_trap_ratio: float = typer.Option(0.2, "--safety-trap-ratio", help="Fraction of sessions with safety traps."),
+    brand_trap_ratio: float = typer.Option(0.2, "--brand-trap-ratio", help="Fraction of sessions with brand violations."),
+    persona_id: str = typer.Option("default_v1", "--persona-id", help="Persona identifier to annotate each turn with."),
+    seed: int = typer.Option(42, "--seed", help="Random seed for reproducibility."),
+) -> None:
+    """Generate a synthetic dataset with brand + safety traps."""
+
+    _run_bootstrap_dataset(
+        source=source,
+        out=out,
+        sessions=sessions,
+        turns_per_session=turns_per_session,
+        safety_trap_ratio=safety_trap_ratio,
+        brand_trap_ratio=brand_trap_ratio,
+        persona_id=persona_id,
+        seed=seed,
+    )
+
+
 # Calibration Commands
 
 
@@ -1166,6 +1236,35 @@ def analyze_scenarios(
     except Exception as e:
         typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
         raise typer.Exit(1)
+
+
+@app.command("calibrate-persona")
+def calibrate_persona_command(
+    persona_path: Path = typer.Option(..., "--persona-path", help="Persona YAML containing the 'id' to calibrate."),
+    dataset: Path = typer.Option(..., "--dataset", help="Labeled JSONL with persona_id + label fields."),
+    out: Optional[Path] = typer.Option(None, "--out", help="Output path for generated .traits.json"),
+    min_samples: int = typer.Option(25, "--min-samples", help="Minimum number of labeled examples required."),
+    learning_rate: float = typer.Option(0.1, "--learning-rate", help="Learning rate for logistic regression."),
+    epochs: int = typer.Option(300, "--epochs", help="Training epochs."),
+    l2: float = typer.Option(0.0, "--l2", help="L2 regularization strength."),
+) -> None:
+    """Fit persona-specific trait weights from labeled data."""
+
+    try:
+        calibrate_persona_script.calibrate(
+            persona_path=str(persona_path),
+            dataset=str(dataset),
+            out=str(out) if out else None,
+            min_samples=min_samples,
+            learning_rate=learning_rate,
+            epochs=epochs,
+            l2=l2,
+        )
+    except typer.Exit as exc:
+        raise exc
+    except Exception as exc:  # noqa: BLE001 - friendly surface
+        typer.secho(f"✗ Error: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(1) from exc
 
 
 def _load_env(path: Path) -> dict[str, str]:

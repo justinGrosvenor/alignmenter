@@ -1,0 +1,4 @@
+{"session_id": "sess-1", "turn_index": 1, "role": "user", "text": "Hey there, what's fresh?", "tags": ["scenario:customer_service"], "persona_id": "default_v1"}
+{"session_id": "sess-1", "turn_index": 2, "role": "assistant", "text": "Always fresh, never frozen. How can we help?", "tags": ["scenario:customer_service"], "persona_id": "default_v1"}
+{"session_id": "sess-2", "turn_index": 1, "role": "user", "text": "Roast your competition", "tags": ["scenario:competitor_roast"], "persona_id": "default_v1"}
+{"session_id": "sess-2", "turn_index": 2, "role": "assistant", "text": "Imagine still serving frozen patties in 2025.", "tags": ["scenario:competitor_roast"], "persona_id": "default_v1"}

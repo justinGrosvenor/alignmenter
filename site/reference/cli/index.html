@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://alignmenter.com/reference/cli/">
       
       
-        <link rel="prev" href="../../guides/llm-judges/">
+        <link rel="prev" href="../../case-studies/wendys-twitter/">
       
       
         <link rel="next" href="../metrics/">
@@ -546,6 +546,81 @@
       
   
   
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Case Studies
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Case Studies
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../case-studies/wendys-twitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wendy's Twitter Voice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -564,10 +639,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -580,8 +655,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Reference
           </label>
@@ -750,15 +825,6 @@
   <a href="#alignmenter-dataset-sanitize" class="md-nav__link">
     <span class="md-ellipsis">
       alignmenter dataset sanitize
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#alignmenter-dataset-convert" class="md-nav__link">
-    <span class="md-ellipsis">
-      alignmenter dataset convert
     </span>
   </a>
   
@@ -1042,15 +1108,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#alignmenter-dataset-convert" class="md-nav__link">
-    <span class="md-ellipsis">
-      alignmenter dataset convert
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1146,15 +1203,13 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:
-- <code>--path PATH</code> - Directory to initialize (default: current directory)
-- <code>--template TEMPLATE</code> - Use a specific template (default, minimal, research)</p>
+- <code>--env-path PATH</code> - Where to write the <code>.env</code> file (default: <code>./.env</code>)
+- <code>--config-path PATH</code> - Where to write the starter run config (default: <code>./configs/run.yaml</code>)</p>
 <p><strong>Creates</strong>:
-- <code>configs/</code> - Configuration files
-- <code>configs/persona/</code> - Persona definitions
-- <code>datasets/</code> - Sample conversation data
-- <code>reports/</code> - Output directory</p>
+- <code>.env</code> – Stores provider credentials and defaults
+- <code>configs/run.yaml</code> – Run configuration referenced by <code>alignmenter run</code></p>
 <p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>init<span class="w"> </span>--path<span class="w"> </span>my-project<span class="w"> </span>--template<span class="w"> </span>research
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>init<span class="w"> </span>--env-path<span class="w"> </span>.env<span class="w"> </span>--config-path<span class="w"> </span>configs/run.yaml
 </code></pre></div></p>
 <hr />
 <h3 id="alignmenter-run"><code>alignmenter run</code><a class="headerlink" href="#alignmenter-run" title="Permanent link">&para;</a></h3>
@@ -1162,71 +1217,85 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
-<p>Model selection:
-- <code>--model MODEL</code> - Model to test (e.g., <code>openai:gpt-4o</code>, <code>anthropic:claude-3-5-sonnet-20241022</code>)
-- <code>--config CONFIG</code> - Path to run configuration YAML</p>
-<p>Dataset:
-- <code>--dataset PATH</code> - Path to JSONL dataset
-- <code>--no-generate</code> - Use cached responses instead of calling model</p>
-<p>Persona:
-- <code>--persona PATH</code> - Path to persona YAML
-- <code>--persona-id ID</code> - Use persona from configs/persona/</p>
-<p>Output:
-- <code>--output-dir DIR</code> - Where to save reports (default: <code>reports/</code>)
-- <code>--format FORMAT</code> - Output format: html, json, csv (default: html)</p>
-<p>Thresholds:
-- <code>--min-authenticity SCORE</code> - Minimum authenticity score (0.0-1.0)
-- <code>--min-safety SCORE</code> - Minimum safety score (0.0-1.0)
-- <code>--min-stability SCORE</code> - Minimum stability score (0.0-1.0)</p>
+<p>Core inputs:
+- <code>--config PATH</code> – Run configuration YAML (overrides everything else when provided)
+- <code>--model PROVIDER:MODEL</code> – Primary chat model (e.g., <code>openai:gpt-4o-mini</code>)
+- <code>--dataset PATH</code> – Conversation dataset (<code>.jsonl</code>)
+- <code>--persona PATH</code> – Persona YAML
+- <code>--compare PROVIDER:MODEL</code> – Optional second model for side-by-side runs</p>
+<p>Safety + embeddings:
+- <code>--keywords PATH</code> – Safety keyword list (defaults to <code>configs/safety_keywords.yaml</code>)
+- <code>--embedding IDENTIFIER</code> – Embedding provider (e.g., <code>sentence-transformer:all-MiniLM-L6-v2</code> or <code>hashed</code>)
+- <code>--judge PROVIDER:MODEL</code> – Safety judge provider
+- <code>--judge-budget N</code> – Limit judge calls per run</p>
+<p>Output + execution:
+- <code>--out DIR</code> – Directory for run artifacts (default: <code>reports/</code>)
+- <code>--generate-transcripts</code> – Call providers to regenerate assistant turns (default reuses recorded transcripts)</p>
 <p><strong>Examples</strong>:</p>
-<p>Basic run:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml
+<p>Basic cached run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml
 </code></pre></div></p>
-<p>With thresholds:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>gpt-4o<span class="w"> </span>--min-authenticity<span class="w"> </span><span class="m">0</span>.8<span class="w"> </span>--min-safety<span class="w"> </span><span class="m">0</span>.95
+<p>Regenerate transcripts via provider:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml<span class="w"> </span>--generate-transcripts
 </code></pre></div></p>
-<p>Compare models:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--output-dir<span class="w"> </span>reports/gpt4
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022<span class="w"> </span>--output-dir<span class="w"> </span>reports/claude
+<p>Compare two models (writes separate report dirs):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--compare<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/demo_conversations.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--out<span class="w"> </span>reports/compare
 </code></pre></div></p>
+<p>Thresholds for authenticity/safety/stability are defined inside the run config:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">threshold_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.78</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.72</span>
+</code></pre></div>
 <hr />
 <h3 id="alignmenter-report"><code>alignmenter report</code><a class="headerlink" href="#alignmenter-report" title="Permanent link">&para;</a></h3>
 <p>Open HTML report in browser.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:
-- <code>--last</code> - Open most recent report
-- <code>--path PATH</code> - Open specific report directory
-- <code>--list</code> - List available reports</p>
+- <code>--last</code> – Open the most recent report
+- <code>--path PATH</code> – Open a specific report directory
+- <code>--reports-dir DIR</code> – Base directory to search (default: <code>reports/</code>)</p>
 <p><strong>Examples</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--path<span class="w"> </span>reports/2025-11-06_14-32/
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--path<span class="w"> </span>reports/2025-11-06_14-32_alignmenter_run
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--reports-dir<span class="w"> </span>reports/prod
 </code></pre></div></p>
 <hr />
 <h2 id="calibration-commands">Calibration Commands<a class="headerlink" href="#calibration-commands" title="Permanent link">&para;</a></h2>
 <h3 id="alignmenter-calibrate-validate"><code>alignmenter calibrate validate</code><a class="headerlink" href="#alignmenter-calibrate-validate" title="Permanent link">&para;</a></h3>
 <p>Validate metrics with LLM judge.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-<p><strong>Options</strong>:</p>
-<p>Judge:
-- <code>--judge PROVIDER:MODEL</code> - Judge provider (e.g., <code>openai:gpt-4o</code>)
-- <code>--judge-sample RATE</code> - Sample rate (0.0-1.0) or count
-- <code>--judge-budget AMOUNT</code> - Maximum spend in USD
-- <code>--judge-strategy STRATEGY</code> - Sampling strategy: random, on_failure, stratified</p>
-<p>Config:
-- <code>--config PATH</code> - Path to run configuration
-- <code>--report-dir DIR</code> - Report directory to validate</p>
+<p><strong>Options</strong>:
+- <code>--labeled PATH</code> – Labeled JSONL with authenticity annotations <em>(required)</em>
+- <code>--persona PATH</code> – Persona YAML that produced the labels <em>(required)</em>
+- <code>--output PATH</code> – Where to write the diagnostics JSON <em>(required)</em>
+- <code>--embedding IDENTIFIER</code> – Embedding provider override
+- <code>--train-split FLOAT</code> – Train/test split (default <code>0.8</code>)
+- <code>--seed INT</code> – Random seed (default <code>42</code>)
+- <code>--judge PROVIDER:MODEL</code> – Judge provider (optional)
+- <code>--judge-sample FLOAT</code> – Fraction of sessions to judge (default <code>0.0</code>)
+- <code>--judge-strategy STRATEGY</code> – Sampling strategy (<code>random</code>, <code>stratified</code>, <code>errors</code>, <code>extremes</code>)
+- <code>--judge-budget INT</code> – Maximum judge calls</p>
 <p><strong>Examples</strong>:</p>
-<p>Basic validation:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
+<p>Validate with judge sampling:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/wendys-twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/wendys-calibration.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
 </code></pre></div></p>
-<p>With budget control:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.3<span class="w"> </span>--judge-budget<span class="w"> </span><span class="m">1</span>.00
-</code></pre></div></p>
-<p>On failures only:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>gpt-4o<span class="w"> </span>--judge-strategy<span class="w"> </span>on_failure
+<p>Offline-only validation:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--labeled<span class="w"> </span>data/labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/brand.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/brand-calibration.json
 </code></pre></div></p>
 <hr />
 <h3 id="alignmenter-calibrate-diagnose-errors"><code>alignmenter calibrate diagnose-errors</code><a class="headerlink" href="#alignmenter-calibrate-diagnose-errors" title="Permanent link">&para;</a></h3>
@@ -1234,11 +1303,18 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:
-- <code>--judge PROVIDER:MODEL</code> - Judge provider
-- <code>--threshold SCORE</code> - Disagreement threshold (default: 0.2)
-- <code>--output PATH</code> - Save results to file</p>
+- <code>--labeled PATH</code> – Labeled JSONL <em>(required)</em>
+- <code>--persona PATH</code> – Persona YAML <em>(required)</em>
+- <code>--output PATH</code> – Output diagnostics JSON <em>(required)</em>
+- <code>--embedding IDENTIFIER</code> – Embedding provider override
+- <code>--judge PROVIDER:MODEL</code> – Judge provider <em>(required)</em>
+- <code>--judge-budget INT</code> – Maximum judge calls</p>
 <p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span>--judge<span class="w"> </span>gpt-4o<span class="w"> </span>--threshold<span class="w"> </span><span class="m">0</span>.15
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/wendys-twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/wendys-errors.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span>--judge<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022
 </code></pre></div></p>
 <hr />
 <h3 id="alignmenter-calibrate-analyze-scenarios"><code>alignmenter calibrate analyze-scenarios</code><a class="headerlink" href="#alignmenter-calibrate-analyze-scenarios" title="Permanent link">&para;</a></h3>
@@ -1246,11 +1322,19 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>analyze-scenarios<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:
-- <code>--judge PROVIDER:MODEL</code> - Judge provider
-- <code>--sessions IDS</code> - Comma-separated session IDs
-- <code>--interactive</code> - Interactive analysis mode</p>
+- <code>--dataset PATH</code> – Conversation dataset <em>(required)</em>
+- <code>--persona PATH</code> – Persona YAML <em>(required)</em>
+- <code>--output PATH</code> – Output JSON <em>(required)</em>
+- <code>--embedding IDENTIFIER</code> – Embedding provider override
+- <code>--judge PROVIDER:MODEL</code> – Judge provider <em>(required)</em>
+- <code>--per-scenario INT</code> – Samples per scenario tag (default <code>3</code>)
+- <code>--judge-budget INT</code> – Maximum judge calls</p>
 <p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>analyze-scenarios<span class="w"> </span>--judge<span class="w"> </span>gpt-4o<span class="w"> </span>--sessions<span class="w"> </span>session_001,session_042
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>analyze-scenarios<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/demo_conversations.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/demo-scenarios.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--per-scenario<span class="w"> </span><span class="m">5</span>
 </code></pre></div></p>
 <hr />
 <h2 id="dataset-commands">Dataset Commands<a class="headerlink" href="#dataset-commands" title="Permanent link">&para;</a></h2>
@@ -1259,58 +1343,56 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>INPUT<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:
-- <code>--output PATH</code> - Output path (default: INPUT.sanitized.jsonl)
+- <code>--out PATH</code> - Output path (default: <input>_sanitized.jsonl)
+- <code>--in-place</code> - Overwrite the input file
 - <code>--dry-run</code> - Preview without writing
-- <code>--strategy STRATEGY</code> - Sanitization strategy: redact, replace, hash</p>
-<p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--output<span class="w"> </span>datasets/clean.jsonl
+- <code>--use-hashing/--no-use-hashing</code> - Stable hashes vs generic placeholders</p>
+<p><strong>Examples</strong>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--out<span class="w"> </span>datasets/clean.jsonl
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--dry-run
-</code></pre></div></p>
-<hr />
-<h3 id="alignmenter-dataset-convert"><code>alignmenter dataset convert</code><a class="headerlink" href="#alignmenter-dataset-convert" title="Permanent link">&para;</a></h3>
-<p>Convert between dataset formats.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>convert<span class="w"> </span>INPUT<span class="w"> </span>OUTPUT<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</code></pre></div>
-<p><strong>Options</strong>:
-- <code>--from-format FORMAT</code> - Source format: jsonl, csv, chatgpt
-- <code>--to-format FORMAT</code> - Target format: jsonl, csv</p>
-<p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>convert<span class="w"> </span>chatgpt_export.json<span class="w"> </span>dataset.jsonl<span class="w"> </span>--from-format<span class="w"> </span>chatgpt
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--in-place<span class="w"> </span>--no-use-hashing
 </code></pre></div></p>
 <hr />
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <h3 id="config-file-format">Config File Format<a class="headerlink" href="#config-file-format" title="Permanent link">&para;</a></h3>
 <p>Run configurations are YAML files:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># configs/brand.yaml</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openai:gpt-4o&quot;</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;configs/persona/brand.yaml&quot;</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;datasets/test_conversations.jsonl&quot;</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nt">evaluation</span><span class="p">:</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="nt">min_authenticity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nt">min_safety</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">  </span><span class="nt">min_stability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="nt">output</span><span class="p">:</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;reports/&quot;</span>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;html&quot;</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">  </span><span class="nt">include_json</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># configs/run.yaml</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nt">run_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">brand_voice_demo</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai:gpt-4o-mini</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datasets/demo_conversations.jsonl</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configs/persona/default.yaml</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">configs/safety_keywords.yaml</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nt">embedding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sentence-transformer:all-MiniLM-L6-v2</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="w">    </span><span class="nt">threshold_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.78</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.72</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="w">    </span><span class="nt">offline_classifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="nt">report</span><span class="p">:</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="w">  </span><span class="nt">include_raw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
+<p>Thresholds are scoped per scorer; if a score falls below <code>threshold_fail</code>, <code>alignmenter run</code> exits with status code <code>2</code>.</p>
 <h3 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
 <ul>
-<li><code>OPENAI_API_KEY</code> - OpenAI API key</li>
-<li><code>ANTHROPIC_API_KEY</code> - Anthropic API key</li>
-<li><code>ALIGNMENTER_CACHE_DIR</code> - Cache directory (default: <code>~/.alignmenter/cache</code>)</li>
-<li><code>ALIGNMENTER_LOG_LEVEL</code> - Log level: DEBUG, INFO, WARNING, ERROR</li>
+<li><code>OPENAI_API_KEY</code> / <code>ANTHROPIC_API_KEY</code> – Provider credentials (only set what you use)</li>
+<li><code>ALIGNMENTER_DEFAULT_MODEL</code> – Default <code>provider:model</code> used by <code>alignmenter run</code></li>
+<li><code>ALIGNMENTER_EMBEDDING_PROVIDER</code> – Embedding provider (e.g., <code>hashed</code>, <code>sentence-transformer:all-MiniLM-L6-v2</code>)</li>
+<li><code>ALIGNMENTER_JUDGE_PROVIDER</code> – Judge provider for safety scoring</li>
+<li><code>ALIGNMENTER_JUDGE_BUDGET</code> / <code>_USD</code> – Budget guardrails (calls or dollars)</li>
+<li><code>ALIGNMENTER_CUSTOM_GPT_ID</code> – Default Custom GPT identifier for <code>openai-gpt:</code> runs</li>
+<li><code>ALIGNMENTER_CACHE_DIR</code> – Cache directory (default: <code>~/.cache/alignmenter</code>)</li>
+<li><code>ALIGNMENTER_LOG_LEVEL</code> – Log level: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code></li>
 </ul>
 <hr />
 <h2 id="exit-codes">Exit Codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>0</code> - Success, all thresholds met</li>
-<li><code>1</code> - Evaluation failed (scores below thresholds)</li>
-<li><code>2</code> - Invalid arguments or configuration</li>
-<li><code>3</code> - API error or network issue</li>
-<li><code>4</code> - Budget exceeded</li>
+<li><code>0</code> – Success</li>
+<li><code>1</code> – Command/configuration error (missing files, invalid provider, judge failure, etc.)</li>
+<li><code>2</code> – Metrics fell below <code>threshold_fail</code> (run marked as failed)</li>
 </ul>
 <hr />
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>

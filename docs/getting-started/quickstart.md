@@ -4,7 +4,8 @@ This guide will walk you through running your first Alignmenter evaluation in un
 
 ## Prerequisites
 
-- Alignmenter installed ([Installation Guide](installation.md))
+- Alignmenter installed with safety extras ([Installation Guide](installation.md))
+  - `pip install "alignmenter[safety]"` (PyPI) or `pip install -e .[dev,safety]` (repo checkout)
 - OpenAI API key set in environment
 
 ## 1. Initialize Project
@@ -19,22 +20,27 @@ This creates sample configs, datasets, and personas you can use right away.
 
 ## 2. Run Your First Test
 
-Run an evaluation with the demo dataset:
+Run an evaluation with the demo dataset (reuses the bundled transcripts):
 
 ```bash
-alignmenter run --model openai-gpt:brand-voice --config configs/brand.yaml
+alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
+```
+
+Want fresh transcripts from your provider? Add `--generate-transcripts`:
+
+```bash
+alignmenter run --config configs/run.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
 
 You'll see output like:
 
 ```
-Loading test dataset: 60 conversation turns
-Running model: openai-gpt:brand-voice
-Computing metrics...
-✓ Brand Authenticity: 0.83 (strong match to reference voice)
-✓ Safety: 0.95 (2 keyword flags, 0 critical)
-✓ Stability: 0.88 (consistent tone across sessions)
-Report saved: reports/2025-11-06_14-32/index.html
+Loading dataset: 60 turns across 10 sessions
+Running model: openai:gpt-4o-mini
+✓ Brand voice score: 0.83 (range: 0.79-0.87)
+✓ Safety score: 0.95
+✓ Consistency score: 0.88
+Report written to: reports/2025-11-06_14-32/index.html
 ```
 
 !!! success
@@ -62,10 +68,10 @@ Compare GPT-4 vs Claude:
 
 ```bash
 # Test with GPT-4
-alignmenter run --model openai:gpt-4o --config configs/brand.yaml
+alignmenter run --model openai:gpt-4o --config configs/brand.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
 
 # Test with Claude
-alignmenter run --model anthropic:claude-3-5-sonnet-20241022 --config configs/brand.yaml
+alignmenter run --model anthropic:claude-3-5-sonnet-20241022 --config configs/brand.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
 
 ## 5. Add LLM Judge Analysis (Optional)
@@ -73,7 +79,11 @@ alignmenter run --model anthropic:claude-3-5-sonnet-20241022 --config configs/br
 Get qualitative feedback from an LLM judge:
 
 ```bash
-alignmenter calibrate validate --judge openai:gpt-4o --judge-sample 0.2
+alignmenter calibrate validate \
+  --labeled case-studies/wendys-twitter/labeled.jsonl \
+  --persona configs/persona/wendys-twitter.yaml \
+  --output reports/wendys-calibration.json \
+  --judge openai:gpt-4o --judge-sample 0.2
 ```
 
 This analyzes 20% of your sessions with GPT-4 and provides:
@@ -88,20 +98,30 @@ This analyzes 20% of your sessions with GPT-4 and provides:
 
 ```bash
 # Run full test suite
-alignmenter run --model openai-gpt:prod-bot --config configs/prod.yaml
+alignmenter run --model openai:gpt-4o-mini --config configs/prod.yaml --generate-transcripts
 
-# Check if scores meet thresholds
-alignmenter run --config configs/prod.yaml --min-authenticity 0.80 --min-safety 0.95
+# (Thresholds live in configs/prod.yaml)
+alignmenter run --config configs/prod.yaml
+```
+
+Add thresholds to your run config:
+
+```yaml
+scorers:
+  authenticity:
+    threshold_fail: 0.80
+  safety:
+    threshold_fail: 0.95
 ```
 
 ### Compare Model Versions
 
 ```bash
 # Baseline
-alignmenter run --model openai:gpt-4o --config configs/brand.yaml --output-dir reports/baseline
+alignmenter run --model openai:gpt-4o --config configs/brand.yaml --out reports/baseline --generate-transcripts
 
 # After prompt changes
-alignmenter run --model openai:gpt-4o --config configs/brand-v2.yaml --output-dir reports/v2
+alignmenter run --model openai:gpt-4o --config configs/brand-v2.yaml --out reports/v2 --generate-transcripts
 
 # Compare reports manually or diff the JSON exports
 ```
@@ -113,7 +133,7 @@ alignmenter run --model openai:gpt-4o --config configs/brand-v2.yaml --output-di
 alignmenter dataset sanitize datasets/prod_logs.jsonl --dry-run
 
 # Actually sanitize
-alignmenter dataset sanitize datasets/prod_logs.jsonl --output datasets/sanitized.jsonl
+alignmenter dataset sanitize datasets/prod_logs.jsonl --out datasets/sanitized.jsonl
 ```
 
 ## Next Steps
@@ -141,9 +161,9 @@ pip install sentence-transformers
 
 ### Tests are slow
 
-Use `--no-generate` to reuse cached transcripts:
+Runs reuse existing transcripts by default. Only add `--generate-transcripts` when you explicitly want to call the provider:
 ```bash
-alignmenter run --config configs/brand.yaml --no-generate
+alignmenter run --config configs/brand.yaml --generate-transcripts
 ```
 
 ### Need help?

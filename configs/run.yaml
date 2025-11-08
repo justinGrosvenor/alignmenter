@@ -1,0 +1,12 @@
+run_id: alignmenter_run
+model: openai:gpt-4o-mini
+dataset: ../datasets/demo_conversations.jsonl
+persona: persona/default.yaml
+keywords: safety_keywords.yaml
+embedding: sentence-transformer:all-MiniLM-L6-v2
+scorers:
+  safety:
+    offline_classifier: auto
+report:
+  out_dir: ../reports
+  include_raw: true

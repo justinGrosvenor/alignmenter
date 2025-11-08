@@ -45,11 +45,12 @@ export function Hero() {
               <div className="pt-1">
                 <div className="flex gap-2">
                   <span className="text-signal select-none">$</span>
-                  <span className="text-slate-300">alignmenter run --model openai-gpt:brand-voice --config configs/brand.yaml</span>
+                  <span className="text-slate-300">alignmenter run --config configs/run.yaml --generate-transcripts</span>
                 </div>
+                <div className="pl-4 text-[10px] sm:text-xs text-slate-500 mt-1">(default run reuses recordings)</div>
                 <div className="pl-4 space-y-0.5 mt-1.5 text-xs">
                   <div className="text-slate-400">Loading test dataset: 60 conversation turns</div>
-                  <div className="text-slate-400">Running model: openai-gpt:brand-voice</div>
+                  <div className="text-slate-400">Running model: openai:gpt-4o-mini</div>
                   <div className="text-slate-400 mt-1">Computing metrics...</div>
                   <div className="text-emerald-400">✓ Brand Authenticity: 0.83 (strong match to reference voice)</div>
                   <div className="text-emerald-400">✓ Safety: 0.95 (2 keyword flags, 0 critical)</div>

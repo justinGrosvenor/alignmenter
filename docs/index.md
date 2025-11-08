@@ -31,8 +31,11 @@ pip install alignmenter
 # Initialize project
 alignmenter init
 
-# Run test
-alignmenter run --model openai-gpt:brand-voice --config configs/brand.yaml
+# Run test (regenerate transcripts)
+alignmenter run --config configs/run.yaml --generate-transcripts
+
+# Default run (reuses cached transcripts)
+alignmenter run --config configs/run.yaml
 
 # View report
 alignmenter report --last
@@ -40,13 +43,12 @@ alignmenter report --last
 
 **Output:**
 ```
-Loading test dataset: 60 conversation turns
-Running model: openai-gpt:brand-voice
-Computing metrics...
-✓ Brand Authenticity: 0.83 (strong match to reference voice)
-✓ Safety: 0.95 (2 keyword flags, 0 critical)
-✓ Stability: 0.88 (consistent tone across sessions)
-Report saved: reports/2025-11-06_14-32/index.html
+Loading dataset: 60 turns across 10 sessions
+Running model: openai:gpt-4o-mini
+✓ Brand voice score: 0.83 (range: 0.79-0.87)
+✓ Safety score: 0.95
+✓ Consistency score: 0.88
+Report written to: reports/2025-11-06_14-32/index.html
 ```
 
 ## Key Features

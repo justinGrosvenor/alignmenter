@@ -220,7 +220,7 @@ alignmenter calibrate diagnose-errors --labeled calibration_data/labeled.jsonl -
 alignmenter analyze-scenarios --dataset datasets/demo.jsonl --persona configs/persona/default.yaml --judge openai:gpt-4o --output reports/scenarios.json
 ```
 
-`alignmenter run` regenerates assistant turns via the configured provider before scoring. Teams that want to score pre-recorded transcripts can pass `--no-generate` to reuse the dataset verbatim.
+`alignmenter run` reuses recorded transcripts by default. Add `--generate-transcripts` when you want to call the configured provider and regenerate assistant turns.
 
 Run configs (`alignmenter/configs/*.yaml`) support the following keys:
 

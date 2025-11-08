@@ -48,8 +48,12 @@ export function CLIPreview() {
             <div className="flex items-start gap-2">
               <span className="text-signal flex-shrink-0">$</span>
               <span className="text-slate-300 break-all">
-                alignmenter run --model openai-gpt:brand-voice --config configs/brand.yaml
+                alignmenter run --config configs/run.yaml --generate-transcripts
               </span>
+            </div>
+
+            <div className="pl-5 text-slate-500 text-[11px] sm:text-xs">
+              # default run (reuses cached transcripts): `alignmenter run --config configs/run.yaml`
             </div>
 
             <div className="pl-3 sm:pl-4 space-y-1 text-xs sm:text-sm">
@@ -77,8 +81,12 @@ export function CLIPreview() {
 
             <div className="flex items-start gap-2">
               <span className="text-signal flex-shrink-0">$</span>
-              <span className="text-slate-300 break-all">
-                alignmenter calibrate validate --judge openai:gpt-4o --judge-sample 0.2
+              <span className="text-slate-300 whitespace-pre-wrap">
+                alignmenter calibrate validate \
+                  --labeled case-studies/wendys-twitter/labeled.jsonl \
+                  --persona configs/persona/wendys-twitter.yaml \
+                  --output reports/wendys-calibration.json \
+                  --judge openai:gpt-4o --judge-sample 0.2
               </span>
             </div>
 

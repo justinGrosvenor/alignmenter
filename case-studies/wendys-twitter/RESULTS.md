@@ -412,7 +412,7 @@ alignmenter calibrate optimize \
   --output calibration_reports/weights_report.json
 
 # 4. Train trait model
-python -m alignmenter.scripts.calibrate_persona \
+alignmenter calibrate-persona \
   --persona-path wendys_twitter.yaml \
   --dataset wendys_dataset.jsonl \
   --out wendys_twitter.traits.json

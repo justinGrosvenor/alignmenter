@@ -2,22 +2,22 @@
   "validation_metrics": {
     "roc_auc": 1.0,
     "f1": 1.0,
-    "correlation": 0.986,
-    "optimal_threshold": 0.26,
+    "correlation": 0.99,
+    "optimal_threshold": 0.27,
     "optimal_f1": 1.0
   },
   "score_distributions": {
     "on_brand": {
-      "mean": 0.599,
-      "std": 0.044,
-      "median": 0.599,
-      "count": 64
+      "mean": 0.661,
+      "std": 0.036,
+      "median": 0.659,
+      "count": 13
     },
     "off_brand": {
-      "mean": 0.169,
+      "mean": 0.202,
       "std": 0.029,
-      "median": 0.15,
-      "count": 72
+      "median": 0.2,
+      "count": 15
     }
   },
   "error_analysis": {
@@ -27,8 +27,8 @@
     "num_false_negatives": 0
   },
   "data_split": {
-    "train_size": 0,
-    "validation_size": 136,
-    "train_split": 0.0
+    "train_size": 108,
+    "validation_size": 28,
+    "train_split": 0.8
   }
 }

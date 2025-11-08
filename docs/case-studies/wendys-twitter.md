@@ -49,24 +49,30 @@ git clone https://github.com/justinGrosvenor/alignmenter.git
 cd alignmenter
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .[dev]
+pip install -e .[dev,safety]
 ```
 
 ### 2. Prepare the Dataset (optional sanitization)
 
-```bash
-cp case-studies/wendys-twitter/wendys_dataset.jsonl datasets/wendys_twitter.jsonl
-alignmenter dataset sanitize datasets/wendys_twitter.jsonl --dry-run
-```
+All of the data you need already ships in `case-studies/wendys-twitter/`:
 
-The dry run prints the number of PII hits and shows how placeholders will be inserted. Drop `--dry-run` to write a cleaned copy alongside the original.
+| File | Purpose | Expected authenticity |
+| --- | --- | --- |
+| `demo/wendys_full.jsonl` | Mixed-quality set used for calibration (good + bad replies) | ≈0.40 before calibration |
+| `demo/wendys_onbrand_strict.jsonl` | On-brand replies that just meet the “pass” threshold | ≈0.65 |
+| `demo/wendys_generic_llm.jsonl` | Friendly but generic LLM voice (mid-grade) | ≈0.40 |
+| `demo/wendys_offbrand.jsonl` | Explicitly off-brand corporate replies | ≈0.20 |
+
+Everything lives under `case-studies/wendys-twitter/demo/`, so there’s no need to copy files unless you want to edit them. If you do need a personalized copy, just `cp case-studies/wendys-twitter/demo/wendys_full.jsonl my_dataset.jsonl` and iterate from there.
+
+> **Why the extra `--embedding` flag?** The hashed fallback is great for offline demos, but its cosine range is narrow; authenticity style scores will hover near the floor even for perfect replies. For any calibration or artifact you plan to share, use a real embedding provider (the docs default to `sentence-transformer:all-MiniLM-L6-v2`) so style similarity has enough headroom.
 
 ### 3. Run the Baseline Evaluation
 
 ```bash
 alignmenter run \
   --config case-studies/wendys-twitter/baseline_run.yaml \
-  --no-generate
+
 ```
 
 This reproduces the `baseline_diagnostics.json` file (ROC-AUC ≈ 0.733). Open the HTML report under `reports/<timestamp>_baseline/` and note that the new scenario/persona analytics already highlight which flows are most off-brand.
@@ -76,30 +82,33 @@ This reproduces the `baseline_diagnostics.json` file (ROC-AUC ≈ 0.733). Open t
 Use the CLI `calibrate` namespace to replicate the calibration pipeline:
 
 1. **Estimate style bounds**
-   ```bash
-   alignmenter calibrate bounds \
-     --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
-     --persona case-studies/wendys-twitter/wendys_twitter.yaml \
-     --output case-studies/wendys-twitter/calibration_reports/bounds.json
-   ```
+```bash
+alignmenter calibrate bounds \
+  --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --output case-studies/wendys-twitter/calibration_reports/bounds.json
+```
 
 2. **Optimize weights**
-   ```bash
-   alignmenter calibrate optimize \
-     --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
-     --persona case-studies/wendys-twitter/wendys_twitter.yaml \
-     --bounds case-studies/wendys-twitter/calibration_reports/bounds.json \
-     --output case-studies/wendys-twitter/calibration_reports/weights.json \
-     --grid-step 0.1
-   ```
+```bash
+alignmenter calibrate optimize \
+  --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --bounds case-studies/wendys-twitter/calibration_reports/bounds.json \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --output case-studies/wendys-twitter/calibration_reports/weights.json \
+  --grid-step 0.1
+```
 
 3. **Validate + diagnose**
-   ```bash
-   alignmenter calibrate validate \
-     --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
-     --persona case-studies/wendys-twitter/wendys_twitter.yaml \
-     --output case-studies/wendys-twitter/calibrated_diagnostics.json
-   ```
+```bash
+alignmenter calibrate validate \
+  --labeled case-studies/wendys-twitter/wendys_dataset.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --output case-studies/wendys-twitter/calibrated_diagnostics.json
+```
 
 4. **Store the trait model** (already included as `wendys_twitter.traits.json`, but you can regenerate by passing `--output wendys_twitter.traits.json` to the calibration commands above).
 
@@ -108,13 +117,40 @@ Use the CLI `calibrate` namespace to replicate the calibration pipeline:
 Update the persona pack to reference the `.traits.json` file (already wired in `case-studies/wendys-twitter/wendys_twitter.yaml`), then run:
 
 ```bash
+# Pass: strict on-brand slice
 alignmenter run \
   --model openai:gpt-4o-mini \
-  --dataset datasets/wendys_twitter.jsonl \
+  --dataset case-studies/wendys-twitter/demo/wendys_onbrand_strict.jsonl \
   --persona case-studies/wendys-twitter/wendys_twitter.yaml \
-  --no-generate \
-  --out reports/wendys_twitter_calibrated
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --out reports/wendys_onbrand
+
+# Mid: generic-but-friendly LLM voice
+alignmenter run \
+  --model openai:gpt-4o-mini \
+  --dataset case-studies/wendys-twitter/demo/wendys_generic_llm.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --out reports/wendys_generic
+
+# Fail: explicitly off-brand corporate replies
+alignmenter run \
+  --model openai:gpt-4o-mini \
+  --dataset case-studies/wendys-twitter/demo/wendys_offbrand.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --out reports/wendys_offbrand
 ```
+
+Typical authenticity scores on a laptop (re-using recorded transcripts):
+
+```
+On-brand strict  -> Brand voice ≈ 0.65 (passes) 
+Generic LLM voice -> Brand voice ≈ 0.40 (borderline, reads polite but off-voice)
+Off-brand set     -> Brand voice ≈ 0.20 (clearly corporate / wrong persona)
+```
+
+These contrasts make it easy to show stakeholders what “good vs. mid vs. bad” looks like without invoking a provider. When you’re ready to evaluate your real assistant, point `--dataset` at your sanitized transcripts or add `--generate-transcripts` to regenerate turns via the configured provider.
 
 The CLI summary now shows pass/fail status based on the thresholds declared in `baseline_run.yaml`, and the HTML report’s “Scenario Breakdown” + “Persona Breakdown” tables surface which flows still need work.
 
