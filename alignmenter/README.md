@@ -51,7 +51,7 @@ pip install -e .[dev,safety]
 ```bash
 pip install alignmenter
 alignmenter init
-alignmenter run --config configs/run.yaml --no-generate
+alignmenter run --config configs/run.yaml
 ```
 
 > **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md) for details.
@@ -69,13 +69,16 @@ alignmenter run \
   --persona configs/persona/default.yaml
 
 # Reuse existing transcripts without hitting the provider
-alignmenter run --config configs/run.yaml --no-generate
+alignmenter run --config configs/run.yaml
 
 # View interactive HTML report
 alignmenter report --last
 
 # Sanitize a dataset in-place or to a new file
 alignmenter dataset sanitize datasets/demo_conversations.jsonl --out datasets/demo_sanitized.jsonl
+
+# Generate fresh transcripts (requires provider access)
+alignmenter run --config configs/run.yaml --generate-transcripts
 ```
 
 ## Case Studies
@@ -249,11 +252,9 @@ alignmenter calibrate-persona \
 
 ```bash
 # Remove PII before evaluation
-alignmenter sanitize-dataset \
-  --input prod_logs.jsonl \
+alignmenter dataset sanitize prod_logs.jsonl \
   --out datasets/sanitized.jsonl \
-  --hash-session-ids \
-  --scrub-patterns "email|phone|ssn"
+  --no-use-hashing
 ```
 
 ## Persona Configuration

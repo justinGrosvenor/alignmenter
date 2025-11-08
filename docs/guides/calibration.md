@@ -119,7 +119,7 @@ alignmenter calibrate optimize \
 Use existing script to train logistic regression on token features:
 
 ```bash
-python -m alignmenter.scripts.calibrate_persona \
+alignmenter calibrate-persona \
   --persona-path alignmenter/configs/persona/default.yaml \
   --dataset calibration_data/labeled/default_v1_labeled.jsonl \
   --out alignmenter/configs/persona/default.traits.json

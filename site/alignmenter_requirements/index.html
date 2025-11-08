@@ -568,7 +568,7 @@
   
   
   <span class="md-ellipsis">
-    Reference
+    Case Studies
     
   </span>
   
@@ -578,6 +578,81 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Case Studies
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../case-studies/wendys-twitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wendy's Twitter Voice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Reference
           </label>
@@ -1385,7 +1460,7 @@ Minimal geometric aesthetics with converging lines forming an <strong>A</strong>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span>--labeled<span class="w"> </span>calibration_data/labeled.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--output<span class="w"> </span>reports/errors.json
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>alignmenter<span class="w"> </span>analyze-scenarios<span class="w"> </span>--dataset<span class="w"> </span>datasets/demo.jsonl<span class="w"> </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--output<span class="w"> </span>reports/scenarios.json
 </code></pre></div>
-<p><code>alignmenter run</code> regenerates assistant turns via the configured provider before scoring. Teams that want to score pre-recorded transcripts can pass <code>--no-generate</code> to reuse the dataset verbatim.</p>
+<p><code>alignmenter run</code> reuses recorded transcripts by default. Add <code>--generate-transcripts</code> when you want to call the configured provider and regenerate assistant turns.</p>
 <p>Run configs (<code>alignmenter/configs/*.yaml</code>) support the following keys:</p>
 <ul>
 <li><code>model</code>, <code>compare_model</code>, <code>run_id</code></li>

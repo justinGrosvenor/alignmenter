@@ -55,19 +55,16 @@ cd alignmenter
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
 
-# Install the CLI
-pip install -e .[dev]
-
-# Optional: Install offline safety classifier
+# Install the CLI (includes safety extras)
 pip install -e .[dev,safety]
 ```
 
 ### Install from PyPI
 
 ```bash
-pip install alignmenter
+pip install "alignmenter[safety]"
 alignmenter init
-alignmenter run --config configs/run.yaml --no-generate
+alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
 
 ### Run Your First Evaluation
@@ -80,10 +77,11 @@ export OPENAI_API_KEY="your-key-here"
 alignmenter run \
   --model openai:gpt-4o-mini \
   --dataset datasets/demo_conversations.jsonl \
-  --persona configs/persona/default.yaml
+  --persona configs/persona/default.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2
 
-# Reuse recorded transcripts instead of calling the provider
-alignmenter run --config configs/run.yaml --no-generate
+# Reuse recorded transcripts (default behavior)
+alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
 
 # View interactive report
 alignmenter report --last
@@ -91,6 +89,9 @@ alignmenter report --last
 # Sanitize a dataset (dry run shows sample output)
 alignmenter dataset sanitize datasets/demo_conversations.jsonl --dry-run
 ```
+
+# Generate fresh transcripts (requires provider access + API keys)
+alignmenter run --config configs/run.yaml --generate-transcripts
 
 ## Case Studies
 
@@ -208,7 +209,7 @@ examples:
 - **Multi-provider support**: OpenAI, Anthropic, vLLM, Ollama
 - **Budget guardrails**: Halt at 90% of judge API budget
 - **Cost projection**: Estimate expenses before execution
-- **PII sanitization**: Built-in scrubbing with `alignmenter sanitize-dataset`
+- **PII sanitization**: Built-in scrubbing with `alignmenter dataset sanitize`
 - **Offline mode**: Works without internet using local models
 
 ### 🧪 Developer Experience

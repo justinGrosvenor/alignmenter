@@ -139,7 +139,7 @@ alignmenter bootstrap-dataset \
 If adapting production logs:
 
 1. **Never commit raw production data** to version control
-2. **Always sanitize PII** using `alignmenter sanitize-dataset`
+2. **Always sanitize PII** using `alignmenter dataset sanitize`
 3. **Document the source** in dataset metadata
 4. **Get legal approval** before using production data for research
 5. **Anonymize identifiers** (hash session IDs, remove emails/names)
@@ -147,10 +147,9 @@ If adapting production logs:
 **Sanitization workflow**:
 ```bash
 # Remove PII from production logs
-alignmenter sanitize-dataset \
-  --input prod_logs.jsonl \
+alignmenter dataset sanitize prod_logs.jsonl \
   --out datasets/sanitized_prod.jsonl \
-  --hash-session-ids \
+  --use-hashing \
   --scrub-patterns "email|phone|ssn|credit_card"
 
 # Verify no PII remains
@@ -190,8 +189,7 @@ For time-sensitive data:
 
 ```bash
 # Add random noise to timestamps
-alignmenter sanitize-dataset \
-  --input logs.jsonl \
+alignmenter dataset sanitize logs.jsonl \
   --out sanitized.jsonl \
   --fuzz-timestamps 3600  # ±1 hour noise
 ```
@@ -274,7 +272,7 @@ alignmenter bootstrap-dataset \
   --turns-per-session 6 \
   --safety-trap-ratio 0.15 \
   --brand-trap-ratio 0.20 \
-  --persona configs/persona/mybot.yaml \
+  --persona-id mybot_v1 \
   --seed 42
 ```
 
@@ -307,10 +305,9 @@ alignmenter bootstrap-dataset \
 
 2. **Sanitize PII**:
    ```bash
-   alignmenter sanitize-dataset \
-     --input raw_export.jsonl \
+   alignmenter dataset sanitize raw_export.jsonl \
      --out datasets/prod_clean.jsonl \
-     --hash-session-ids \
+     --use-hashing \
      --scrub-patterns "email|phone" \
      --fuzz-timestamps 1800
    ```

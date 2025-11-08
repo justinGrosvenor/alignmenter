@@ -1,11 +1,11 @@
 {
   "weights": {
-    "style": 0.5,
+    "style": 0.45,
     "traits": 0.4,
-    "lexicon": 0.1
+    "lexicon": 0.15
   },
-  "style_sim_min": 0.1401,
-  "style_sim_max": 0.4523,
+  "style_sim_min": 0.0056,
+  "style_sim_max": 0.2542,
   "trait_model": {
     "bias": 3.050557283965965,
     "token_weights": {

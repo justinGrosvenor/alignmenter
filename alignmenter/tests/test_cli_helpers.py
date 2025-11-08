@@ -10,6 +10,9 @@ from typer.testing import CliRunner
 from alignmenter import app
 
 
+DATA_DIR = Path(__file__).resolve().parent / "data"
+MINI_DATASET = DATA_DIR / "mini_cli_dataset.jsonl"
+
 runner = CliRunner()
 
 
@@ -149,9 +152,75 @@ def test_dataset_sanitize_command(tmp_path: Path) -> None:
     assert "[DRY RUN]" in result.output
 
 
+def test_bootstrap_dataset_command(tmp_path: Path) -> None:
+    out_path = tmp_path / "generated.jsonl"
+    result = runner.invoke(
+        app,
+        [
+            "bootstrap-dataset",
+            "--out",
+            str(out_path),
+            "--sessions",
+            "2",
+            "--turns-per-session",
+            "2",
+            "--safety-trap-ratio",
+            "0.5",
+            "--brand-trap-ratio",
+            "0.0",
+            "--persona-id",
+            "demo_v1",
+            "--seed",
+            "7",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert out_path.exists()
+    lines = out_path.read_text().strip().splitlines()
+    assert len(lines) == 4  # 2 sessions × 2 turns
+
+
+def test_calibrate_persona_command(tmp_path: Path) -> None:
+    persona_path = tmp_path / "persona.yaml"
+    persona_path.write_text("id: sample_persona\n", encoding="utf-8")
+
+    dataset_path = tmp_path / "annotations.jsonl"
+    dataset_path.write_text(
+        json.dumps({"text": "On brand reply", "label": 1, "persona_id": "sample_persona"})
+        + "\n"
+        + json.dumps({"text": "off brand hype", "label": 0, "persona_id": "sample_persona"})
+        + "\n",
+        encoding="utf-8",
+    )
+
+    out_path = tmp_path / "persona.traits.json"
+    result = runner.invoke(
+        app,
+        [
+            "calibrate-persona",
+            "--persona-path",
+            str(persona_path),
+            "--dataset",
+            str(dataset_path),
+            "--out",
+            str(out_path),
+            "--min-samples",
+            "2",
+            "--epochs",
+            "10",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert out_path.exists()
+    payload = json.loads(out_path.read_text())
+    assert "trait_model" in payload
+
+
 def test_run_command(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2] / "alignmenter"
-    dataset = root / "datasets" / "demo_conversations.jsonl"
+    dataset = MINI_DATASET
     persona = root / "configs" / "persona" / "default.yaml"
     keywords = root / "configs" / "safety_keywords.yaml"
 
@@ -169,7 +238,6 @@ def test_run_command(tmp_path: Path) -> None:
             str(keywords),
             "--out",
             str(tmp_path),
-            "--no-generate",
         ],
     )
 
@@ -185,7 +253,7 @@ def test_run_command(tmp_path: Path) -> None:
 
 def test_run_command_with_compare(tmp_path: Path) -> None:
     root = Path(__file__).resolve().parents[2] / "alignmenter"
-    dataset = root / "datasets" / "demo_conversations.jsonl"
+    dataset = MINI_DATASET
     persona = root / "configs" / "persona" / "default.yaml"
     keywords = root / "configs" / "safety_keywords.yaml"
 
@@ -205,7 +273,6 @@ def test_run_command_with_compare(tmp_path: Path) -> None:
             str(keywords),
             "--out",
             str(tmp_path),
-            "--no-generate",
         ],
     )
 
@@ -224,7 +291,7 @@ def test_run_command_threshold_failure(tmp_path: Path) -> None:
             [
                 "run_id: threshold",
                 "model: openai:gpt-4o-mini",
-                f"dataset: {root / 'datasets' / 'demo_conversations.jsonl'}",
+                f"dataset: {MINI_DATASET}",
                 f"persona: {root / 'configs' / 'persona' / 'default.yaml'}",
                 f"keywords: {root / 'configs' / 'safety_keywords.yaml'}",
                 "scorers:",
@@ -243,7 +310,6 @@ def test_run_command_threshold_failure(tmp_path: Path) -> None:
             "run",
             "--config",
             str(config_path),
-            "--no-generate",
         ],
     )
 

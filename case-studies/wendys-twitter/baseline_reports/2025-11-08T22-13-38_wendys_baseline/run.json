@@ -1,0 +1,17 @@
+{
+  "run_id": "wendys_baseline",
+  "model": "openai:gpt-4o-mini",
+  "compare_model": null,
+  "dataset_path": "/Users/justingrosvenor/alignmenter/case-studies/wendys-twitter/wendys_dataset.jsonl",
+  "persona_path": "/Users/justingrosvenor/alignmenter/case-studies/wendys-twitter/wendys_twitter.yaml",
+  "run_at": "2025-11-08T22:13:38Z",
+  "session_count": 99,
+  "turn_count": 235,
+  "transcripts": {
+    "primary": {
+      "model": "openai:gpt-4o-mini",
+      "path": "transcripts/openai_gpt-4o-mini.jsonl",
+      "source": "dataset"
+    }
+  }
+}

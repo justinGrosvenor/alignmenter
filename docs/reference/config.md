@@ -26,7 +26,7 @@ evaluation:
   stability_weight: 0.2
 
 generation:
-  # Only if --no-generate not specified
+  # Only when --generate-transcripts is used
   temperature: 0.7
   max_tokens: 500
   top_p: 1.0

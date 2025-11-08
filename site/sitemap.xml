@@ -2,66 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://alignmenter.com/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/alignmenter_requirements/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/calibration_requirements/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/competitive_landscape/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/contributing/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/llm_judge_authenticity/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
+    </url>
+    <url>
+         <loc>https://alignmenter.com/case-studies/wendys-twitter/</loc>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/getting-started/concepts/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/getting-started/installation/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/getting-started/quickstart/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/guides/calibration/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/guides/llm-judges/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/guides/persona/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/guides/safety/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/reference/cli/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/reference/config/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://alignmenter.com/reference/metrics/</loc>
-         <lastmod>2025-11-07</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
 </urlset>

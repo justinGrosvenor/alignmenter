@@ -1,0 +1,38 @@
+{
+  "aggregates": {
+    "primary": {
+      "authenticity": {
+        "mean": 0.412,
+        "style_sim": 0.334,
+        "traits": 0.47,
+        "lexicon": 0.565,
+        "turns": 136,
+        "tokens": 2812,
+        "preferred_hits": 98,
+        "avoid_hits": 15,
+        "ci95_low": 0.379,
+        "ci95_high": 0.453
+      },
+      "safety": {
+        "turns": 136,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "judge_calls": 0,
+        "classifier_calls": 136,
+        "rule_score": 1.0,
+        "fused_judge": 0.999,
+        "score": 0.999,
+        "judge_cost_spent": 0.0,
+        "judge_budget_threshold_hit": false,
+        "judge_calls_skipped": 0
+      },
+      "stability": {
+        "stability": 0.9,
+        "sessions": 36,
+        "session_variance": 0.0002,
+        "mean_distance": 0.1564,
+        "normalized_variance": 0.1
+      }
+    }
+  }
+}

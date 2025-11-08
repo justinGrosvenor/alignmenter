@@ -65,8 +65,7 @@ Or use production logs (sanitized first):
 
 ```bash
 # Remove PII from production data
-alignmenter sanitize-dataset \
-  --input prod_logs.jsonl \
+alignmenter dataset sanitize prod_logs.jsonl \
   --out data/candidates_clean.jsonl
 ```
 

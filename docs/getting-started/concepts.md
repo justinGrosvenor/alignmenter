@@ -125,8 +125,8 @@ Test datasets are JSONL files containing conversation turns:
 - `assistant` - AI response (optional - can be generated)
 
 Datasets support:
-- **Regeneration**: Use `--model` to generate fresh responses
-- **Caching**: Use `--no-generate` to test on recorded transcripts
+- **Regeneration**: Add `--generate-transcripts` to call the configured provider and refresh assistant turns
+- **Caching**: By default Alignmenter reuses recorded transcripts for deterministic scoring
 - **Sanitization**: Built-in PII scrubbing
 
 ## LLM Judges (Optional)

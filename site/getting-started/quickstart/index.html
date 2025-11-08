@@ -770,7 +770,7 @@
   
   
   <span class="md-ellipsis">
-    Reference
+    Case Studies
     
   </span>
   
@@ -780,6 +780,81 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Case Studies
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../case-studies/wendys-twitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wendy's Twitter Voice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Reference
           </label>
@@ -1093,7 +1168,8 @@
 <p>This guide will walk you through running your first Alignmenter evaluation in under 5 minutes.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Alignmenter installed (<a href="../installation/">Installation Guide</a>)</li>
+<li>Alignmenter installed with safety extras (<a href="../installation/">Installation Guide</a>)</li>
+<li><code>pip install "alignmenter[safety]"</code> (PyPI) or <code>pip install -e .[dev,safety]</code> (repo checkout)</li>
 <li>OpenAI API key set in environment</li>
 </ul>
 <h2 id="1-initialize-project">1. Initialize Project<a class="headerlink" href="#1-initialize-project" title="Permanent link">&para;</a></h2>
@@ -1102,17 +1178,19 @@
 </code></pre></div>
 <p>This creates sample configs, datasets, and personas you can use right away.</p>
 <h2 id="2-run-your-first-test">2. Run Your First Test<a class="headerlink" href="#2-run-your-first-test" title="Permanent link">&para;</a></h2>
-<p>Run an evaluation with the demo dataset:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai-gpt:brand-voice<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml
+<p>Run an evaluation with the demo dataset (reuses the bundled transcripts):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
+</code></pre></div>
+<p>Want fresh transcripts from your provider? Add <code>--generate-transcripts</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
 </code></pre></div>
 <p>You'll see output like:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Loading test dataset: 60 conversation turns
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Running model: openai-gpt:brand-voice
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Computing metrics...
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>✓ Brand Authenticity: 0.83 (strong match to reference voice)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>✓ Safety: 0.95 (2 keyword flags, 0 critical)
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>✓ Stability: 0.88 (consistent tone across sessions)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Report saved: reports/2025-11-06_14-32/index.html
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Loading dataset: 60 turns across 10 sessions
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Running model: openai:gpt-4o-mini
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>✓ Brand voice score: 0.83 (range: 0.79-0.87)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>✓ Safety score: 0.95
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>✓ Consistency score: 0.88
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Report written to: reports/2025-11-06_14-32/index.html
 </code></pre></div>
 <div class="admonition success">
 <p class="admonition-title">Success</p>
@@ -1120,7 +1198,7 @@
 </div>
 <h2 id="3-view-the-report">3. View the Report<a class="headerlink" href="#3-view-the-report" title="Permanent link">&para;</a></h2>
 <p>Open the interactive HTML report:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
 </code></pre></div>
 <p>This opens the most recent report in your browser. You'll see:</p>
 <ul>
@@ -1132,15 +1210,19 @@
 </ul>
 <h2 id="4-test-different-models">4. Test Different Models<a class="headerlink" href="#4-test-different-models" title="Permanent link">&para;</a></h2>
 <p>Compare GPT-4 vs Claude:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test with GPT-4</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test with Claude</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test with GPT-4</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test with Claude</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
 </code></pre></div>
 <h2 id="5-add-llm-judge-analysis-optional">5. Add LLM Judge Analysis (Optional)<a class="headerlink" href="#5-add-llm-judge-analysis-optional" title="Permanent link">&para;</a></h2>
 <p>Get qualitative feedback from an LLM judge:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/wendys-twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/wendys-calibration.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
 </code></pre></div>
 <p>This analyzes 20% of your sessions with GPT-4 and provides:
 - Human-readable explanations of brand voice alignment
@@ -1149,27 +1231,34 @@
 - Cost tracking (typically $0.03-$0.10 for demo dataset)</p>
 <h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
 <h3 id="test-before-deploying">Test Before Deploying<a class="headerlink" href="#test-before-deploying" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Run full test suite</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai-gpt:prod-bot<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check if scores meet thresholds</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml<span class="w"> </span>--min-authenticity<span class="w"> </span><span class="m">0</span>.80<span class="w"> </span>--min-safety<span class="w"> </span><span class="m">0</span>.95
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run full test suite</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml<span class="w"> </span>--generate-transcripts
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># (Thresholds live in configs/prod.yaml)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml
+</code></pre></div>
+<p>Add thresholds to your run config:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
 </code></pre></div>
 <h3 id="compare-model-versions">Compare Model Versions<a class="headerlink" href="#compare-model-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Baseline</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--output-dir<span class="w"> </span>reports/baseline
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># After prompt changes</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand-v2.yaml<span class="w"> </span>--output-dir<span class="w"> </span>reports/v2
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Compare reports manually or diff the JSON exports</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Baseline</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--out<span class="w"> </span>reports/baseline<span class="w"> </span>--generate-transcripts
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># After prompt changes</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand-v2.yaml<span class="w"> </span>--out<span class="w"> </span>reports/v2<span class="w"> </span>--generate-transcripts
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Compare reports manually or diff the JSON exports</span>
 </code></pre></div>
 <h3 id="sanitize-production-data">Sanitize Production Data<a class="headerlink" href="#sanitize-production-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Preview sanitization (dry run)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--dry-run
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Actually sanitize</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--output<span class="w"> </span>datasets/sanitized.jsonl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Preview sanitization (dry run)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--dry-run
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Actually sanitize</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--out<span class="w"> </span>datasets/sanitized.jsonl
 </code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1181,15 +1270,15 @@
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="no-api-key-found">"No API key found"<a class="headerlink" href="#no-api-key-found" title="Permanent link">&para;</a></h3>
 <p>Set your OpenAI API key:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span>
 </code></pre></div></p>
 <h3 id="module-not-found-sentence-transformers">"Module not found: sentence-transformers"<a class="headerlink" href="#module-not-found-sentence-transformers" title="Permanent link">&para;</a></h3>
 <p>The authenticity scorer requires sentence-transformers:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pip<span class="w"> </span>install<span class="w"> </span>sentence-transformers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip<span class="w"> </span>install<span class="w"> </span>sentence-transformers
 </code></pre></div></p>
 <h3 id="tests-are-slow">Tests are slow<a class="headerlink" href="#tests-are-slow" title="Permanent link">&para;</a></h3>
-<p>Use <code>--no-generate</code> to reuse cached transcripts:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--no-generate
+<p>Runs reuse existing transcripts by default. Only add <code>--generate-transcripts</code> when you explicitly want to call the provider:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts
 </code></pre></div></p>
 <h3 id="need-help">Need help?<a class="headerlink" href="#need-help" title="Permanent link">&para;</a></h3>
 <p>File an issue on <a href="https://github.com/justinGrosvenor/alignmenter/issues">GitHub</a> or check the <a href="../../reference/cli/">CLI Reference</a>.</p>

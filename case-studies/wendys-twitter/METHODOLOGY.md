@@ -210,7 +210,7 @@ alignmenter run --config case-studies/wendys-twitter/baseline_config.yaml
 **Step 1: Generate Candidates (50 samples for pilot)**
 ```bash
 alignmenter calibrate generate \
-  --dataset case-studies/wendys-twitter/wendys_full_dataset.jsonl \
+  --dataset case-studies/wendys-twitter/demo/wendys_full.jsonl \
   --persona case-studies/wendys-twitter/wendys_twitter.yaml \
   --output calibration_data/unlabeled/wendys_candidates.jsonl \
   --strategy diverse \
@@ -261,7 +261,7 @@ alignmenter calibrate optimize \
 
 **Step 5: Train Trait Model**
 ```bash
-python -m alignmenter.scripts.calibrate_persona \
+alignmenter calibrate-persona \
   --persona-path case-studies/wendys-twitter/wendys_twitter.yaml \
   --dataset calibration_data/labeled/wendys_labeled.jsonl \
   --out case-studies/wendys-twitter/wendys_twitter.traits.json
@@ -355,7 +355,7 @@ alignmenter run --config case-studies/wendys-twitter/calibrated_config.yaml
    - When to prioritize style vs lexicon
 
 5. **Reproducibility**
-   - Full dataset (wendys_full_dataset.jsonl)
+   - Full dataset (demo/wendys_full.jsonl)
    - Labeled subset (wendys_labeled.jsonl)
    - Calibration files (wendys_twitter.traits.json)
    - Analysis notebooks
