@@ -16,7 +16,7 @@ We welcome contributions from the community! This guide will help you get starte
 ### 1. Fork and Clone
 
 ```bash
-git clone https://github.com/yourusername/alignmenter.git
+git clone https://github.com/justinGrosvenor/alignmenter.git
 cd alignmenter
 ```
 
