@@ -32,26 +32,23 @@ Unlike generic LLM evaluation frameworks, Alignmenter is purpose-built for **per
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/alignmenter.git
+git clone https://github.com/justinGrosvenor/alignmenter.git
 cd alignmenter
 
 # Create virtual environment
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
 
-# Install with dev dependencies
-pip install -e .[dev]
-
-# Optional: Install with offline safety classifier
-pip install -e .[dev,safety]
+# Install with dev + safety extras
+pip install -e ./alignmenter[dev,safety]
 ```
 
 ### Install from PyPI
 
 ```bash
-pip install alignmenter
+pip install "alignmenter[safety]"
 alignmenter init
-alignmenter run --config configs/run.yaml
+alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
 
 > **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md) for details.
@@ -437,7 +434,7 @@ If you use Alignmenter in research, please cite:
   title={Alignmenter: A Framework for Persona-Aligned Conversational AI Evaluation},
   author={Alignmenter Contributors},
   year={2024},
-  url={https://github.com/yourusername/alignmenter}
+  url={https://github.com/justinGrosvenor/alignmenter}
 }
 ```
 

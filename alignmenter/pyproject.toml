@@ -38,7 +38,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff", "build", "twine"]
+dev = ["pytest", "pytest-cov", "ruff", "build", "twine"]
 safety = ["transformers>=4.30.0"]
 
 [project.urls]

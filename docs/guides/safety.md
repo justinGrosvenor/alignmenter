@@ -400,4 +400,4 @@ Planned improvements:
 For issues with the offline safety model:
 - Check `transformers` installation: `pip list | grep transformers`
 - Verify model downloads to `~/.cache/huggingface/`
-- File issues at: https://github.com/yourusername/alignmenter/issues
+- File issues at: https://github.com/justinGrosvenor/alignmenter/issues
