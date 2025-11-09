@@ -89,14 +89,10 @@ alignmenter report --last
 
 # Sanitize a dataset (dry run shows sample output)
 alignmenter dataset sanitize datasets/demo_conversations.jsonl --dry-run
-```
 
 # Generate fresh transcripts (requires provider access + API keys)
 alignmenter run --config configs/run.yaml --generate-transcripts
-
-## Case Studies
-
-- [Wendy's Twitter Voice](docs/case-studies/wendys-twitter.md) – full calibration walkthrough, reproduction steps, and diagnostics for a high-sass social persona. *(Requires installing from this repo so the `case-studies/` assets are present.)*
+```
 
 **Output:**
 ```
@@ -118,6 +114,12 @@ Quick links:
 - **[Persona Guide](https://docs.alignmenter.com/guides/persona/)** - Configure your brand voice
 - **[LLM Judges](https://docs.alignmenter.com/guides/llm-judges/)** - Qualitative analysis
 - **[Contributing](https://docs.alignmenter.com/contributing/)** - How to contribute
+
+---
+
+## Case Studies
+
+- **[Wendy's Twitter Voice](docs/case-studies/wendys-twitter.md)** - Full calibration walkthrough, reproduction steps, and diagnostics for a high-sass social persona. *(Requires installing from this repo so the `case-studies/` assets are present.)*
 
 ---
 
@@ -161,8 +163,6 @@ The core evaluation toolkit lives in **`alignmenter/`**:
 | **Reporters** | HTML report cards, JSON exports, CSV downloads |
 | **Datasets** | Demo conversations, sanitization tools |
 | **Personas** | Brand voice definitions (YAML format) |
-
----
 
 ---
 
@@ -247,46 +247,25 @@ examples:
 
 ## Roadmap
 
-### Current (v0.0.1)
-- ✅ Three-dimensional scoring (authenticity, safety, stability)
-- ✅ Multi-provider support (OpenAI, Anthropic, local)
-- ✅ HTML report cards with interactive charts
-- ✅ Offline safety classifier (distilled-safety-roberta)
-- ✅ Budget guardrails and cost tracking
-- ✅ PII sanitization tools
+### Completed ✅
+- Three-dimensional scoring (authenticity, safety, stability)
+- Multi-provider support (OpenAI, Anthropic, local models)
+- HTML report cards with interactive charts
+- Offline safety classifier (distilled-safety-roberta)
+- LLM judges for qualitative analysis
+- Budget guardrails and cost tracking
+- PII sanitization tools
+- Calibration workflow and diagnostics
 
-### Upcoming (v0.1.0)
-- [ ] Hosted evaluation pipelines (CI/CD SaaS)
-- [ ] Multi-language support (non-English personas)
-- [ ] Real-time monitoring and alerts
-- [ ] Advanced trait models (neural networks)
+### In Progress 🚧
+- Multi-language support (non-English personas)
+- Batch processing optimizations
+- Additional embedding providers
 
-### Future (v1.0.0)
-- [ ] Enterprise SSO and RBAC
-- [ ] Synthetic test case generation
-- [ ] Fine-tuning integrations
-- [ ] Custom metric plugins
-- [ ] Batch processing optimizations
-
----
-
-## Open Source Model
-
-Alignmenter is built as **open core**:
-
-**Open Source (Apache 2.0):**
-- CLI and all evaluation tools
-- Scorers, reporters, and providers
-- Persona packs and datasets
-- Documentation and examples
-
-**Proprietary (Hosted Service):**
-- Web dashboard and team features
-- Audit trails and compliance reports
-- Managed infrastructure
-- Enterprise support
-
-💡 **Get Started**: Use the open-source CLI today. Contact us for hosted features.
+### Future Considerations 💭
+- Synthetic test case generation
+- Custom metric plugins
+- Advanced trait models (neural networks)
 
 ---
 
@@ -346,6 +325,26 @@ If you use Alignmenter in research, please cite:
   license={Apache-2.0}
 }
 ```
+
+---
+
+## Open Source Model
+
+Alignmenter is built as **open core**:
+
+**Open Source (Apache 2.0):**
+- CLI and all evaluation tools
+- Scorers, reporters, and providers
+- Persona packs and datasets
+- Documentation and examples
+
+**Proprietary (Hosted Service):**
+- Web dashboard and team features
+- Audit trails and compliance reports
+- Managed infrastructure
+- Enterprise support
+
+💡 **Get Started**: Use the open-source CLI today. Contact us for hosted features.
 
 ---
 

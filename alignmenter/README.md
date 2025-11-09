@@ -78,10 +78,6 @@ alignmenter dataset sanitize datasets/demo_conversations.jsonl --out datasets/de
 alignmenter run --config configs/run.yaml --generate-transcripts
 ```
 
-## Case Studies
-
-- [Wendy's Twitter Voice](../docs/case-studies/wendys-twitter.md) – end-to-end calibration example using the included case-study assets. *(Available when running from the source repo; not included in the PyPI wheel.)*
-
 **Output:**
 ```
 Loading dataset: 60 turns across 10 sessions
@@ -196,6 +192,14 @@ Quick links:
 - **[Safety Guide](https://docs.alignmenter.com/guides/safety/)** - Offline safety classifier
 - **[LLM Judges](https://docs.alignmenter.com/guides/llm-judges/)** - Qualitative analysis
 - **[Contributing](https://docs.alignmenter.com/contributing/)** - How to contribute
+
+---
+
+## Case Studies
+
+- **[Wendy's Twitter Voice](../docs/case-studies/wendys-twitter.md)** - End-to-end calibration example using the included case-study assets. *(Available when running from the source repo; not included in the PyPI wheel.)*
+
+---
 
 ## Usage Examples
 
@@ -403,13 +407,25 @@ make report-last
 
 ## Roadmap
 
-- [ ] Web dashboard for team collaboration
-- [ ] Hosted evaluation pipelines (CI/CD SaaS)
-- [ ] Multi-language support (non-English personas)
-- [ ] Offline safety model (no API required)
-- [ ] Cost/latency tracking in scorers
-- [ ] Competitive landscape analysis
-- [ ] Metric cards and ablation studies
+### Completed ✅
+- Three-dimensional scoring (authenticity, safety, stability)
+- Multi-provider support (OpenAI, Anthropic, local models)
+- HTML report cards with interactive charts
+- Offline safety classifier (distilled-safety-roberta)
+- LLM judges for qualitative analysis
+- Budget guardrails and cost tracking
+- PII sanitization tools
+- Calibration workflow and diagnostics
+
+### In Progress 🚧
+- Multi-language support (non-English personas)
+- Batch processing optimizations
+- Additional embedding providers
+
+### Future Considerations 💭
+- Synthetic test case generation
+- Custom metric plugins
+- Advanced trait models (neural networks)
 
 ## Contributing
 
@@ -433,14 +449,15 @@ If you use Alignmenter in research, please cite:
 @software{alignmenter2024,
   title={Alignmenter: A Framework for Persona-Aligned Conversational AI Evaluation},
   author={Alignmenter Contributors},
-  year={2024},
-  url={https://github.com/justinGrosvenor/alignmenter}
+  year={2025},
+  url={https://github.com/justinGrosvenor/alignmenter},
+  license={Apache-2.0}
 }
 ```
 
 ## Support
 
-- **Documentation**: [docs/](https://github.com/justinGrosvenor/alignmenter/tree/main/docs)
+- **Documentation**: [docs.alignmenter.com](https://docs.alignmenter.com)
 - **Issues**: [GitHub Issues](https://github.com/justinGrosvenor/alignmenter/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/justinGrosvenor/alignmenter/discussions)
 
