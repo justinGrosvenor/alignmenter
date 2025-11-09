@@ -254,7 +254,7 @@ When using Alignmenter datasets in research:
   title={Alignmenter: A Framework for Persona-Aligned Conversational AI Evaluation},
   author={Alignmenter Contributors},
   year={2024},
-  howpublished={\url{https://github.com/yourusername/alignmenter}},
+  howpublished={\url{https://github.com/justinGrosvenor/alignmenter}},
   note={Dataset: demo_conversations.jsonl, v1.0}
 }
 ```

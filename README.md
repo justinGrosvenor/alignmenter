@@ -3,6 +3,11 @@
 </p>
 
 <p align="center">
+  <a href="https://pypi.org/project/alignmenter/"><img src="https://badge.fury.io/py/alignmenter.svg" alt="PyPI version"></a>
+  <a href="https://pepy.tech/project/alignmenter"><img src="https://pepy.tech/badge/alignmenter" alt="Downloads"></a>
+</p>
+
+<p align="center">
   <strong>Persona-aligned evaluation for conversational AI</strong>
 </p>
 
@@ -43,29 +48,25 @@ Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for per
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/alignmenter.git
-cd alignmenter
-
-# Navigate to the Python package
-cd alignmenter
-
-# Create virtual environment
-python -m venv env
-source env/bin/activate  # On Windows: env\Scripts\activate
-
-# Install the CLI (includes safety extras)
-pip install -e .[dev,safety]
-```
-
-### Install from PyPI
+**Option 1 · PyPI (recommended for most users)**
 
 ```bash
 pip install "alignmenter[safety]"
 alignmenter init
 alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
+
+Use this path when you want to try Alignmenter quickly, run it in CI, or install it inside a production environment.
+
+**Option 2 · From Source (for case studies & contributing)**
+
+```bash
+git clone https://github.com/justinGrosvenor/alignmenter.git
+cd alignmenter
+pip install -e ./alignmenter[dev,safety]
+```
+
+This installs the CLI plus the case-study assets under `alignmenter/case-studies/`, which are excluded from the PyPI wheel. Ideal when you want to reproduce the Wendy's walkthrough or contribute code.
 
 ### Run Your First Evaluation
 
@@ -305,7 +306,7 @@ We welcome contributions from the community!
 
 ```bash
 # Fork and clone
-git clone https://github.com/yourusername/alignmenter.git
+git clone https://github.com/justinGrosvenor/alignmenter.git
 cd alignmenter/alignmenter
 
 # Install with dev dependencies
@@ -341,7 +342,7 @@ If you use Alignmenter in research, please cite:
   title={Alignmenter: A Framework for Persona-Aligned Conversational AI Evaluation},
   author={Alignmenter Contributors},
   year={2025},
-  url={https://github.com/yourusername/alignmenter},
+  url={https://github.com/justinGrosvenor/alignmenter},
   license={Apache-2.0}
 }
 ```
@@ -375,7 +376,7 @@ See [LICENSE](LICENSE) for the full text.
 ---
 
 <p align="center">
-  <a href="https://github.com/yourusername/alignmenter/stargazers">⭐ Star us on GitHub</a> •
+  <a href="https://github.com/justinGrosvenor/alignmenter/stargazers">⭐ Star us on GitHub</a> •
   <a href="https://twitter.com/alignmenter">🐦 Follow on Twitter</a> •
   <a href="https://alignmenter.com">🌐 Visit Website</a>
 </p>
