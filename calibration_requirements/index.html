@@ -1,0 +1,1915 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+      
+      
+        <meta name="author" content="Justin Grosvenor">
+      
+      
+        <link rel="canonical" href="https://alignmenter.com/calibration_requirements/">
+      
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.23">
+    
+    
+      
+        <title>Calibration System Requirements - Alignmenter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-3733FD2K8Q"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-3733FD2K8Q",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-3733FD2K8Q",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#calibration-system-requirements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Alignmenter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Calibration System Requirements
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Alignmenter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Getting Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Core Concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Guides
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/persona/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Persona Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Calibration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Safety Checks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/llm-judges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Judges
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Case Studies
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Case Studies
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../case-studies/wendys-twitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wendy's Twitter Voice
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CLI Commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Metrics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Executive Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-current-state-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Current State Analysis
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Current State Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Missing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Problem
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-goals-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Goals &amp; Non-Goals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Goals &amp; Non-Goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Goals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-foundation-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Foundation (Now)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-ml-ready-architecture-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: ML-Ready Architecture (Later)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Non-Goals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Directory Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Flow
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-data-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Data Requirements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Data Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#labeled-data-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      Labeled Data Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#labeling-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Labeling Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-size-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Size Requirements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-calibration-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Calibration Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Calibration Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-normalization-bound-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.1 Normalization Bound Estimation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-component-weight-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.2 Component Weight Optimization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-trait-model-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.3 Trait Model Training
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-validation-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      5.4 Validation &amp; Diagnostics
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Implementation Plan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-foundation-1-2-weeks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1: Foundation (1-2 weeks)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-validation-tooling-1-week" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2: Validation + Tooling (1 week)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-ml-enhancements-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3: ML Enhancements (Future)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-success-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Success Metrics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Success Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#immediate-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Immediate Goals
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#long-term-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Long-Term Goals
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Open Questions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Dependencies
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-example-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Appendix: Example Workflows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix: Example Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workflow-a-first-time-calibration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow A: First-Time Calibration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-b-incremental-calibration-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      Workflow B: Incremental Calibration Update
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/calibration_requirements.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="calibration-system-requirements">Calibration System Requirements<a class="headerlink" href="#calibration-system-requirements" title="Permanent link">&para;</a></h1>
+<p><strong>Version:</strong> 0.1
+<strong>Status:</strong> Draft
+<strong>Last Updated:</strong> 2025-11-05</p>
+<hr />
+<h2 id="executive-summary">Executive Summary<a class="headerlink" href="#executive-summary" title="Permanent link">&para;</a></h2>
+<p>Design a calibration system to optimize persona scoring parameters (component weights, normalization bounds, trait models) using labeled data. The system should provide immediate value with simple statistical methods while being architected for future ML enhancements.</p>
+<p><strong>Key Principle:</strong> Start simple, build incrementally, maintain scientific rigor.</p>
+<hr />
+<h2 id="1-current-state-analysis">1. Current State Analysis<a class="headerlink" href="#1-current-state-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="what-works">What Works<a class="headerlink" href="#what-works" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ <strong>Trait model calibration exists</strong> (<code>calibrate_persona.py</code>)</li>
+<li>Trains logistic regression on labeled examples</li>
+<li>Learns token-level weights via gradient descent</li>
+<li>
+<p>Outputs <code>{persona}.traits.json</code></p>
+</li>
+<li>
+<p>✅ <strong>Global normalization bounds implemented</strong></p>
+</li>
+<li>Style similarity: <code>style_sim_min/max</code> (default: 0.05-0.25)</li>
+<li>Stability variance: <code>variance_min/max</code> (default: 0.01-0.50)</li>
+<li>
+<p>Supports calibration file override</p>
+</li>
+<li>
+<p>✅ <strong>Component scoring is modular</strong></p>
+</li>
+<li>Authenticity: <code>style + traits + lexicon</code></li>
+<li>Safety: <code>rules + judge + classifier</code></li>
+<li>Stability: <code>1.0 - normalized_variance</code></li>
+</ul>
+<h3 id="whats-missing">What's Missing<a class="headerlink" href="#whats-missing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>❌ <strong>Component weight optimization</strong> - Currently hardcoded (0.3/0.3/0.4)</li>
+<li>❌ <strong>Normalization bound estimation</strong> - Using educated guesses</li>
+<li>❌ <strong>Scenario-specific calibration</strong> - All scenarios use same weights</li>
+<li>❌ <strong>Calibration data generation</strong> - Manual process, no tooling</li>
+<li>❌ <strong>Calibration diagnostics</strong> - No metrics to assess calibration quality</li>
+<li>❌ <strong>Validation framework</strong> - No held-out test sets or cross-validation</li>
+</ul>
+<h3 id="core-problem">Core Problem<a class="headerlink" href="#core-problem" title="Permanent link">&para;</a></h3>
+<p><strong>Without proper calibration, traits default to 0.5 (neutral), compressing scores into 0.5-0.7 range and making it hard to distinguish good from mediocre responses.</strong></p>
+<hr />
+<h2 id="2-goals-non-goals">2. Goals &amp; Non-Goals<a class="headerlink" href="#2-goals-non-goals" title="Permanent link">&para;</a></h2>
+<h3 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h3>
+<h4 id="phase-1-foundation-now">Phase 1: Foundation (Now)<a class="headerlink" href="#phase-1-foundation-now" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Generate calibration datasets</strong></li>
+<li>Bootstrap from existing demo data</li>
+<li>Support manual labeling workflow</li>
+<li>
+<p>Validate data quality</p>
+</li>
+<li>
+<p><strong>Estimate normalization bounds</strong></p>
+</li>
+<li>Compute empirical min/max for style similarity</li>
+<li>Compute empirical min/max for stability variance</li>
+<li>
+<p>Store in calibration file</p>
+</li>
+<li>
+<p><strong>Optimize component weights</strong></p>
+</li>
+<li>Grid search or simple optimization</li>
+<li>Maximize correlation with human labels</li>
+<li>
+<p>Output optimized weights to calibration file</p>
+</li>
+<li>
+<p><strong>Provide calibration diagnostics</strong></p>
+</li>
+<li>Show component distributions</li>
+<li>Correlation analysis (component vs label)</li>
+<li>Confusion matrix / ROC curves</li>
+</ol>
+<h4 id="phase-2-ml-ready-architecture-later">Phase 2: ML-Ready Architecture (Later)<a class="headerlink" href="#phase-2-ml-ready-architecture-later" title="Permanent link">&para;</a></h4>
+<ol>
+<li><strong>Support advanced optimization</strong></li>
+<li>Bayesian optimization</li>
+<li>Cross-validation</li>
+<li>
+<p>Hyperparameter tuning</p>
+</li>
+<li>
+<p><strong>Enable ensemble methods</strong></p>
+</li>
+<li>Combine multiple trait models</li>
+<li>Learn non-linear weight combinations</li>
+<li>
+<p>Scenario-specific models</p>
+</li>
+<li>
+<p><strong>Add active learning</strong></p>
+</li>
+<li>Identify uncertain examples for labeling</li>
+<li>Prioritize high-value samples</li>
+</ol>
+<h3 id="non-goals">Non-Goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li>❌ Not building a full ML platform (use existing tools: scikit-learn, optuna)</li>
+<li>❌ Not replacing existing <code>calibrate_persona.py</code> (extend it)</li>
+<li>❌ Not packaging calibration tools with Alignmenter (keep in <code>/calibration</code> directory)</li>
+<li>❌ Not requiring cloud infrastructure (run locally)</li>
+</ul>
+<hr />
+<h2 id="3-architecture">3. Architecture<a class="headerlink" href="#3-architecture" title="Permanent link">&para;</a></h2>
+<h3 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/Users/justingrosvenor/alignmenter/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── alignmenter/                     # Main package (shipped)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── src/alignmenter/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   ├── scorers/
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │   ├── calibration/             # Calibration modules (CLI commands)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   │   ├── generate.py          # Bootstrap from demo data
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   │   ├── label.py             # Interactive labeling tool
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │   │   ├── bounds.py            # Compute normalization bounds
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │   │   ├── optimize.py          # Grid search for component weights
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   │   ├── validate.py          # Test calibration quality
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   │   ├── diagnose.py          # Error analysis with LLM judge
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │   │   ├── analyze.py           # Scenario performance analysis
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │   │   └── sampling.py          # Judge sampling strategies
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │   └── scripts/
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       └── calibrate_persona.py  # Existing trait model trainer
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── configs/
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │   └── persona/
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       ├── default.yaml
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       └── default.traits.json   # Calibration output
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   ├── datasets/
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │   └── demo_conversations.jsonl
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └── tests/
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│       ├── test_authenticity_judge.py
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│       ├── test_sampling.py
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│       └── test_judge_providers.py
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>├── docs/                            # Documentation (NOT shipped)
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ├── alignmenter_requirements.md  # Main requirements
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ├── calibration_requirements.md  # This document
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   ├── calibration_guide.md         # User guide
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   ├── llm_judge_authenticity.md    # Judge design doc
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   ├── persona_annotation.md        # Annotation guidelines
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └── offline_safety.md            # Safety classifier doc
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>├── calibration_data/                # User&#39;s calibration datasets (gitignored)
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   ├── labeled/
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   │   ├── default_v1_labeled.jsonl
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   │   └── validation_split.jsonl
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│   ├── unlabeled/
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│   │   └── candidates_for_labeling.jsonl
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│   └── reports/
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│       ├── bounds_report.json
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│       ├── weights_report.json
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│       └── diagnostics.json
+</code></pre></div>
+<h3 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ 1. DATA GENERATION                                              │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│                                                                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  demo_conversations.jsonl                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│         │                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│         ├─&gt; alignmenter calibrate generate                     │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│         │   • Sample diverse responses                         │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│         │   • Include edge cases (brand_trap, safety_trap)     │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│         │   • Output: unlabeled/candidates.jsonl               │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│         │                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│         └─&gt; alignmenter calibrate label (interactive)          │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│             • Show response + persona context                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│             • Ask: &quot;On-brand (1) or off-brand (0)?&quot;            │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│             • Output: labeled/default_v1_labeled.jsonl         │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│ 2. BOUND ESTIMATION                                             │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                 │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  labeled/default_v1_labeled.jsonl                               │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│         │                                                       │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│         └─&gt; alignmenter calibrate bounds                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│             • Compute raw style_sim for all examples           │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│             • Compute percentiles (5th, 95th)                  │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│             • Compute stability variance (if multi-turn)       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│             • Output: bounds_report.json                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                 │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  bounds_report.json                                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    {                                                            │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│      &quot;style_sim_min&quot;: 0.08,  # 5th percentile                  │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│      &quot;style_sim_max&quot;: 0.28,  # 95th percentile                 │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│      &quot;variance_min&quot;: 0.015,                                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│      &quot;variance_max&quot;: 0.45                                      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    }                                                            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│ 3. WEIGHT OPTIMIZATION                                          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                 │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  labeled/default_v1_labeled.jsonl + bounds_report.json          │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│         │                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│         └─&gt; alignmenter calibrate optimize                     │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│             • Score each example with different weight combos  │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│             • Try grid: style ∈ [0.1, 0.3, 0.5, 0.7, 0.9]      │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│             •           traits ∈ [0.1, 0.3, 0.5, 0.7, 0.9]     │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│             •           lexicon ∈ [0.1, 0.3, 0.5, 0.7, 0.9]    │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│             •           (constrained to sum=1.0)               │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│             • Evaluate: ROC-AUC, F1, correlation with labels   │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│             • Select best weights                              │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│             • Output: weights_report.json                      │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                 │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  weights_report.json                                            │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│    {                                                            │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│      &quot;best_weights&quot;: {                                         │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│        &quot;style&quot;: 0.5,                                           │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│        &quot;traits&quot;: 0.3,                                          │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│        &quot;lexicon&quot;: 0.2                                          │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│      },                                                         │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│      &quot;metrics&quot;: {                                              │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│        &quot;roc_auc&quot;: 0.87,                                        │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│        &quot;f1&quot;: 0.82,                                             │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>│        &quot;correlation&quot;: 0.78                                     │
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>│      }                                                          │
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>│    }                                                            │
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>│ 4. TRAIT MODEL TRAINING                                         │
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>│                                                                 │
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>│  labeled/default_v1_labeled.jsonl                               │
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>│         │                                                       │
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>│         └─&gt; calibrate_persona.py (existing)                    │
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>│             • Train logistic regression                        │
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>│             • Learn token weights                              │
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>│             • Output: trait_model (bias + token_weights)       │
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>│ 5. INTEGRATION                                                  │
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>│                                                                 │
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>│  bounds_report.json + weights_report.json + trait_model        │
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>│         │                                                       │
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>│         └─&gt; Merge into configs/persona/default.traits.json     │
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>│             {                                                   │
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>│               &quot;weights&quot;: {...},                                 │
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>│               &quot;trait_model&quot;: {...},                             │
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>│               &quot;style_sim_min&quot;: 0.08,                            │
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>│               &quot;style_sim_max&quot;: 0.28                             │
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>│             }                                                   │
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>│                                                                 │
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>│  alignmenter run --config configs/run.yaml                      │
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>│         │                                                       │
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>│         └─&gt; Uses calibrated parameters automatically           │
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>│ 6. VALIDATION                                                   │
+<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>│                                                                 │
+<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>│  labeled/validation_split.jsonl (held-out 20%)                  │
+<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>│         │                                                       │
+<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>│         └─&gt; alignmenter calibrate validate                     │
+<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>│             • Score with calibrated parameters                 │
+<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>│             • Compute metrics on held-out set                  │
+<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>│             • Optional: LLM judge analysis (--judge)           │
+<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>│             • Generate diagnostics report                      │
+<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>│             • Output: diagnostics.json                         │
+<a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>│                                                                 │
+<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>│         └─&gt; alignmenter calibrate diagnose-errors (optional)   │
+<a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a>│             • Analyze false positives/negatives with judge     │
+<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>│             • Provide human-readable reasoning for errors      │
+<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>│             • Output: error_analysis.json                      │
+<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>│                                                                 │
+<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>│         └─&gt; alignmenter analyze-scenarios (optional)           │
+<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>│             • Per-scenario performance breakdown               │
+<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>│             • Judge samples from each scenario type            │
+<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a>│             • Output: scenario_performance.json                │
+<a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>└─────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="4-data-requirements">4. Data Requirements<a class="headerlink" href="#4-data-requirements" title="Permanent link">&para;</a></h2>
+<h3 id="labeled-data-format">Labeled Data Format<a class="headerlink" href="#labeled-data-format" title="Permanent link">&para;</a></h3>
+<p><strong>File:</strong> <code>calibration/data/labeled/{persona_id}_labeled.jsonl</code></p>
+<p><strong>Schema:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Absolutely. Alignmenter scores authenticity, safety, and stability...&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;persona_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default_v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;session-01&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&quot;turn_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;scenario_tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;scenario:product_inquiry&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">&quot;labeler&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;justin&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-05T10:30:00Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Fields:</strong>
+- <code>text</code> (required): Assistant response text
+- <code>label</code> (required): 0 = off-brand, 1 = on-brand
+- <code>persona_id</code> (required): Which persona this is labeled for
+- <code>session_id</code> (optional): Original session ID
+- <code>turn_index</code> (optional): Original turn index
+- <code>scenario_tags</code> (optional): Scenario tags for stratified sampling
+- <code>labeler</code> (optional): Who labeled this
+- <code>timestamp</code> (optional): When it was labeled
+- <code>confidence</code> (optional): "high" | "medium" | "low"
+- <code>notes</code> (optional): Free-text notes</p>
+<h3 id="labeling-guidelines">Labeling Guidelines<a class="headerlink" href="#labeling-guidelines" title="Permanent link">&para;</a></h3>
+<p><strong>On-Brand (label=1):</strong>
+- Uses preferred vocabulary from persona lexicon
+- Matches exemplar style and tone
+- Professional, helpful, technically precise
+- No avoided words (lol, bro, etc.)</p>
+<p><strong>Off-Brand (label=0):</strong>
+- Uses avoided vocabulary
+- Overly casual or hyped language
+- Generic/robotic responses
+- Mismatched formality level</p>
+<p><strong>Edge Cases:</strong>
+- Technically correct but bland → label=0 (not distinctive)
+- Has 1-2 brand words but wrong tone → label=0 (holistic judgment)
+- Borderline cases → confidence="low", include notes</p>
+<h3 id="sample-size-requirements">Sample Size Requirements<a class="headerlink" href="#sample-size-requirements" title="Permanent link">&para;</a></h3>
+<p><strong>Minimum for statistical validity:</strong>
+- 50 labeled examples (25 on-brand, 25 off-brand)
+- 80/20 train/validation split</p>
+<p><strong>Recommended for robust calibration:</strong>
+- 100-200 labeled examples
+- Stratified by scenario (ensure all scenarios represented)
+- Include edge cases (brand_trap, safety_trap)</p>
+<p><strong>For ML methods (Phase 2):</strong>
+- 500+ labeled examples
+- 5-fold cross-validation
+- Active learning to expand dataset</p>
+<hr />
+<h2 id="5-calibration-methods">5. Calibration Methods<a class="headerlink" href="#5-calibration-methods" title="Permanent link">&para;</a></h2>
+<h3 id="51-normalization-bound-estimation">5.1 Normalization Bound Estimation<a class="headerlink" href="#51-normalization-bound-estimation" title="Permanent link">&para;</a></h3>
+<p><strong>Method:</strong> Empirical percentiles</p>
+<p><strong>Algorithm:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">estimate_bounds</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">persona</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="sd">    Compute empirical normalization bounds from labeled data.</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="sd">    Uses 5th and 95th percentiles to be robust to outliers.</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="c1"># Compute raw style similarity for all examples</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">raw_style_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">labeled_data</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">([</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">style_sim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                       <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">persona</span><span class="o">.</span><span class="n">exemplars</span><span class="p">)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">raw_style_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">style_sim</span><span class="p">)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="c1"># Use percentiles instead of min/max (robust to outliers)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">style_sim_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">style_sim_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="s2">&quot;style_sim_min&quot;</span><span class="p">:</span> <span class="n">style_sim_min</span><span class="p">,</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="s2">&quot;style_sim_max&quot;</span><span class="p">:</span> <span class="n">style_sim_max</span><span class="p">,</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="s2">&quot;style_sim_mean&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">),</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        <span class="s2">&quot;style_sim_std&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">)</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Output:</strong> <code>bounds_report.json</code></p>
+<p><strong>Future Enhancement (ML):</strong>
+- Learn separate bounds for on-brand vs off-brand
+- Use quantile regression
+- Account for scenario-specific distributions</p>
+<hr />
+<h3 id="52-component-weight-optimization">5.2 Component Weight Optimization<a class="headerlink" href="#52-component-weight-optimization" title="Permanent link">&para;</a></h3>
+<p><strong>Method:</strong> Grid search with cross-validation</p>
+<p><strong>Objective:</strong> Maximize discriminative power (ROC-AUC or F1)</p>
+<p><strong>Algorithm:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">optimize_weights</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">persona</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="sd">    Grid search over component weight combinations.</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="sd">    Constraint: weights must sum to 1.0</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">best_auc</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">best_weights</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="c1"># Grid search</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="k">for</span> <span class="n">style_w</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]:</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="k">for</span> <span class="n">traits_w</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>            <span class="n">lexicon_w</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">style_w</span> <span class="o">-</span> <span class="n">traits_w</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>            <span class="k">if</span> <span class="n">lexicon_w</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="ow">or</span> <span class="n">lexicon_w</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">:</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>                <span class="k">continue</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>            <span class="c1"># Score all examples with these weights</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>            <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">labeled_data</span><span class="p">:</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>                <span class="n">score</span> <span class="o">=</span> <span class="n">compute_authenticity</span><span class="p">(</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>                    <span class="n">example</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>                    <span class="n">persona</span><span class="p">,</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>                    <span class="n">embedder</span><span class="p">,</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>                    <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">&quot;traits&quot;</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">&quot;lexicon&quot;</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>                <span class="p">)</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>            <span class="c1"># Compute ROC-AUC</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>            <span class="n">auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>            <span class="k">if</span> <span class="n">auc</span> <span class="o">&gt;</span> <span class="n">best_auc</span><span class="p">:</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>                <span class="n">best_auc</span> <span class="o">=</span> <span class="n">auc</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>                <span class="n">best_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">&quot;traits&quot;</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">&quot;lexicon&quot;</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    <span class="k">return</span> <span class="n">best_weights</span><span class="p">,</span> <span class="n">best_auc</span>
+</code></pre></div></p>
+<p><strong>Metrics:</strong>
+- <strong>ROC-AUC</strong>: Area under ROC curve (higher = better discrimination)
+- <strong>F1 Score</strong>: Harmonic mean of precision/recall (at threshold=0.5)
+- <strong>Pearson Correlation</strong>: Linear correlation between scores and labels</p>
+<p><strong>Output:</strong> <code>weights_report.json</code></p>
+<p><strong>Future Enhancement (ML):</strong>
+- Use Bayesian optimization (optuna, hyperopt)
+- Learn non-linear weight functions
+- Multi-objective optimization (balance accuracy + interpretability)</p>
+<hr />
+<h3 id="53-trait-model-training">5.3 Trait Model Training<a class="headerlink" href="#53-trait-model-training" title="Permanent link">&para;</a></h3>
+<p><strong>Method:</strong> Logistic regression with L2 regularization (existing)</p>
+<p><strong>Already implemented in:</strong> <code>alignmenter/scripts/calibrate_persona.py</code></p>
+<p><strong>Enhancement needed:</strong>
+- Integrate with bound estimation + weight optimization
+- Support phrase-level features (bigrams, trigrams)
+- Add feature selection (drop low-weight tokens)</p>
+<hr />
+<h3 id="54-validation-diagnostics">5.4 Validation &amp; Diagnostics<a class="headerlink" href="#54-validation-diagnostics" title="Permanent link">&para;</a></h3>
+<p><strong>Metrics to track:</strong></p>
+<ol>
+<li><strong>Held-out performance</strong></li>
+<li>ROC-AUC on validation set</li>
+<li>F1 score at different thresholds</li>
+<li>
+<p>Confusion matrix</p>
+</li>
+<li>
+<p><strong>Component analysis</strong></p>
+</li>
+<li>Distribution of style_sim, traits, lexicon scores</li>
+<li>Correlation between components</li>
+<li>
+<p>Feature importance (which words drive trait scores)</p>
+</li>
+<li>
+<p><strong>Calibration quality</strong></p>
+</li>
+<li>Reliability diagram (predicted prob vs actual)</li>
+<li>
+<p>Brier score (calibration error)</p>
+</li>
+<li>
+<p><strong>Error analysis</strong></p>
+</li>
+<li>False positives (off-brand scored high)</li>
+<li>False negatives (on-brand scored low)</li>
+<li>Edge cases</li>
+</ol>
+<p><strong>Output:</strong> <code>diagnostics.html</code> with interactive charts</p>
+<hr />
+<h2 id="6-implementation-plan">6. Implementation Plan<a class="headerlink" href="#6-implementation-plan" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-foundation-1-2-weeks">Phase 1: Foundation (1-2 weeks)<a class="headerlink" href="#phase-1-foundation-1-2-weeks" title="Permanent link">&para;</a></h3>
+<p><strong>Week 1: Data + Bounds</strong>
+- [ ] Create <code>/calibration</code> directory structure
+- [ ] Write <code>generate_candidates.py</code> (bootstrap from demo data)
+- [ ] Write <code>label_data.py</code> (interactive CLI labeling tool)
+- [ ] Label 50-100 examples for <code>default_v1</code> persona
+- [ ] Write <code>estimate_bounds.py</code>
+- [ ] Generate <code>bounds_report.json</code></p>
+<p><strong>Week 2: Weights + Integration</strong>
+- [ ] Write <code>optimize_weights.py</code>
+- [ ] Generate <code>weights_report.json</code>
+- [ ] Integrate bounds + weights into <code>default.traits.json</code>
+- [ ] Re-run evaluation on demo dataset
+- [ ] Compare before/after calibration scores</p>
+<h3 id="phase-2-validation-tooling-1-week">Phase 2: Validation + Tooling (1 week)<a class="headerlink" href="#phase-2-validation-tooling-1-week" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Write <code>validate_calibration.py</code></li>
+<li>[ ] Create Jupyter notebooks for EDA and diagnostics</li>
+<li>[ ] Generate HTML diagnostics report</li>
+<li>[ ] Document calibration workflow in <code>calibration/README.md</code></li>
+</ul>
+<h3 id="phase-3-ml-enhancements-future">Phase 3: ML Enhancements (Future)<a class="headerlink" href="#phase-3-ml-enhancements-future" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Bayesian optimization for weights</li>
+<li>[ ] Cross-validation framework</li>
+<li>[ ] Active learning for data collection</li>
+<li>[ ] Scenario-specific calibration</li>
+<li>[ ] Ensemble methods</li>
+</ul>
+<hr />
+<h2 id="7-success-metrics">7. Success Metrics<a class="headerlink" href="#7-success-metrics" title="Permanent link">&para;</a></h2>
+<h3 id="immediate-goals">Immediate Goals<a class="headerlink" href="#immediate-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li>✅ Generate 50+ labeled examples for <code>default_v1</code></li>
+<li>✅ Compute empirical normalization bounds</li>
+<li>✅ Optimize component weights</li>
+<li>✅ Achieve ROC-AUC &gt; 0.75 on held-out validation set</li>
+<li>✅ Increase score separation: on-brand mean &gt; 0.75, off-brand mean &lt; 0.40</li>
+</ul>
+<h3 id="long-term-goals">Long-Term Goals<a class="headerlink" href="#long-term-goals" title="Permanent link">&para;</a></h3>
+<ul>
+<li>🎯 ROC-AUC &gt; 0.85 with ML-optimized weights</li>
+<li>🎯 Support 5+ personas with calibration</li>
+<li>🎯 Automated calibration pipeline (CI/CD integration)</li>
+<li>🎯 Active learning reduces labeling effort by 50%</li>
+</ul>
+<hr />
+<h2 id="8-open-questions">8. Open Questions<a class="headerlink" href="#8-open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Should we calibrate per-scenario?</strong></li>
+<li>Pro: More accurate for specific use cases</li>
+<li>Con: Requires more labeled data per scenario</li>
+<li>
+<p>Decision: Start global, add scenario-specific later</p>
+</li>
+<li>
+<p><strong>How to handle multi-turn sessions?</strong></p>
+</li>
+<li>Option A: Label entire sessions (holistic judgment)</li>
+<li>Option B: Label individual turns (more granular)</li>
+<li>
+<p>Decision: Start with individual turns, aggregate later</p>
+</li>
+<li>
+<p><strong>What threshold should we use for binary classification?</strong></p>
+</li>
+<li>Option A: Fixed threshold (e.g., 0.5)</li>
+<li>Option B: Learn threshold from labeled data</li>
+<li>
+<p>Decision: Learn optimal threshold via ROC curve</p>
+</li>
+<li>
+<p><strong>Should we version calibration files?</strong></p>
+</li>
+<li>Pro: Track calibration improvements over time</li>
+<li>Con: More file management complexity</li>
+<li>Decision: Include timestamp in calibration file, keep history</li>
+</ol>
+<hr />
+<h2 id="9-dependencies">9. Dependencies<a class="headerlink" href="#9-dependencies" title="Permanent link">&para;</a></h2>
+<p><strong>Required:</strong>
+- <code>numpy</code>, <code>scipy</code> (for statistics)
+- <code>scikit-learn</code> (for metrics, validation)
+- <code>matplotlib</code>, <code>seaborn</code> (for visualization)
+- <code>pandas</code> (for data manipulation)
+- <code>jupyter</code> (for notebooks)</p>
+<p><strong>Optional (Phase 2):</strong>
+- <code>optuna</code> (Bayesian optimization)
+- <code>shap</code> (feature importance)
+- <code>plotly</code> (interactive charts)</p>
+<hr />
+<h2 id="10-next-steps">10. Next Steps<a class="headerlink" href="#10-next-steps" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Review this requirements doc</strong> - Iterate on design</li>
+<li><strong>Create <code>/calibration</code> directory structure</strong></li>
+<li><strong>Start with data generation</strong> - Write <code>generate_candidates.py</code></li>
+<li><strong>Label initial dataset</strong> - 50 examples for <code>default_v1</code></li>
+<li><strong>Implement bound estimation</strong> - Prove the concept</li>
+<li><strong>Iterate based on results</strong></li>
+</ol>
+<hr />
+<h2 id="appendix-example-workflows">Appendix: Example Workflows<a class="headerlink" href="#appendix-example-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="workflow-a-first-time-calibration">Workflow A: First-Time Calibration<a class="headerlink" href="#workflow-a-first-time-calibration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Generate candidate responses for labeling</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/demo_conversations.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/unlabeled/candidates.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--strategy<span class="w"> </span>diverse<span class="w">  </span><span class="c1"># sample diverse scenarios</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 2. Label examples interactively</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>--input<span class="w"> </span>calibration_data/unlabeled/candidates.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 3. Estimate normalization bounds</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/bounds_report.json
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># 4. Optimize component weights</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>--bounds<span class="w"> </span>calibration_data/reports/bounds_report.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/weights_report.json
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># 5. Train trait model (existing script)</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>python<span class="w"> </span>-m<span class="w"> </span>alignmenter.scripts.calibrate_persona<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--persona-path<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--dataset<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>--out<span class="w"> </span>configs/persona/default.traits.json
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="c1"># 6. Merge calibration results (manual for now)</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="c1"># Combine bounds_report.json + weights_report.json into default.traits.json</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="c1"># 7. Validate calibration</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/diagnostics.json
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="c1"># 8. Optional: Run LLM judge analysis</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">  </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">  </span>--judge-strategy<span class="w"> </span>stratified<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/diagnostics_with_judge.json
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="c1"># 9. Optional: Diagnose specific errors</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/error_analysis.json
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="c1"># 10. Re-run evaluation</span>
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml
+</code></pre></div>
+<h3 id="workflow-b-incremental-calibration-update">Workflow B: Incremental Calibration Update<a class="headerlink" href="#workflow-b-incremental-calibration-update" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Add more labeled examples</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--input<span class="w"> </span>calibration_data/unlabeled/new_candidates.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--append<span class="w">  </span><span class="c1"># add to existing labeled data</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 2. Re-run calibration</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/weights_report_v2.json
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 3. Validate updated calibration with judge</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span>--labeled<span class="w"> </span>calibration_data/labeled/default_v1_labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--judge-strategy<span class="w"> </span>on_failure<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span>--output<span class="w"> </span>calibration_data/reports/diagnostics_v2.json
+</code></pre></div>
+<hr />
+<p><strong>END OF REQUIREMENTS DOCUMENT</strong></p>
+<p><em>This is a living document. Update as we learn from implementation.</em></p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/justinGrosvenor/alignmenter" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
