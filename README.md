@@ -5,6 +5,7 @@
 <p align="center">
   <a href="https://pypi.org/project/alignmenter/"><img src="https://badge.fury.io/py/alignmenter.svg" alt="PyPI version"></a>
   <a href="https://pepy.tech/project/alignmenter"><img src="https://pepy.tech/badge/alignmenter" alt="Downloads"></a>
+  <a href="https://github.com/justinGrosvenor/alignmenter/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
 </p>
 
 <p align="center">
