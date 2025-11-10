@@ -1168,9 +1168,39 @@ The Wendy's project ships only in the source repo. Install Alignmenter from this
 <td>Explicitly off-brand corporate replies</td>
 <td>≈0.20</td>
 </tr>
+<tr>
+<td><code>demo/wendys_holdout_service.jsonl</code></td>
+<td>10 customer-service sessions (never used in calibration)</td>
+<td>≈0.45–0.55</td>
+</tr>
+<tr>
+<td><code>demo/wendys_holdout_roast.jsonl</code></td>
+<td>8 competitor-roast sessions for out-of-sample testing</td>
+<td>≈0.40–0.50</td>
+</tr>
+<tr>
+<td><code>demo/wendys_holdout_product.jsonl</code></td>
+<td>8 product-promo sessions (mixed quality)</td>
+<td>≈0.35–0.50</td>
+</tr>
+<tr>
+<td><code>demo/wendys_holdout_community.jsonl</code></td>
+<td>8 community-engagement sessions</td>
+<td>≈0.40–0.55</td>
+</tr>
+<tr>
+<td><code>demo/wendys_holdout_trend.jsonl</code></td>
+<td>2 trend-participation sessions (limited remaining data)</td>
+<td>varies</td>
+</tr>
+<tr>
+<td><code>demo/wendys_holdout_crisis.jsonl</code></td>
+<td>5 crisis-response sessions</td>
+<td>≈0.30–0.45</td>
+</tr>
 </tbody>
 </table>
-<p>Everything lives under <code>case-studies/wendys-twitter/demo/</code>, so there’s no need to copy files unless you want to edit them. If you do need a personalized copy, just <code>cp case-studies/wendys-twitter/demo/wendys_full.jsonl my_dataset.jsonl</code> and iterate from there.</p>
+<p>Everything lives under <code>case-studies/wendys-twitter/demo/</code>, so there’s no need to copy files unless you want to edit them. If you do need a personalized copy, just <code>cp case-studies/wendys-twitter/demo/wendys_full.jsonl my_dataset.jsonl</code> and iterate from there. The holdout files above were never used during calibration, so they’re safe for out-of-sample validation.</p>
 <blockquote>
 <p><strong>Why the extra <code>--embedding</code> flag?</strong> The hashed fallback is great for offline demos, but its cosine range is narrow; authenticity style scores will hover near the floor even for perfect replies. For any calibration or artifact you plan to share, use a real embedding provider (the docs default to <code>sentence-transformer:all-MiniLM-L6-v2</code>) so style similarity has enough headroom.</p>
 </blockquote>
@@ -1240,7 +1270,23 @@ The Wendy's project ships only in the source repo. Install Alignmenter from this
 <a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_offbrand
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Holdout suites (fresh sessions not seen during calibration)</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_holdout_service.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_holdout_service
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_holdout_roast.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_holdout_roast
 </code></pre></div>
+<p>Swap the dataset path for any of the other holdouts (<code>wendys_holdout_product.jsonl</code>, <code>wendys_holdout_community.jsonl</code>, <code>wendys_holdout_trend.jsonl</code>, <code>wendys_holdout_crisis.jsonl</code>) to benchmark additional scenario buckets.</p>
 <p>Typical authenticity scores on a laptop (re-using recorded transcripts):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>On-brand strict  -&gt; Brand voice ≈ 0.65 (passes) 
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Generic LLM voice -&gt; Brand voice ≈ 0.40 (borderline, reads polite but off-voice)
