@@ -1,0 +1,42 @@
+{
+  "demo/wendys_holdout_trend_expanded.jsonl": {
+    "n_samples": 16,
+    "n_positive": 8,
+    "n_negative": 8,
+    "roc_auc": 1.0,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "demo/wendys_holdout_crisis_expanded.jsonl": {
+    "n_samples": 16,
+    "n_positive": 8,
+    "n_negative": 8,
+    "roc_auc": 1.0,
+    "accuracy": 0.9375,
+    "precision": 0.8888888888888888,
+    "recall": 1.0,
+    "f1": 0.9411764705882353
+  },
+  "demo/wendys_holdout_mixed.jsonl": {
+    "n_samples": 20,
+    "n_positive": 10,
+    "n_negative": 10,
+    "roc_auc": 1.0,
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "demo/wendys_holdout_edgecases.jsonl": {
+    "n_samples": 20,
+    "n_positive": 10,
+    "n_negative": 10,
+    "roc_auc": 0.86,
+    "accuracy": 0.75,
+    "precision": 1.0,
+    "recall": 0.5,
+    "f1": 0.6666666666666666
+  }
+}

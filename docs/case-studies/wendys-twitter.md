@@ -62,8 +62,14 @@ All of the data you need already ships in `case-studies/wendys-twitter/`:
 | `demo/wendys_onbrand_strict.jsonl` | On-brand replies that just meet the “pass” threshold | ≈0.65 |
 | `demo/wendys_generic_llm.jsonl` | Friendly but generic LLM voice (mid-grade) | ≈0.40 |
 | `demo/wendys_offbrand.jsonl` | Explicitly off-brand corporate replies | ≈0.20 |
+| `demo/wendys_holdout_service.jsonl` | 10 customer-service sessions (never used in calibration) | ≈0.45–0.55 |
+| `demo/wendys_holdout_roast.jsonl` | 8 competitor-roast sessions for out-of-sample testing | ≈0.40–0.50 |
+| `demo/wendys_holdout_product.jsonl` | 8 product-promo sessions (mixed quality) | ≈0.35–0.50 |
+| `demo/wendys_holdout_community.jsonl` | 8 community-engagement sessions | ≈0.40–0.55 |
+| `demo/wendys_holdout_trend.jsonl` | 2 trend-participation sessions (limited remaining data) | varies |
+| `demo/wendys_holdout_crisis.jsonl` | 5 crisis-response sessions | ≈0.30–0.45 |
 
-Everything lives under `case-studies/wendys-twitter/demo/`, so there’s no need to copy files unless you want to edit them. If you do need a personalized copy, just `cp case-studies/wendys-twitter/demo/wendys_full.jsonl my_dataset.jsonl` and iterate from there.
+Everything lives under `case-studies/wendys-twitter/demo/`, so there’s no need to copy files unless you want to edit them. If you do need a personalized copy, just `cp case-studies/wendys-twitter/demo/wendys_full.jsonl my_dataset.jsonl` and iterate from there. The holdout files above were never used during calibration, so they’re safe for out-of-sample validation.
 
 > **Why the extra `--embedding` flag?** The hashed fallback is great for offline demos, but its cosine range is narrow; authenticity style scores will hover near the floor even for perfect replies. For any calibration or artifact you plan to share, use a real embedding provider (the docs default to `sentence-transformer:all-MiniLM-L6-v2`) so style similarity has enough headroom.
 
@@ -140,7 +146,24 @@ alignmenter run \
   --persona case-studies/wendys-twitter/wendys_twitter.yaml \
   --embedding sentence-transformer:all-MiniLM-L6-v2 \
   --out reports/wendys_offbrand
+
+# Holdout suites (fresh sessions not seen during calibration)
+alignmenter run \
+  --model openai:gpt-4o-mini \
+  --dataset case-studies/wendys-twitter/demo/wendys_holdout_service.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --out reports/wendys_holdout_service
+
+alignmenter run \
+  --model openai:gpt-4o-mini \
+  --dataset case-studies/wendys-twitter/demo/wendys_holdout_roast.jsonl \
+  --persona case-studies/wendys-twitter/wendys_twitter.yaml \
+  --embedding sentence-transformer:all-MiniLM-L6-v2 \
+  --out reports/wendys_holdout_roast
 ```
+
+Swap the dataset path for any of the other holdouts (`wendys_holdout_product.jsonl`, `wendys_holdout_community.jsonl`, `wendys_holdout_trend.jsonl`, `wendys_holdout_crisis.jsonl`) to benchmark additional scenario buckets.
 
 Typical authenticity scores on a laptop (re-using recorded transcripts):
 

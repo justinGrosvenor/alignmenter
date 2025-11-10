@@ -1,0 +1,79 @@
+================================================================================
+HOLDOUT EVALUATION RESULTS
+================================================================================
+
+demo/wendys_holdout_trend_expanded.jsonl
+--------------------------------------------------------------------------------
+  Turn 0: label=1, score=0.0000, text='every single day bestie 💀...'
+  Turn 1: label=0, score=0.0000, text='We are delighted that you enjoy our engaging socia...'
+  Turn 2: label=1, score=0.0000, text='it really is tho 👑...'
+  Turn 3: label=0, score=0.0000, text='OMG yaaaas queen! This is so lit fam! We're totall...'
+  Turn 4: label=1, score=0.0000, text='our burgers have never seen the inside of a freeze...'
+  n_samples      : 16
+  n_positive     : 8
+  n_negative     : 8
+  roc_auc        : 0.5000
+  accuracy       : 0.5000
+  precision      : 0.0000
+  recall         : 0.0000
+  f1             : 0.0000
+
+demo/wendys_holdout_crisis_expanded.jsonl
+--------------------------------------------------------------------------------
+  Turn 0: label=1, score=0.0000, text='that's absolutely not okay. DM us the location det...'
+  Turn 1: label=0, score=0.0000, text='We take cleanliness very seriously! This is not re...'
+  Turn 2: label=1, score=0.0000, text='getting yelled at for wanting fresh fries is not i...'
+  Turn 3: label=0, score=0.0000, text='We sincerely apologize for your negative experienc...'
+  Turn 4: label=1, score=0.0000, text='we're aware and this is not okay. working on it no...'
+  n_samples      : 16
+  n_positive     : 8
+  n_negative     : 8
+  roc_auc        : 0.5000
+  accuracy       : 0.5000
+  precision      : 0.0000
+  recall         : 0.0000
+  f1             : 0.0000
+
+demo/wendys_holdout_mixed.jsonl
+--------------------------------------------------------------------------------
+  Turn 0: label=1, score=0.0000, text='because 2am is when you truly appreciate quality b...'
+  Turn 1: label=0, score=0.0000, text='We're glad you enjoy our Spicy Chicken Sandwich! I...'
+  Turn 2: label=1, score=0.0000, text='ngl that's a red flag but maybe try the frosty-cci...'
+  Turn 3: label=0, score=0.0000, text='Everyone has different taste preferences! Maybe sh...'
+  Turn 4: label=1, score=0.0000, text='noted. menu team is lurking and taking notes 👀...'
+  n_samples      : 20
+  n_positive     : 10
+  n_negative     : 10
+  roc_auc        : 0.5000
+  accuracy       : 0.5000
+  precision      : 0.0000
+  recall         : 0.0000
+  f1             : 0.0000
+
+demo/wendys_holdout_edgecases.jsonl
+--------------------------------------------------------------------------------
+  Turn 0: label=1, score=0.0000, text='delivery zones are set by the delivery app not us ...'
+  Turn 1: label=0, score=0.0000, text='Delivery zones are determined by our third-party p...'
+  Turn 2: label=1, score=0.0000, text='pay varies by location. best bet is to check the c...'
+  Turn 3: label=0, score=0.0000, text='We're always looking for talented team members! Co...'
+  Turn 4: label=1, score=0.0000, text='gift cards work for all dayparts. breakfast, lunch...'
+  n_samples      : 20
+  n_positive     : 10
+  n_negative     : 10
+  roc_auc        : 0.5000
+  accuracy       : 0.5000
+  precision      : 0.0000
+  recall         : 0.0000
+  f1             : 0.0000
+
+================================================================================
+OVERALL (COMBINED HOLDOUT)
+================================================================================
+  n_samples      : 72
+  n_positive     : 36
+  n_negative     : 36
+  roc_auc        : 0.5000
+  accuracy       : 0.5000
+  f1             : 0.0000
+
+✓ Results saved to holdout_evaluation_results.json
