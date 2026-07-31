@@ -8,24 +8,24 @@ Alignmenter is a production-ready evaluation toolkit for teams shipping AI copil
 
 ### Three Core Metrics
 
-- **🎨 Authenticity** – Does the AI match your brand voice? Measures semantic similarity, linguistic traits, and lexicon compliance.
-- **🛡️ Safety** – Does it avoid harmful outputs? Combines keyword rules, LLM judges, and offline ML classifiers.
+- **🎨 Authenticity** – Does the AI match your brand voice? Blends an LLM judge (when configured) with a deterministic score built from semantic similarity, a learned trait model, and lexicon compliance.
+- **🛡️ Safety** – Does it avoid harmful outputs? Combines keyword rules with an LLM judge or an offline ML classifier, taking the conservative minimum.
 - **⚖️ Stability** – Are responses consistent? Detects semantic drift and variance across sessions.
 
 ### Why Alignmenter?
 
 Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for persona alignment**:
 
-- **Persona packs**: Define your brand voice in YAML with examples, lexicon, and traits
-- **Local-first**: Works without constant API calls (optional LLM judge for qualitative analysis)
+- **Persona packs**: Define your brand voice in YAML with exemplars, lexicon, and style rules
+- **Judge-blended, with an offline fallback**: When an LLM judge is configured it is blended into the headline authenticity score (default 60% judge / 40% deterministic); with no judge, the deterministic score runs entirely offline
 - **Budget-aware**: Built-in cost tracking and guardrails
 - **Reproducible**: Deterministic scoring, full audit trails
-- **Privacy-focused**: Local models available, sanitize production data before evaluation
+- **Privacy-focused**: Local embeddings and safety classifier available, sanitize production data before evaluation
 
 ## Quick Example
 
 ```bash
-# Install
+# Install (lightweight core: no torch, no scikit-learn)
 pip install alignmenter
 
 # Initialize project
@@ -59,28 +59,24 @@ Define your brand voice declaratively:
 
 ```yaml
 # configs/persona/mybot.yaml
-id: mybot
-name: "MyBot Assistant"
-description: "Professional, evidence-driven, technical"
-
-voice:
-  tone: ["professional", "precise", "measured"]
-  formality: "business_casual"
-
-  lexicon:
-    preferred:
-      - "baseline"
-      - "signal"
-      - "alignment"
-    avoided:
-      - "lol"
-      - "bro"
-      - "hype"
-
-examples:
+id: mybot_v1
+display_name: "MyBot Assistant"
+exemplars:
   - "Our baseline analysis indicates a 15% improvement."
   - "The signal-to-noise ratio suggests this approach is viable."
+lexicon:
+  preferred: ["baseline", "signal", "alignment"]
+  avoid: ["lol", "bro", "hype"]
+style_rules:
+  sentence_length: {max_avg: 16}
+  contractions: {allowed: true}
+  emojis: {allowed: false}
+safety_rules:
+  disallowed_topics: []
+  brand_notes: "Professional, evidence-driven, technical."
 ```
+
+Generate this template with `alignmenter persona scaffold --name "MyBot Assistant"`.
 
 ### 📊 Interactive Reports
 
@@ -96,7 +92,7 @@ examples:
 - **Budget guardrails**: Halt at 90% of judge API budget
 - **Cost projection**: Estimate expenses before execution
 - **PII sanitization**: Built-in scrubbing with `alignmenter dataset sanitize`
-- **Offline mode**: Works without internet using local models
+- **Offline fallback**: Deterministic authenticity, keyword safety, and the optional local classifier run without any API calls
 
 ## Use Cases
 

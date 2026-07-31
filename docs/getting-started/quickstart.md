@@ -4,9 +4,13 @@ This guide will walk you through running your first Alignmenter evaluation in un
 
 ## Prerequisites
 
-- Alignmenter installed with safety extras ([Installation Guide](installation.md))
-  - `pip install "alignmenter[safety]"` (PyPI) or `pip install -e .[dev,safety]` (repo checkout)
-- OpenAI API key set in environment
+- Alignmenter installed ([Installation Guide](installation.md)).
+  - The core install works offline with the default `hashed` embeddings.
+  - This quickstart uses local sentence-transformer embeddings and the offline
+    safety classifier, so install the `[ml]` extra:
+    `pip install "alignmenter[ml]"` (PyPI) or `pip install -e ".[ml]"` (repo checkout).
+- An API key (`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`) is only needed to generate
+  transcripts or enable an LLM judge — not for the default cached, offline run.
 
 ## 1. Initialize Project
 
@@ -76,7 +80,8 @@ alignmenter run --model anthropic:claude-3-5-sonnet-20241022 --config configs/br
 
 ## 5. Add LLM Judge Analysis (Optional)
 
-Get qualitative feedback from an LLM judge:
+Get qualitative feedback from an LLM judge. `calibrate validate` needs the
+`[calibrate]` extra (`pip install "alignmenter[calibrate]"`):
 
 ```bash
 alignmenter calibrate validate \
@@ -154,9 +159,11 @@ export OPENAI_API_KEY="sk-..."
 
 ### "Module not found: sentence-transformers"
 
-The authenticity scorer requires sentence-transformers:
+Local sentence-transformer embeddings and the offline safety classifier live in
+the `[ml]` extra. Either install it, or drop the `--embedding` flag to use the
+default zero-dependency `hashed` provider:
 ```bash
-pip install sentence-transformers
+pip install "alignmenter[ml]"
 ```
 
 ### Tests are slow

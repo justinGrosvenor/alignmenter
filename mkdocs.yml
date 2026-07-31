@@ -66,8 +66,10 @@ nav:
       - Core Concepts: getting-started/concepts.md
   - Guides:
       - Persona Configuration: guides/persona.md
+      - Persona Annotation: persona_annotation.md
       - Calibration: guides/calibration.md
       - Safety Checks: guides/safety.md
+      - Offline Safety: offline_safety.md
       - LLM Judges: guides/llm-judges.md
   - Case Studies:
       - Wendy's Twitter Voice: case-studies/wendys-twitter.md

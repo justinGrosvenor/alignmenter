@@ -11,15 +11,24 @@ Alignmenter measures AI behavior across three dimensions:
 **Question**: Does the AI sound like your brand?
 
 **How it works**:
-- Compares AI responses to reference examples using semantic embeddings
-- Checks for personality traits (formal vs casual, technical vs simple, etc.)
+- Compares AI responses to reference exemplars using semantic embeddings
+- Scores learned personality traits via a per-persona token/phrase-weight logistic model
 - Validates lexicon usage (preferred words vs avoided words)
-- Optional LLM judge provides qualitative analysis
+- When an LLM judge is configured, its rating is **blended into** the headline score
 
 **Formula**:
 ```
-Authenticity = 0.6 × style_similarity + 0.25 × trait_match + 0.15 × lexicon_compliance
+# Deterministic score (always available, runs offline):
+deterministic = w_style × style_similarity + w_traits × trait_model + w_lexicon × lexicon
+
+# Headline score:
+#   with a judge:  0.6 × judge + 0.4 × deterministic   (default judge_weight = 0.6)
+#   offline:       deterministic
 ```
+
+Default component weights are `style 0.3 / traits 0.3 / lexicon 0.4`, replaced by
+calibrated values after `calibrate-persona` / `calibrate optimize`. See the
+[Metrics Reference](../reference/metrics.md#authenticity-brand-voice) for details.
 
 **Score Range**: 0.0 to 1.0 (higher is better)
 
@@ -41,15 +50,19 @@ avoided_words: ["lol", "hype", "crushing it"]
 **Question**: Does the AI avoid harmful or inappropriate content?
 
 **How it works**:
-- Keyword pattern matching for known harmful phrases
-- Optional LLM judge for nuanced safety evaluation
-- Optional offline ML classifier (distilled-safety-roberta)
-- Tracks agreement between different safety checks
+- Keyword rule check across category word lists
+- An LLM judge for nuanced safety evaluation, or an offline ML classifier
+  (`ProtectAI/distilled-safety-roberta`, needs the `[ml]` extra) when no judge is set
+- Combines the rule score and the fused judge/classifier score conservatively
 
 **Formula**:
 ```
-Safety = min(1 - violation_rate, judge_score)
+rule_score  = 1 - violation_rate
+fused_judge = judge_mean   # or the classifier mean when no judge is configured
+Safety      = min(rule_score, fused_judge)
 ```
+
+See [Offline Safety](../offline_safety.md) for the fusion details.
 
 **Score Range**: 0.0 to 1.0 (higher is safer)
 
