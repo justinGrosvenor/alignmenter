@@ -12,31 +12,31 @@
         <meta name="author" content="Justin Grosvenor">
       
       
-        <link rel="canonical" href="https://alignmenter.com/getting-started/installation/">
+        <link rel="canonical" href="https://alignmenter.com/persona_annotation/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../guides/persona/">
       
       
-        <link rel="next" href="../quickstart/">
+        <link rel="next" href="../guides/calibration/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Installation - Alignmenter</title>
+        <title>Persona Annotation - Alignmenter</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#persona-annotation" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+    <a href=".." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Persona Annotation
             
           </span>
         </div>
@@ -244,7 +244,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+    <a href=".." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -274,7 +274,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -298,8 +298,6 @@
       
   
   
-    
-  
   
   
     
@@ -312,11 +310,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -337,7 +337,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -352,37 +352,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -398,142 +371,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#install-from-pypi" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install from PyPI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#install-from-source" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Install from Source
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional Dependencies
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Optional Dependencies">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#local-embeddings-and-offline-safety" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local embeddings and offline safety
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#persona-calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Persona calibration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#everything" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Everything
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verify Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#set-api-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Set API Keys
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#initialize-project" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Initialize Project
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -546,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -574,7 +411,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/" class="md-nav__link">
+      <a href="../getting-started/concepts/" class="md-nav__link">
         
   
   
@@ -606,8 +443,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -618,13 +457,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
@@ -645,7 +482,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -663,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/persona/" class="md-nav__link">
+      <a href="../guides/persona/" class="md-nav__link">
         
   
   
@@ -688,10 +525,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../persona_annotation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persona Annotation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -707,6 +571,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-label-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The label format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparing-candidates-to-label" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparing candidates to label
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparing candidates to label">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-persona-export-for-external-annotation-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — persona export (for external annotation tools)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-calibrate-generate-calibrate-label-built-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — calibrate generate + calibrate label (built-in)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-a-review-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing a review rubric
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#from-labels-to-a-calibrated-scorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From labels to a calibrated scorer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -719,7 +686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/calibration/" class="md-nav__link">
+      <a href="../guides/calibration/" class="md-nav__link">
         
   
   
@@ -747,7 +714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/safety/" class="md-nav__link">
+      <a href="../guides/safety/" class="md-nav__link">
         
   
   
@@ -775,7 +742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../offline_safety/" class="md-nav__link">
+      <a href="../offline_safety/" class="md-nav__link">
         
   
   
@@ -803,7 +770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/llm-judges/" class="md-nav__link">
+      <a href="../guides/llm-judges/" class="md-nav__link">
         
   
   
@@ -892,7 +859,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../case-studies/wendys-twitter/" class="md-nav__link">
+      <a href="../case-studies/wendys-twitter/" class="md-nav__link">
         
   
   
@@ -981,7 +948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/cli/" class="md-nav__link">
+      <a href="../reference/cli/" class="md-nav__link">
         
   
   
@@ -1009,7 +976,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/metrics/" class="md-nav__link">
+      <a href="../reference/metrics/" class="md-nav__link">
         
   
   
@@ -1037,7 +1004,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/config/" class="md-nav__link">
+      <a href="../reference/config/" class="md-nav__link">
         
   
   
@@ -1072,7 +1039,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing/" class="md-nav__link">
+      <a href="../contributing/" class="md-nav__link">
         
   
   
@@ -1119,10 +1086,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-from-pypi" class="md-nav__link">
+  <a href="#the-label-format" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install from PyPI
+        The label format
       
     </span>
   </a>
@@ -1130,33 +1097,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#install-from-source" class="md-nav__link">
+  <a href="#preparing-candidates-to-label" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install from Source
+        Preparing candidates to label
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional Dependencies
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Optional Dependencies">
+    <nav class="md-nav" aria-label="Preparing candidates to label">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-embeddings-and-offline-safety" class="md-nav__link">
+  <a href="#option-a-persona-export-for-external-annotation-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local embeddings and offline safety
+        Option A — persona export (for external annotation tools)
       
     </span>
   </a>
@@ -1164,21 +1120,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#persona-calibration" class="md-nav__link">
+  <a href="#option-b-calibrate-generate-calibrate-label-built-in" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Persona calibration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#everything" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Everything
+        Option B — calibrate generate + calibrate label (built-in)
       
     </span>
   </a>
@@ -1191,10 +1136,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify-installation" class="md-nav__link">
+  <a href="#writing-a-review-rubric" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify Installation
+        Writing a review rubric
       
     </span>
   </a>
@@ -1202,10 +1147,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#set-api-keys" class="md-nav__link">
+  <a href="#from-labels-to-a-calibrated-scorer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Set API Keys
+        From labels to a calibrated scorer
       
     </span>
   </a>
@@ -1213,21 +1158,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#initialize-project" class="md-nav__link">
+  <a href="#related" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Initialize Project
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Related
       
     </span>
   </a>
@@ -1251,7 +1185,7 @@
 
 
   
-    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/getting-started/installation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/persona_annotation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1259,124 +1193,133 @@
   
 
 
-<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<h2 id="install-from-pypi">Install from PyPI<a class="headerlink" href="#install-from-pypi" title="Permanent link">&para;</a></h2>
-<p>The easiest way to install Alignmenter is from PyPI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>alignmenter
-</code></pre></div>
-<p>The core install is intentionally <strong>lightweight</strong> — no torch, no scikit-learn. The
-default scoring path (hashed embeddings + optional LLM judge + keyword safety) runs
-on this alone. Heavier local-model features live behind optional extras (below).</p>
-<p><strong>Requires Python 3.10–3.13.</strong></p>
-<h2 id="install-from-source">Install from Source<a class="headerlink" href="#install-from-source" title="Permanent link">&para;</a></h2>
-<p>For development or to get the latest features:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Clone the repository</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/justinGrosvenor/alignmenter.git
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">cd</span><span class="w"> </span>alignmenter
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create virtual environment</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>env
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">source</span><span class="w"> </span>env/bin/activate<span class="w">  </span><span class="c1"># On Windows: env\Scripts\activate</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Install the CLI</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</code></pre></div>
-<h2 id="optional-dependencies">Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Permanent link">&para;</a></h2>
-<p>Alignmenter ships a small set of extras. Quote the bracketed name so your shell
-does not glob it: <code>pip install "alignmenter[ml]"</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Extra</th>
-<th>Adds</th>
-<th>Enables</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>[ml]</code></td>
-<td>torch, sentence-transformers, transformers</td>
-<td>Local sentence-transformer embeddings <strong>and</strong> the offline safety classifier</td>
-</tr>
-<tr>
-<td><code>[calibrate]</code></td>
-<td>scikit-learn, numpy</td>
-<td>The numeric calibration pipeline (<code>calibrate bounds</code>, <code>calibrate optimize</code>, <code>calibrate validate</code>)</td>
-</tr>
-<tr>
-<td><code>[safety]</code></td>
-<td>(alias of <code>[ml]</code>)</td>
-<td>Back-compat name for the offline safety classifier</td>
-</tr>
-<tr>
-<td><code>[all]</code></td>
-<td><code>[ml]</code> + <code>[calibrate]</code></td>
-<td>Everything runtime-optional</td>
-</tr>
-<tr>
-<td><code>[dev]</code></td>
-<td><code>[all]</code> + pytest, ruff, build, twine</td>
-<td>Contributing and running tests</td>
-</tr>
-</tbody>
-</table>
-<h3 id="local-embeddings-and-offline-safety">Local embeddings and offline safety<a class="headerlink" href="#local-embeddings-and-offline-safety" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;alignmenter[ml]&quot;</span>
-</code></pre></div>
-<p>This is the only extra that pulls in torch. It provides the
-<code>sentence-transformer:all-MiniLM-L6-v2</code> embedding provider and the offline safety
-classifier (<code>ProtectAI/distilled-safety-roberta</code>).</p>
-<div class="admonition info">
-<p class="admonition-title">Model Download</p>
-<p>The safety model (~82MB) downloads automatically on <strong>first use</strong> from Hugging Face Hub.</p>
+<h1 id="persona-annotation">Persona Annotation<a class="headerlink" href="#persona-annotation" title="Permanent link">&para;</a></h1>
+<p>Calibration turns Alignmenter's authenticity scorer from a reasonable default into
+a measurement tuned to <em>your</em> brand voice. It all starts with a small set of
+human-labeled examples. This page explains the annotation workflow and how those
+labels flow into calibration.</p>
+<h2 id="the-label-format">The label format<a class="headerlink" href="#the-label-format" title="Permanent link">&para;</a></h2>
+<p>Annotation is a binary judgment on individual assistant turns:</p>
 <ul>
-<li><strong>First run</strong>: 10-30 seconds</li>
-<li><strong>Subsequent runs</strong>: Instant (cached locally)</li>
+<li><strong><code>1</code> = on-brand</strong> – the response sounds like your persona</li>
+<li><strong><code>0</code> = off-brand</strong> – it does not</li>
 </ul>
-<p>For CI/CD pipelines, see the <a href="../../guides/safety/#cicd-caching">Safety Guide</a> for caching instructions to avoid re-downloading on every build. More detail in <a href="../../offline_safety/">Offline Safety</a>.</p>
-</div>
-<h3 id="persona-calibration">Persona calibration<a class="headerlink" href="#persona-calibration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;alignmenter[calibrate]&quot;</span>
+<p>Labeled data is stored as JSONL, one record per turn. Each record needs at least:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;persona_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default_v1&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Our baseline analysis shows a clear signal.&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span>
 </code></pre></div>
-<p>Needed for the numeric calibration steps. (Interactive labeling, candidate
-generation, and <code>calibrate-persona</code> trait fitting are pure-Python and work without
-this extra.)</p>
-<h3 id="everything">Everything<a class="headerlink" href="#everything" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;alignmenter[all]&quot;</span><span class="w">   </span><span class="c1"># runtime extras</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;alignmenter[dev]&quot;</span><span class="w">   </span><span class="c1"># runtime extras + test/lint tooling</span>
+<p>The <code>persona_id</code> must match the <code>id</code> field of the persona YAML you are
+calibrating; <code>calibrate-persona</code> skips rows whose <code>persona_id</code> does not match.
+Interactive labeling also records <code>labeler</code>, <code>timestamp</code>, <code>confidence</code>
+(<code>high</code>/<code>medium</code>/<code>low</code>), and free-text <code>notes</code>, but only <code>persona_id</code>, <code>text</code>, and
+<code>label</code> are required for training.</p>
+<p>Aim for at least <strong>25 labeled turns</strong> (the default <code>--min-samples</code>), balanced
+between on-brand and off-brand examples. Calibration needs both classes present.</p>
+<h2 id="preparing-candidates-to-label">Preparing candidates to label<a class="headerlink" href="#preparing-candidates-to-label" title="Permanent link">&para;</a></h2>
+<p>You have two ways to assemble the turns you will label.</p>
+<h3 id="option-a-persona-export-for-external-annotation-tools">Option A — <code>persona export</code> (for external annotation tools)<a class="headerlink" href="#option-a-persona-export-for-external-annotation-tools" title="Permanent link">&para;</a></h3>
+<p>Export assistant turns from a dataset into a spreadsheet-friendly CSV, or into
+Label Studio tasks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># CSV for a spreadsheet / labeling tool</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--persona-id<span class="w"> </span>default_v1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--out<span class="w"> </span>annotation_batch.csv
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Label Studio JSON tasks</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--format<span class="w"> </span>labelstudio<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--out<span class="w"> </span>tasks.json
 </code></pre></div>
-<h2 id="verify-installation">Verify Installation<a class="headerlink" href="#verify-installation" title="Permanent link">&para;</a></h2>
-<p>Check that Alignmenter is installed correctly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>--version
+<p>Add a <code>label</code> column/field (0 or 1) in your tool of choice, then convert the
+results back to the JSONL format above.</p>
+<h3 id="option-b-calibrate-generate-calibrate-label-built-in">Option B — <code>calibrate generate</code> + <code>calibrate label</code> (built-in)<a class="headerlink" href="#option-b-calibrate-generate-calibrate-label-built-in" title="Permanent link">&para;</a></h3>
+<p>Sample a diverse set of candidate turns, then label them interactively in the
+terminal:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Sample candidates from an existing dataset</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>candidates.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--num-samples<span class="w"> </span><span class="m">50</span><span class="w"> </span>--strategy<span class="w"> </span>diverse
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 2. Label them one-by-one (writes each label immediately)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--input<span class="w"> </span>candidates.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--output<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--labeler<span class="w"> </span>jane
 </code></pre></div>
-<p>You should see output like:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter version 0.2.0
-</code></pre></div></p>
-<h2 id="set-api-keys">Set API Keys<a class="headerlink" href="#set-api-keys" title="Permanent link">&para;</a></h2>
-<p>API keys are only needed for the features that call a provider. The default
-embedding provider is <code>hashed</code> (zero-dependency, offline), so you can run
-deterministic evaluations with <strong>no key at all</strong>.</p>
-<p>Set a key when you want to generate transcripts, use OpenAI embeddings, or enable
-an LLM judge:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-key-here&quot;</span>
+<p>The labeler prompt shows the persona's exemplars and lexicon for context and
+accepts <code>1</code> (on-brand), <code>0</code> (off-brand), <code>s</code> (skip), or <code>q</code> (quit). Use
+<code>--append</code> to resume a labeling session without re-labeling turns you already
+covered.</p>
+<h2 id="writing-a-review-rubric">Writing a review rubric<a class="headerlink" href="#writing-a-review-rubric" title="Permanent link">&para;</a></h2>
+<p>Consistent labels come from a shared definition of "on-brand." Before annotating,
+write down for each persona:</p>
+<ul>
+<li><strong>Tone traits</strong> to reward (e.g. measured, precise, warm) and their opposites.</li>
+<li><strong>Disallowed phrases / lexicon</strong> — words the brand never uses (mirror the
+  persona's <code>lexicon.avoid</code>).</li>
+<li><strong>Borderline guidance</strong> — how to handle responses that are correct but flat, or
+  on-topic but off-voice.</li>
+</ul>
+<p>Keep the rubric next to the labeling tool so every annotator applies the same bar.</p>
+<h2 id="from-labels-to-a-calibrated-scorer">From labels to a calibrated scorer<a class="headerlink" href="#from-labels-to-a-calibrated-scorer" title="Permanent link">&para;</a></h2>
+<p>Once you have <code>labeled.jsonl</code>, the calibration pipeline consumes it in stages.
+Diagnostics and weight tuning require the <code>[calibrate]</code> extra
+(<code>pip install "alignmenter[calibrate]"</code>); fitting the trait model does not.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Estimate style-similarity normalization bounds   [calibrate]</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--output<span class="w"> </span>bounds.json
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 2. Grid-search the style/traits/lexicon blend weights  [calibrate]</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--bounds<span class="w"> </span>bounds.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--output<span class="w"> </span>weights.json
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 3. Fit the persona trait model -&gt; writes &lt;persona&gt;.traits.json</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>alignmenter<span class="w"> </span>calibrate-persona<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--persona-path<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--dataset<span class="w"> </span>labeled.jsonl
 </code></pre></div>
-<p>For Anthropic models (e.g. the <code>anthropic:claude-sonnet-5</code> judge):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">&quot;your-key-here&quot;</span>
+<p>What each stage produces:</p>
+<ul>
+<li><strong><code>bounds</code></strong> derives <code>style_sim_min</code> / <code>style_sim_max</code> percentiles used to
+  rescale raw embedding cosine similarity into a presentable band.</li>
+<li><strong><code>optimize</code></strong> searches component weight combinations that sum to 1.0 and reports
+  the blend that maximizes ROC-AUC against your labels.</li>
+<li><strong><code>calibrate-persona</code></strong> trains a per-token/phrase-weight <strong>logistic model</strong> (the
+  "traits" component) and writes <code>&lt;persona&gt;.traits.json</code> next to the persona YAML.
+  The authenticity scorer loads this file automatically on the next run; without
+  it, the scorer falls back to heuristic trait weights.</li>
+</ul>
+<p>You can then confirm the result and inspect disagreements:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Cross-validate and (optionally) sample an LLM judge   [calibrate]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>diagnostics.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--judge<span class="w"> </span>anthropic:claude-sonnet-5<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Explain false positives / false negatives with a judge</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--output<span class="w"> </span>errors.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--judge<span class="w"> </span>anthropic:claude-sonnet-5
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Add these to your <code>~/.bashrc</code> or <code>~/.zshrc</code> to make them permanent.</p>
-</div>
-<h2 id="initialize-project">Initialize Project<a class="headerlink" href="#initialize-project" title="Permanent link">&para;</a></h2>
-<p>Create a new Alignmenter project:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>alignmenter<span class="w"> </span>init
-</code></pre></div>
-<p>This creates:
-- <code>configs/</code> - Configuration files and persona definitions
-- <code>datasets/</code> - Sample conversation data
-- <code>reports/</code> - Output directory for test results</p>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<p>Now that you have Alignmenter installed, check out the <a href="../quickstart/">Quick Start Guide</a> to run your first test.</p>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../guides/calibration/">Calibration Guide</a></strong> – end-to-end walkthrough</li>
+<li><strong><a href="../guides/persona/">Persona Guide</a></strong> – the persona YAML schema</li>
+<li><strong><a href="../reference/cli/">CLI Reference</a></strong> – every <code>calibrate</code> command</li>
+<li><strong><a href="../reference/metrics/">Metrics Reference</a></strong> – how the trait model scores</li>
+</ul>
 
 
 
@@ -1450,10 +1393,10 @@ an LLM judge:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
