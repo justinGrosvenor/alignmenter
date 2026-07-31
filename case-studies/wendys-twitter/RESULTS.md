@@ -8,9 +8,23 @@
 
 ## Executive Summary
 
-This case study validates Alignmenter's calibration system using Wendy's iconic Twitter voice—a highly distinctive brand persona known for witty roasts, Gen Z fluency, and cultural awareness. Calibration moves the deterministic authenticity scorer from weak separation (baseline ROC-AUC 0.733, F1 0.594) to strong separation on **held-out scenario data it was never calibrated on**. The headline evidence below is out-of-sample, not the in-sample fit.
+This case study validates Alignmenter's calibration system using Wendy's iconic Twitter voice—a highly distinctive brand persona known for witty roasts, Gen Z fluency, and cultural awareness. Calibration moves the deterministic authenticity scorer from weak separation (baseline ROC-AUC 0.733, F1 0.594) to strong separation that **holds up under leakage-free cross-validation**. The headline evidence below is out-of-sample, not the in-sample fit.
 
-### Held-out results (the credible numbers)
+### Cross-validated results (leakage-free — the primary evidence)
+
+The published `calibrated_diagnostics.json` scored its validation split with a trait model fit on the *full* dataset, so its ROC-AUC 1.000 is in-sample fit, not generalization. To get an honest estimate we ran a stratified 5-fold cross-validation in which the trait model is **refit on the training rows of each fold only** and the held-out rows are scored with that fold-specific model (`cross_validate.py` → `cross_validation_results.json`). Style-similarity and lexicon come from the persona definition, not from labels, so only the trait model needs refitting to remove leakage; ROC-AUC is rank-based and the score's rescaling is monotonic, so normalization bounds do not affect it.
+
+| Fold | n (held out) | ROC-AUC | F1 @ 0.5 |
+|---|---|---|---|
+| 1 | 28 | 0.938 | 0.800 |
+| 2 | 27 | 0.962 | 0.963 |
+| 3 | 27 | 0.945 | 0.857 |
+| 4 | 27 | 0.959 | 0.828 |
+| 5 | 27 | 0.939 | 0.923 |
+
+**Cross-validated ROC-AUC: 0.949 ± 0.010** (pooled out-of-fold ROC-AUC 0.954; mean F1 @ 0.5 = 0.874). That is a genuine, leakage-free generalization estimate: the calibrated scorer discriminates on-brand from off-brand strongly and consistently across folds — a large, real improvement over the uncalibrated baseline (0.733) — while being clearly short of the misleading "perfect" 1.000 the in-sample number reported. This is the number to cite.
+
+### Held-out scenario results (corroborating)
 
 Evaluated on four holdout suites (72 turns total) drawn from scenarios excluded from the calibration set (`holdout_evaluation_results.json`):
 
@@ -416,7 +430,10 @@ case-studies/wendys-twitter/
 │   ├── bounds_report.json           # Empirical bounds
 │   └── weights_report.json          # Grid search results
 ├── baseline_diagnostics.json        # Pre-calibration metrics
-├── calibrated_diagnostics.json      # Post-calibration metrics
+├── calibrated_diagnostics.json      # Post-calibration metrics (in-sample — see caveat)
+├── cross_validate.py                # Leakage-free k-fold CV harness
+├── cross_validation_results.json    # Cross-validated metrics (primary evidence)
+├── holdout_evaluation_results.json  # Same-author held-out scenario metrics
 ├── METHODOLOGY.md                   # Full methodology
 └── RESULTS.md                       # This report
 ```
@@ -449,12 +466,16 @@ alignmenter calibrate-persona \
   --dataset wendys_dataset.jsonl \
   --out wendys_twitter.traits.json
 
-# 5. Validate calibrated model
+# 5. Validate calibrated model (in-sample fit; --train-split 0.0 means train==test)
 alignmenter calibrate validate \
   --labeled wendys_dataset.jsonl \
   --persona wendys_twitter.yaml \
   --output calibrated_diagnostics.json \
   --train-split 0.0
+
+# 6. Leakage-free cross-validation (the primary, honest generalization estimate)
+#    Refits the trait model per fold; requires the [ml] and [calibrate] extras.
+python cross_validate.py   # -> cross_validation_results.json
 ```
 
 ---

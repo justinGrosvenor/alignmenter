@@ -2,9 +2,15 @@
 
 This case study reproduces a full calibration workflow for Wendy's Twitter persona and shows, candidly, how far the deterministic authenticity scorer can and cannot be trusted after calibration. Follow the steps below to reproduce every artifact end to end. Read the caveats box before citing any number.
 
-> **What the numbers actually say (held-out, the credible ones)**
+> **What the numbers actually say (leakage-free cross-validation, the credible ones)**
 >
-> Evaluated on four holdout scenario suites (72 turns, `holdout_evaluation_results.json`):
+> Stratified 5-fold CV with the trait model **refit on each fold's training rows only** (`cross_validate.py` → `cross_validation_results.json`):
+>
+> **Cross-validated ROC-AUC: 0.949 ± 0.010** (per-fold 0.938 / 0.962 / 0.945 / 0.959 / 0.939; pooled out-of-fold 0.954; mean F1 @ 0.5 = 0.874).
+>
+> That is a genuine generalization estimate — a large, real gain over the uncalibrated baseline (ROC-AUC 0.733 / F1 0.594), and clearly short of the misleading "perfect" number below. This is the figure to cite.
+>
+> Corroborating same-author held-out scenario suites (72 turns, `holdout_evaluation_results.json`):
 >
 > | Holdout suite | n | ROC-AUC | Accuracy | Recall | F1 |
 > | --- | --- | --- | --- | --- | --- |
@@ -12,8 +18,6 @@ This case study reproduces a full calibration workflow for Wendy's Twitter perso
 > | Crisis | 16 | 1.00 | 0.938 | 1.00 | 0.941 |
 > | Mixed | 20 | 1.00 | 1.00 | 1.00 | 1.00 |
 > | **Edge cases** | 20 | **0.86** | **0.75** | **0.50** | 0.667 |
->
-> Baseline (uncalibrated, in-sample): ROC-AUC 0.733 / F1 0.594.
 >
 > **The in-sample ROC-AUC 1.000 that older versions of this doc led with is train=test** (all 136 rows fit and scored together). It shows the classes are separable given the features — it is **not** a generalization estimate and should not be cited as performance.
 >
