@@ -1749,7 +1749,12 @@ def _build_scorers_for_run(
 
     def _bundle() -> list[Any]:
         return [
-            AuthenticityScorer(persona_path=inputs.persona_path, **scorer_kwargs),
+            AuthenticityScorer(
+                persona_path=inputs.persona_path,
+                judge=judge_provider,
+                judge_budget=inputs.judge_budget,
+                **scorer_kwargs,
+            ),
             SafetyScorer(
                 keyword_path=inputs.keywords_path,
                 judge=judge_callable,
@@ -2208,6 +2213,16 @@ def _print_run_summary(
                 high = metrics.get("ci95_high")
                 if isinstance(low, (int, float)) and isinstance(high, (int, float)):
                     line += f" (range: {_format_score_value(low)}-{_format_score_value(high)})"
+                if metrics.get("basis") == "blended":
+                    weight = metrics.get("judge_weight")
+                    jm = metrics.get("judge_mean")
+                    if isinstance(weight, (int, float)) and isinstance(jm, (int, float)):
+                        line += (
+                            f" [judge-blended: {int(weight * 100)}% judge={_format_score_value(jm)}"
+                            f" + {int((1 - weight) * 100)}% deterministic]"
+                        )
+                elif metrics.get("basis") == "deterministic":
+                    line += " [deterministic — no judge configured]"
         warn_threshold = info.get("warn")
         fail_threshold = info.get("fail")
         if warn_threshold is not None or fail_threshold is not None:

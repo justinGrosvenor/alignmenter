@@ -133,6 +133,8 @@ class CachedJudgeProvider(JudgeProvider):
     def __init__(self, base: JudgeProvider) -> None:
         self._base = base
         self.name = base.name
+        # Surface the wrapped provider's model so cost estimators can price calls.
+        self.model = getattr(base, "model", None)
         self._cache: dict[str, dict] = {}
 
     def evaluate(self, prompt: str) -> dict:

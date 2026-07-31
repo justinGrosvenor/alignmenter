@@ -70,12 +70,30 @@ class AuthenticityScorer:
 
     id = "authenticity"
 
-    def __init__(self, persona_path: Path, *, embedding: str | None = None, seed: int = 42) -> None:
+    def __init__(
+        self,
+        persona_path: Path,
+        *,
+        embedding: str | None = None,
+        seed: int = 42,
+        judge: object | None = None,
+        judge_weight: float = 0.6,
+        judge_budget: int | None = None,
+    ) -> None:
         self.embedder = load_embedding_provider(embedding)
-        self.profile = load_persona_profile(persona_path, self.embedder)
+        self.persona_path = Path(persona_path)
+        self.profile = load_persona_profile(self.persona_path, self.embedder)
         self.random = random.Random(seed)
+        # Optional LLM judge. When present, the headline score blends the judge's
+        # holistic rating with the deterministic (embedding + lexicon + trait)
+        # score; offline runs fall back to the deterministic score alone.
+        self.judge = judge
+        self.judge_weight = max(0.0, min(1.0, judge_weight))
+        self.judge_budget = judge_budget
+        self._authenticity_judge = None
 
     def score(self, sessions: Iterable) -> dict:
+        sessions = list(sessions)
         turns: list[AuthenticityTurn] = []
         preferred_hits = 0
         avoid_hits = 0
@@ -122,7 +140,67 @@ class AuthenticityScorer:
         for key in ("mean", "style_sim", "traits", "lexicon", "ci95_low", "ci95_high"):
             if payload[key] is not None:
                 payload[key] = round(payload[key], 3)
+
+        # The deterministic score is always available and is the offline fallback.
+        payload["deterministic_mean"] = payload["mean"]
+        payload["basis"] = "deterministic"
+        payload["judge_mean"] = None
+        payload["judge_weight"] = None
+        payload["judge_sessions"] = 0
+        payload["judge_notes"] = []
+        payload["judge_cost"] = 0.0
+
+        if self.judge is not None:
+            judged = self._judge_sessions(sessions)
+            if judged["sessions"] > 0:
+                judge_mean = judged["mean"]  # already 0-1
+                blended = (
+                    self.judge_weight * judge_mean
+                    + (1.0 - self.judge_weight) * payload["deterministic_mean"]
+                )
+                payload["mean"] = round(blended, 3)
+                payload["judge_mean"] = round(judge_mean, 3)
+                payload["judge_weight"] = self.judge_weight
+                payload["judge_sessions"] = judged["sessions"]
+                payload["judge_notes"] = judged["notes"][:5]
+                payload["judge_cost"] = round(judged["cost"], 4)
+                payload["basis"] = "blended"
         return payload
+
+    def _judge_sessions(self, sessions: list) -> dict:
+        """Run the LLM authenticity judge over sessions and average its rating.
+
+        Returns a 0-1 mean plus reasoning notes and estimated cost. The judge
+        provider is cached per-prompt, so re-scoring subsets (scenario/persona
+        breakdowns) reuses earlier evaluations at no additional API cost.
+        """
+        from alignmenter.judges.authenticity_judge import AuthenticityJudge
+
+        if self._authenticity_judge is None:
+            self._authenticity_judge = AuthenticityJudge(self.persona_path, self.judge)
+        judge = self._authenticity_judge
+
+        scores: list[float] = []
+        notes: list[str] = []
+        judged = 0
+        for session in sessions:
+            if self.judge_budget is not None and judged >= self.judge_budget:
+                break
+            session_id, turns, scenario = _session_identity(session)
+            if not turns:
+                continue
+            analysis = judge.evaluate_session(session_id, turns, scenario_tag=scenario)
+            scores.append(max(0.0, min(1.0, analysis.score / 10.0)))
+            if analysis.reasoning:
+                notes.append(analysis.reasoning)
+            judged += 1
+
+        return {
+            "sessions": len(scores),
+            "mean": (sum(scores) / len(scores)) if scores else 0.0,
+            "notes": notes,
+            "cost": judge.total_cost,
+        }
 
 
 def load_persona_profile(persona_path: Path, embedder: EmbeddingProvider) -> PersonaProfile:
@@ -357,6 +435,26 @@ def _parse_trait_model(calibration: dict) -> TraitModel | None:
         return TraitModel(bias=bias, token_weights=normalized, phrase_weights={})
 
     return None
+
+
+def _session_identity(session) -> tuple[str, list[dict], str | None]:
+    """Extract (session_id, turns, scenario_tag) from a Session object or dict."""
+    turns = getattr(session, "turns", None)
+    if turns is None and hasattr(session, "get"):
+        turns = session.get("turns", [])
+    turns = list(turns or [])
+
+    session_id = getattr(session, "session_id", None)
+    if session_id is None and hasattr(session, "get"):
+        session_id = session.get("session_id")
+    session_id = session_id or "session"
+
+    scenario_tags = getattr(session, "scenario_tags", None)
+    if scenario_tags is None and hasattr(session, "get"):
+        tags = session.get("scenario_tags") or session.get("tags") or []
+        scenario_tags = [t for t in tags if isinstance(t, str) and t.startswith("scenario:")]
+    scenario = next(iter(sorted(scenario_tags)), None) if scenario_tags else None
+    return session_id, turns, scenario
 
 
 def iter_assistant_text(sessions: Iterable) -> Iterable[str]:

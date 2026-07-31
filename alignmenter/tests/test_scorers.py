@@ -72,6 +72,59 @@ def test_authenticity_scorer(tmp_path: Path) -> None:
     assert result["tokens"] > 0
 
 
+def test_authenticity_offline_basis_is_deterministic() -> None:
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
+    scorer = AuthenticityScorer(persona_path=persona_path)
+    result = scorer.score(_sample_sessions())
+    # With no judge configured, the headline equals the deterministic score.
+    assert result["basis"] == "deterministic"
+    assert result["mean"] == result["deterministic_mean"]
+    assert result["judge_mean"] is None
+    assert result["judge_sessions"] == 0
+
+
+class _StubAuthenticityJudge:
+    """Judge provider returning a fixed high rating for every session."""
+
+    model = "openai:gpt-4o-mini"
+
+    def __init__(self, rating: int = 9) -> None:
+        self.rating = rating
+        self.calls = 0
+
+    def evaluate(self, prompt: str) -> dict:
+        self.calls += 1
+        payload = {"score": self.rating, "reasoning": "consistently on brand"}
+        return {"notes": json.dumps(payload), "usage": {"prompt_tokens": 10, "completion_tokens": 5}}
+
+
+def test_authenticity_blends_judge_when_present() -> None:
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
+    baseline = AuthenticityScorer(persona_path=persona_path).score(_sample_sessions())
+
+    judge = _StubAuthenticityJudge(rating=9)  # 0.9 on a 0-1 scale
+    blended = AuthenticityScorer(
+        persona_path=persona_path, judge=judge, judge_weight=0.6
+    ).score(_sample_sessions())
+
+    assert blended["basis"] == "blended"
+    assert blended["judge_sessions"] == 2
+    assert blended["judge_mean"] == 0.9
+    expected = round(0.6 * 0.9 + 0.4 * baseline["deterministic_mean"], 3)
+    assert blended["mean"] == expected
+    # Deterministic component is preserved for transparency.
+    assert blended["deterministic_mean"] == baseline["deterministic_mean"]
+
+
+def test_authenticity_judge_budget_caps_calls() -> None:
+    persona_path = _fixture_root() / "configs" / "persona" / "default.yaml"
+    judge = _StubAuthenticityJudge()
+    result = AuthenticityScorer(
+        persona_path=persona_path, judge=judge, judge_budget=1
+    ).score(_sample_sessions())
+    assert result["judge_sessions"] == 1
+
+
 def test_safety_scorer(tmp_path: Path) -> None:
     keywords_path = _fixture_root() / "configs" / "safety_keywords.yaml"
     scorer = SafetyScorer(keyword_path=keywords_path)
