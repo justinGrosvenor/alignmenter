@@ -696,6 +696,35 @@ def _render_calibration_section(scores: dict[str, Any]) -> str:
                 </div>
             """)
 
+        # Authenticity scoring basis (judge-blended vs deterministic fallback)
+        basis = authenticity.get("basis")
+        if basis == "blended":
+            weight = authenticity.get("judge_weight") or 0.0
+            judge_mean = authenticity.get("judge_mean")
+            det_mean = authenticity.get("deterministic_mean")
+            judged = authenticity.get("judge_sessions") or 0
+            detail = ""
+            if isinstance(judge_mean, (int, float)) and isinstance(det_mean, (int, float)):
+                detail = (
+                    f"{int(weight * 100)}% judge ({judge_mean:.3f}) + "
+                    f"{int((1 - weight) * 100)}% deterministic ({det_mean:.3f})"
+                )
+            items.append(f"""
+                <div class="calibration-item">
+                    <strong>Authenticity Basis</strong>
+                    <span>Judge-blended</span>
+                    <div class="muted">{detail} · {judged} sessions judged</div>
+                </div>
+            """)
+        elif basis == "deterministic":
+            items.append("""
+                <div class="calibration-item">
+                    <strong>Authenticity Basis</strong>
+                    <span>Deterministic</span>
+                    <div class="muted">No judge configured — offline fallback score</div>
+                </div>
+            """)
+
     # Safety judge agreement
     safety = scores.get("safety", {})
     if isinstance(safety, dict):
