@@ -101,7 +101,7 @@ MODEL_BASE_CHOICES: list[dict[str, Any]] = [
     {
         "id": "anthropic-claude-sonnet",
         "label": "Anthropic Claude 3.5 Sonnet",
-        "value": "anthropic:claude-3-5-sonnet-20241022",
+        "value": "anthropic:claude-sonnet-5",
         "description": "Anthropic's flagship for nuanced brand copy",
     },
 ]
@@ -1136,7 +1136,7 @@ def calibrate_validate(
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
     train_split: float = typer.Option(0.8, "--train-split", help="Fraction of data for training"),
     seed: int = typer.Option(42, "--seed", help="Random seed for splitting"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
     judge_sample: float = typer.Option(0.0, "--judge-sample", help="Fraction of sessions to judge (0.0-1.0)"),
     judge_strategy: str = typer.Option("stratified", "--judge-strategy", help="Sampling strategy: random, stratified, errors, extremes"),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
@@ -1169,7 +1169,7 @@ def calibrate_diagnose_errors(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
     output: Path = typer.Option(..., "--output", help="Path to output error analysis JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Diagnose calibration errors using LLM judge analysis.
@@ -1181,7 +1181,7 @@ def calibrate_diagnose_errors(
 
     if not judge:
         typer.secho("✗ Error: --judge is required for error diagnosis", fg=typer.colors.RED, err=True)
-        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
     try:
@@ -1206,7 +1206,7 @@ def analyze_scenarios(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output scenario analysis JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
     per_scenario: int = typer.Option(3, "--per-scenario", help="Number of sessions to judge per scenario tag"),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
@@ -1219,7 +1219,7 @@ def analyze_scenarios(
 
     if not judge:
         typer.secho("✗ Error: --judge is required for scenario analysis", fg=typer.colors.RED, err=True)
-        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
     try:

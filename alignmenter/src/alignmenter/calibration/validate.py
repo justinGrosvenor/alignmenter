@@ -49,7 +49,7 @@ def validate_calibration(
         embedding_provider: Embedding provider (default: sentence-transformer)
         train_split: Fraction of data for training (default: 0.8)
         seed: Random seed for splitting
-        judge_provider: Optional LLM judge provider (e.g., "anthropic:claude-3-5-sonnet-20241022")
+        judge_provider: Optional LLM judge provider (e.g., "anthropic:claude-sonnet-5")
         judge_sample_rate: Fraction of validation sessions to judge (0.0-1.0)
         judge_strategy: Sampling strategy (random, stratified, errors, extremes)
         judge_budget: Maximum number of judge API calls
