@@ -8,9 +8,10 @@ import re
 import shutil
 import sys
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 import requests
 import typer
@@ -24,12 +25,13 @@ from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
-from alignmenter.scripts import bootstrap_dataset as bootstrap_dataset_script
-from alignmenter.scripts import calibrate_persona as calibrate_persona_script
-from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.safety import SafetyScorer
 from alignmenter.scorers.stability import StabilityScorer
+from alignmenter.scripts import bootstrap_dataset as bootstrap_dataset_script
+from alignmenter.scripts import calibrate_persona as calibrate_persona_script
+from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
+
 app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
 
 persona_app = typer.Typer(help="Persona helper commands.")
@@ -99,7 +101,7 @@ MODEL_BASE_CHOICES: list[dict[str, Any]] = [
     {
         "id": "anthropic-claude-sonnet",
         "label": "Anthropic Claude 3.5 Sonnet",
-        "value": "anthropic:claude-3-5-sonnet-20241022",
+        "value": "anthropic:claude-sonnet-5",
         "description": "Anthropic's flagship for nuanced brand copy",
     },
 ]
@@ -183,7 +185,7 @@ def _prompt_choice(
     title: str,
     options: list[dict[str, Any]],
     *,
-    default_index: Optional[int] = None,
+    default_index: int | None = None,
 ) -> dict[str, Any]:
     while True:
         typer.echo(f"{title}:")
@@ -195,7 +197,7 @@ def _prompt_choice(
             typer.echo(line)
 
         prompt_label = "Select option"
-        default_value: Optional[str] = None
+        default_value: str | None = None
         if default_index is not None:
             prompt_label += f" [{default_index + 1}]"
             default_value = str(default_index + 1)
@@ -224,7 +226,7 @@ def _prompt_choice(
         typer.secho("Invalid selection. Try again.", fg=typer.colors.YELLOW)
 
 
-def _find_model_default_index(model_identifier: Optional[str], choices: list[dict[str, Any]]) -> Optional[int]:
+def _find_model_default_index(model_identifier: str | None, choices: list[dict[str, Any]]) -> int | None:
     if not model_identifier:
         return None
     if model_identifier.startswith("openai-gpt:"):
@@ -241,7 +243,7 @@ def _find_model_default_index(model_identifier: Optional[str], choices: list[dic
     return None
 
 
-def _extract_custom_gpt_id(model_identifier: Optional[str]) -> Optional[str]:
+def _extract_custom_gpt_id(model_identifier: str | None) -> str | None:
     if not model_identifier:
         return None
     if model_identifier.startswith("openai-gpt:"):
@@ -249,7 +251,7 @@ def _extract_custom_gpt_id(model_identifier: Optional[str]) -> Optional[str]:
     return None
 
 
-def _parse_local_identifier(identifier: Optional[str]) -> tuple[Optional[str], Optional[str]]:
+def _parse_local_identifier(identifier: str | None) -> tuple[str | None, str | None]:
     if not identifier or not identifier.startswith("local:"):
         return None, None
     body = identifier.split(":", 1)[1]
@@ -378,7 +380,7 @@ def init(
         default_index=default_model_index,
     )
 
-    custom_gpt_env_value: Optional[str] = None
+    custom_gpt_env_value: str | None = None
     if selected_model_option.get("id") == "custom-gpt":
         custom_gpt_id = typer.prompt(
             "Custom GPT identifier (gpt://...)",
@@ -430,11 +432,11 @@ def init(
     )
 
     judge_provider = None
-    judge_budget_calls: Optional[int] = None
-    judge_budget_usd: Optional[float] = None
-    judge_price_in: Optional[float] = None
-    judge_price_out: Optional[float] = None
-    judge_tokens: Optional[int] = None
+    judge_budget_calls: int | None = None
+    judge_budget_usd: float | None = None
+    judge_price_in: float | None = None
+    judge_price_out: float | None = None
+    judge_tokens: int | None = None
 
     if use_judge:
         judge_provider = typer.prompt(
@@ -465,7 +467,7 @@ def init(
             or settings.judge_estimated_tokens_per_call,
         )
 
-    env_updates: dict[str, Optional[str]] = {
+    env_updates: dict[str, str | None] = {
         "OPENAI_API_KEY": openai_key if (use_openai and store_openai_in_file and openai_key) else None,
         "ALIGNMENTER_DEFAULT_MODEL": default_model or None,
         "ALIGNMENTER_EMBEDDING_PROVIDER": embedding_provider or None,
@@ -502,18 +504,18 @@ def init(
 
 @app.command()
 def run(
-    config: Optional[str] = typer.Option(None, "--config", "-c", help="Path to run configuration YAML."),
-    model: Optional[str] = typer.Option(None, help="Primary model identifier (provider:model-id)."),
-    dataset: Optional[str] = typer.Option(None, help="Path to conversation dataset."),
-    persona: Optional[str] = typer.Option(None, help="Persona pack to evaluate against."),
-    compare: Optional[str] = typer.Option(
+    config: str | None = typer.Option(None, "--config", "-c", help="Path to run configuration YAML."),
+    model: str | None = typer.Option(None, help="Primary model identifier (provider:model-id)."),
+    dataset: str | None = typer.Option(None, help="Path to conversation dataset."),
+    persona: str | None = typer.Option(None, help="Persona pack to evaluate against."),
+    compare: str | None = typer.Option(
         None, help="Optional secondary model identifier for diff runs."
     ),
-    out: Optional[str] = typer.Option(None, help="Output directory for run artifacts."),
-    keywords: Optional[str] = typer.Option(None, help="Safety keyword configuration file."),
-    embedding: Optional[str] = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
-    judge: Optional[str] = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
-    judge_budget: Optional[int] = typer.Option(None, help="Maximum LLM judge calls per run."),
+    out: str | None = typer.Option(None, help="Output directory for run artifacts."),
+    keywords: str | None = typer.Option(None, help="Safety keyword configuration file."),
+    embedding: str | None = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
+    judge: str | None = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
+    judge_budget: int | None = typer.Option(None, help="Maximum LLM judge calls per run."),
     generate_transcripts: bool = typer.Option(
         False,
         "--generate-transcripts",
@@ -636,7 +638,7 @@ def demo(
 @app.command()
 def report(
     last: bool = typer.Option(False, "--last", help="Open the most recent report."),
-    path: Optional[str] = typer.Option(None, "--path", help="Path to specific report directory."),
+    path: str | None = typer.Option(None, "--path", help="Path to specific report directory."),
     reports_dir: str = typer.Option("reports", help="Base reports directory."),
 ) -> None:
     """Open or view reports."""
@@ -692,7 +694,7 @@ def _slugify(name: str) -> str:
 @persona_app.command("scaffold")
 def persona_scaffold(
     name: str = typer.Option(..., "--name", help="Display name for the persona."),
-    out: Optional[Path] = typer.Option(None, "--out", help="Path for the generated YAML."),
+    out: Path | None = typer.Option(None, "--out", help="Path for the generated YAML."),
     force: bool = typer.Option(False, "--force", help="Overwrite existing files."),
 ) -> None:
     """Generate a starter persona YAML template."""
@@ -737,7 +739,7 @@ def persona_export(
         help="Dataset file to export from (JSONL).",
     ),
     out: Path = typer.Option(Path("persona_export.csv"), "--out", help="Output CSV path."),
-    persona_id: Optional[str] = typer.Option(None, "--persona-id", help="Filter to a single persona."),
+    persona_id: str | None = typer.Option(None, "--persona-id", help="Filter to a single persona."),
     format: str = typer.Option(
         "csv",
         "--format",
@@ -809,7 +811,7 @@ def persona_export(
 @persona_app.command("sync-gpt")
 def persona_sync_gpt(
     gpt_id: str = typer.Argument(..., help="Custom GPT identifier (gpt://...)"),
-    out: Optional[Path] = typer.Option(None, "--out", help="Where to write the synced persona YAML."),
+    out: Path | None = typer.Option(None, "--out", help="Where to write the synced persona YAML."),
     force: bool = typer.Option(False, "--force", help="Overwrite the target file if it exists."),
 ) -> None:
     """Pull instructions from a Custom GPT into a persona pack."""
@@ -830,7 +832,7 @@ def persona_sync_gpt(
 @dataset_app.command("lint")
 def dataset_lint(
     path: Path = typer.Argument(..., help="Dataset JSONL file to validate."),
-    persona_dir: Optional[Path] = typer.Option(
+    persona_dir: Path | None = typer.Option(
         PERSONA_DIR, "--persona-dir", help="Directory containing persona YAML files."
     ),
     strict: bool = typer.Option(
@@ -914,14 +916,14 @@ def dataset_lint(
 @dataset_app.command("sanitize")
 def dataset_sanitize(
     path: Path = typer.Argument(..., help="Path to input dataset (JSONL)."),
-    out: Optional[Path] = typer.Option(None, "--out", help="Output path (default: <input>_sanitized.jsonl)."),
+    out: Path | None = typer.Option(None, "--out", help="Output path (default: <input>_sanitized.jsonl)."),
     in_place: bool = typer.Option(False, "--in-place", help="Overwrite the input file."),
     use_hashing: bool = typer.Option(True, help="Use stable hashes for replacements instead of generic placeholders."),
     dry_run: bool = typer.Option(False, "--dry-run", help="Show sanitization results without writing output."),
 ) -> None:
     input_path = path if path.is_absolute() else (Path.cwd() / path)
 
-    output_override: Optional[Path] = None
+    output_override: Path | None = None
     if out:
         output_override = out if out.is_absolute() else (Path.cwd() / out)
 
@@ -956,7 +958,7 @@ def dataset_sanitize(
 
 
 def _run_bootstrap_dataset(
-    source: Optional[Path],
+    source: Path | None,
     out: Path,
     sessions: int,
     turns_per_session: int,
@@ -986,7 +988,7 @@ def _run_bootstrap_dataset(
 @dataset_app.command("bootstrap")
 @app.command("bootstrap-dataset")
 def bootstrap_dataset_command(
-    source: Optional[Path] = typer.Option(None, "--source", help="Optional source dataset to augment."),
+    source: Path | None = typer.Option(None, "--source", help="Optional source dataset to augment."),
     out: Path = typer.Option(..., "--out", help="Output JSONL path for generated data."),
     sessions: int = typer.Option(10, "--sessions", help="Number of sessions to generate."),
     turns_per_session: int = typer.Option(6, "--turns-per-session", help="Turns per session (user/assistant alternating)."),
@@ -1036,7 +1038,7 @@ def calibrate_generate(
         typer.secho(f"✓ Generated {result['total_candidates']} candidates", fg=typer.colors.GREEN)
         typer.echo(f"  Strategy: {result['strategy']}")
         typer.echo(f"  Output: {result['output_path']}")
-        typer.echo(f"\nScenario distribution:")
+        typer.echo("\nScenario distribution:")
         for scenario, count in sorted(result['scenario_distribution'].items()):
             typer.echo(f"  {scenario}: {count}")
     except Exception as e:
@@ -1050,13 +1052,13 @@ def calibrate_label(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output labeled JSONL"),
     append: bool = typer.Option(False, "--append", help="Append to existing labeled data"),
-    labeler: Optional[str] = typer.Option(None, "--labeler", help="Name of person labeling"),
+    labeler: str | None = typer.Option(None, "--labeler", help="Name of person labeling"),
 ) -> None:
     """Interactively label responses for calibration."""
     from alignmenter.calibration.label import label_data
 
     try:
-        stats = label_data(
+        label_data(
             input_path=input,
             persona_path=persona,
             output_path=output,
@@ -1077,7 +1079,7 @@ def calibrate_bounds(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output bounds report JSON"),
-    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
     percentile_low: float = typer.Option(5.0, "--percentile-low", help="Lower percentile for min bound"),
     percentile_high: float = typer.Option(95.0, "--percentile-high", help="Upper percentile for max bound"),
 ) -> None:
@@ -1085,7 +1087,7 @@ def calibrate_bounds(
     from alignmenter.calibration.bounds import estimate_bounds
 
     try:
-        report = estimate_bounds(
+        estimate_bounds(
             labeled_path=labeled,
             persona_path=persona,
             output_path=output,
@@ -1104,15 +1106,15 @@ def calibrate_optimize(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output weights report JSON"),
-    bounds: Optional[Path] = typer.Option(None, "--bounds", help="Path to bounds report JSON"),
-    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    bounds: Path | None = typer.Option(None, "--bounds", help="Path to bounds report JSON"),
+    embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
     grid_step: float = typer.Option(0.1, "--grid-step", help="Grid search step size"),
 ) -> None:
     """Optimize component weights using grid search."""
     from alignmenter.calibration.optimize import optimize_weights
 
     try:
-        report = optimize_weights(
+        optimize_weights(
             labeled_path=labeled,
             persona_path=persona,
             output_path=output,
@@ -1131,19 +1133,19 @@ def calibrate_validate(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
     output: Path = typer.Option(..., "--output", help="Path to output diagnostics report JSON"),
-    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
+    embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
     train_split: float = typer.Option(0.8, "--train-split", help="Fraction of data for training"),
     seed: int = typer.Option(42, "--seed", help="Random seed for splitting"),
-    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
     judge_sample: float = typer.Option(0.0, "--judge-sample", help="Fraction of sessions to judge (0.0-1.0)"),
     judge_strategy: str = typer.Option("stratified", "--judge-strategy", help="Sampling strategy: random, stratified, errors, extremes"),
-    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
+    judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Validate calibration and generate diagnostics with optional LLM judge analysis."""
     from alignmenter.calibration.validate import validate_calibration
 
     try:
-        report = validate_calibration(
+        validate_calibration(
             labeled_path=labeled,
             persona_path=persona,
             output_path=output,
@@ -1166,9 +1168,9 @@ def calibrate_diagnose_errors(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
     output: Path = typer.Option(..., "--output", help="Path to output error analysis JSON"),
-    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
-    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
+    embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
+    judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Diagnose calibration errors using LLM judge analysis.
 
@@ -1179,7 +1181,7 @@ def calibrate_diagnose_errors(
 
     if not judge:
         typer.secho("✗ Error: --judge is required for error diagnosis", fg=typer.colors.RED, err=True)
-        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
     try:
@@ -1203,10 +1205,10 @@ def analyze_scenarios(
     dataset: Path = typer.Option(..., "--dataset", help="Path to conversation dataset JSONL"),
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output scenario analysis JSON"),
-    embedding: Optional[str] = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: Optional[str] = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-3-5-sonnet-20241022')"),
+    embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
+    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
     per_scenario: int = typer.Option(3, "--per-scenario", help="Number of sessions to judge per scenario tag"),
-    judge_budget: Optional[int] = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
+    judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Analyze performance across different scenario types using LLM judge.
 
@@ -1217,7 +1219,7 @@ def analyze_scenarios(
 
     if not judge:
         typer.secho("✗ Error: --judge is required for scenario analysis", fg=typer.colors.RED, err=True)
-        typer.echo("Example: --judge anthropic:claude-3-5-sonnet-20241022")
+        typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
     try:
@@ -1242,7 +1244,7 @@ def analyze_scenarios(
 def calibrate_persona_command(
     persona_path: Path = typer.Option(..., "--persona-path", help="Persona YAML containing the 'id' to calibrate."),
     dataset: Path = typer.Option(..., "--dataset", help="Labeled JSONL with persona_id + label fields."),
-    out: Optional[Path] = typer.Option(None, "--out", help="Output path for generated .traits.json"),
+    out: Path | None = typer.Option(None, "--out", help="Output path for generated .traits.json"),
     min_samples: int = typer.Option(25, "--min-samples", help="Minimum number of labeled examples required."),
     learning_rate: float = typer.Option(0.1, "--learning-rate", help="Learning rate for logistic regression."),
     epochs: int = typer.Option(300, "--epochs", help="Training epochs."),
@@ -1280,7 +1282,7 @@ def _load_env(path: Path) -> dict[str, str]:
     return entries
 
 
-def _write_env(path: Path, updates: dict[str, Optional[str]], *, existing: dict[str, str]) -> None:
+def _write_env(path: Path, updates: dict[str, str | None], *, existing: dict[str, str]) -> None:
     merged = dict(existing)
     for key, value in updates.items():
         if value is None or value == "":
@@ -1301,12 +1303,12 @@ def _write_run_config(
     *,
     model: str,
     embedding: str,
-    judge_provider: Optional[str],
-    judge_budget: Optional[int],
-    judge_budget_usd: Optional[float],
-    judge_price_in: Optional[float],
-    judge_price_out: Optional[float],
-    judge_tokens: Optional[int],
+    judge_provider: str | None,
+    judge_budget: int | None,
+    judge_budget_usd: float | None,
+    judge_price_in: float | None,
+    judge_price_out: float | None,
+    judge_tokens: int | None,
 ) -> None:
     dataset_default = DATASETS_DIR / "demo_conversations.jsonl"
     persona_default = PERSONA_DIR / "default.yaml"
@@ -1376,13 +1378,13 @@ def _relpath_for_config(target: Path, base_dir: Path) -> str:
         return Path(rel).as_posix()
 
 
-def _format_float(value: Optional[float]) -> Optional[str]:
+def _format_float(value: float | None) -> str | None:
     if value is None:
         return None
     return (f"{value:.6f}".rstrip("0").rstrip("."))
 
 
-def _safe_float(value: object) -> Optional[float]:
+def _safe_float(value: object) -> float | None:
     try:
         if value is None or value == "":
             return None
@@ -1391,7 +1393,7 @@ def _safe_float(value: object) -> Optional[float]:
         return None
 
 
-def _prompt_optional_int(message: str, default: Optional[Any]) -> Optional[int]:
+def _prompt_optional_int(message: str, default: Any | None) -> int | None:
     default_str = "" if default in (None, "") else str(default)
     while True:
         raw = typer.prompt(message, default=default_str)
@@ -1404,7 +1406,7 @@ def _prompt_optional_int(message: str, default: Optional[Any]) -> Optional[int]:
             typer.secho("Please enter an integer or leave blank.", fg=typer.colors.RED)
 
 
-def _prompt_optional_float(message: str, default: Optional[Any]) -> Optional[float]:
+def _prompt_optional_float(message: str, default: Any | None) -> float | None:
     default_str = "" if default in (None, "") else str(default)
     while True:
         raw = typer.prompt(message, default=default_str)
@@ -1418,7 +1420,7 @@ def _prompt_optional_float(message: str, default: Optional[Any]) -> Optional[flo
 
 
 def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[str, float]:
-    def _coerce_float(value: object) -> Optional[float]:
+    def _coerce_float(value: object) -> float | None:
         try:
             if value is None or value == "":
                 return None
@@ -1426,7 +1428,7 @@ def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[
         except (TypeError, ValueError):
             return None
 
-    def _coerce_int(value: object) -> Optional[int]:
+    def _coerce_int(value: object) -> int | None:
         try:
             if value is None or value == "":
                 return None
@@ -1459,7 +1461,7 @@ def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[
     return {key: value for key, value in cost.items() if value is not None}
 
 
-def _estimate_cost_per_call(cost: dict[str, float]) -> Optional[float]:
+def _estimate_cost_per_call(cost: dict[str, float]) -> float | None:
     price_in = cost.get("price_per_1k_input")
     price_out = cost.get("price_per_1k_output")
     prompt_tokens = cost.get("estimated_prompt_tokens_per_call")
@@ -1501,8 +1503,8 @@ class _ProgressReporter:
     def __init__(self, *, total: int, label: str) -> None:
         self.total = max(0, total)
         self.label = label
-        self._manager: Optional[Any] = None
-        self._bar: Optional[Any] = None
+        self._manager: Any | None = None
+        self._bar: Any | None = None
 
     def __enter__(self) -> Callable[[int], None]:
         if self.total > 0:
@@ -1526,16 +1528,16 @@ class RunInputs:
     """Resolved configuration for `alignmenter run`."""
 
     model_identifier: str
-    compare_identifier: Optional[str]
+    compare_identifier: str | None
     dataset_path: Path
     persona_path: Path
     keywords_path: Path
     out_dir: Path
     run_id: str
     include_raw: bool
-    embedding_identifier: Optional[str]
-    judge_identifier: Optional[str]
-    judge_budget: Optional[int]
+    embedding_identifier: str | None
+    judge_identifier: str | None
+    judge_budget: int | None
     judge_cost: dict[str, float | int]
     classifier_identifier: str
     thresholds: dict[str, dict[str, float]]
@@ -1545,15 +1547,15 @@ def _prepare_run_inputs(
     *,
     settings: Any,
     config_options: dict[str, object],
-    model: Optional[str],
-    dataset: Optional[str],
-    persona: Optional[str],
-    keywords: Optional[str],
-    out: Optional[str],
-    compare: Optional[str],
-    judge: Optional[str],
-    judge_budget: Optional[int],
-    embedding: Optional[str],
+    model: str | None,
+    dataset: str | None,
+    persona: str | None,
+    keywords: str | None,
+    out: str | None,
+    compare: str | None,
+    judge: str | None,
+    judge_budget: int | None,
+    embedding: str | None,
 ) -> tuple[RunInputs, RunConfig]:
     model_identifier = model or config_options.get("model") or settings.default_model
     try:
@@ -1639,7 +1641,7 @@ def _prepare_run_inputs(
 
 
 def _lazy_assistant_turn_counter(dataset_path: Path) -> Callable[[], int]:
-    cached: Optional[int] = None
+    cached: int | None = None
 
     def _inner() -> int:
         nonlocal cached
@@ -1683,9 +1685,9 @@ def _maybe_warn_about_cost(inputs: RunInputs, turn_counter: Callable[[], int]) -
 
 def _initialise_providers(
     model_identifier: str,
-    compare_identifier: Optional[str],
+    compare_identifier: str | None,
     regenerate: bool,
-) -> tuple[bool, Optional[Any], Optional[Any]]:
+) -> tuple[bool, Any | None, Any | None]:
     provider = None
     compare_provider = None
 
@@ -1722,7 +1724,7 @@ def _initialise_providers(
     return True, provider, compare_provider
 
 
-def _initialise_judge_provider(judge_identifier: Optional[str]):
+def _initialise_judge_provider(judge_identifier: str | None):
     if not judge_identifier:
         return None
     try:
@@ -1740,14 +1742,19 @@ def _build_scorers_for_run(
     inputs: RunInputs,
     *,
     safety_classifier: Any,
-    judge_provider: Optional[Any],
-) -> tuple[list[Any], Optional[list[Any]]]:
+    judge_provider: Any | None,
+) -> tuple[list[Any], list[Any] | None]:
     scorer_kwargs = {"embedding": inputs.embedding_identifier}
     judge_callable = judge_provider.evaluate if judge_provider else None
 
     def _bundle() -> list[Any]:
         return [
-            AuthenticityScorer(persona_path=inputs.persona_path, **scorer_kwargs),
+            AuthenticityScorer(
+                persona_path=inputs.persona_path,
+                judge=judge_provider,
+                judge_budget=inputs.judge_budget,
+                **scorer_kwargs,
+            ),
             SafetyScorer(
                 keyword_path=inputs.keywords_path,
                 judge=judge_callable,
@@ -1793,7 +1800,7 @@ def _sync_custom_gpt(
     model_identifier: str,
     default_persona: Path,
     *,
-    output_path: Optional[Path] = None,
+    output_path: Path | None = None,
     force: bool = False,
     silent: bool = True,
 ) -> Path:
@@ -1852,8 +1859,8 @@ def _sync_custom_gpt(
 
 
 def _fetch_custom_gpt_metadata(
-    gpt_id: str, api_key: Optional[str]
-) -> tuple[dict[str, Any], Optional[str]]:
+    gpt_id: str, api_key: str | None
+) -> tuple[dict[str, Any], str | None]:
     if not api_key:
         return {}, "OPENAI_API_KEY not configured; generating persona stub."
     try:
@@ -1879,7 +1886,7 @@ def _fetch_custom_gpt_metadata(
 
 def _fetch_custom_gpt_metadata_http(
     gpt_id: str, api_key: str
-) -> tuple[dict[str, Any], Optional[str]]:
+) -> tuple[dict[str, Any], str | None]:
     url = f"https://api.openai.com/v1/gpts/{gpt_id}"
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -2035,8 +2042,8 @@ def _normalize_gpt_metadata(gpt_id: str, payload: Any) -> dict[str, Any]:
 
 
 def _describe_gpt_via_conversation(
-    gpt_id: str, api_key: Optional[str]
-) -> tuple[dict[str, Any], Optional[str]]:
+    gpt_id: str, api_key: str | None
+) -> tuple[dict[str, Any], str | None]:
     if not api_key:
         return {}, "OPENAI_API_KEY not configured; cannot query GPT for self-description."
 
@@ -2110,7 +2117,7 @@ def _persona_from_gpt_description(description: dict[str, Any], gpt_id: str) -> d
     }
 
 
-def _extract_json_block(text: str) -> Optional[str]:
+def _extract_json_block(text: str) -> str | None:
     if not text:
         return None
     start = text.find("{")
@@ -2123,7 +2130,7 @@ def _extract_json_block(text: str) -> Optional[str]:
 
 
 def _print_run_summary(
-    run_dir: Path, *, thresholds: Optional[dict[str, dict[str, Any]]] = None
+    run_dir: Path, *, thresholds: dict[str, dict[str, Any]] | None = None
 ) -> dict[str, dict[str, Any]]:
     run_meta = _safe_read_json(run_dir / "run.json")
     if run_meta:
@@ -2172,7 +2179,7 @@ def _print_run_summary(
             }
 
     for scorer_id, label in headlines:
-        value: Optional[float] = None
+        value: float | None = None
         card = scorecard_index.get(scorer_id)
         if card:
             primary_value = card.get("primary")
@@ -2206,6 +2213,16 @@ def _print_run_summary(
                 high = metrics.get("ci95_high")
                 if isinstance(low, (int, float)) and isinstance(high, (int, float)):
                     line += f" (range: {_format_score_value(low)}-{_format_score_value(high)})"
+                if metrics.get("basis") == "blended":
+                    weight = metrics.get("judge_weight")
+                    jm = metrics.get("judge_mean")
+                    if isinstance(weight, (int, float)) and isinstance(jm, (int, float)):
+                        line += (
+                            f" [judge-blended: {int(weight * 100)}% judge={_format_score_value(jm)}"
+                            f" + {int((1 - weight) * 100)}% deterministic]"
+                        )
+                elif metrics.get("basis") == "deterministic":
+                    line += " [deterministic — no judge configured]"
         warn_threshold = info.get("warn")
         fail_threshold = info.get("fail")
         if warn_threshold is not None or fail_threshold is not None:

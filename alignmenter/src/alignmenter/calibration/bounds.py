@@ -5,12 +5,25 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Optional
 
-import numpy as np
+try:
+    import numpy as np
+except ModuleNotFoundError as _exc:  # pragma: no cover - exercised without [calibrate]
+    _CALIBRATE_IMPORT_ERROR: ModuleNotFoundError | None = _exc
+    np = None  # type: ignore[assignment]
+else:
+    _CALIBRATE_IMPORT_ERROR = None
 
 from alignmenter.providers.embeddings import load_embedding_provider
 from alignmenter.utils import load_yaml
+from alignmenter.utils.optional import missing_dependency
+
+
+def _require_calibrate() -> None:
+    if _CALIBRATE_IMPORT_ERROR is not None:
+        raise missing_dependency(
+            "Persona calibration", "calibrate", "scikit-learn, numpy"
+        ) from _CALIBRATE_IMPORT_ERROR
 
 
 def estimate_bounds(
@@ -18,7 +31,7 @@ def estimate_bounds(
     persona_path: Path,
     output_path: Path,
     *,
-    embedding_provider: Optional[str] = None,
+    embedding_provider: str | None = None,
     percentile_low: float = 5.0,
     percentile_high: float = 95.0,
 ) -> dict:
@@ -38,9 +51,10 @@ def estimate_bounds(
     Returns:
         Bounds report with statistics
     """
+    _require_calibrate()
     # Load labeled data
     labeled_data = []
-    with open(labeled_path, "r") as f:
+    with open(labeled_path) as f:
         for line in f:
             if line.strip():
                 labeled_data.append(json.loads(line))
@@ -133,7 +147,7 @@ def estimate_bounds(
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"\n✓ Bounds estimation complete")
+    print("\n✓ Bounds estimation complete")
     print(f"  Style similarity min: {style_sim_min:.4f}")
     print(f"  Style similarity max: {style_sim_max:.4f}")
     print(f"  Mean: {report['style_sim_mean']:.4f}")

@@ -6,7 +6,6 @@ import json
 import math
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional, Tuple
 
 import typer
 
@@ -26,7 +25,7 @@ class Sample:
 def calibrate(
     persona_path: str = typer.Option(..., help="Path to persona YAML file."),
     dataset: str = typer.Option(..., help="Path to labeled dataset (JSONL with 'label' field: 0=fail, 1=pass)."),
-    out: Optional[str] = typer.Option(None, help="Output path for calibration JSON (default: <persona>.traits.json)."),
+    out: str | None = typer.Option(None, help="Output path for calibration JSON (default: <persona>.traits.json)."),
     min_samples: int = typer.Option(25, help="Minimum labeled samples required."),
     learning_rate: float = typer.Option(0.1, help="Learning rate for gradient descent."),
     epochs: int = typer.Option(300, help="Training epochs."),
@@ -110,7 +109,7 @@ def _load_persona_id(persona_path: Path) -> str:
     raise typer.BadParameter(f"Persona file {persona_path} is missing required 'id' field")
 
 
-def _load_samples(path: Path, expected_persona: str) -> Tuple[list[Sample], int]:
+def _load_samples(path: Path, expected_persona: str) -> tuple[list[Sample], int]:
     samples: list[Sample] = []
     skipped = 0
     with path.open("r", encoding="utf-8") as handle:

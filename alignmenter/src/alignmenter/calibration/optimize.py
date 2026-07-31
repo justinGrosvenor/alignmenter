@@ -5,13 +5,26 @@ from __future__ import annotations
 import json
 import math
 from pathlib import Path
-from typing import Optional
 
-import numpy as np
-from sklearn.metrics import roc_auc_score, f1_score, confusion_matrix
+try:
+    import numpy as np
+    from sklearn.metrics import confusion_matrix, f1_score, roc_auc_score
+except ModuleNotFoundError as _exc:  # pragma: no cover - exercised without [calibrate]
+    _CALIBRATE_IMPORT_ERROR: ModuleNotFoundError | None = _exc
+    np = None  # type: ignore[assignment]
+else:
+    _CALIBRATE_IMPORT_ERROR = None
 
 from alignmenter.providers.embeddings import load_embedding_provider
 from alignmenter.utils import load_yaml
+from alignmenter.utils.optional import missing_dependency
+
+
+def _require_calibrate() -> None:
+    if _CALIBRATE_IMPORT_ERROR is not None:
+        raise missing_dependency(
+            "Persona calibration", "calibrate", "scikit-learn, numpy"
+        ) from _CALIBRATE_IMPORT_ERROR
 
 
 def optimize_weights(
@@ -19,8 +32,8 @@ def optimize_weights(
     persona_path: Path,
     output_path: Path,
     *,
-    bounds_path: Optional[Path] = None,
-    embedding_provider: Optional[str] = None,
+    bounds_path: Path | None = None,
+    embedding_provider: str | None = None,
     grid_step: float = 0.1,
 ) -> dict:
     """
@@ -40,9 +53,10 @@ def optimize_weights(
     Returns:
         Weights report with best weights and metrics
     """
+    _require_calibrate()
     # Load labeled data
     labeled_data = []
-    with open(labeled_path, "r") as f:
+    with open(labeled_path) as f:
         for line in f:
             if line.strip():
                 item = json.loads(line)
@@ -65,7 +79,7 @@ def optimize_weights(
     # Load bounds if available
     bounds = None
     if bounds_path and bounds_path.exists():
-        with open(bounds_path, "r") as f:
+        with open(bounds_path) as f:
             bounds = json.load(f)
 
     # Pre-compute scores for all examples
@@ -200,7 +214,7 @@ def optimize_weights(
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"\n✓ Weight optimization complete")
+    print("\n✓ Weight optimization complete")
     print(f"  Best weights: style={best_weights['style']:.2f}, "
           f"traits={best_weights['traits']:.2f}, lexicon={best_weights['lexicon']:.2f}")
     print(f"  ROC-AUC: {best_metrics['roc_auc']:.3f}")
@@ -214,7 +228,7 @@ def _compute_component_scores(
     text: str,
     persona: dict,
     embedder,
-    bounds: Optional[dict] = None,
+    bounds: dict | None = None,
 ) -> dict:
     """
     Compute style, traits, and lexicon scores for a single text.

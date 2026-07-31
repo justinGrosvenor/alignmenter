@@ -5,11 +5,10 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 from pathlib import Path
-from typing import Optional
 
-from alignmenter.scorers.authenticity import AuthenticityScorer
-from alignmenter.providers.judges import load_judge_provider
 from alignmenter.judges.authenticity_judge import AuthenticityJudge
+from alignmenter.providers.judges import load_judge_provider
+from alignmenter.scorers.authenticity import AuthenticityScorer
 
 
 def analyze_scenario_performance(
@@ -17,10 +16,10 @@ def analyze_scenario_performance(
     persona_path: Path,
     output_path: Path,
     *,
-    embedding_provider: Optional[str] = None,
+    embedding_provider: str | None = None,
     judge_provider: str,
     samples_per_scenario: int = 3,
-    judge_budget: Optional[int] = None,
+    judge_budget: int | None = None,
 ) -> dict:
     """
     Analyze performance across different scenario types.
@@ -39,7 +38,7 @@ def analyze_scenario_performance(
     """
     # Load dataset
     sessions = []
-    with open(dataset_path, "r") as f:
+    with open(dataset_path) as f:
         for line in f:
             if line.strip():
                 session = json.loads(line)

@@ -15,3 +15,6 @@ dist/
 build/
 calibration_data/
 */calibration_data/
+
+# Generated docs site (built by docs.yml)
+site/

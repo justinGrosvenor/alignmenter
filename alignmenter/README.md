@@ -45,19 +45,37 @@ cd alignmenter
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
 
-# Install with dev + safety extras
-pip install -e ./alignmenter[dev,safety]
+# Install with all optional extras for development
+pip install -e "./alignmenter[dev]"
 ```
 
 ### Install from PyPI
 
+The core install is lightweight — no `torch`, no `scikit-learn`. It runs the
+default scoring path (hashed embeddings + keyword safety, optionally blended
+with an LLM judge) out of the box:
+
 ```bash
-pip install "alignmenter[safety]"
+pip install alignmenter
 alignmenter init
+alignmenter run --config configs/run.yaml
+```
+
+Add optional extras only when you need them:
+
+| Extra | Adds | Use it for |
+|-------|------|------------|
+| `alignmenter[ml]` | torch, sentence-transformers, transformers | Local embeddings (`--embedding sentence-transformer:...`) and the offline safety classifier |
+| `alignmenter[calibrate]` | scikit-learn, numpy | The persona calibration pipeline (`calibrate*` commands) |
+| `alignmenter[all]` | both of the above | Everything |
+
+```bash
+# Example: better local embeddings + offline safety classifier
+pip install "alignmenter[ml]"
 alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
 ```
 
-> **Note**: The `safety` extra includes `transformers` for the offline safety classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md) for details.
+> **Offline safety classifier**: `[ml]` includes `transformers` for the offline classifier (ProtectAI/distilled-safety-roberta). Without it, Alignmenter falls back to a lightweight heuristic classifier. See [docs/offline_safety.md](https://github.com/justinGrosvenor/alignmenter/blob/main/docs/offline_safety.md) for details.
 
 ### Run Your First Evaluation
 
@@ -305,32 +323,43 @@ traits:
 
 ## API Usage
 
+`Runner` coordinates transcript preparation, scoring, and report generation.
+It takes a `RunConfig` plus a list of scorers, and `execute()` returns the
+path to the timestamped report directory (JSON + HTML are written for you).
+
 ```python
-from alignmenter.runner import Runner
-from alignmenter.config import RunConfig
+import json
+from pathlib import Path
 
-# Load configuration
-config = RunConfig.from_yaml("configs/run/my_eval.yaml")
+from alignmenter.runner import RunConfig, Runner
+from alignmenter.scorers.authenticity import AuthenticityScorer
+from alignmenter.scorers.safety import SafetyScorer
+from alignmenter.scorers.stability import StabilityScorer
 
-# Execute evaluation
-runner = Runner(config)
-results = runner.execute()
-
-# Access scores
-print(f"Authenticity: {results['scores']['authenticity']['mean']:.3f}")
-print(f"Safety: {results['scores']['safety']['fused_judge']:.3f}")
-print(f"Stability: {results['scores']['stability']['session_variance']:.3f}")
-
-# Generate reports
-from alignmenter.reporting import HTMLReporter, JSONReporter
-
-html_reporter = HTMLReporter()
-html_reporter.write(
-    run_dir=results["run_dir"],
-    summary=results["summary"],
-    scores=results["scores"],
-    sessions=results["sessions"],
+config = RunConfig(
+    model="openai:gpt-4o-mini",
+    dataset_path=Path("datasets/demo_conversations.jsonl"),
+    persona_path=Path("configs/persona/default.yaml"),
 )
+
+# Pass a judge to AuthenticityScorer/SafetyScorer to blend LLM judgment in;
+# omit it (as here) for a fully offline, deterministic run.
+scorers = [
+    AuthenticityScorer(persona_path=config.persona_path, embedding="hashed"),
+    SafetyScorer(keyword_path=Path("configs/safety_keywords.yaml")),
+    StabilityScorer(embedding="hashed"),
+]
+
+# generate_transcripts=False reuses recorded transcripts (no provider calls).
+runner = Runner(config, scorers, generate_transcripts=False)
+run_dir = runner.execute()  # -> Path to reports/<timestamp>_<run_id>/
+
+results = json.loads((run_dir / "results.json").read_text())
+primary = results["scores"]["primary"]
+auth = primary["authenticity"]
+print(f"Authenticity: {auth['mean']:.3f}  (basis: {auth['basis']})")
+print(f"Safety:       {primary['safety']['score']:.3f}")
+print(f"Stability:    {primary['stability']['stability']:.3f}")
 ```
 
 ## CI/CD Integration

@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from alignmenter.providers.base import parse_provider_model
-from alignmenter.providers.openai import OpenAIProvider, OpenAICustomGPTProvider
+from alignmenter.providers.openai import OpenAICustomGPTProvider, OpenAIProvider
 
 
 def test_parse_provider_model_valid() -> None:

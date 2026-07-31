@@ -6,7 +6,6 @@ import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 from alignmenter.utils import load_yaml
 
@@ -17,7 +16,7 @@ def label_data(
     output_path: Path,
     *,
     append: bool = False,
-    labeler: Optional[str] = None,
+    labeler: str | None = None,
 ) -> dict:
     """
     Interactively label responses as on-brand (1) or off-brand (0).
@@ -39,7 +38,7 @@ def label_data(
 
     # Load candidates
     candidates = []
-    with open(input_path, "r") as f:
+    with open(input_path) as f:
         for line in f:
             if line.strip():
                 candidates.append(json.loads(line))
@@ -51,7 +50,7 @@ def label_data(
     # Load existing labeled data if appending
     existing_texts = set()
     if append and output_path.exists():
-        with open(output_path, "r") as f:
+        with open(output_path) as f:
             for line in f:
                 if line.strip():
                     item = json.loads(line)
@@ -165,7 +164,7 @@ def _print_persona_context(persona: dict):
                 print(f"    ... and {len(avoided) - 10} more")
 
 
-def _prompt_label() -> tuple[Optional[int], Optional[str], str]:
+def _prompt_label() -> tuple[int | None, str | None, str]:
     """
     Prompt user for label, confidence, and notes.
 

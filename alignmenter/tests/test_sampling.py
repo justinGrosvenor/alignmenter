@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from alignmenter.calibration.sampling import select_scenarios_for_judge, estimate_judge_cost
+from alignmenter.calibration.sampling import estimate_judge_cost, select_scenarios_for_judge
 
 
 @dataclass

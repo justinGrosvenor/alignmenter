@@ -1,0 +1,25 @@
+{
+  "method": "stratified 5-fold CV, trait model refit per fold",
+  "n": 136,
+  "n_positive": 64,
+  "embedding": "sentence-transformer:all-MiniLM-L6-v2",
+  "per_fold_roc_auc": [
+    0.938,
+    0.962,
+    0.945,
+    0.959,
+    0.939
+  ],
+  "per_fold_f1": [
+    0.8,
+    0.963,
+    0.857,
+    0.828,
+    0.923
+  ],
+  "mean_roc_auc": 0.949,
+  "std_roc_auc": 0.01,
+  "mean_f1": 0.874,
+  "pooled_out_of_fold_roc_auc": 0.954,
+  "seed": 42
+}

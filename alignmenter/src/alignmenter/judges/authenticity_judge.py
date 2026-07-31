@@ -6,30 +6,34 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from alignmenter.providers.base import JudgeProvider
 from alignmenter.utils import load_yaml
+
 from .prompts import format_authenticity_prompt
 
 LOGGER = logging.getLogger(__name__)
 
 
-# Pricing per 1M tokens (input, output) in USD
-# Prices as of January 2025
+# Pricing per 1M tokens (input, output) in USD.
+# Reviewed 2026-07; verify against provider pricing pages before relying on
+# exact figures. Unknown models fall back to a flat per-call estimate.
 PRICING_TABLE = {
     # OpenAI models
     "gpt-4o": (2.50, 10.00),
     "gpt-4o-mini": (0.15, 0.60),
-    "gpt-4-turbo": (10.00, 30.00),
-    "gpt-4-turbo-preview": (10.00, 30.00),
-    "gpt-4": (30.00, 60.00),
-    # Anthropic models
+    "gpt-4.1": (2.00, 8.00),
+    "gpt-4.1-mini": (0.40, 1.60),
+    # Anthropic models (current line)
+    "claude-opus-5": (5.00, 25.00),
+    "claude-opus-4-8": (5.00, 25.00),
+    "claude-opus-4-7": (5.00, 25.00),
+    "claude-sonnet-5": (3.00, 15.00),
+    "claude-sonnet-4-6": (3.00, 15.00),
+    "claude-haiku-4-5": (1.00, 5.00),
+    # Anthropic models (legacy, retained for reproducibility of older runs)
     "claude-3-5-sonnet-20241022": (3.00, 15.00),
-    "claude-3-5-sonnet-20240620": (3.00, 15.00),
     "claude-3-5-haiku-20241022": (0.80, 4.00),
-    "claude-3-opus-20240229": (15.00, 75.00),
-    "claude-3-sonnet-20240229": (3.00, 15.00),
     "claude-3-haiku-20240307": (0.25, 1.25),
 }
 
@@ -81,10 +85,10 @@ class JudgeAnalysis:
     reasoning: str
     strengths: list[str]
     weaknesses: list[str]
-    suggestion: Optional[str]
+    suggestion: str | None
     context_appropriate: bool
-    calibrated_score: Optional[float] = None  # For comparison
-    cost: Optional[float] = None  # API cost for this call
+    calibrated_score: float | None = None  # For comparison
+    cost: float | None = None  # API cost for this call
 
 
 @dataclass
@@ -156,8 +160,8 @@ class AuthenticityJudge:
         self,
         session_id: str,
         turns: list[dict],
-        scenario_tag: Optional[str] = None,
-        calibrated_score: Optional[float] = None,
+        scenario_tag: str | None = None,
+        calibrated_score: float | None = None,
     ) -> JudgeAnalysis:
         """Evaluate a full conversation session for brand voice authenticity.
 
@@ -222,7 +226,7 @@ class AuthenticityJudge:
         self,
         session_id: str,
         response_text: str,
-        calibrated_score: Optional[float],
+        calibrated_score: float | None,
         cost: float,
     ) -> JudgeAnalysis:
         """Parse the JSON response from the judge.
@@ -293,7 +297,7 @@ class AuthenticityJudge:
                 cost=cost,
             )
 
-    def _calculate_cost(self, usage: Optional[dict]) -> float:
+    def _calculate_cost(self, usage: dict | None) -> float:
         """Calculate cost from usage data using provider-specific pricing.
 
         Args:

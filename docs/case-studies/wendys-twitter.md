@@ -1,19 +1,32 @@
 # Wendy's Twitter Voice Case Study
 
-This case study reproduces a full calibration workflow for Wendy's Twitter persona, showing how Alignmenter can learn a highly distinctive voice and ship a trustworthy scorecard. Follow the steps below to recreate the published ROC-AUC 1.000 result and inspect every artifact end to end.
+This case study reproduces a full calibration workflow for Wendy's Twitter persona and shows, candidly, how far the deterministic authenticity scorer can and cannot be trusted after calibration. Follow the steps below to reproduce every artifact end to end. Read the caveats box before citing any number.
 
-> **Highlights**
+> **What the numbers actually say (leakage-free cross-validation, the credible ones)**
 >
-> | Metric | Baseline | Calibrated |
-> | --- | --- | --- |
-> | ROC-AUC | 0.733 | **1.000** |
-> | F1 Score | 0.594 | **1.000** |
-> | On-brand mean | 0.468 | **0.599** |
-> | Off-brand mean | 0.323 | **0.169** |
+> Stratified 5-fold CV with the trait model **refit on each fold's training rows only** (`cross_validate.py` → `cross_validation_results.json`):
 >
-> - Distinctive voice is driven by style + traits (0.5 / 0.4 weights); lexicon contributes only 0.1.
-> - Scenario analytics isolate the riskiest flows (competitor roasts + crisis response).
-> - Persona breakdown proves the calibrated scorer separates on/off brand turns within each session.
+> **Cross-validated ROC-AUC: 0.949 ± 0.010** (per-fold 0.938 / 0.962 / 0.945 / 0.959 / 0.939; pooled out-of-fold 0.954; mean F1 @ 0.5 = 0.874).
+>
+> That is a genuine generalization estimate — a large, real gain over the uncalibrated baseline (ROC-AUC 0.733 / F1 0.594), and clearly short of the misleading "perfect" number below. This is the figure to cite.
+>
+> Corroborating same-author held-out scenario suites (72 turns, `holdout_evaluation_results.json`):
+>
+> | Holdout suite | n | ROC-AUC | Accuracy | Recall | F1 |
+> | --- | --- | --- | --- | --- | --- |
+> | Trend | 16 | 1.00 | 1.00 | 1.00 | 1.00 |
+> | Crisis | 16 | 1.00 | 0.938 | 1.00 | 0.941 |
+> | Mixed | 20 | 1.00 | 1.00 | 1.00 | 1.00 |
+> | **Edge cases** | 20 | **0.86** | **0.75** | **0.50** | 0.667 |
+>
+> **The in-sample ROC-AUC 1.000 that older versions of this doc led with is train=test** (all 136 rows fit and scored together). It shows the classes are separable given the features — it is **not** a generalization estimate and should not be cited as performance.
+>
+> **Three caveats before you trust this:**
+> - The calibrated trait model's top features are largely **function words** (`just`, `it`, `our`, `for`, `we're`, `you`). It partly keys on the register gap between deliberately-corporate off-brand examples and casual on-brand ones — a dataset-construction artifact, not proven brand-voice signal.
+> - The holdout sets are **same-author synthetic data**, so even these out-of-sample numbers likely overstate performance on real production traffic.
+> - For production decisions, use the **LLM-judge-blended authenticity path** (now the default when a judge is configured) and report **judge-vs-human agreement**, rather than relying on the deterministic classifier alone.
+>
+> Mechanism finding (not a performance claim): after calibration the scorer weights style + traits (0.5 / 0.4) far above lexicon (0.1).
 
 ---
 
@@ -31,7 +44,8 @@ All of the files referenced below live under [`case-studies/wendys-twitter/`](ht
 | `wendys_twitter.traits.json` | Trained trait model (logistic regression weights) |
 | `baseline_run.yaml` | Run config for the uncalibrated baseline |
 | `baseline_diagnostics.json` | ROC, F1, and score separation for the baseline |
-| `calibrated_diagnostics.json` | Final validation report (ROC-AUC 1.000) |
+| `calibrated_diagnostics.json` | Post-calibration diagnostics (ROC-AUC 1.000 — in-sample/near-in-sample; see caveats box) |
+| `holdout_evaluation_results.json` | Held-out scenario results (the credible, out-of-sample numbers) |
 | `calibration_reports/` | Intermediate artifacts: bounds, weight grid search, confusion matrices |
 
 > Tip: keep the case-study directory intact. All commands below reference these exact paths so you can copy‑paste without editing YAML.
@@ -193,4 +207,4 @@ The CLI summary now shows pass/fail status based on the thresholds declared in `
 4. Work through the **bounds → optimize → validate** pipeline.
 5. Set thresholds in your run config (`scorers.authenticity.threshold_warn`, etc.) so CI exits non-zero when voice drift occurs.
 
-The Wendy's case study proves that Alignmenter’s calibration tooling can master a playful, culturally aware persona without hand-tuned heuristics. Use it as a template for social media, marketing, or support personas that demand more than keyword checks.
+The Wendy's case study shows Alignmenter’s calibration tooling can substantially improve out-of-sample separation for a playful, culturally aware persona without hand-tuned heuristics — while also being honest about where the deterministic scorer weakens (edge cases) and where its apparent strength comes from surface statistics rather than brand voice. Use it as a template for social media, marketing, or support personas, and pair the deterministic scorer with the LLM-judge-blended path before trusting it in production.

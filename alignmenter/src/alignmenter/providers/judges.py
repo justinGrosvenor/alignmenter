@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 try:  # pragma: no cover
     from openai import OpenAI
@@ -17,11 +17,44 @@ except ImportError:  # pragma: no cover
     Anthropic = None  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
-    from openai import OpenAI as _OpenAI
     from anthropic import Anthropic as _Anthropic
 
-from alignmenter.providers.base import JudgeProvider, parse_provider_model
 from alignmenter.config import get_settings
+from alignmenter.providers.base import JudgeProvider, parse_provider_model
+
+
+def _parse_score(content: str) -> float:
+    """Best-effort extraction of a 0-1 ``score`` field from judge output.
+
+    Tolerates raw JSON, ```json fenced blocks, and prose-wrapped JSON so that a
+    judge which ignores the "JSON only" instruction still yields a usable score.
+    """
+
+    text = (content or "").strip()
+    if "```" in text:
+        # Pull the contents of the first fenced block.
+        fence = text.split("```", 2)
+        if len(fence) >= 2:
+            body = fence[1]
+            if body.startswith("json"):
+                body = body[4:]
+            text = body.strip()
+    start = text.find("{")
+    if start != -1:
+        text = text[start:]
+    try:
+        data = json.loads(text)
+    except (json.JSONDecodeError, TypeError):
+        try:
+            data, _ = json.JSONDecoder().raw_decode(text)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            return 0.0
+    if not isinstance(data, dict):
+        return 0.0
+    try:
+        return max(0.0, min(1.0, float(data.get("score", 0.0))))
+    except (TypeError, ValueError):
+        return 0.0
 
 
 class OpenAIJudge(JudgeProvider):
@@ -34,7 +67,7 @@ class OpenAIJudge(JudgeProvider):
 
     name = "openai"
 
-    def __init__(self, model: str, client: Optional[OpenAI] = None) -> None:
+    def __init__(self, model: str, client: OpenAI | None = None) -> None:
         self.model = model
         if client is not None:
             # Use provided client (for testing or custom configurations)
@@ -52,23 +85,30 @@ class OpenAIJudge(JudgeProvider):
             self._client = OpenAI(api_key=api_key)
 
     @classmethod
-    def from_identifier(cls, identifier: str, client: Optional[OpenAI] = None) -> OpenAIJudge:
+    def from_identifier(cls, identifier: str, client: OpenAI | None = None) -> OpenAIJudge:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'openai', got '{provider}'.")
         return cls(model=model, client=client)
 
     def evaluate(self, prompt: str) -> dict:
-        response = self._client.chat.completions.create(
-            model=self.model,
-            messages=[
+        request_kwargs = {
+            "model": self.model,
+            "messages": [
                 {
                     "role": "system",
                     "content": "You are an evaluation assistant. Respond with valid JSON matching the schema requested in the user prompt.",
                 },
                 {"role": "user", "content": prompt},
             ],
-        )
+        }
+        try:
+            # JSON mode guarantees parseable output on gpt-4o / gpt-4.1-class models.
+            response = self._client.chat.completions.create(
+                response_format={"type": "json_object"}, **request_kwargs
+            )
+        except Exception:  # pragma: no cover - model without JSON-mode support
+            response = self._client.chat.completions.create(**request_kwargs)
         content = response.choices[0].message.content or ""
         usage_payload = None
         if response.usage:
@@ -78,19 +118,11 @@ class OpenAIJudge(JudgeProvider):
                 "total_tokens": response.usage.total_tokens,
             }
 
-        # For backward compatibility with SafetyScorer, parse the score
-        # But return RAW content in notes so AuthenticityJudge can parse all fields
-        score = None
-        try:
-            data = json.loads(content)
-            score = float(data.get("score", 0.0))
-            score = max(0.0, min(1.0, score))
-        except (json.JSONDecodeError, TypeError, ValueError):
-            score = 0.0
-
+        # Return RAW content in notes so AuthenticityJudge can parse all fields;
+        # also surface a parsed score for SafetyScorer's fused signal.
         return {
-            "score": score,
-            "notes": content,  # Return raw content for full parsing by consumers
+            "score": _parse_score(content),
+            "notes": content,
             "usage": usage_payload,
         }
 
@@ -101,6 +133,8 @@ class CachedJudgeProvider(JudgeProvider):
     def __init__(self, base: JudgeProvider) -> None:
         self._base = base
         self.name = base.name
+        # Surface the wrapped provider's model so cost estimators can price calls.
+        self.model = getattr(base, "model", None)
         self._cache: dict[str, dict] = {}
 
     def evaluate(self, prompt: str) -> dict:
@@ -119,7 +153,7 @@ class AnthropicJudge(JudgeProvider):
 
     name = "anthropic"
 
-    def __init__(self, model: str, client: Optional["_Anthropic"] = None) -> None:
+    def __init__(self, model: str, client: _Anthropic | None = None) -> None:
         self.model = model
         if client is not None:
             # Use provided client (for testing or custom configurations)
@@ -137,7 +171,7 @@ class AnthropicJudge(JudgeProvider):
             self._client = Anthropic(api_key=api_key)
 
     @classmethod
-    def from_identifier(cls, identifier: str, client: Optional["_Anthropic"] = None) -> "AnthropicJudge":
+    def from_identifier(cls, identifier: str, client: _Anthropic | None = None) -> AnthropicJudge:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'anthropic', got '{provider}'.")
@@ -168,18 +202,8 @@ class AnthropicJudge(JudgeProvider):
                 "total_tokens": getattr(usage, "input_tokens", 0) + getattr(usage, "output_tokens", 0),
             }
 
-        # For backward compatibility with SafetyScorer, parse the score
-        # But return RAW content in notes so AuthenticityJudge can parse all fields
-        score = None
-        try:
-            data = json.loads(content)
-            score = float(data.get("score", 0.0))
-            score = max(0.0, min(1.0, score))
-        except (json.JSONDecodeError, TypeError, ValueError):
-            score = 0.0
-
         return {
-            "score": score,
+            "score": _parse_score(content),
             "notes": content,  # Return raw content for full parsing by consumers
             "usage": usage_payload,
         }
@@ -194,11 +218,11 @@ class NullJudge(JudgeProvider):
         return {"score": 1.0, "notes": "Judge disabled."}
 
 
-def load_judge_provider(identifier: Optional[str]) -> Optional[JudgeProvider]:
+def load_judge_provider(identifier: str | None) -> JudgeProvider | None:
     """Load a judge provider from an identifier string.
 
     Args:
-        identifier: Provider identifier (e.g., "openai:gpt-4o", "anthropic:claude-3-5-sonnet-20241022")
+        identifier: Provider identifier (e.g., "openai:gpt-4o", "anthropic:claude-sonnet-5")
 
     Returns:
         JudgeProvider instance or None if identifier is empty/none

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Optional, Tuple
+from typing import Any
 
 import requests
 
@@ -19,8 +19,8 @@ class LocalProvider:
         self,
         endpoint: str,
         *,
-        model: Optional[str] = None,
-        api_key: Optional[str] = None,
+        model: str | None = None,
+        api_key: str | None = None,
         timeout: float = 30.0,
     ) -> None:
         if not endpoint:
@@ -31,7 +31,7 @@ class LocalProvider:
         self.api_key = api_key or os.getenv("ALIGNMENTER_LOCAL_API_KEY") or os.getenv("OPENAI_API_KEY")
 
     @classmethod
-    def from_identifier(cls, identifier: str) -> "LocalProvider":
+    def from_identifier(cls, identifier: str) -> LocalProvider:
         provider, remainder = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'local', got '{provider}'.")
@@ -65,7 +65,7 @@ class LocalProvider:
         return None
 
 
-def _split_endpoint_model(value: str) -> Tuple[str, Optional[str]]:
+def _split_endpoint_model(value: str) -> tuple[str, str | None]:
     endpoint, sep, model = value.partition("|")
     endpoint = endpoint.strip()
     model = model.strip() if sep else None
@@ -87,7 +87,7 @@ def _extract_content(payload: Any) -> str:
     return payload.get("text", "") if isinstance(payload, dict) else ""
 
 
-def _extract_usage(payload: Any) -> Optional[dict[str, Any]]:
+def _extract_usage(payload: Any) -> dict[str, Any] | None:
     if not isinstance(payload, dict):
         return None
 

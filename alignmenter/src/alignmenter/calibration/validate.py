@@ -4,13 +4,26 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
 
-import numpy as np
-from sklearn.metrics import roc_auc_score, f1_score, precision_recall_curve, roc_curve
-from sklearn.model_selection import train_test_split
+try:
+    import numpy as np
+    from sklearn.metrics import f1_score, precision_recall_curve, roc_auc_score, roc_curve
+    from sklearn.model_selection import train_test_split
+except ModuleNotFoundError as _exc:  # pragma: no cover - exercised without [calibrate]
+    _CALIBRATE_IMPORT_ERROR: ModuleNotFoundError | None = _exc
+    np = None  # type: ignore[assignment]
+else:
+    _CALIBRATE_IMPORT_ERROR = None
 
 from alignmenter.scorers.authenticity import AuthenticityScorer
+from alignmenter.utils.optional import missing_dependency
+
+
+def _require_calibrate() -> None:
+    if _CALIBRATE_IMPORT_ERROR is not None:
+        raise missing_dependency(
+            "Persona calibration", "calibrate", "scikit-learn, numpy"
+        ) from _CALIBRATE_IMPORT_ERROR
 
 
 def validate_calibration(
@@ -18,13 +31,13 @@ def validate_calibration(
     persona_path: Path,
     output_path: Path,
     *,
-    embedding_provider: Optional[str] = None,
+    embedding_provider: str | None = None,
     train_split: float = 0.8,
     seed: int = 42,
-    judge_provider: Optional[str] = None,
+    judge_provider: str | None = None,
     judge_sample_rate: float = 0.0,
     judge_strategy: str = "stratified",
-    judge_budget: Optional[int] = None,
+    judge_budget: int | None = None,
 ) -> dict:
     """
     Validate calibration using train/validation split with optional LLM judge analysis.
@@ -36,7 +49,7 @@ def validate_calibration(
         embedding_provider: Embedding provider (default: sentence-transformer)
         train_split: Fraction of data for training (default: 0.8)
         seed: Random seed for splitting
-        judge_provider: Optional LLM judge provider (e.g., "anthropic:claude-3-5-sonnet-20241022")
+        judge_provider: Optional LLM judge provider (e.g., "anthropic:claude-sonnet-5")
         judge_sample_rate: Fraction of validation sessions to judge (0.0-1.0)
         judge_strategy: Sampling strategy (random, stratified, errors, extremes)
         judge_budget: Maximum number of judge API calls
@@ -44,11 +57,12 @@ def validate_calibration(
     Returns:
         Diagnostics report with metrics and analysis
     """
+    _require_calibrate()
     np.random.seed(seed)
 
     # Load labeled data
     labeled_data = []
-    with open(labeled_path, "r") as f:
+    with open(labeled_path) as f:
         for line in f:
             if line.strip():
                 item = json.loads(line)
@@ -93,9 +107,9 @@ def validate_calibration(
     scorer = AuthenticityScorer(persona_path, embedding=embedding_provider)
 
     # Score validation set
-    print(f"\nScoring validation set...")
+    print("\nScoring validation set...")
     val_sessions = _convert_to_sessions(val_data)
-    val_scores_raw = scorer.score(val_sessions)
+    scorer.score(val_sessions)
 
     # Extract per-turn scores
     val_scores = []
@@ -143,13 +157,13 @@ def validate_calibration(
     optimal_f1 = float(f1_scores[optimal_threshold_idx])
 
     # Analyze score distributions
-    on_brand_scores = [s for s, l in zip(val_scores, val_labels) if l == 1]
-    off_brand_scores = [s for s, l in zip(val_scores, val_labels) if l == 0]
+    on_brand_scores = [s for s, lab in zip(val_scores, val_labels, strict=False) if lab == 1]
+    off_brand_scores = [s for s, lab in zip(val_scores, val_labels, strict=False) if lab == 0]
 
     # Identify errors
     false_positives = []
     false_negatives = []
-    for i, (score, label, example) in enumerate(zip(val_scores, val_labels, val_data)):
+    for _i, (score, label, example) in enumerate(zip(val_scores, val_labels, val_data, strict=False)):
         prediction = 1 if score >= 0.5 else 0
         if prediction == 1 and label == 0:
             false_positives.append({
@@ -225,11 +239,11 @@ def validate_calibration(
     with open(output_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    print(f"\n✓ Validation complete")
+    print("\n✓ Validation complete")
     print(f"  ROC-AUC: {val_auc:.3f}")
     print(f"  F1 Score: {val_f1:.3f}")
     print(f"  Optimal Threshold: {optimal_threshold:.3f} (F1={optimal_f1:.3f})")
-    print(f"  Score separation:")
+    print("  Score separation:")
     if on_brand_scores:
         print(f"    On-brand mean: {np.mean(on_brand_scores):.3f}")
     if off_brand_scores:
@@ -246,13 +260,14 @@ def _run_judge_analysis(
     judge_provider: str,
     sample_rate: float,
     strategy: str,
-    budget: Optional[int],
-) -> Optional[dict]:
+    budget: int | None,
+) -> dict | None:
     """Run LLM judge analysis on validation sessions."""
     from dataclasses import dataclass
-    from alignmenter.providers.judges import load_judge_provider
-    from alignmenter.judges.authenticity_judge import AuthenticityJudge
+
     from alignmenter.calibration.sampling import select_scenarios_for_judge
+    from alignmenter.judges.authenticity_judge import AuthenticityJudge
+    from alignmenter.providers.judges import load_judge_provider
 
     # Load judge provider
     judge = load_judge_provider(judge_provider)
@@ -269,7 +284,7 @@ def _run_judge_analysis(
         authenticity_score: float
 
     sessions = []
-    for i, (example, score) in enumerate(zip(val_data, val_scores)):
+    for i, (example, score) in enumerate(zip(val_data, val_scores, strict=False)):
         sessions.append(
             MockSession(
                 session_id=f"val_{i}",

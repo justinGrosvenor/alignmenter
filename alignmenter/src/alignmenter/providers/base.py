@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional, Protocol, Tuple
+from typing import Any, Protocol
 
 
 class ChatProvider(Protocol):
@@ -14,7 +14,7 @@ class ChatProvider(Protocol):
     def chat(self, messages: list[dict], **kwargs) -> dict:
         ...
 
-    def tokenizer(self) -> Optional[Any]:
+    def tokenizer(self) -> Any | None:
         ...
 
 
@@ -23,10 +23,10 @@ class ChatResponse:
     """Standardized provider response placeholder."""
 
     text: str
-    usage: Optional[dict[str, Any]] = None
+    usage: dict[str, Any] | None = None
 
 
-def parse_provider_model(identifier: str) -> Tuple[str, str]:
+def parse_provider_model(identifier: str) -> tuple[str, str]:
     """Split a provider specifier like ``openai:gpt-4o`` into parts."""
 
     if ":" not in identifier:

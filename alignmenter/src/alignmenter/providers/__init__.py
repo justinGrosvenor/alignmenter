@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
 from .anthropic import AnthropicProvider
 from .base import ChatProvider, parse_provider_model
 from .classifiers import load_safety_classifier
 from .local import LocalProvider
-from .openai import OpenAIProvider, OpenAICustomGPTProvider
+from .openai import OpenAICustomGPTProvider, OpenAIProvider
 
 __all__ = [
     "OpenAIProvider",
@@ -20,7 +18,7 @@ __all__ = [
 ]
 
 
-def load_chat_provider(identifier: Optional[str]) -> Optional[ChatProvider]:
+def load_chat_provider(identifier: str | None) -> ChatProvider | None:
     """Instantiate a chat provider for the given identifier.
 
     Returns ``None`` when *identifier* is falsy or explicitly disabled.

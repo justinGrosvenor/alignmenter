@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 try:  # pragma: no cover - import guard
     from anthropic import Anthropic  # type: ignore
@@ -22,7 +22,7 @@ class AnthropicProvider:
 
     name = "anthropic"
 
-    def __init__(self, model: str, client: Optional["_Anthropic"] = None) -> None:
+    def __init__(self, model: str, client: _Anthropic | None = None) -> None:
         self.model = model
         if client is not None:
             self._client = client
@@ -35,7 +35,7 @@ class AnthropicProvider:
             self._client = Anthropic(api_key=settings.anthropic_api_key)
 
     @classmethod
-    def from_model_identifier(cls, identifier: str, client: Optional["_Anthropic"] = None) -> "AnthropicProvider":
+    def from_model_identifier(cls, identifier: str, client: _Anthropic | None = None) -> AnthropicProvider:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'anthropic', got '{provider}'.")
@@ -76,7 +76,7 @@ def _extract_content(response: Any) -> str:
     return str(content)
 
 
-def _extract_usage(response: Any) -> Optional[dict[str, Any]]:
+def _extract_usage(response: Any) -> dict[str, Any] | None:
     usage = getattr(response, "usage", None)
     if usage is None:
         return None

@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
 
-
-from alignmenter.scorers.authenticity import AuthenticityScorer
-from alignmenter.providers.judges import load_judge_provider
 from alignmenter.judges.authenticity_judge import AuthenticityJudge
+from alignmenter.providers.judges import load_judge_provider
+from alignmenter.scorers.authenticity import AuthenticityScorer
 
 
 def diagnose_calibration_errors(
@@ -17,9 +15,9 @@ def diagnose_calibration_errors(
     persona_path: Path,
     output_path: Path,
     *,
-    embedding_provider: Optional[str] = None,
+    embedding_provider: str | None = None,
     judge_provider: str,
-    judge_budget: Optional[int] = None,
+    judge_budget: int | None = None,
 ) -> dict:
     """
     Diagnose calibration errors by analyzing false positives and false negatives.
@@ -37,7 +35,7 @@ def diagnose_calibration_errors(
     """
     # Load labeled data
     labeled_data = []
-    with open(labeled_path, "r") as f:
+    with open(labeled_path) as f:
         for line in f:
             if line.strip():
                 item = json.loads(line)
@@ -69,7 +67,7 @@ def diagnose_calibration_errors(
     # Identify errors
     false_positives = []
     false_negatives = []
-    for i, (score, example) in enumerate(zip(scores, labeled_data)):
+    for i, (score, example) in enumerate(zip(scores, labeled_data, strict=False)):
         label = example["label"]
         prediction = 1 if score >= 0.5 else 0
 

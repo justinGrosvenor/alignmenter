@@ -38,10 +38,10 @@
 Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for persona alignment**:
 
 - **Persona packs**: Define your brand voice in YAML with examples, lexicon, and traits
-- **Offline-first**: Works without constant API calls (optional LLM judge for higher accuracy)
+- **Judge-blended, offline-capable**: When an LLM judge is configured, brand-voice scores blend the judge's holistic rating with deterministic signals; with no key, it falls back to a fully offline deterministic score (clearly labeled)
 - **Budget-aware**: Built-in cost tracking and guardrails
 - **Reproducible**: Deterministic scoring, full audit trails
-- **Privacy-focused**: Local models available, sanitize production data before evaluation
+- **Lightweight core**: No `torch` or `scikit-learn` in the default install — heavy local models are opt-in extras
 
 ---
 
@@ -52,12 +52,12 @@ Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for per
 **Option 1 · PyPI (recommended for most users)**
 
 ```bash
-pip install "alignmenter[safety]"
+pip install alignmenter          # lightweight core — no torch / scikit-learn
 alignmenter init
-alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
+alignmenter run --config configs/run.yaml
 ```
 
-Use this path when you want to try Alignmenter quickly, run it in CI, or install it inside a production environment.
+Use this path when you want to try Alignmenter quickly, run it in CI, or install it inside a production environment. Add optional extras when you need them: `alignmenter[ml]` for local embeddings and the offline safety classifier, `alignmenter[calibrate]` for the persona calibration pipeline.
 
 **Option 2 · From Source (for case studies & contributing)**
 
@@ -79,11 +79,13 @@ export OPENAI_API_KEY="your-key-here"
 alignmenter run \
   --model openai:gpt-4o-mini \
   --dataset datasets/demo_conversations.jsonl \
-  --persona configs/persona/default.yaml \
-  --embedding sentence-transformer:all-MiniLM-L6-v2
+  --persona configs/persona/default.yaml
 
 # Reuse recorded transcripts (default behavior)
-alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
+alignmenter run --config configs/run.yaml
+
+# For higher-fidelity local embeddings, install alignmenter[ml] and pass:
+#   --embedding sentence-transformer:all-MiniLM-L6-v2
 
 # View interactive report
 alignmenter report --last
@@ -212,7 +214,7 @@ examples:
 - **Budget guardrails**: Halt at 90% of judge API budget
 - **Cost projection**: Estimate expenses before execution
 - **PII sanitization**: Built-in scrubbing with `alignmenter dataset sanitize`
-- **Offline mode**: Works without internet using local models
+- **Offline fallback**: With no API key, scoring runs fully offline on the deterministic path (results labeled `basis: deterministic`); add the `[ml]` extra for local embedding/classifier models
 
 ### 🧪 Developer Experience
 

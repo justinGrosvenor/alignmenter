@@ -8,6 +8,12 @@ The easiest way to install Alignmenter is from PyPI:
 pip install alignmenter
 ```
 
+The core install is intentionally **lightweight** — no torch, no scikit-learn. The
+default scoring path (hashed embeddings + optional LLM judge + keyword safety) runs
+on this alone. Heavier local-model features live behind optional extras (below).
+
+**Requires Python 3.10–3.13.**
+
 ## Install from Source
 
 For development or to get the latest features:
@@ -27,15 +33,26 @@ pip install -e .
 
 ## Optional Dependencies
 
-### Safety Classifier
+Alignmenter ships a small set of extras. Quote the bracketed name so your shell
+does not glob it: `pip install "alignmenter[ml]"`.
 
-For offline safety checking without API calls:
+| Extra | Adds | Enables |
+| --- | --- | --- |
+| `[ml]` | torch, sentence-transformers, transformers | Local sentence-transformer embeddings **and** the offline safety classifier |
+| `[calibrate]` | scikit-learn, numpy | The numeric calibration pipeline (`calibrate bounds`, `calibrate optimize`, `calibrate validate`) |
+| `[safety]` | (alias of `[ml]`) | Back-compat name for the offline safety classifier |
+| `[all]` | `[ml]` + `[calibrate]` | Everything runtime-optional |
+| `[dev]` | `[all]` + pytest, ruff, build, twine | Contributing and running tests |
+
+### Local embeddings and offline safety
 
 ```bash
-pip install alignmenter[safety]
+pip install "alignmenter[ml]"
 ```
 
-This installs the `distilled-safety-roberta` model for local safety classification.
+This is the only extra that pulls in torch. It provides the
+`sentence-transformer:all-MiniLM-L6-v2` embedding provider and the offline safety
+classifier (`ProtectAI/distilled-safety-roberta`).
 
 !!! info "Model Download"
     The safety model (~82MB) downloads automatically on **first use** from Hugging Face Hub.
@@ -43,24 +60,23 @@ This installs the `distilled-safety-roberta` model for local safety classificati
     - **First run**: 10-30 seconds
     - **Subsequent runs**: Instant (cached locally)
 
-    For CI/CD pipelines, see the [Safety Guide](../guides/safety.md#cicd-caching) for caching instructions to avoid re-downloading on every build.
+    For CI/CD pipelines, see the [Safety Guide](../guides/safety.md#cicd-caching) for caching instructions to avoid re-downloading on every build. More detail in [Offline Safety](../offline_safety.md).
 
-### Development Tools
-
-For contributing or running tests:
+### Persona calibration
 
 ```bash
-pip install alignmenter[dev]
+pip install "alignmenter[calibrate]"
 ```
 
-This includes pytest, ruff, black, and other development tools.
+Needed for the numeric calibration steps. (Interactive labeling, candidate
+generation, and `calibrate-persona` trait fitting are pure-Python and work without
+this extra.)
 
-### All Dependencies
-
-To install everything:
+### Everything
 
 ```bash
-pip install alignmenter[dev,safety]
+pip install "alignmenter[all]"   # runtime extras
+pip install "alignmenter[dev]"   # runtime extras + test/lint tooling
 ```
 
 ## Verify Installation
@@ -73,18 +89,23 @@ alignmenter --version
 
 You should see output like:
 ```
-alignmenter version 0.3.0
+alignmenter version 0.2.0
 ```
 
 ## Set API Keys
 
-Alignmenter needs an OpenAI API key for embeddings (used in authenticity scoring):
+API keys are only needed for the features that call a provider. The default
+embedding provider is `hashed` (zero-dependency, offline), so you can run
+deterministic evaluations with **no key at all**.
+
+Set a key when you want to generate transcripts, use OpenAI embeddings, or enable
+an LLM judge:
 
 ```bash
 export OPENAI_API_KEY="your-key-here"
 ```
 
-For Anthropic models:
+For Anthropic models (e.g. the `anthropic:claude-sonnet-5` judge):
 
 ```bash
 export ANTHROPIC_API_KEY="your-key-here"

@@ -24,7 +24,7 @@ def test_cli_run_uses_run_config_file(tmp_path: Path) -> None:
         "\n".join(
             [
                 "run_id: cli-mini",
-                f"model: openai:gpt-4o-mini",
+                "model: openai:gpt-4o-mini",
                 f"dataset: {MINI_DATASET}",
                 f"persona: {persona}",
                 f"keywords: {keywords}",

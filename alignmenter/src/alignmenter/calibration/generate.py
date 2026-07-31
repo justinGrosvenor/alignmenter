@@ -6,7 +6,6 @@ import json
 import random
 from collections import defaultdict
 from pathlib import Path
-from typing import Optional
 
 from alignmenter.utils import load_yaml
 
@@ -42,7 +41,7 @@ def generate_candidates(
 
     # Read dataset
     records = []
-    with open(dataset_path, "r") as f:
+    with open(dataset_path) as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line))
@@ -126,7 +125,7 @@ def _sample_diverse(turns: list[dict], num_samples: int) -> list[dict]:
     samples_per_scenario = max(1, num_samples // len(scenarios))
     candidates = []
 
-    for scenario, scenario_turns in by_scenario.items():
+    for _scenario, scenario_turns in by_scenario.items():
         n = min(samples_per_scenario, len(scenario_turns))
         candidates.extend(random.sample(scenario_turns, n))
 
@@ -225,7 +224,7 @@ def main():
     print(f"✓ Generated {result['total_candidates']} candidates")
     print(f"  Strategy: {result['strategy']}")
     print(f"  Output: {result['output_path']}")
-    print(f"\nScenario distribution:")
+    print("\nScenario distribution:")
     for scenario, count in sorted(result['scenario_distribution'].items()):
         print(f"  {scenario}: {count}")
 

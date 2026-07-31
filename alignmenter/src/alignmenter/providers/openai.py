@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 try:  # pragma: no cover - import guard
     from openai import OpenAI  # type: ignore
@@ -22,7 +22,7 @@ class OpenAIProvider:
 
     name = "openai"
 
-    def __init__(self, model: str, client: Optional["_OpenAI"] = None) -> None:
+    def __init__(self, model: str, client: _OpenAI | None = None) -> None:
         self.model = model
         if client is not None:
             self._client = client
@@ -35,7 +35,7 @@ class OpenAIProvider:
             self._client = OpenAI(api_key=settings.openai_api_key)
 
     @classmethod
-    def from_model_identifier(cls, identifier: str, client: Optional["_OpenAI"] = None) -> "OpenAIProvider":
+    def from_model_identifier(cls, identifier: str, client: _OpenAI | None = None) -> OpenAIProvider:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'openai', got '{provider}'.")
@@ -63,7 +63,7 @@ class OpenAICustomGPTProvider:
 
     name = "openai-gpt"
 
-    def __init__(self, gpt_id: str, client: Optional["_OpenAI"] = None) -> None:
+    def __init__(self, gpt_id: str, client: _OpenAI | None = None) -> None:
         if OpenAI is None:
             raise RuntimeError(
                 "The 'openai' package is required for Custom GPT support. Install with 'pip install openai'."
@@ -76,7 +76,7 @@ class OpenAICustomGPTProvider:
             self._client = OpenAI(api_key=settings.openai_api_key)
 
     @classmethod
-    def from_model_identifier(cls, identifier: str, client: Optional["_OpenAI"] = None) -> "OpenAICustomGPTProvider":
+    def from_model_identifier(cls, identifier: str, client: _OpenAI | None = None) -> OpenAICustomGPTProvider:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'openai-gpt', got '{provider}'.")
@@ -117,7 +117,7 @@ def _extract_content(message: Any) -> str:
     return str(content)
 
 
-def _extract_usage(response: Any) -> Optional[dict[str, Any]]:
+def _extract_usage(response: Any) -> dict[str, Any] | None:
     usage = getattr(response, "usage", None)
     if usage is None:
         return None
