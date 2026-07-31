@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from alignmenter.utils import load_yaml
 
 
-def _resolve(base: Path, value: Optional[str]) -> Optional[Path]:
+def _resolve(base: Path, value: str | None) -> Path | None:
     if not value:
         return None
     candidate = Path(value)

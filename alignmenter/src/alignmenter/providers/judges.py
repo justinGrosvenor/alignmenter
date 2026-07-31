@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 try:  # pragma: no cover
     from openai import OpenAI
@@ -17,11 +17,10 @@ except ImportError:  # pragma: no cover
     Anthropic = None  # type: ignore
 
 if TYPE_CHECKING:  # pragma: no cover
-    from openai import OpenAI as _OpenAI
     from anthropic import Anthropic as _Anthropic
 
-from alignmenter.providers.base import JudgeProvider, parse_provider_model
 from alignmenter.config import get_settings
+from alignmenter.providers.base import JudgeProvider, parse_provider_model
 
 
 class OpenAIJudge(JudgeProvider):
@@ -34,7 +33,7 @@ class OpenAIJudge(JudgeProvider):
 
     name = "openai"
 
-    def __init__(self, model: str, client: Optional[OpenAI] = None) -> None:
+    def __init__(self, model: str, client: OpenAI | None = None) -> None:
         self.model = model
         if client is not None:
             # Use provided client (for testing or custom configurations)
@@ -52,7 +51,7 @@ class OpenAIJudge(JudgeProvider):
             self._client = OpenAI(api_key=api_key)
 
     @classmethod
-    def from_identifier(cls, identifier: str, client: Optional[OpenAI] = None) -> OpenAIJudge:
+    def from_identifier(cls, identifier: str, client: OpenAI | None = None) -> OpenAIJudge:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'openai', got '{provider}'.")
@@ -119,7 +118,7 @@ class AnthropicJudge(JudgeProvider):
 
     name = "anthropic"
 
-    def __init__(self, model: str, client: Optional["_Anthropic"] = None) -> None:
+    def __init__(self, model: str, client: _Anthropic | None = None) -> None:
         self.model = model
         if client is not None:
             # Use provided client (for testing or custom configurations)
@@ -137,7 +136,7 @@ class AnthropicJudge(JudgeProvider):
             self._client = Anthropic(api_key=api_key)
 
     @classmethod
-    def from_identifier(cls, identifier: str, client: Optional["_Anthropic"] = None) -> "AnthropicJudge":
+    def from_identifier(cls, identifier: str, client: _Anthropic | None = None) -> AnthropicJudge:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'anthropic', got '{provider}'.")
@@ -194,7 +193,7 @@ class NullJudge(JudgeProvider):
         return {"score": 1.0, "notes": "Judge disabled."}
 
 
-def load_judge_provider(identifier: Optional[str]) -> Optional[JudgeProvider]:
+def load_judge_provider(identifier: str | None) -> JudgeProvider | None:
     """Load a judge provider from an identifier string.
 
     Args:

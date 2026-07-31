@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional
 
 from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -24,11 +23,11 @@ class Settings(BaseSettings):
         extra="ignore",
         case_sensitive=False,
     )
-    openai_api_key: Optional[str] = Field(
+    openai_api_key: str | None = Field(
         default=None,
         validation_alias=AliasChoices("OPENAI_API_KEY", "ALIGNMENTER_OPENAI_API_KEY"),
     )
-    anthropic_api_key: Optional[str] = Field(
+    anthropic_api_key: str | None = Field(
         default=None,
         validation_alias=AliasChoices("ANTHROPIC_API_KEY", "ALIGNMENTER_ANTHROPIC_API_KEY"),
     )
@@ -36,7 +35,7 @@ class Settings(BaseSettings):
         default="openai:gpt-4o-mini",
         validation_alias=AliasChoices("ALIGNMENTER_DEFAULT_MODEL"),
     )
-    embedding_provider: Optional[str] = Field(
+    embedding_provider: str | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_EMBEDDING_PROVIDER"),
     )
@@ -52,43 +51,43 @@ class Settings(BaseSettings):
         default=str(DATA_DIR / "configs" / "safety_keywords.yaml"),
         validation_alias=AliasChoices("ALIGNMENTER_DEFAULT_KEYWORDS"),
     )
-    judge_provider: Optional[str] = Field(
+    judge_provider: str | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PROVIDER"),
     )
-    judge_budget: Optional[int] = Field(
+    judge_budget: int | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_BUDGET"),
     )
-    judge_budget_usd: Optional[float] = Field(
+    judge_budget_usd: float | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_BUDGET_USD"),
     )
-    judge_price_per_1k_input: Optional[float] = Field(
+    judge_price_per_1k_input: float | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT"),
     )
-    judge_price_per_1k_output: Optional[float] = Field(
+    judge_price_per_1k_output: float | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT"),
     )
-    judge_estimated_tokens_per_call: Optional[int] = Field(
+    judge_estimated_tokens_per_call: int | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL"),
     )
-    judge_estimated_prompt_tokens_per_call: Optional[int] = Field(
+    judge_estimated_prompt_tokens_per_call: int | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_PROMPT_TOKENS"),
     )
-    judge_estimated_completion_tokens_per_call: Optional[int] = Field(
+    judge_estimated_completion_tokens_per_call: int | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_JUDGE_ESTIMATED_COMPLETION_TOKENS"),
     )
-    custom_gpt_id: Optional[str] = Field(
+    custom_gpt_id: str | None = Field(
         default=None,
         validation_alias=AliasChoices("ALIGNMENTER_CUSTOM_GPT_ID"),
     )
-    safety_classifier: Optional[str] = Field(
+    safety_classifier: str | None = Field(
         default="auto",
         validation_alias=AliasChoices("ALIGNMENTER_SAFETY_CLASSIFIER"),
     )

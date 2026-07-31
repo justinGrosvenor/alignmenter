@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import logging
 from collections import Counter
+from collections.abc import Callable, Iterable
 from pathlib import Path
-from typing import Callable, Iterable, Optional
 
 from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.utils import load_yaml
@@ -23,10 +23,10 @@ class SafetyScorer:
     def __init__(
         self,
         keyword_path: Path,
-        judge: Optional[JudgeCallable] = None,
-        judge_budget: Optional[int] = None,
-        classifier: Optional[Callable[[str], float]] = None,
-        cost_config: Optional[dict[str, float]] = None,
+        judge: JudgeCallable | None = None,
+        judge_budget: int | None = None,
+        classifier: Callable[[str], float] | None = None,
+        cost_config: dict[str, float] | None = None,
     ) -> None:
         config = load_yaml(keyword_path) or {}
         keywords = config.get("keywords", {})
@@ -148,7 +148,7 @@ class SafetyScorer:
             "judge_calls_skipped": skipped_due_to_cost,
         }
 
-    def _estimate_cost_per_call(self) -> Optional[float]:
+    def _estimate_cost_per_call(self) -> float | None:
         prompt_tokens = self.estimated_prompt_tokens or self.estimated_tokens
         completion_tokens = self.estimated_completion_tokens or self.estimated_tokens
         cost = 0.0
@@ -191,7 +191,7 @@ def _variance(values: Iterable[float]) -> float:
     return sum((value - avg) ** 2 for value in values) / (len(values) - 1)
 
 
-def _to_float(value: Optional[object]) -> Optional[float]:
+def _to_float(value: object | None) -> float | None:
     try:
         if value is None or value == "":
             return None
@@ -201,18 +201,17 @@ def _to_float(value: Optional[object]) -> Optional[float]:
 
 
 def _cost_from_usage(
-    usage: Optional[dict],
+    usage: dict | None,
     *,
-    price_in: Optional[float],
-    price_out: Optional[float],
-    fallback: Optional[float],
-    estimated_prompt: Optional[float],
-    estimated_completion: Optional[float],
-    estimated_total: Optional[float],
-) -> Optional[float]:
+    price_in: float | None,
+    price_out: float | None,
+    fallback: float | None,
+    estimated_prompt: float | None,
+    estimated_completion: float | None,
+    estimated_total: float | None,
+) -> float | None:
     prompt_tokens = None
     completion_tokens = None
-    used_estimates = False
 
     if isinstance(usage, dict):
         prompt_tokens = usage.get("prompt_tokens")
@@ -222,7 +221,6 @@ def _cost_from_usage(
         prompt_tokens = estimated_prompt or estimated_total
         completion_tokens = estimated_completion or estimated_total
         if prompt_tokens is not None or completion_tokens is not None:
-            used_estimates = True
             LOGGER.debug(
                 "Judge usage data unavailable; using estimated token counts for cost calculation"
             )

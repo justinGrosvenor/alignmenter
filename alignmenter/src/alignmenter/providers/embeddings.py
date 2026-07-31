@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 try:  # pragma: no cover
     from sentence_transformers import SentenceTransformer
@@ -42,7 +41,7 @@ class OpenAIEmbeddingProvider(EmbeddingProvider):
 
     name = "openai"
 
-    def __init__(self, model: str, client: Optional[OpenAI] = None) -> None:
+    def __init__(self, model: str, client: OpenAI | None = None) -> None:
         if OpenAI is None:
             raise RuntimeError("The 'openai' package is required for OpenAI embeddings.")
         self.model_name = model
@@ -50,7 +49,7 @@ class OpenAIEmbeddingProvider(EmbeddingProvider):
         self._client = client or OpenAI(api_key=api_key)
 
     @classmethod
-    def from_identifier(cls, identifier: str, client: Optional[OpenAI] = None) -> "OpenAIEmbeddingProvider":
+    def from_identifier(cls, identifier: str, client: OpenAI | None = None) -> OpenAIEmbeddingProvider:
         provider, model = parse_provider_model(identifier)
         if provider != cls.name:
             raise ValueError(f"Expected provider 'openai', got '{provider}'.")
@@ -103,14 +102,14 @@ class CachedEmbeddingProvider(EmbeddingProvider):
 
         if missing:
             new_vectors = self._base.embed(missing)
-            for text, vector in zip(missing, new_vectors):
+            for text, vector in zip(missing, new_vectors, strict=False):
                 stored = list(vector)
                 self._cache[text] = stored
 
         return [self._cache[text] for text in texts]
 
 
-def load_embedding_provider(identifier: Optional[str]) -> EmbeddingProvider:
+def load_embedding_provider(identifier: str | None) -> EmbeddingProvider:
     if identifier in (None, "", "hashed"):
         provider = PassthroughEmbeddingProvider()
     else:

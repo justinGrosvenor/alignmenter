@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import json
-import pytest
 
-from alignmenter.providers.judges import OpenAIJudge, AnthropicJudge
+from alignmenter.providers.judges import AnthropicJudge, OpenAIJudge
 
 
 class MockOpenAIClient:

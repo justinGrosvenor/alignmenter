@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+
 import yaml
 
 from alignmenter.scripts.run_openai_demo import _write_config

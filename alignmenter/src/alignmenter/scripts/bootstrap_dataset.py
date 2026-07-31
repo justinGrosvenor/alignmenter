@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import random
 from pathlib import Path
-from typing import Optional
 
 import typer
 
@@ -39,7 +38,7 @@ NEUTRAL_PROMPTS = [
 
 @app.command()
 def bootstrap(
-    source: Optional[str] = typer.Option(None, help="Source JSONL dataset to expand."),
+    source: str | None = typer.Option(None, help="Source JSONL dataset to expand."),
     out: str = typer.Option(..., help="Output path for bootstrapped dataset."),
     sessions: int = typer.Option(10, help="Number of sessions to generate."),
     turns_per_session: int = typer.Option(6, help="Turns per session."),

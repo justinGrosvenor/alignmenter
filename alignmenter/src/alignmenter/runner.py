@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import copy
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any
 
 from alignmenter.providers.base import ChatProvider
 from alignmenter.reporting.html import HTMLReporter
@@ -22,7 +23,7 @@ class RunConfig:
     dataset_path: Path
     persona_path: Path
     run_id: str = "alignmenter_run"
-    compare_model: Optional[str] = None
+    compare_model: str | None = None
     report_out_dir: Path = Path("reports")
     include_raw: bool = True
 
@@ -37,7 +38,7 @@ class Session:
     """Grouped conversation session."""
 
     session_id: str
-    turns: List[dict]
+    turns: list[dict]
     persona_ids: set[str]
     scenario_tags: set[str]
 
@@ -49,16 +50,16 @@ class Runner:
         self,
         config: RunConfig,
         scorers: Iterable,
-        compare_scorers: Optional[Iterable] = None,
-        reporters: Optional[Iterable] = None,
+        compare_scorers: Iterable | None = None,
+        reporters: Iterable | None = None,
         *,
-        provider: Optional[ChatProvider] = None,
-        compare_provider: Optional[ChatProvider] = None,
+        provider: ChatProvider | None = None,
+        compare_provider: ChatProvider | None = None,
         generate_transcripts: bool = True,
-        compare_generate: Optional[bool] = None,
-        progress_callback: Optional[Callable[[int], None]] = None,
-        compare_progress_callback: Optional[Callable[[int], None]] = None,
-        thresholds: Optional[dict[str, dict[str, float]]] = None,
+        compare_generate: bool | None = None,
+        progress_callback: Callable[[int], None] | None = None,
+        compare_progress_callback: Callable[[int], None] | None = None,
+        thresholds: dict[str, dict[str, float]] | None = None,
     ) -> None:
         self.config = config
         self.scorers = list(scorers)
@@ -75,7 +76,7 @@ class Runner:
             compare_progress_callback if self.compare_generate else None
         )
         self.thresholds = thresholds or {}
-        self.latest_results: Optional[dict[str, Any]] = None
+        self.latest_results: dict[str, Any] | None = None
         self.threshold_results: dict[str, dict[str, Any]] = {}
         self.analytics: dict[str, Any] = {}
 
@@ -92,9 +93,9 @@ class Runner:
         )
         primary_sessions = group_sessions(primary_records)
 
-        compare_records: Optional[list[dict[str, Any]]] = None
+        compare_records: list[dict[str, Any]] | None = None
         compare_usage: dict[str, int] = {}
-        compare_sessions: Optional[list[Session]] = None
+        compare_sessions: list[Session] | None = None
 
         if self.compare_scorers:
             compare_records, compare_usage = self._prepare_transcripts(
@@ -124,7 +125,7 @@ class Runner:
             score_results["analytics"] = analytics
             self.analytics = analytics
 
-        run_at = datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+        run_at = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=None).isoformat() + "Z"
         run_dir = prepare_run_directory(self.config.report_out_dir, run_at, self.config.run_id)
 
         transcript_info: dict[str, dict[str, str]] = {}
@@ -291,16 +292,16 @@ class Runner:
         self,
         records: Iterable[dict[str, Any]],
         *,
-        provider: Optional[ChatProvider],
-        model_identifier: Optional[str],
-        progress_callback: Optional[Callable[[int], None]] = None,
-    ) -> Tuple[List[dict[str, Any]], dict[str, int]]:
+        provider: ChatProvider | None,
+        model_identifier: str | None,
+        progress_callback: Callable[[int], None] | None = None,
+    ) -> tuple[list[dict[str, Any]], dict[str, int]]:
         grouped = _group_records(records)
-        output: List[dict[str, Any]] = []
+        output: list[dict[str, Any]] = []
         usage = _UsageAccumulator()
 
         for session_id in grouped:
-            conversation: List[dict[str, str]] = []
+            conversation: list[dict[str, str]] = []
             for turn in grouped[session_id]:
                 record = copy.deepcopy(turn)
                 role = (record.get("role") or "user").strip().lower()
@@ -431,7 +432,7 @@ def build_scorecards(
     compare: dict,
     diff: dict,
     *,
-    thresholds: Optional[dict[str, dict[str, Any]]] = None,
+    thresholds: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict]:
     """Create scorecard summaries for headline metrics."""
 
@@ -476,7 +477,7 @@ def build_scorecards(
     return scorecards
 
 
-def _extract_metric(metrics: Optional[dict], key: str) -> Optional[float]:
+def _extract_metric(metrics: dict | None, key: str) -> float | None:
     if isinstance(metrics, dict):
         value = metrics.get(key)
         if isinstance(value, (int, float)):
@@ -493,7 +494,7 @@ def _serialize_session(session: Session) -> dict[str, Any]:
     }
 
 
-def _safe_float(value: Any) -> Optional[float]:
+def _safe_float(value: Any) -> float | None:
     try:
         if value is None or value == "":
             return None
@@ -502,8 +503,8 @@ def _safe_float(value: Any) -> Optional[float]:
         return None
 
 
-def _group_records(records: Iterable[dict[str, Any]]) -> Dict[str, List[dict[str, Any]]]:
-    grouped: Dict[str, List[dict[str, Any]]] = {}
+def _group_records(records: Iterable[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
     for record in records:
         session_id = record.get("session_id")
         if not session_id:
@@ -524,7 +525,7 @@ def _ensure_metadata(record: dict[str, Any]) -> dict[str, Any]:
     return metadata
 
 
-def _slugify_model(identifier: Optional[str]) -> str:
+def _slugify_model(identifier: str | None) -> str:
     if not identifier:
         return "model"
     slug = [ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in identifier]

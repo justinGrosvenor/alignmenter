@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from typing import Iterable, Optional, Sequence
+from collections.abc import Iterable, Sequence
 
 from alignmenter.providers.embeddings import load_embedding_provider
 
@@ -21,7 +21,7 @@ class StabilityScorer:
     def __init__(
         self,
         *,
-        embedding: Optional[str] = None,
+        embedding: str | None = None,
         min_turns: int = 2,
         variance_min: float = DEFAULT_VARIANCE_MIN,
         variance_max: float = DEFAULT_VARIANCE_MAX,

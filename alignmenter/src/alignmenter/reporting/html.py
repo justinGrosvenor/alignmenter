@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
-
+from typing import Any
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang=\"en\">
@@ -508,7 +507,7 @@ def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:
     """
 
 
-def _get_grade_class(score: Any, status: Optional[str] = None) -> str:
+def _get_grade_class(score: Any, status: str | None = None) -> str:
     """Get CSS class for grade styling."""
     if status in {"pass", "warn", "fail"}:
         return status
@@ -601,7 +600,7 @@ def _render_breakdown_table(title: str, items: Any) -> str:
     )
 
 
-def _breakdown_score(scores: dict[str, Any], scorer_id: str, metric: str) -> Optional[float]:
+def _breakdown_score(scores: dict[str, Any], scorer_id: str, metric: str) -> float | None:
     metrics = scores.get(scorer_id)
     if isinstance(metrics, dict):
         value = metrics.get(metric)
@@ -612,7 +611,7 @@ def _breakdown_score(scores: dict[str, Any], scorer_id: str, metric: str) -> Opt
 
 def _render_turn_preview(sessions: list, analytics: Any) -> str:
     turns: list[dict[str, Any]] = []
-    scenario_scores: dict[str, Optional[float]] = {}
+    scenario_scores: dict[str, float | None] = {}
     if isinstance(analytics, dict):
         for scenario, payload in (analytics.get("scenarios") or {}).items():
             if not isinstance(payload, dict):
@@ -672,7 +671,7 @@ def _render_turn_preview(sessions: list, analytics: Any) -> str:
     )
 
 
-def _format_score_value(value: Optional[float]) -> str:
+def _format_score_value(value: float | None) -> str:
     if value is None:
         return "—"
     if isinstance(value, (int, float)):
@@ -753,8 +752,8 @@ def _render_calibration_section(scores: dict[str, Any]) -> str:
 
 def _render_reproducibility_section(summary: dict[str, Any]) -> str:
     """Render reproducibility information (config, versions, seed)."""
-    import sys
     import platform
+    import sys
 
     items = []
 

@@ -7,12 +7,12 @@ from pathlib import Path
 
 from alignmenter.scorers.authenticity import (
     AuthenticityScorer,
+    bootstrap_ci,
+    lexicon_score,
     load_persona_profile,
     score_turn,
-    lexicon_score,
-    traits_probability,
-    bootstrap_ci,
     tokenize,
+    traits_probability,
 )
 from alignmenter.scorers.safety import SafetyScorer
 from alignmenter.scorers.stability import StabilityScorer

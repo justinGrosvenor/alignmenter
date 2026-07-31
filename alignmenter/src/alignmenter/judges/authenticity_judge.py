@@ -6,10 +6,10 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 from alignmenter.providers.base import JudgeProvider
 from alignmenter.utils import load_yaml
+
 from .prompts import format_authenticity_prompt
 
 LOGGER = logging.getLogger(__name__)
@@ -81,10 +81,10 @@ class JudgeAnalysis:
     reasoning: str
     strengths: list[str]
     weaknesses: list[str]
-    suggestion: Optional[str]
+    suggestion: str | None
     context_appropriate: bool
-    calibrated_score: Optional[float] = None  # For comparison
-    cost: Optional[float] = None  # API cost for this call
+    calibrated_score: float | None = None  # For comparison
+    cost: float | None = None  # API cost for this call
 
 
 @dataclass
@@ -156,8 +156,8 @@ class AuthenticityJudge:
         self,
         session_id: str,
         turns: list[dict],
-        scenario_tag: Optional[str] = None,
-        calibrated_score: Optional[float] = None,
+        scenario_tag: str | None = None,
+        calibrated_score: float | None = None,
     ) -> JudgeAnalysis:
         """Evaluate a full conversation session for brand voice authenticity.
 
@@ -222,7 +222,7 @@ class AuthenticityJudge:
         self,
         session_id: str,
         response_text: str,
-        calibrated_score: Optional[float],
+        calibrated_score: float | None,
         cost: float,
     ) -> JudgeAnalysis:
         """Parse the JSON response from the judge.
@@ -293,7 +293,7 @@ class AuthenticityJudge:
                 cost=cost,
             )
 
-    def _calculate_cost(self, usage: Optional[dict]) -> float:
+    def _calculate_cost(self, usage: dict | None) -> float:
         """Calculate cost from usage data using provider-specific pricing.
 
         Args:

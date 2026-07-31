@@ -3,14 +3,13 @@
 from __future__ import annotations
 
 import json
+import logging
 import math
 import random
 import re
-from dataclasses import dataclass, asdict
+from collections.abc import Iterable, Sequence
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable, Optional, Sequence
-
-import logging
 
 from alignmenter.providers.embeddings import EmbeddingProvider, load_embedding_provider
 from alignmenter.utils import load_yaml
@@ -62,8 +61,8 @@ class AuthenticitySummary:
     tokens: int
     preferred_hits: int
     avoid_hits: int
-    ci95_low: Optional[float] = None
-    ci95_high: Optional[float] = None
+    ci95_low: float | None = None
+    ci95_high: float | None = None
 
 
 class AuthenticityScorer:
@@ -71,7 +70,7 @@ class AuthenticityScorer:
 
     id = "authenticity"
 
-    def __init__(self, persona_path: Path, *, embedding: Optional[str] = None, seed: int = 42) -> None:
+    def __init__(self, persona_path: Path, *, embedding: str | None = None, seed: int = 42) -> None:
         self.embedder = load_embedding_provider(embedding)
         self.profile = load_persona_profile(persona_path, self.embedder)
         self.random = random.Random(seed)
@@ -266,7 +265,7 @@ def bootstrap_ci(
     scores: list[float],
     iterations: int = 200,
     alpha: float = 0.05,
-) -> tuple[Optional[float], Optional[float]]:
+) -> tuple[float | None, float | None]:
     if len(scores) < 2:
         return None, None
 
@@ -285,7 +284,7 @@ def bootstrap_ci(
 
 def load_calibration(
     calibration_path: Path, default_weights: dict[str, float]
-) -> tuple[dict[str, float], Optional[TraitModel], float, float]:
+) -> tuple[dict[str, float], TraitModel | None, float, float]:
     """Load calibration data including weights, trait model, and normalization bounds."""
     default_min = DEFAULT_STYLE_SIM_MIN
     default_max = DEFAULT_STYLE_SIM_MAX
@@ -316,7 +315,7 @@ def load_calibration(
             if all(isinstance(weight, (int, float)) for weight in values):
                 total = sum(values) or 1.0
                 keys = ("style", "traits", "lexicon")
-                weights = {key: value / total for key, value in zip(keys, values)}
+                weights = {key: value / total for key, value in zip(keys, values, strict=False)}
 
         # Read normalization bounds if present
         if isinstance(calibration.get("style_sim_min"), (int, float)):
@@ -330,7 +329,7 @@ def load_calibration(
     return weights, None, default_min, default_max
 
 
-def _parse_trait_model(calibration: dict) -> Optional[TraitModel]:
+def _parse_trait_model(calibration: dict) -> TraitModel | None:
     model_data = calibration.get("trait_model")
     if isinstance(model_data, dict):
         bias = float(model_data.get("bias", 0.0))

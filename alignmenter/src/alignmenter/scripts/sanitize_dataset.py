@@ -6,7 +6,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any
 
 import typer
 
@@ -89,7 +89,7 @@ def sanitize_text(text: str, use_hashing: bool = True) -> tuple[str, list[str]]:
 def sanitize_dataset_file(
     *,
     path: Path,
-    out: Optional[Path] = None,
+    out: Path | None = None,
     in_place: bool = False,
     use_hashing: bool = True,
     dry_run: bool = False,
@@ -107,7 +107,7 @@ def sanitize_dataset_file(
 
     records = []
     with input_path.open("r", encoding="utf-8") as f:
-        for line_no, line in enumerate(f, start=1):
+        for _line_no, line in enumerate(f, start=1):
             line = line.strip()
             if not line:
                 continue
@@ -157,7 +157,7 @@ def sanitize_dataset_file(
 @app.command()
 def sanitize(
     path: str = typer.Option(..., help="Path to input dataset (JSONL)."),
-    out: Optional[str] = typer.Option(None, help="Output path (default: <input>_sanitized.jsonl)."),
+    out: str | None = typer.Option(None, help="Output path (default: <input>_sanitized.jsonl)."),
     in_place: bool = typer.Option(False, "--in-place", help="Overwrite input file."),
     use_hashing: bool = typer.Option(True, help="Use stable hashes for replacements (vs generic placeholders)."),
     dry_run: bool = typer.Option(False, "--dry-run", help="Show what would be sanitized without writing."),

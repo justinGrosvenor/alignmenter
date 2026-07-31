@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import lru_cache
-from typing import Callable, Optional
 
 try:  # pragma: no cover - optional import
     from transformers import pipeline  # type: ignore
@@ -14,7 +14,7 @@ except ImportError:  # pragma: no cover
 ClassifierFn = Callable[[str], float]
 
 
-def load_safety_classifier(identifier: Optional[str]) -> ClassifierFn:
+def load_safety_classifier(identifier: str | None) -> ClassifierFn:
     spec = (identifier or "auto").lower()
     if spec == "none":
         return lambda text: 1.0
@@ -40,7 +40,7 @@ def load_safety_classifier(identifier: Optional[str]) -> ClassifierFn:
 
 
 @lru_cache(maxsize=1)
-def _load_distilled_roberta() -> Optional[ClassifierFn]:  # pragma: no cover - heavy import
+def _load_distilled_roberta() -> ClassifierFn | None:  # pragma: no cover - heavy import
     if pipeline is None:
         return None
     try:

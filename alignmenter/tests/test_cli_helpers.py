@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import json
+from pathlib import Path
 
 from typer.testing import CliRunner
 
 from alignmenter import app
-
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 MINI_DATASET = DATA_DIR / "mini_cli_dataset.jsonl"
