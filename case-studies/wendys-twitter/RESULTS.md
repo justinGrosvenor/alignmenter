@@ -8,9 +8,32 @@
 
 ## Executive Summary
 
-This case study validates Alignmenter's calibration system using Wendy's iconic Twitter voice—a highly distinctive brand persona known for witty roasts, Gen Z fluency, and cultural awareness. The calibration achieved **perfect classification** (ROC-AUC 1.000, F1 1.000), representing a **36.4% improvement over baseline** and demonstrating that proper calibration is essential for scoring distinctive brand voices.
+This case study validates Alignmenter's calibration system using Wendy's iconic Twitter voice—a highly distinctive brand persona known for witty roasts, Gen Z fluency, and cultural awareness. Calibration moves the deterministic authenticity scorer from weak separation (baseline ROC-AUC 0.733, F1 0.594) to strong separation on **held-out scenario data it was never calibrated on**. The headline evidence below is out-of-sample, not the in-sample fit.
 
-**Key Finding:** Wendy's voice is predominantly about **style and tone** (weight: 0.50) and **trait patterns** (weight: 0.40) rather than specific keywords (weight: 0.10). This insight validates the hypothesis that distinctive voices require calibration to move beyond simple keyword matching.
+### Held-out results (the credible numbers)
+
+Evaluated on four holdout suites (72 turns total) drawn from scenarios excluded from the calibration set (`holdout_evaluation_results.json`):
+
+| Holdout suite | n | ROC-AUC | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| Trend participation | 16 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| Crisis response | 16 | 1.00 | 0.938 | 0.889 | 1.00 | 0.941 |
+| Mixed | 20 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+| **Edge cases** | 20 | **0.86** | **0.75** | 1.00 | **0.50** | 0.667 |
+
+The clean scenarios (trend, crisis, mixed) separate cleanly out-of-sample. The **edge-case suite is where the deterministic scorer visibly weakens**: ROC-AUC 0.86, accuracy 0.75, and recall of only 0.50 — it misses half of the genuinely on-brand replies that don't look prototypically on-brand (adversarial, ambiguous, or subtle tone). That gap is the honest picture of where this model is and isn't reliable.
+
+### In-sample fit (reported for context only)
+
+A full-dataset run with no held-out split (`--train-split 0.0`, all 136 labeled rows used for both fitting and scoring) reports ROC-AUC 1.000 / F1 1.000. **This is train=test and is not a generalization estimate** — it is reported only to confirm the classes are linearly separable given the features, and should be disregarded as a performance claim. The 80/20-split diagnostics file (`calibrated_diagnostics.json`: 108 train / 28 validation) also reports ROC-AUC 1.000, but on same-author synthetic validation data — see Limitations.
+
+### Read this before trusting the numbers
+
+1. **The trait model partly keys on surface statistics, not brand voice.** Its most influential features are largely function words — `just`, `it`, `our`, `for`, `we're`, `you`, `your` — which separate the *deliberately corporate* off-brand examples from the on-brand ones by register and pronoun frequency, not by genuine brand-voice signal. The classifier is exploiting the way this dataset was constructed as much as it is learning "Wendy's voice."
+2. **The holdout sets are same-author synthetic data.** They were written to the same brief as the calibration set, so near-perfect holdout numbers almost certainly overstate performance on real production traffic. Treat them as an upper bound, not an estimate.
+3. **Prefer the LLM-judge-blended path for real evaluation.** When a judge is configured, the blended authenticity path is now the default. For any production decision, evaluate through that path and report judge-vs-human agreement, rather than relying on the deterministic classifier's separation numbers alone.
+
+**Key Finding (mechanism, not performance claim):** After calibration, the scorer weights **style/tone** (0.50) and **trait patterns** (0.40) far above **keywords** (0.10). Directionally this matches the hypothesis that distinctive voices need more than keyword matching — but see the function-word caveat above before reading the trait weights as evidence of learned brand vocabulary.
 
 ---
 
@@ -147,7 +170,7 @@ Bias term: 3.0506
 - `in` (-1.39) - preposition overuse
 - `customers` (-1.25) - corporate term
 
-**Key insight:** The model learned that **specific pronouns and formality markers** distinguish off-brand responses, while **casual language and action words** signal on-brand voice.
+**Honest read of these features:** Most of the highest-magnitude features are **function words** (`just`, `it`, `our`, `for`, `we're`, `you`, `your`, `in`) rather than brand vocabulary. What the logistic regression mostly learned is that the off-brand examples in this dataset were written in a more formal, pronoun-heavy corporate register and the on-brand ones in a casual register. That is a real signal, but it is largely a **surface statistic of how the dataset was constructed** (deliberately-corporate negatives vs. casual positives), not proof that the model has captured "Wendy's voice." A handful of genuinely brand-specific tokens do appear (`frozen`, `bestie`, `wendysjobs.com`, `dm`), but they sit below the function words in weight. Read the weights accordingly.
 
 ### 3. Post-Calibration Validation
 
@@ -156,40 +179,44 @@ Bias term: 3.0506
 - Empirical bounds: min=0.1401, max=0.4523
 - Trained trait model: 853 token features
 
-**Results:**
+**In-sample results (`--train-split 0.0`, train=test — NOT a generalization estimate):**
 ```
-ROC-AUC: 1.000 ← Perfect discrimination!
-F1 Score: 1.000 ← Perfect classification!
+ROC-AUC: 1.000   (in-sample fit; reported only to show class separability)
+F1 Score: 1.000  (in-sample fit)
 Optimal Threshold: 0.260
 Score separation:
   On-brand mean: 0.599
   Off-brand mean: 0.169
 ```
 
+> These figures use every labeled row for both fitting and scoring. They demonstrate the classes are separable given the features; they do **not** estimate performance on new data. For out-of-sample performance, see the held-out scenario results in the Executive Summary (`holdout_evaluation_results.json`), where the edge-case suite drops to ROC-AUC 0.86 / recall 0.50.
+
 ---
 
 ## Results
 
-### Discrimination Improvement
+### Discrimination Improvement (in-sample, train=test)
 
-| Metric | Baseline | Calibrated | Δ Absolute | Δ Relative |
+> **All "Calibrated" figures in this subsection are in-sample (train=test) on the full 136-row set.** They quantify how much calibration tightens the fit, not how the model generalizes. The trustworthy generalization numbers are the held-out results in the Executive Summary.
+
+| Metric | Baseline (in-sample) | Calibrated (in-sample) | Δ Absolute | Δ Relative |
 |--------|----------|------------|------------|------------|
-| **ROC-AUC** | 0.733 | **1.000** | +0.267 | **+36.4%** |
-| **F1 Score** | 0.594 | **1.000** | +0.406 | **+68.4%** |
+| **ROC-AUC** | 0.733 | 1.000 | +0.267 | +36.4% |
+| **F1 Score** | 0.594 | 1.000 | +0.406 | +68.4% |
 | **On-brand mean** | 0.468 | 0.599 | +0.131 | +28.0% |
 | **Off-brand mean** | 0.323 | 0.169 | -0.154 | -47.7% |
-| **Separation** | 0.145 | 0.430 | +0.285 | **+196.6%** |
+| **Separation** | 0.145 | 0.430 | +0.285 | +196.6% |
 
-**Effect size (Cohen's d):** 3.51 (extremely large)
+**Effect size (Cohen's d):** 3.51 (extremely large) — again, in-sample.
 
-### Confusion Matrix (Calibrated)
+### Confusion Matrix (in-sample, train=test)
 
 |  | Predicted Off | Predicted On |
 |--|---------------|--------------|
 | **Actual Off (72)** | 72 | 0 |
 | **Actual On (64)** | 0 | 64 |
 
-**Perfect classification:** 0 false positives, 0 false negatives
+Zero in-sample errors. This is expected for a linearly-separable train=test fit and is **not** evidence of production accuracy — the held-out edge-case suite makes 5 errors out of 20 (recall 0.50).
 
 ### Score Distributions
 
@@ -290,13 +317,13 @@ The calibrated model handles **context-dependent voice** well:
 **Methodology predictions (METHODOLOGY.md):**
 | Prediction | Actual | Status |
 |------------|--------|--------|
-| Baseline ROC-AUC: 0.60-0.65 | 0.733 | Better than expected ✅ |
-| Calibrated ROC-AUC: > 0.85 | **1.000** | Far exceeded ✅✅ |
+| Baseline ROC-AUC: 0.60-0.65 | 0.733 (in-sample) | Better than expected ✅ |
+| Calibrated ROC-AUC: > 0.85 | 1.000 in-sample; 0.86–1.00 held-out (0.86 on edge cases) | Met out-of-sample, with a real edge-case gap ⚠️ |
 | Style weight: 0.60-0.70 | 0.50 | Close (within range) ✅ |
 | Lexicon weight: 0.10-0.20 | 0.10 | Exact match ✅ |
-| Score separation: d > 1.5 | **d = 3.51** | Far exceeded ✅✅ |
+| Score separation: d > 1.5 | d = 3.51 (in-sample) | In-sample only — not a generalization claim ⚠️ |
 
-**Takeaway:** Methodology predictions were directionally correct, with actual results exceeding expectations.
+**Takeaway:** Directionally the predictions held out-of-sample, but the in-sample 1.000 / d=3.51 figures overstate real performance; the edge-case holdout (ROC-AUC 0.86, recall 0.50) is the binding constraint.
 
 ---
 
@@ -304,21 +331,24 @@ The calibrated model handles **context-dependent voice** well:
 
 ### Current Limitations
 
-1. **Perfect fit concerns:** ROC-AUC 1.000 suggests potential overfitting
-   - Validation set = full dataset (no train/test split)
-   - Model may not generalize to unseen Wendy's tweets
-   - **Mitigation needed:** Cross-validation with held-out test set
+1. **The in-sample ROC-AUC 1.000 is train=test and should not be cited as performance.** It uses every labeled row for both fitting and scoring. The honest performance evidence is the held-out scenario suites (Executive Summary), where the edge-case set falls to ROC-AUC 0.86 / accuracy 0.75 / recall 0.50.
 
-2. **Dataset size:** 136 labeled examples is modest
+2. **The trait model partly keys on surface statistics, not brand voice.** Its top-weighted features are largely function words (`just`, `it`, `our`, `for`, `we're`, `you`). It is exploiting the register gap between the deliberately-corporate off-brand examples and the casual on-brand ones, not demonstrably learning Wendy's vocabulary. On real traffic that lacks this clean corporate-vs-casual split, expect the deterministic scorer to be less discriminating than the numbers here suggest.
+
+3. **The "holdout" sets are same-author synthetic data.** They were authored to the same brief as the calibration data, so even the out-of-sample numbers likely **overstate** performance on real production tweets. They bound the model from above; they do not estimate it.
+
+4. **Recommendation: use the LLM-judge-blended authenticity path.** When a judge is configured, blended authenticity is now the default. For production decisions, evaluate through that path and report **judge-vs-human agreement**, rather than relying on the deterministic classifier's separation numbers alone. The deterministic scorer is a fast, cheap pre-filter — not the final word on brand voice.
+
+5. **Dataset size:** 136 labeled examples is modest
    - Sufficient for pilot, but more data would improve robustness
    - **Recommendation:** Expand to 300+ examples for production use
 
-3. **Temporal drift:** Gen Z slang evolves rapidly
+6. **Temporal drift:** Gen Z slang evolves rapidly
    - "bestie," "ngl," "tbh" are current (2025)
    - Model may degrade as language trends shift
    - **Recommendation:** Quarterly recalibration
 
-4. **Context limitations:** Dataset focuses on Twitter interactions
+7. **Context limitations:** Dataset focuses on Twitter interactions
    - May not transfer to other platforms (Instagram, TikTok)
    - **Recommendation:** Platform-specific calibration
 
@@ -350,19 +380,21 @@ The calibrated model handles **context-dependent voice** well:
 
 ## Conclusions
 
-This case study demonstrates that **calibration is essential for scoring distinctive brand voices**:
+This case study demonstrates that **calibration meaningfully improves the deterministic authenticity scorer for distinctive brand voices — while also exposing its limits**:
 
-1. **Uncalibrated scoring fails** at distinguishing voice-driven personas (ROC-AUC 0.733)
-2. **Proper calibration achieves perfect discrimination** (ROC-AUC 1.000) by:
+1. **Uncalibrated scoring is weak** at distinguishing voice-driven personas (in-sample ROC-AUC 0.733).
+2. **Calibration produces strong out-of-sample separation on clean scenarios** (held-out ROC-AUC 1.00 on trend/crisis/mixed) by:
    - Optimizing component weights (style-heavy: 0.5/0.4/0.1)
    - Learning empirical normalization bounds (wider range: 0.14-0.45)
-   - Training trait models on labeled data (853 features)
+   - Training a trait model on labeled data (853 features)
 
-3. **Key insight:** Wendy's voice is 90% style+traits, 10% keywords
+3. **But the gains are partly dataset-construction artifacts.** The trait model leans on function-word/register differences, the in-sample 1.000 is train=test, and the held-out data is same-author synthetic. On the hardest held-out slice (edge cases) the scorer drops to ROC-AUC 0.86 and recall 0.50. Treat the deterministic scorer as a fast pre-filter, and confirm production judgments with the LLM-judge-blended path plus judge-vs-human agreement.
+
+4. **Key insight (mechanism):** After calibration the scorer weights style+traits ~90% vs. keywords ~10%
    - Generic "fresh never frozen" marketing scores low if tone is corporate
    - Casual helpful responses score high without any brand keywords
 
-4. **Practical value:** Calibration enables:
+5. **Practical value:** Calibration enables:
    - Automated voice consistency checking for social media teams
    - Training data generation for fine-tuning LLMs
    - Quality control for outsourced content creation
@@ -438,4 +470,4 @@ alignmenter calibrate validate \
 
 **Case Study Complete:** November 5, 2025
 **Total Time:** Dataset generation (manual), Calibration (< 10 minutes compute)
-**Status:** ✅ Success - Perfect discrimination achieved
+**Status:** Complete — strong held-out separation on clean scenarios (ROC-AUC 1.00), a real edge-case gap (ROC-AUC 0.86, recall 0.50), and known caveats (function-word features, same-author synthetic holdouts). Validate production use via the LLM-judge-blended path.
