@@ -158,7 +158,7 @@ This document compares **Alignmenter** to existing LLM evaluation frameworks and
 
 **Limitations:** Closed-source. Expensive. No offline mode. Generic evaluation.
 
-**Use Alignmenter if:** You need open-source, offline-first, persona-aligned evaluation.
+**Use Alignmenter if:** You need open-source, judge-blended persona-aligned evaluation that can also run fully offline.
 
 ---
 
@@ -172,7 +172,7 @@ Choose Alignmenter when:
 
 3. **Budget constraints**: You can't afford uncapped API bills for judge models. You need cost projection and guardrails.
 
-4. **Offline-first**: You require PII sanitization and local model support. Production data can't leave your infrastructure.
+4. **Offline-capable**: The default path runs fully offline (deterministic scoring, PII sanitization, local model support) — add an LLM judge for higher-fidelity brand-voice scoring when you can. Production data doesn't have to leave your infrastructure.
 
 5. **Statistical rigor**: You need reproducible metrics with bootstrap confidence intervals, not just point estimates.
 
@@ -225,11 +225,11 @@ Alignmenter is **composable** and can work alongside other tools:
 
 Alignmenter is **purpose-built for persona alignment** in conversational AI. While other frameworks excel at capability benchmarking (OpenAI Evals), production tracing (LangSmith), or ML observability (Phoenix), Alignmenter uniquely focuses on:
 
-- **Brand voice fidelity** (semantic similarity, trait models, lexicon)
-- **Adversarial safety** (offline classifiers, LLM judges, keyword rules)
+- **Brand voice fidelity** (LLM-judge-blended scoring over semantic similarity, trait models, and lexicon)
+- **Adversarial safety** (keyword rules, LLM judges, optional offline classifiers)
 - **Consistency** (session variance, drift detection)
 - **Budget-aware evaluation** (cost projection, guardrails)
-- **Offline-first design** (PII sanitization, local models)
+- **Offline-capable design** (deterministic fallback, PII sanitization, optional local models)
 
 For teams shipping AI copilots, chat experiences, or branded assistants, Alignmenter provides the specialized evaluation toolkit that generic frameworks lack.
 
