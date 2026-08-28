@@ -321,6 +321,9 @@ class Runner:
                     if response.usage:
                         metadata["usage"] = response.usage
                         usage.add(response.usage)
+                    context = getattr(response, "context", None)
+                    if isinstance(context, dict) and context:
+                        metadata["context"] = context
 
                     conversation.append({"role": "assistant", "content": generated_text})
                     if progress_callback:

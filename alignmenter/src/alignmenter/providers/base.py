@@ -20,10 +20,14 @@ class ChatProvider(Protocol):
 
 @dataclass
 class ChatResponse:
-    """Standardized provider response placeholder."""
+    """Standardized provider response."""
 
     text: str
     usage: dict[str, Any] | None = None
+    #: Structured context behind the reply — retrieved documents, latency, tool calls.
+    #: Carried onto the turn as ``metadata["context"]`` so scorers can inspect what the
+    #: model was actually given. Retrieval-augmented systems cannot be scored without it.
+    context: dict[str, Any] | None = None
 
 
 def parse_provider_model(identifier: str) -> tuple[str, str]:
