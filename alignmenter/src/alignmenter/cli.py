@@ -9,7 +9,7 @@ import shutil
 import sys
 from collections import Counter
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -25,7 +25,10 @@ from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
+from alignmenter.scorers import load_custom_scorer
 from alignmenter.scorers.authenticity import AuthenticityScorer
+from alignmenter.scorers.faithfulness import FaithfulnessScorer
+from alignmenter.scorers.grounding import GroundingScorer
 from alignmenter.scorers.safety import SafetyScorer
 from alignmenter.scorers.stability import StabilityScorer
 from alignmenter.scripts import bootstrap_dataset as bootstrap_dataset_script
@@ -521,6 +524,21 @@ def run(
         "--generate-transcripts",
         help="Call providers to regenerate assistant turns before scoring (default reuses recorded transcripts).",
     ),
+    grounding: bool | None = typer.Option(
+        None,
+        "--grounding/--no-grounding",
+        help="Score whether answer figures are traceable to the retrieved passages (needs provider context).",
+    ),
+    faithfulness: bool | None = typer.Option(
+        None,
+        "--faithfulness/--no-faithfulness",
+        help="Judge each grounded answer for supported claims, correctness, and danger (needs a judge).",
+    ),
+    custom_scorer: list[str] | None = typer.Option(
+        None,
+        "--custom-scorer",
+        help="Product-owned scorer as 'module.path:ClassName'. Repeatable.",
+    ),
 ) -> None:
     """Execute an evaluation run."""
 
@@ -541,6 +559,9 @@ def run(
         judge=judge,
         judge_budget=judge_budget,
         embedding=embedding,
+        grounding=grounding,
+        faithfulness=faithfulness,
+        custom_scorers=custom_scorer,
     )
 
     assistant_turns = _lazy_assistant_turn_counter(inputs.dataset_path)
@@ -1541,6 +1562,14 @@ class RunInputs:
     judge_cost: dict[str, float | int]
     classifier_identifier: str
     thresholds: dict[str, dict[str, float]]
+    grounding: bool = False
+    grounding_units_only: bool = True
+    faithfulness: bool = False
+    faithfulness_judge: str | None = None
+    faithfulness_budget: int | None = None
+    faithfulness_domain: str | None = None
+    faithfulness_max_excerpt_chars: int | None = None
+    custom_scorers: list[str] = field(default_factory=list)
 
 
 def _prepare_run_inputs(
@@ -1556,6 +1585,9 @@ def _prepare_run_inputs(
     judge: str | None,
     judge_budget: int | None,
     embedding: str | None,
+    grounding: bool | None = None,
+    faithfulness: bool | None = None,
+    custom_scorers: list[str] | None = None,
 ) -> tuple[RunInputs, RunConfig]:
     model_identifier = model or config_options.get("model") or settings.default_model
     try:
@@ -1598,8 +1630,8 @@ def _prepare_run_inputs(
         for scorer, cfg in raw_thresholds.items():
             if not isinstance(cfg, dict):
                 continue
-            warn = _safe_float(cfg.get("warn") or cfg.get("threshold_warn"))
-            fail = _safe_float(cfg.get("fail") or cfg.get("threshold_fail"))
+            warn = _safe_float(_first_present(cfg.get("warn"), cfg.get("threshold_warn")))
+            fail = _safe_float(_first_present(cfg.get("fail"), cfg.get("threshold_fail")))
             scoped: dict[str, float] = {}
             if warn is not None:
                 scoped["warn"] = warn
@@ -1635,6 +1667,16 @@ def _prepare_run_inputs(
         judge_cost=judge_cost,
         classifier_identifier=classifier_identifier,
         thresholds=thresholds,
+        grounding=bool(grounding if grounding is not None else config_options.get("grounding", False)),
+        grounding_units_only=bool(config_options.get("grounding_units_only", True)),
+        faithfulness=bool(
+            faithfulness if faithfulness is not None else config_options.get("faithfulness", False)
+        ),
+        faithfulness_judge=config_options.get("faithfulness_judge"),  # type: ignore[arg-type]
+        faithfulness_budget=_safe_int(config_options.get("faithfulness_budget")),
+        faithfulness_domain=config_options.get("faithfulness_domain"),  # type: ignore[arg-type]
+        faithfulness_max_excerpt_chars=_safe_int(config_options.get("faithfulness_max_excerpt_chars")),
+        custom_scorers=list(custom_scorers or config_options.get("custom_scorers") or []),  # type: ignore[arg-type]
     )
 
     return inputs, run_config
@@ -1765,8 +1807,39 @@ def _build_scorers_for_run(
             StabilityScorer(**scorer_kwargs),
         ]
 
-    scorers = _bundle()
-    compare_scorers = _bundle() if inputs.compare_identifier else None
+    def _grounded() -> list[Any]:
+        extra: list[Any] = []
+        if inputs.grounding:
+            extra.append(GroundingScorer(units_only=inputs.grounding_units_only))
+        if inputs.faithfulness:
+            faith_judge = judge_provider
+            if inputs.faithfulness_judge:
+                faith_judge = _initialise_judge_provider(inputs.faithfulness_judge)
+            if faith_judge is None:
+                typer.secho(
+                    "Faithfulness scoring needs a judge (set scorers.faithfulness.judge or --judge); skipping.",
+                    fg=typer.colors.YELLOW,
+                )
+            else:
+                kwargs: dict[str, Any] = {
+                    "judge_budget": inputs.faithfulness_budget
+                    if inputs.faithfulness_budget is not None
+                    else inputs.judge_budget,
+                    "cost_config": inputs.judge_cost,
+                    "domain": inputs.faithfulness_domain,
+                }
+                if inputs.faithfulness_max_excerpt_chars:
+                    kwargs["max_excerpt_chars"] = inputs.faithfulness_max_excerpt_chars
+                extra.append(FaithfulnessScorer(faith_judge.evaluate, **kwargs))
+        for spec in inputs.custom_scorers:
+            try:
+                extra.append(load_custom_scorer(spec))
+            except ValueError as exc:
+                raise typer.BadParameter(str(exc)) from exc
+        return extra
+
+    scorers = _bundle() + _grounded()
+    compare_scorers = (_bundle() + _grounded()) if inputs.compare_identifier else None
     return scorers, compare_scorers
 
 
@@ -2272,3 +2345,20 @@ def _offer_report_open(run_dir: Path) -> None:
 
 if __name__ == "__main__":
     app()
+
+
+def _safe_int(value: Any) -> int | None:
+    try:
+        if value is None or value == "":
+            return None
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _first_present(*values: Any) -> Any:
+    """First value that is not None/empty — unlike ``or``, keeps a legitimate 0."""
+    for value in values:
+        if value is not None and value != "":
+            return value
+    return None

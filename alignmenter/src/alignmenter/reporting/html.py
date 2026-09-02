@@ -256,6 +256,8 @@ class HTMLReporter:
                 safety_details = _render_judge_details(primary_metrics)
                 if safety_details:
                     table += safety_details
+            elif scorer_id in ("grounding", "faithfulness"):
+                table += _render_grounded_details(scorer_id, primary_metrics)
             score_blocks.append(table)
 
         analytics = extras.get("analytics") if isinstance(extras, dict) else None
@@ -369,6 +371,66 @@ def _render_judge_details(metrics: dict[str, Any]) -> str:
     body = "<br />".join(item for item in lines if not item.startswith("<ul>"))
     list_html = "".join(item for item in lines if item.startswith("<ul>"))
     return f"<div class='muted'>{body}{list_html}</div>"
+
+
+def _render_grounded_details(scorer_id: str, metrics: dict[str, Any]) -> str:
+    """The answers behind a grounding or faithfulness number: dangerous ones first."""
+
+    if not isinstance(metrics, dict):
+        return ""
+    import html as _html
+
+    def esc(value: Any) -> str:
+        return _html.escape(str(value)) if value is not None else ""
+
+    blocks: list[str] = []
+    if scorer_id == "faithfulness":
+        dangerous = metrics.get("dangerous_answers") or []
+        if dangerous:
+            items = "".join(
+                f"<li><strong>{esc(row.get('question'))}</strong><br />{esc(row.get('danger'))}</li>"
+                for row in dangerous
+            )
+            blocks.append(
+                f"<div class='muted'><strong>Answers that could hurt someone ({len(dangerous)})</strong>"
+                f"<ul>{items}</ul></div>"
+            )
+        weak = metrics.get("unfaithful_answers") or []
+        if weak:
+            items = []
+            for row in weak:
+                problems = "; ".join(
+                    f"{esc(p.get('status'))}: {esc(p.get('claim'))}" for p in (row.get("problems") or [])
+                )
+                items.append(
+                    f"<li><strong>{esc(row.get('question'))}</strong> — faithfulness {row.get('faithfulness')}, "
+                    f"correctness {row.get('correctness')}<br />{problems}</li>"
+                )
+            blocks.append(
+                f"<div class='muted'><strong>Answers with unsupported or wrong claims ({len(weak)})</strong>"
+                f"<ul>{''.join(items)}</ul></div>"
+            )
+        notes = metrics.get("notes") or []
+        if notes:
+            blocks.append("<div class='muted'>" + "<br />".join(esc(n) for n in notes) + "</div>")
+    else:
+        violations = metrics.get("violations") or []
+        if violations:
+            items = []
+            for row in violations:
+                invented = ", ".join(esc(x) for x in row.get("invented") or [])
+                contradicted = ", ".join(esc(x) for x in row.get("contradicted") or [])
+                parts = []
+                if invented:
+                    parts.append(f"invented: {invented}")
+                if contradicted:
+                    parts.append(f"contradicted: {contradicted}")
+                items.append(f"<li><strong>{esc(row.get('question'))}</strong><br />{' · '.join(parts)}</li>")
+            blocks.append(
+                f"<div class='muted'><strong>Answers with figures the passages never gave ({len(violations)})</strong>"
+                f"<ul>{''.join(items)}</ul></div>"
+            )
+    return "".join(blocks)
 
 
 def _render_scorecards(scorecards: list[dict], summary: dict[str, Any]) -> str:

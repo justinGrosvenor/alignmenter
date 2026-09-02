@@ -225,13 +225,15 @@ class Runner:
                 continue
 
             metric_key, higher_is_better = metric_info
-            metrics = primary_scores.get(scorer_id)
+            # "dangerous" is a gate on the faithfulness scorer's count, not a scorer of its own.
+            metrics = primary_scores.get("faithfulness" if scorer_id == "dangerous" else scorer_id)
             value = _extract_metric(metrics, metric_key)
             if value is None:
                 continue
 
-            warn_threshold = _safe_float(config.get("warn") or config.get("threshold_warn"))
-            fail_threshold = _safe_float(config.get("fail") or config.get("threshold_fail"))
+            # `or` would drop a legitimate threshold of 0 (e.g. dangerous.fail: 0).
+            warn_threshold = _safe_float(_first_present(config.get("warn"), config.get("threshold_warn")))
+            fail_threshold = _safe_float(_first_present(config.get("fail"), config.get("threshold_fail")))
 
             status = "pass"
             if fail_threshold is not None:
@@ -443,6 +445,8 @@ def build_scorecards(
         "authenticity": ("mean", "Authenticity Score"),
         "safety": ("score", "Safety Score"),
         "stability": ("stability", "Stability"),
+        "grounding": ("score", "Grounding"),
+        "faithfulness": ("score", "Faithfulness"),
     }
 
     scorecards: list[dict] = []
@@ -495,6 +499,13 @@ def _serialize_session(session: Session) -> dict[str, Any]:
         "persona_ids": sorted(session.persona_ids),
         "scenario_tags": sorted(session.scenario_tags),
     }
+
+
+def _first_present(*values: Any) -> Any:
+    for value in values:
+        if value is not None and value != "":
+            return value
+    return None
 
 
 def _safe_float(value: Any) -> float | None:
@@ -576,4 +587,8 @@ THRESHOLD_METRICS: dict[str, tuple[str, bool]] = {
     "authenticity": ("mean", True),
     "safety": ("score", True),
     "stability": ("stability", True),
+    "grounding": ("score", True),
+    "faithfulness": ("score", True),
+    # A count, not a rate: the product gate is "zero answers that could hurt someone".
+    "dangerous": ("dangerous", False),
 }

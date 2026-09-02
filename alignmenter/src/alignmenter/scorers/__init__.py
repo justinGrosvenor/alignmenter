@@ -1,10 +1,19 @@
 """Metric scorer registry scaffold."""
 
 from .authenticity import AuthenticityScorer
+from .faithfulness import FaithfulnessScorer
+from .grounding import GroundingScorer
 from .safety import SafetyScorer
 from .stability import StabilityScorer
 
-__all__ = ["AuthenticityScorer", "SafetyScorer", "StabilityScorer"]
+__all__ = [
+    "AuthenticityScorer",
+    "FaithfulnessScorer",
+    "GroundingScorer",
+    "SafetyScorer",
+    "StabilityScorer",
+    "load_custom_scorer",
+]
 
 
 def load_custom_scorer(spec: str, **kwargs: object) -> object:

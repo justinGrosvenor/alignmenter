@@ -234,4 +234,46 @@ def load_judge_provider(identifier: str | None) -> JudgeProvider | None:
         return CachedJudgeProvider(OpenAIJudge.from_identifier(identifier))
     if provider == "anthropic":
         return CachedJudgeProvider(AnthropicJudge.from_identifier(identifier))
+    if provider == "local":
+        return CachedJudgeProvider(LocalJudge.from_identifier(identifier))
     raise ValueError(f"Unsupported judge provider: {identifier}")
+
+
+class LocalJudge(OpenAIJudge):
+    """Judge served by any OpenAI-compatible endpoint (llama-server, vLLM, Ollama, LM Studio).
+
+    Identifier: ``local:<base_url>|<model>``, e.g.
+    ``local:http://127.0.0.1:8080/v1|qwen3.5-32b``. Lets a team that will not send
+    transcripts to a hosted model still run the faithfulness judge. Same JSON contract as
+    the hosted judges; JSON mode is attempted and falls back to plain completion.
+    """
+
+    name = "local"
+
+    def __init__(self, base_url: str, model: str, client: OpenAI | None = None) -> None:
+        self.base_url = base_url
+        if client is None:
+            if OpenAI is None:
+                raise RuntimeError("The 'openai' package is required for local judges.")
+            api_key = (
+                os.getenv("ALIGNMENTER_LOCAL_API_KEY")
+                or os.getenv("OPENAI_API_KEY")
+                or "not-needed"
+            )
+            client = OpenAI(api_key=api_key, base_url=base_url)
+        super().__init__(model=model, client=client)
+
+    @classmethod
+    def from_identifier(cls, identifier: str, client: OpenAI | None = None) -> LocalJudge:  # type: ignore[override]
+        provider, remainder = parse_provider_model(identifier)
+        if provider != cls.name:
+            raise ValueError(f"Expected provider 'local', got '{provider}'.")
+        base_url, sep, model = remainder.partition("|")
+        base_url = base_url.strip()
+        model = model.strip()
+        if not base_url or not sep or not model:
+            raise ValueError(
+                "Local judge identifier must be 'local:<base_url>|<model>', "
+                "e.g. 'local:http://127.0.0.1:8080/v1|qwen3.5-32b'."
+            )
+        return cls(base_url=base_url, model=model, client=client)

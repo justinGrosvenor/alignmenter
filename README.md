@@ -32,12 +32,16 @@
 - **🎨 Authenticity** – Does the AI match your brand voice? Measures semantic similarity, linguistic traits, and lexicon compliance.
 - **🛡️ Safety** – Does it avoid harmful outputs? Combines keyword rules, LLM judges, and offline ML classifiers.
 - **⚖️ Stability** – Are responses consistent? Detects semantic drift and variance across sessions.
+- **📎 Grounding & Faithfulness** (for retrieval-augmented assistants) – Are the figures in an answer actually in the passages it was shown? Which claims does the library support, is the answer correct, and could it hurt someone? Offline grounding check plus a judge-based audit with a hard `dangerous: 0` gate. See the [RAG Evaluation guide](https://docs.alignmenter.com/guides/rag-evaluation/).
 
 ### Why Alignmenter?
 
 Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for persona alignment**:
 
 - **Persona packs**: Define your brand voice in YAML with examples, lexicon, and traits
+- **Scores what the model was shown**: providers attach retrieval context to each answer, so grounding and faithfulness are measured against the real passages, not a re-implementation
+- **Your scorers, your product**: load any `module:Class` with `id` and `score(sessions)` beside the built-ins
+- **Judge locally if you must**: any OpenAI-compatible endpoint (`local:http://…|model`) can be the judge, so transcripts never leave the building
 - **Judge-blended, offline-capable**: When an LLM judge is configured, brand-voice scores blend the judge's holistic rating with deterministic signals; with no key, it falls back to a fully offline deterministic score (clearly labeled)
 - **Budget-aware**: Built-in cost tracking and guardrails
 - **Reproducible**: Deterministic scoring, full audit trails

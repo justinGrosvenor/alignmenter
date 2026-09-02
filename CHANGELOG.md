@@ -3,6 +3,40 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+Retrieval-augmented assistants can now be scored on what matters for them: is
+the answer in the documents, is it right, and could it hurt someone.
+
+### Added
+- **`grounding` scorer** (offline, deterministic). Every quantity in an answer
+  must appear in the passages the provider attached to the turn; unsupported
+  figures are split into *invented* (no figure in that unit in the passages)
+  and *contradicted* (a different figure was given). Citations past the end of
+  the excerpt list are invalid. Enable with `scorers.grounding.enabled: true`
+  or `--grounding`.
+- **`faithfulness` scorer** (LLM judge). Per answer: claims labelled
+  supported / unsupported / contradicted with evidence, a 0–10 correctness
+  rating, abstention handling, and a `dangerous` flag with a reason. Budget and
+  cost caps as for the safety judge. Enable with `scorers.faithfulness` or
+  `--faithfulness`; set `domain` so the judge knows what "dangerous" means for
+  your product.
+- **`dangerous` threshold.** `thresholds.dangerous.fail: 0` fails the run (exit
+  code 2) if any answer was flagged. Gate on this, not on the mean.
+- **Local judges.** `local:<base_url>|<model>` runs the judge against any
+  OpenAI-compatible endpoint (llama-server, vLLM, Ollama, LM Studio).
+- **Custom scorers from config and CLI.** `scorers.custom: [module:Class]` /
+  `--custom-scorer` load product-owned scorers beside the built-ins (the loader
+  existed; it was not wired to a run).
+- Grounding and faithfulness scorecards, thresholds, and an HTML section that
+  lists the answers behind each number, dangerous ones first.
+- `datasets/grounded_demo.jsonl` and the *RAG Evaluation* guide.
+
+### Fixed
+- A threshold of `0` was treated as unset (`warn`/`fail` were read through
+  `or`), so a zero-tolerance gate could never fail. Thresholds now distinguish
+  "not set" from `0`.
+
 ## [0.2.0] — 2026-07-31
 
 Modernization release. The headline change is that the LLM judge is now a
