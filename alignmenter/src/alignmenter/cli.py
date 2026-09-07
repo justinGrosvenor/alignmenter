@@ -6,25 +6,34 @@ import json
 import os
 import re
 import shutil
+import sqlite3
 import sys
 from collections import Counter
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from importlib import import_module
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import requests
 import typer
 import yaml
 
 from alignmenter.config import get_settings
+from alignmenter.evaluators.custom import evaluator_registry, load_evaluators
+from alignmenter.execution.evaluation import evaluate_saved, evaluation_summary
+from alignmenter.execution.recovery import resume_capture
 from alignmenter.providers import load_chat_provider
 from alignmenter.providers.base import parse_provider_model
+from alignmenter.providers.callable import CaptureTarget
 from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
+from alignmenter.release_cli import register_release_commands
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
+from alignmenter.schemas.evaluation import EvaluationSpec, JudgeBudget, JudgeContract
 from alignmenter.scorers import load_custom_scorer
 from alignmenter.scorers.authenticity import AuthenticityScorer
 from alignmenter.scorers.faithfulness import FaithfulnessScorer
@@ -34,8 +43,10 @@ from alignmenter.scorers.stability import StabilityScorer
 from alignmenter.scripts import bootstrap_dataset as bootstrap_dataset_script
 from alignmenter.scripts import calibrate_persona as calibrate_persona_script
 from alignmenter.scripts.sanitize_dataset import sanitize_dataset_file
+from alignmenter.storage.runs import RunStore
 
 app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
+register_release_commands(app)
 
 persona_app = typer.Typer(help="Persona helper commands.")
 dataset_app = typer.Typer(help="Dataset helper commands.")
@@ -46,6 +57,18 @@ app.add_typer(persona_app, name="persona")
 app.add_typer(dataset_app, name="dataset")
 app.add_typer(import_app, name="import")
 app.add_typer(calibrate_app, name="calibrate")
+
+
+def _show_version(value):
+    if value:
+        from alignmenter import __version__
+        typer.echo(__version__)
+        raise typer.Exit()
+
+
+@app.callback()
+def main(version: bool = typer.Option(False, "--version", callback=_show_version, is_eager=True, help="Print the installed release version.")):
+    """Evaluate application behavior with durable evidence, review, and CI gates."""
 
 
 @import_app.command("gpt")
@@ -518,7 +541,7 @@ def run(
     keywords: str | None = typer.Option(None, help="Safety keyword configuration file."),
     embedding: str | None = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
     judge: str | None = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
-    judge_budget: int | None = typer.Option(None, help="Maximum LLM judge calls per run."),
+    judge_budget: int | None = typer.Option(None, help="Legacy scorer-local judge limit; use run-suite for durable shared budgets."),
     generate_transcripts: bool = typer.Option(
         False,
         "--generate-transcripts",
@@ -540,7 +563,7 @@ def run(
         help="Product-owned scorer as 'module.path:ClassName'. Repeatable.",
     ),
 ) -> None:
-    """Execute an evaluation run."""
+    """Execute legacy persona/scorer APIs; new CI workflows should use run-suite."""
 
     settings = get_settings()
     config_options: dict[str, object] = {}
@@ -616,8 +639,15 @@ def run(
 
         try:
             run_dir = runner.execute()
+        except KeyboardInterrupt:
+            if runner.run_dir is not None:
+                typer.echo(f"Captured work: {runner.run_dir}")
+            raise
         except Exception as exc:  # noqa: BLE001 - present friendly message
             typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
+            if runner.run_dir is not None:
+                typer.echo(f"Captured work: {runner.run_dir}")
+                typer.echo("Use 'alignmenter status' or 'alignmenter export-transcripts' with that directory.")
             raise typer.Exit(code=1) from exc
 
     threshold_eval = getattr(runner, "threshold_results", {})
@@ -632,6 +662,179 @@ def run(
 
     if threshold_eval and any(info.get("status") == "fail" for info in threshold_eval.values()):
         raise typer.Exit(code=2)
+
+
+@app.command()
+def capture(
+    dataset: Path = typer.Option(..., "--dataset", exists=True, dir_okay=False, help="Conversation JSONL."),
+    persona: Path | None = typer.Option(None, "--persona", exists=True, dir_okay=False, help="Optional persona snapshot."),
+    target: str | None = typer.Option(None, "--target", help="Product target factory as module:function; omit to import recorded answers."),
+    out: Path = typer.Option(Path("reports"), "--out", help="Parent directory for a new durable run."),
+    max_target_calls: int | None = typer.Option(None, "--max-target-calls", min=0, help="Frozen run-wide target dispatch cap, including retries."),
+) -> None:
+    """Capture target answers or recorded data without invoking scorers."""
+    runner = None
+    try:
+        supplied = _load_capture_target(target) if target else None
+        runner = Runner(
+            RunConfig(model=supplied.model if supplied else "recorded",
+                      dataset_path=dataset, persona_path=persona or Path(""),
+                      report_out_dir=out, max_target_calls=max_target_calls),
+            scorers=[], provider=supplied.provider if supplied else None,
+        )
+        run_dir = runner.capture()
+    except Exception as exc:
+        if runner is not None and runner.run_dir is not None:
+            typer.echo(f"Captured work: {runner.run_dir}")
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(f"Capture saved: {run_dir}")
+    typer.echo("No scoring was run. Use 'alignmenter export-transcripts' to export saved answers.")
+
+
+def _load_capture_target(spec: str) -> CaptureTarget:
+    module, separator, name = spec.partition(":")
+    if not separator or not module or not name.isidentifier():
+        raise ValueError("Target factory must be module.path:function_name")
+    factory = getattr(import_module(module), name)
+    target = factory()
+    if not isinstance(target, CaptureTarget):
+        raise ValueError("Target factory must return a CaptureTarget")
+    return target
+
+
+@app.command()
+def resume(
+    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
+    target: str | None = typer.Option(None, "--target", help="Primary target factory as module:function."),
+    compare_target: str | None = typer.Option(None, "--compare-target", help="Comparison target factory as module:function."),
+    dataset: Path | None = typer.Option(None, "--dataset", exists=True, dir_okay=False, help="Assert dataset compatibility; otherwise use the saved snapshot."),
+    persona: Path | None = typer.Option(None, "--persona", exists=True, dir_okay=False, help="Assert persona compatibility; otherwise use the saved snapshot."),
+    check: bool = typer.Option(False, "--check", help="Check compatibility and recovery without dispatching or changing the database."),
+) -> None:
+    """Continue missing capture safely; scoring is a separate operation."""
+    try:
+        targets = {}
+        if target:
+            targets["primary"] = _load_capture_target(target)
+        if compare_target:
+            targets["compare"] = _load_capture_target(compare_target)
+        summary = resume_capture(run_dir, targets=targets, dataset_path=dataset,
+                                 persona_path=persona, check_only=check)
+    except Exception as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo("Resume checks passed." if check else "Capture is complete; no scoring was run.")
+    typer.echo(f"Saved records: {summary.committed_records}/{summary.planned_records}")
+    typer.echo(f"Last recorded state: {summary.run.status.value} ({summary.run.phase.value})")
+
+
+@app.command()
+def evaluate(
+    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Saved capture run."),
+    spec: Path = typer.Option(..., "--spec", exists=True, dir_okay=False, help="Versioned evaluation YAML."),
+    judge_factory: str | None = typer.Option(None, "--judge-factory", help="Judge adapter factory as module:function; omit for deterministic grounding."),
+    max_judge_calls: int | None = typer.Option(None, "--max-judge-calls", min=0, help="Shared durable call budget; required for the first judged evaluation."),
+    max_judge_cost_micros: int | None = typer.Option(None, "--max-judge-cost-micros", min=0, help="Optional cost cap in millionths of USD; requires a bounded-cost adapter."),
+    new_evaluation: bool = typer.Option(False, "--new-evaluation", help="Explicitly create a changed evaluation under the same run budget."),
+    evaluator_factory: list[str] = typer.Option([], "--evaluator-factory", help="Repeatable deterministic evaluator factory as module:function."),
+) -> None:
+    """Evaluate saved answers, reusing committed judge replies and verdicts."""
+    try:
+        rubric = EvaluationSpec.model_validate(yaml.safe_load(spec.read_text()))
+        evaluators = tuple(load_evaluators(evaluator_factory))
+        evaluator_registry(evaluators, rubric.criteria)
+        judge = None
+        if any(c.evaluator in {"rubric", "faithfulness"} for c in rubric.criteria):
+            if judge_factory is None:
+                raise ValueError("Rubric and faithfulness evaluators require --judge-factory")
+            module, separator, name = judge_factory.partition(":")
+            if not separator or not module or not name.isidentifier():
+                raise ValueError("Judge factory must be module.path:function_name")
+            judge = getattr(import_module(module), name)()
+            if not isinstance(getattr(judge, "contract", None), JudgeContract) or not callable(getattr(judge, "evaluate", None)):
+                raise ValueError("Judge factory must return an adapter with a JudgeContract and evaluate(request)")
+        if max_judge_cost_micros is not None and max_judge_calls is None:
+            raise ValueError("Supply --max-judge-calls with a monetary budget")
+        budget = JudgeBudget(max_calls=max_judge_calls, max_cost_micros=max_judge_cost_micros) if max_judge_calls is not None else None
+        evaluation_id = evaluate_saved(run_dir, rubric, judge, budget=budget, new_evaluation=new_evaluation, evaluators=evaluators)
+        summary = evaluation_summary(run_dir, evaluation_id)
+    except Exception as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    _print_evaluation_summary(summary)
+    raise typer.Exit(code={"pass": 0, "fail": 2, "inconclusive": 3}[summary["decision"]])
+
+
+def _print_evaluation_summary(summary: dict) -> None:
+    typer.echo(f"Evaluation: {summary['evaluation_id']}")
+    typer.echo(f"Decision: {summary['decision']} (rubric qualification: {summary['spec']['qualification']})")
+    typer.echo(f"Judged: {summary['judged']}/{summary['applicable']}; unavailable: {summary['unavailable']}")
+    typer.echo(f"Outcomes: {json.dumps(summary['counts'], sort_keys=True)}")
+    budget = summary["budget"]
+    limit = budget["limits"]["max_calls"] if budget["limits"] is not None else "unconfigured"
+    typer.echo(f"Run judge reservations: {budget['reserved_calls']}/{limit}")
+
+
+@app.command("evaluation-status")
+def evaluation_status(
+    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Saved capture run."),
+    evaluation_id: UUID | None = typer.Option(None, "--evaluation-id", help="Saved evaluation UUID; defaults to latest."),
+    json_output: bool = typer.Option(False, "--json", help="Print pure saved-result summary JSON."),
+    details: bool = typer.Option(False, "--details", help="Include frozen inputs, raw replies, and verdicts in JSON."),
+) -> None:
+    """Inspect saved verdicts and budget usage without loading a judge."""
+    try:
+        summary = evaluation_summary(run_dir, evaluation_id, details=details)
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    if json_output or details:
+        typer.echo(json.dumps(summary, ensure_ascii=False, allow_nan=False, indent=2))
+    else:
+        _print_evaluation_summary(summary)
+
+
+@app.command()
+def status(
+    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
+    json_output: bool = typer.Option(False, "--json", help="Print the versioned execution summary."),
+) -> None:
+    """Inspect saved execution state without calling a provider or scorer."""
+    try:
+        summary = RunStore(run_dir).summary()
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    if json_output:
+        typer.echo(summary.model_dump_json(indent=2))
+        return
+    typer.echo(f"Run: {summary.run.id}")
+    typer.echo(f"Last recorded state: {summary.run.status.value} ({summary.run.phase.value})")
+    typer.echo(f"Saved records: {summary.committed_records}/{summary.planned_records}")
+    typer.echo(f"Saved observations: {summary.observations}")
+    typer.echo("Process liveness is not checked; a hard kill may leave a nonterminal recorded state.")
+
+
+@app.command("export-transcripts")
+def export_transcripts(
+    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
+    out: Path = typer.Option(..., "--out", help="Write committed transcript records to this JSONL file."),
+    stream: str = typer.Option("primary", "--stream", help="primary or compare"),
+    force: bool = typer.Option(False, "--force", help="Replace an existing output file."),
+) -> None:
+    """Export saved records, including partial runs, without executing new work."""
+    if stream not in {"primary", "compare"}:
+        raise typer.BadParameter("Stream must be primary or compare")
+    try:
+        store = RunStore(run_dir)
+        if stream not in {target.stream for target in store.manifest().targets}:
+            raise ValueError(f"Run has no {stream} stream")
+        records = store.transcripts(stream)
+        if out.resolve() == store.path.resolve():
+            raise ValueError("Cannot overwrite the durable run database with a transcript export")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        with out.open("w" if force else "x", encoding="utf-8") as handle:
+            for record in records:
+                handle.write(json.dumps(record, ensure_ascii=False, allow_nan=False) + "\n")
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo(f"Exported {len(records)} committed records to {out}")
 
 
 @app.command()

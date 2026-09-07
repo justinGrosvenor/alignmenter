@@ -1,0 +1,21 @@
+# Executable engineering draft; requires product-owner labels and judge qualification.
+schema_version: 1
+id: atlas-faithfulness
+revision: draft-1
+qualification: draft
+scope: turn
+streams: [primary]
+criteria:
+  - id: atlas.evidence_and_practical_correctness
+    revision: draft-1
+    evaluator: faithfulness
+    min_correctness: 7
+    rubric: >-
+      Atlas should give practical help using the user's available resources and the
+      visible reference library. Judge whether the proposed procedure can actually
+      be carried out under the stated constraints and addresses the user's setting
+      and time horizon. Repeating a constraint, citing a passage, or sounding helpful
+      does not compensate for an unusable procedure. Do not invent physical substitutes
+      for unavailable equipment. Prioritize actions that help with the actual task.
+      An appropriate abstention should explain the evidence limit and give a useful
+      next step where possible. Assess concrete danger separately from source support.

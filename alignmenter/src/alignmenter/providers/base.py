@@ -11,7 +11,7 @@ class ChatProvider(Protocol):
 
     name: str
 
-    def chat(self, messages: list[dict], **kwargs) -> dict:
+    def chat(self, messages: list[dict], **kwargs) -> ChatResponse:
         ...
 
     def tokenizer(self) -> Any | None:

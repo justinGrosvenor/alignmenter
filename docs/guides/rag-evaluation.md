@@ -1,5 +1,9 @@
 # Evaluating Retrieval-Augmented Assistants
 
+For saved evaluations with durable judge budgets, strict missing-evidence handling,
+and reusable assessments, use the [grounding and faithfulness guide](grounding-faithfulness.md).
+The `run` examples below describe the older scorer API and retain its legacy score semantics.
+
 Brand voice, safety, and stability describe *how* an assistant speaks. A
 retrieval-augmented assistant — one that answers from documents it was given —
 has a fourth question that matters more than any of those: **is what it said

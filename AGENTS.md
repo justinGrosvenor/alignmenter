@@ -1,9 +1,9 @@
 # Repository Guidelines
 
 ## Project Structure
-- Core Python package, CLI, scorers, and providers live under `alignmenter/alignmenter/`.
+- Core Python package, CLI, scorers, providers, and durable execution live under `alignmenter/src/alignmenter/`.
 - Configuration defaults, datasets, and persona packs reside in `alignmenter/configs/` and `alignmenter/datasets/`.
-- Marketing site is a Next.js app in `marketing/`, with static export handled via `npm run export`.
+- Marketing site is a Next.js app in `marketing/`; `npm ci` uses its npm lockfile and `npm run build` produces the static export. `npm run export` is an alias.
 - Tests are colocated under `alignmenter/tests/` and should mirror the package layout.
 - CI workflows live in `.github/workflows/` (see `ci.yml`).
 
@@ -12,14 +12,14 @@
   ```bash
   python -m venv .venv
   source .venv/bin/activate
-  pip install -e alignmenter[dev]
+  pip install -e 'alignmenter[test,docs]'
   ```
-- Run CLI from the repo root: `alignmenter run --model openai:gpt-4o-mini --dataset alignmenter/datasets/demo_conversations.jsonl`.
+- Run the offline CLI example: `alignmenter init-suite --out evals/resource-task`, then `alignmenter run-suite evals/resource-task/suite.yaml`.
 - Execute the test suite with `pytest` from the project root.
 - Frontend:
   ```bash
   cd marketing
-  npm install
+  npm ci
   npm run dev
   ```
 - Lint/format:
@@ -56,6 +56,6 @@
 ## Performance & Safety Notes
 - Authenticity/Stability scorers default to a deterministic hashed embedding. Switching to real embeddings (SentenceTransformers/OpenAI) can incur heavy downloads/API cost—cache results where possible.
 - Guard external API usage with budgets/batch limits to avoid rate limiting; ensure tests mock these interactions.
-- Maintain deterministic behavior by using the shared `stable_hash` helper instead of Python’s `hash()`.
+- Use `schemas.execution.content_digest` (SHA-256) for durable content identity. The legacy `stable_hash` helper is only for embedding buckets, not artifact identity.
 
 These guidelines evolve with the project—if you spot gaps, update this document along with the code changes.

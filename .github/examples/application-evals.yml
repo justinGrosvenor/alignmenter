@@ -1,0 +1,30 @@
+# Copy into your application's .github/workflows/ after configuring evals/suite.yaml.
+name: Application alignment
+on: [pull_request]
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install 'alignmenter==0.3.0' -e .
+      - run: alignmenter run-suite evals/suite.yaml --out reports
+      - name: Job summary
+        if: always()
+        run: |
+          python - <<'PYTHON'
+          import os
+          from pathlib import Path
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              for path in sorted(Path('reports').rglob('review/summary.md')):
+                  summary.write(path.read_text() + '\n')
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: alignmenter-review
+          path: reports/**/review/*

@@ -1,0 +1,8 @@
+include LICENSE README.md
+recursive-include tests *.py *.json *.jsonl *.yaml *.yml *.txt *.csv
+recursive-include configs *.yaml *.yml *.json *.txt
+recursive-include datasets *.jsonl *.md
+recursive-include src/alignmenter/data *.yaml *.yml *.jsonl *.txt
+prune build
+prune dist
+prune reports
