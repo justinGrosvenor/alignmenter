@@ -10,10 +10,10 @@ export function Hero() {
             <span className="text-signal">Alignmenter</span>
           </h1>
           <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
-            Automated testing for AI chatbots. Measure brand voice, safety, and consistency across model versions.
+            Application alignment evaluations. Check the commitments your assistant makes, with evidence behind every release decision.
           </p>
           <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
-            Test GPT-4, Claude, or local models with the same dataset. Track scores over time. Get detailed reports and optional LLM judge analysis.
+            Capture answers, compare changes, review failures, and keep regressions in CI. Python SDK, CLI, and offline reports.
           </p>
         </div>
 
@@ -38,25 +38,25 @@ export function Hero() {
                   <span className="text-signal select-none">$</span>
                   <span className="text-slate-300">pip install alignmenter</span>
                 </div>
-                <div className="pl-4 text-slate-500 text-xs mt-0.5">Successfully installed alignmenter-0.3.0</div>
+                <div className="pl-4 text-slate-500 text-xs mt-0.5">Lightweight Python core · optional model dependencies</div>
               </div>
 
               {/* Run */}
               <div className="pt-1">
                 <div className="flex gap-2">
                   <span className="text-signal select-none">$</span>
-                  <span className="text-slate-300">alignmenter run --config configs/run.yaml --generate-transcripts</span>
+                  <span className="text-slate-300">alignmenter init-suite --out evals/resource-task</span>
                 </div>
-                <div className="pl-4 text-[10px] sm:text-xs text-slate-500 mt-1">(default run reuses recordings)</div>
+                <div className="pl-4 text-[10px] sm:text-xs text-slate-500 mt-1">Then: alignmenter run-suite evals/resource-task/suite.yaml</div>
                 <div className="pl-4 space-y-0.5 mt-1.5 text-xs">
-                  <div className="text-slate-400">Loading test dataset: 60 conversation turns</div>
-                  <div className="text-slate-400">Running model: openai:gpt-4o-mini</div>
-                  <div className="text-slate-400 mt-1">Computing metrics...</div>
-                  <div className="text-emerald-400">✓ Brand Authenticity: 0.83 (strong match to reference voice)</div>
-                  <div className="text-emerald-400">✓ Safety: 0.95 (2 keyword flags, 0 critical)</div>
-                  <div className="text-emerald-400">✓ Stability: 0.88 (consistent tone across sessions)</div>
+                  <div className="text-slate-400">Offline example: 2 resource-constraint cases</div>
+                  <div className="text-slate-400">Target: local Python function · Judge calls: 0</div>
+                  <div className="text-slate-400 mt-1">Example checks:</div>
+                  <div className="text-emerald-400">✓ Uses available resources</div>
+                  <div className="text-emerald-400">✓ Every required case evaluated</div>
+                  <div className="text-emerald-400">✓ HTML, JSON, Markdown, and JUnit artifacts</div>
                   <div className="text-slate-400 mt-1">
-                    Report saved: <span className="text-blue-400 underline">reports/2025-11-06_14-32/index.html</span>
+                    Inspect saved evidence: <span className="text-blue-400 underline">review/index.html</span>
                   </div>
                 </div>
               </div>
@@ -76,20 +76,20 @@ export function Hero() {
         {/* Quick stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-6">
           <div className="text-center">
-            <div className="text-2xl font-bold text-white">3 metrics</div>
-            <div className="text-xs text-slate-400 mt-0.5">Brand, safety, stability</div>
+            <div className="text-2xl font-bold text-white">Your criteria</div>
+            <div className="text-xs text-slate-400 mt-0.5">Application commitments</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-white">~10 sec</div>
-            <div className="text-xs text-slate-400 mt-0.5">Demo runtime</div>
+            <div className="text-2xl font-bold text-white">CI gates</div>
+            <div className="text-xs text-slate-400 mt-0.5">Pass, fail, inconclusive</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-white">Local-first</div>
             <div className="text-xs text-slate-400 mt-0.5">Optional cloud judges</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-white">Any model</div>
-            <div className="text-xs text-slate-400 mt-0.5">OpenAI, Anthropic, local</div>
+            <div className="text-2xl font-bold text-white">SDK + CLI</div>
+            <div className="text-xs text-slate-400 mt-0.5">Application-owned adapters</div>
           </div>
         </div>
 

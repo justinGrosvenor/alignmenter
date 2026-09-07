@@ -5,9 +5,9 @@ import { GoogleAnalytics } from "../components/google-analytics";
 import { SeoStructuredData } from "../components/seo-structured-data";
 
 export const metadata: Metadata = {
-  title: "Alignmenter: Test Your AI's Voice and Safety",
+  title: "Alignmenter: Application Evaluations and Release Checks",
   description:
-    "Open-source testing tool for AI behavior. Check if your AI matches your brand voice, stays safe, and behaves consistently across updates.",
+    "Evaluate application commitments with saved evidence, matched comparisons, human review, and CI gates. Lightweight Python SDK and CLI.",
   metadataBase: new URL("https://alignmenter.com"),
   keywords: [
     "AI alignment",
@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     canonical: "https://alignmenter.com",
   },
   openGraph: {
-    title: "Alignmenter: Test Your AI's Voice and Safety",
+    title: "Alignmenter: Application Evaluations and Release Checks",
     description:
-      "Audit brand voice, safety, and behavior drift for your AI copilots. Works with Custom GPTs, Anthropic, and local models.",
+      "Capture answers, compare changes, review failures, and preserve regression cases with the Alignmenter SDK and CLI.",
     url: "https://alignmenter.com",
     siteName: "Alignmenter",
     locale: "en_US",
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Alignmenter: Test Your AI's Voice and Safety",
+    title: "Alignmenter: Application Evaluations and Release Checks",
     description:
-      "Open-source testing tool for AI behavior. Check brand voice, safety, and stability in minutes.",
+      "Open-source application evaluations with saved evidence, human review, and consistent release gates.",
     creator: "@alignmenter",
     site: "@alignmenter",
     images: ["https://alignmenter.com/alignmenter-banner.png"],
