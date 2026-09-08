@@ -3,10 +3,10 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [0.3.0] — release candidate
+## [0.3.0] — 2026-09-07
 
 Application alignment release: capture, evaluate, compare, review, promote regressions,
-and gate CI using saved evidence. Prepared 2026-09-07; publication is separate.
+and gate CI using saved evidence.
 
 ### Added
 

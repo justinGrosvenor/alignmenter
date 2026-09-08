@@ -1,6 +1,6 @@
 # Alignmenter 0.3.0 release acceptance
 
-Status: local release candidate ready, 2026-09-07. The user requested sustained work until the next
+Status: release validated locally; publication authorized, 2026-09-07. The user requested sustained work until the next
 version is ready to release. This is the acceptance boundary for that version; the
 broader Alignmenter Next roadmap remains in `alignmenter-next-delivery.md`.
 
@@ -46,8 +46,10 @@ separate action from preparing and validating the release artifacts.
 All release requirements above are implemented. See the
 [application release workflow](../guides/release-workflow.md),
 [SDK reference](../reference/sdk.md), and [migration guide](../guides/migration-0.3.md).
-The local branch is `release/0.3.0`. No tag, remote push, deployment, or PyPI publication
-has been performed as part of preparing this candidate.
+The release branch is `release/0.3.0`. The validation below records candidate preparation,
+before remote publication. The user subsequently authorized publishing. Final release
+artifacts and status are available from the
+[0.3.0 release](https://github.com/justinGrosvenor/alignmenter/releases/tag/v0.3.0).
 
 ### Validation
 
@@ -91,7 +93,8 @@ Local artifacts are under `reports/release-0.3.0/` (ignored by Git):
 - `wheel-final/rehearsal.json` and `source-final/rehearsal.json`
 - `atlas/grounding/index.html`, `atlas/faithfulness/index.html`, and `atlas/rehearsal.json`
 
-Distribution SHA-256 digests:
+Local candidate SHA-256 digests (the publishing workflow rebuilds distributions;
+published file hashes are authoritative on PyPI and the GitHub release):
 
 ```text
 ea264c82f0cd50cfb70d0fd27ac989e4f12493305ff24e6ef74b0f54b04ba9f0  alignmenter-0.3.0-py3-none-any.whl
