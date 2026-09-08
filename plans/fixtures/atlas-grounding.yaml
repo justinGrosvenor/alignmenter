@@ -1,0 +1,11 @@
+# Deterministic traceability draft; passing this does not establish useful or safe advice.
+schema_version: 1
+id: atlas-grounding
+revision: draft-1
+qualification: draft
+scope: turn
+streams: [primary]
+criteria:
+  - id: atlas.quantity_and_citation_traceability
+    revision: draft-1
+    evaluator: grounding

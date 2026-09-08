@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -500,6 +500,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/persona/" class="md-nav__link">
         
   
@@ -648,6 +704,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -810,6 +1006,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1194,6 +1418,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#retrieval-grounded-scorers-and-custom-scorers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval-grounded scorers and custom scorers
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1524,6 +1759,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#retrieval-grounded-scorers-and-custom-scorers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval-grounded scorers and custom scorers
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1555,9 +1801,9 @@
 <p>Run configs (<code>.yaml</code>) specify evaluation parameters.</p>
 <h3 id="full-example">Full Example<a class="headerlink" href="#full-example" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># configs/brand.yaml</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openai:gpt-4o&quot;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;configs/persona/brand.yaml&quot;</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;datasets/test_conversations.jsonl&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">"openai:gpt-4o"</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="s">"configs/persona/brand.yaml"</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="s">"datasets/test_conversations.jsonl"</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nt">evaluation</span><span class="p">:</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="c1"># Score thresholds (fail if below)</span>
@@ -1579,9 +1825,9 @@
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nt">safety</span><span class="p">:</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="c1"># Keyword patterns to check</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span><span class="nt">violation_patterns</span><span class="p">:</span>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;hate_speech&quot;</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;violence&quot;</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;self_harm&quot;</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"hate_speech"</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"violence"</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"self_harm"</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="w">  </span><span class="c1"># Offline classifier (if installed)</span>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="w">  </span><span class="nt">use_offline_classifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
@@ -1589,14 +1835,14 @@
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="nt">judge</span><span class="p">:</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span><span class="c1"># Optional LLM judge</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;openai:gpt-4o-mini&quot;</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="s">"openai:gpt-4o-mini"</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span><span class="nt">sample_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.00</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;random&quot;</span><span class="w">  </span><span class="c1"># random, on_failure, stratified</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="s">"random"</span><span class="w">  </span><span class="c1"># random, on_failure, stratified</span>
 <a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="nt">output</span><span class="p">:</span>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;reports/&quot;</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;html&quot;</span><span class="w">  </span><span class="c1"># html, json, csv</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">"reports/"</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">  </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="s">"html"</span><span class="w">  </span><span class="c1"># html, json, csv</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="w">  </span><span class="nt">include_json</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a><span class="w">  </span><span class="nt">include_csv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="w">  </span><span class="nt">open_browser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -1611,9 +1857,9 @@
 <h3 id="full-example_1">Full Example<a class="headerlink" href="#full-example_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># configs/persona/brand.yaml</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">brand-assistant</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Brand</span><span class="nv"> </span><span class="s">Assistant&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Professional,</span><span class="nv"> </span><span class="s">helpful,</span><span class="nv"> </span><span class="s">evidence-driven</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">bot&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"Brand</span><span class="nv"> </span><span class="s">Assistant"</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"1.0.0"</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Professional,</span><span class="nv"> </span><span class="s">helpful,</span><span class="nv"> </span><span class="s">evidence-driven</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">bot"</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">voice</span><span class="p">:</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">tone</span><span class="p">:</span>
@@ -1628,23 +1874,23 @@
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="nt">lexicon</span><span class="p">:</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">    </span><span class="nt">preferred</span><span class="p">:</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;d</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">happy</span><span class="nv"> </span><span class="s">to&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you&quot;</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;based</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">our</span><span class="nv"> </span><span class="s">analysis&quot;</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">indicates&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"I'd</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">happy</span><span class="nv"> </span><span class="s">to"</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you"</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"based</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">our</span><span class="nv"> </span><span class="s">analysis"</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">indicates"</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="nt">avoided</span><span class="p">:</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;no</span><span class="nv"> </span><span class="s">problem&quot;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;sure</span><span class="nv"> </span><span class="s">thing&quot;</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;absolutely&quot;</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;lol&quot;</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;hype&quot;</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">problem"</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"sure</span><span class="nv"> </span><span class="s">thing"</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"absolutely"</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"lol"</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"hype"</span>
 <a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
 <a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="nt">examples</span><span class="p">:</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;d</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">happy</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">help</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">request.</span><span class="nv"> </span><span class="s">Let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">look</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">details.&quot;</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Based</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">our</span><span class="nv"> </span><span class="s">analysis,</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">baseline</span><span class="nv"> </span><span class="s">performance</span><span class="nv"> </span><span class="s">shows</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">15%</span><span class="nv"> </span><span class="s">improvement.&quot;</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">indicates</span><span class="nv"> </span><span class="s">strong</span><span class="nv"> </span><span class="s">signal</span><span class="nv"> </span><span class="s">across</span><span class="nv"> </span><span class="s">all</span><span class="nv"> </span><span class="s">test</span><span class="nv"> </span><span class="s">cases.&quot;</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">finding</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">right</span><span class="nv"> </span><span class="s">solution</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">needs.&quot;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"I'd</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">happy</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">help</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">request.</span><span class="nv"> </span><span class="s">Let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">look</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">details."</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Based</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">our</span><span class="nv"> </span><span class="s">analysis,</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">baseline</span><span class="nv"> </span><span class="s">performance</span><span class="nv"> </span><span class="s">shows</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">15%</span><span class="nv"> </span><span class="s">improvement."</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"The</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">indicates</span><span class="nv"> </span><span class="s">strong</span><span class="nv"> </span><span class="s">signal</span><span class="nv"> </span><span class="s">across</span><span class="nv"> </span><span class="s">all</span><span class="nv"> </span><span class="s">test</span><span class="nv"> </span><span class="s">cases."</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">finding</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">right</span><span class="nv"> </span><span class="s">solution</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">needs."</span>
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
 <a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="nt">traits</span><span class="p">:</span>
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">  </span><span class="nt">uses_evidence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -1653,15 +1899,15 @@
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="nt">maintains_context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="nt">guidelines</span><span class="p">:</span>
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Always</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user&#39;s</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">responding&quot;</span>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Use</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">examples</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">claims&quot;</span>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Avoid</span><span class="nv"> </span><span class="s">slang</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">overly</span><span class="nv"> </span><span class="s">casual</span><span class="nv"> </span><span class="s">language&quot;</span>
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Be</span><span class="nv"> </span><span class="s">precise</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">approachable&quot;</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Always</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user's</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">responding"</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Use</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">examples</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">support</span><span class="nv"> </span><span class="s">claims"</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Avoid</span><span class="nv"> </span><span class="s">slang</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">overly</span><span class="nv"> </span><span class="s">casual</span><span class="nv"> </span><span class="s">language"</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Be</span><span class="nv"> </span><span class="s">precise</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">approachable"</span>
 <a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
 <a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="nt">anti_patterns</span><span class="p">:</span>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Don&#39;t</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">exclamation</span><span class="nv"> </span><span class="s">marks</span><span class="nv"> </span><span class="s">excessively&quot;</span>
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Avoid</span><span class="nv"> </span><span class="s">saying</span><span class="nv"> </span><span class="s">&#39;I</span><span class="nv"> </span><span class="s">think&#39;</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">&#39;I</span><span class="nv"> </span><span class="s">feel&#39;&quot;</span>
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Don&#39;t</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">unsupported</span><span class="nv"> </span><span class="s">claims&quot;</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Don't</span><span class="nv"> </span><span class="s">use</span><span class="nv"> </span><span class="s">exclamation</span><span class="nv"> </span><span class="s">marks</span><span class="nv"> </span><span class="s">excessively"</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Avoid</span><span class="nv"> </span><span class="s">saying</span><span class="nv"> </span><span class="s">'I</span><span class="nv"> </span><span class="s">think'</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">'I</span><span class="nv"> </span><span class="s">feel'"</span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Don't</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">unsupported</span><span class="nv"> </span><span class="s">claims"</span>
 </code></pre></div>
 <h3 id="persona-fields">Persona Fields<a class="headerlink" href="#persona-fields" title="Permanent link">&para;</a></h3>
 <table>
@@ -1744,9 +1990,9 @@
 <h2 id="dataset-format">Dataset Format<a class="headerlink" href="#dataset-format" title="Permanent link">&para;</a></h2>
 <p>Datasets are JSONL (one JSON object per line).</p>
 <h3 id="basic-format">Basic Format<a class="headerlink" href="#basic-format" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>{&quot;session_id&quot;: &quot;001&quot;, &quot;turn&quot;: 1, &quot;user&quot;: &quot;Hello!&quot;, &quot;assistant&quot;: &quot;Hi! How can I help you today?&quot;}
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>{&quot;session_id&quot;: &quot;001&quot;, &quot;turn&quot;: 2, &quot;user&quot;: &quot;Tell me about your product&quot;, &quot;assistant&quot;: &quot;Our product is...&quot;}
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>{&quot;session_id&quot;: &quot;002&quot;, &quot;turn&quot;: 1, &quot;user&quot;: &quot;What&#39;s the weather?&quot;, &quot;assistant&quot;: &quot;I can help with that...&quot;}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>{"session_id": "001", "turn": 1, "user": "Hello!", "assistant": "Hi! How can I help you today?"}
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>{"session_id": "001", "turn": 2, "user": "Tell me about your product", "assistant": "Our product is..."}
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>{"session_id": "002", "turn": 1, "user": "What's the weather?", "assistant": "I can help with that..."}
 </code></pre></div>
 <h3 id="required-fields">Required Fields<a class="headerlink" href="#required-fields" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1762,20 +2008,20 @@
 </ul>
 <h3 id="extended-format">Extended Format<a class="headerlink" href="#extended-format" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prod_001&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;turn&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What&#39;s your refund policy?&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;assistant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Our refund policy allows returns within 30 days...&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user_12345&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-06T14:32:00Z&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">&quot;channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;web_chat&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prod_001"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"turn"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What's your refund policy?"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">"assistant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Our refund policy allows returns within 30 days..."</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_12345"</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-11-06T14:32:00Z"</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_chat"</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="special-cases">Special Cases<a class="headerlink" href="#special-cases" title="Permanent link">&para;</a></h3>
 <p><strong>Re-generation mode</strong>: Omit <code>assistant</code> to generate fresh responses:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{&quot;session_id&quot;: &quot;001&quot;, &quot;turn&quot;: 1, &quot;user&quot;: &quot;Hello!&quot;}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{"session_id": "001", "turn": 1, "user": "Hello!"}
 </code></pre></div></p>
 <p><strong>ChatGPT export</strong>: Use <code>alignmenter dataset convert</code>:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>convert<span class="w"> </span>chatgpt_export.json<span class="w"> </span>dataset.jsonl<span class="w"> </span>--from-format<span class="w"> </span>chatgpt
@@ -1783,18 +2029,18 @@
 <hr />
 <h2 id="environment-variables">Environment Variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h2>
 <h3 id="api-keys">API Keys<a class="headerlink" href="#api-keys" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-ant-...&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">"sk-..."</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ANTHROPIC_API_KEY</span><span class="o">=</span><span class="s2">"sk-ant-..."</span>
 </code></pre></div>
 <h3 id="cache">Cache<a class="headerlink" href="#cache" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_CACHE_DIR</span><span class="o">=</span><span class="s2">&quot;~/.alignmenter/cache&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_CACHE_DIR</span><span class="o">=</span><span class="s2">"~/.alignmenter/cache"</span>
 </code></pre></div>
 <p>Default: <code>~/.cache/alignmenter/</code> on Linux/Mac, <code>%LOCALAPPDATA%\alignmenter\</code> on Windows.</p>
 <h3 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_LOG_LEVEL</span><span class="o">=</span><span class="s2">&quot;DEBUG&quot;</span><span class="w">  </span><span class="c1"># DEBUG, INFO, WARNING, ERROR</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_LOG_LEVEL</span><span class="o">=</span><span class="s2">"DEBUG"</span><span class="w">  </span><span class="c1"># DEBUG, INFO, WARNING, ERROR</span>
 </code></pre></div>
 <h3 id="models">Models<a class="headerlink" href="#models" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_DEFAULT_MODEL</span><span class="o">=</span><span class="s2">&quot;openai:gpt-4o&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ALIGNMENTER_DEFAULT_MODEL</span><span class="o">=</span><span class="s2">"openai:gpt-4o"</span>
 </code></pre></div>
 <hr />
 <h2 id="model-identifiers">Model Identifiers<a class="headerlink" href="#model-identifiers" title="Permanent link">&para;</a></h2>
@@ -1820,6 +2066,29 @@
 <li><strong><a href="../metrics/">Metrics Reference</a></strong> - Scoring formulas</li>
 <li><strong><a href="../../guides/persona/">Persona Guide</a></strong> - Creating personas</li>
 </ul>
+<h2 id="retrieval-grounded-scorers-and-custom-scorers">Retrieval-grounded scorers and custom scorers<a class="headerlink" href="#retrieval-grounded-scorers-and-custom-scorers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">grounding</span><span class="p">:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="nt">units_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># judge only quantities that carry a unit</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="nt">faithfulness</span><span class="p">:</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic:claude-sonnet-5</span><span class="w">   </span><span class="c1"># openai:…, anthropic:…, or local:&lt;base_url&gt;|&lt;model&gt;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">                        </span><span class="c1"># judge calls per run (falls back to judge.budget)</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">an offline survival and first-aid reference</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="nt">max_excerpt_chars</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1200</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="nt">threshold_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">  </span><span class="nt">custom</span><span class="p">:</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_product.eval.scorers:ContributionScorer</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="nt">thresholds</span><span class="p">:</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span><span class="nt">dangerous</span><span class="p">:</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">                   </span><span class="c1"># any dangerous answer fails the run (exit code 2)</span>
+</code></pre></div>
+<p>CLI equivalents: <code>--grounding/--no-grounding</code>, <code>--faithfulness/--no-faithfulness</code>,
+<code>--custom-scorer module:Class</code> (repeatable). Both grounded scorers need the
+provider to attach retrieval context to each answer (<code>ChatResponse.context</code>);
+see the <a href="../../guides/rag-evaluation/">RAG Evaluation guide</a>.</p>
 
 
 

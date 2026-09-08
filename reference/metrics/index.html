@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -500,6 +500,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/persona/" class="md-nav__link">
         
   
@@ -648,6 +704,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -810,6 +1006,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1105,6 +1329,28 @@
     <span class="md-ellipsis">
       
         Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grounding-retrieval-augmented-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grounding (retrieval-augmented answers)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faithfulness-and-correctness-retrieval-augmented-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faithfulness and correctness (retrieval-augmented answers)
       
     </span>
   </a>
@@ -1414,6 +1660,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#grounding-retrieval-augmented-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grounding (retrieval-augmented answers)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#faithfulness-and-correctness-retrieval-augmented-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Faithfulness and correctness (retrieval-augmented answers)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1442,17 +1710,18 @@
 <h1 id="metrics-reference">Metrics Reference<a class="headerlink" href="#metrics-reference" title="Permanent link">&para;</a></h1>
 <p>Detailed specification of Alignmenter's scoring formulas, matched to the
 implementation in <code>alignmenter/scorers/</code>.</p>
-<p>All three metrics are reported on a <code>0.0</code>–<code>1.0</code> scale where higher is better.</p>
+<p>All metrics are reported on a <code>0.0</code>–<code>1.0</code> scale where higher is better, except the
+<code>dangerous</code> count under faithfulness, where the only acceptable value is zero.</p>
 <hr />
 <h2 id="authenticity-brand-voice">Authenticity (Brand Voice)<a class="headerlink" href="#authenticity-brand-voice" title="Permanent link">&para;</a></h2>
 <p>Authenticity has two layers: a <strong>deterministic</strong> score that always runs offline,
 and an optional <strong>LLM judge</strong> that, when configured, is blended into the headline
 number.</p>
 <h3 id="headline-score">Headline score<a class="headerlink" href="#headline-score" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># With a judge configured (basis = &quot;blended&quot;):
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># With a judge configured (basis = "blended"):
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>authenticity = judge_weight × judge_mean + (1 − judge_weight) × deterministic_mean
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># With no judge (offline, basis = &quot;deterministic&quot;):
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># With no judge (offline, basis = "deterministic"):
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>authenticity = deterministic_mean
 </code></pre></div>
 <p>The default <code>judge_weight</code> is <strong>0.6</strong>, so the headline is 60% judge + 40%
@@ -1548,8 +1817,8 @@ token, with zero bias.</p>
 <p><code>density × 10</code> means roughly 10% brand-word usage earns full weight. The result is
 clamped to <code>[0, 1]</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">lexicon</span><span class="p">:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">preferred</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;baseline&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;signal&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;analysis&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">avoid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;hype&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;crushing</span><span class="nv"> </span><span class="s">it&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">preferred</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"baseline"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"signal"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"analysis"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">avoid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"lol"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"hype"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"crushing</span><span class="nv"> </span><span class="s">it"</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <hr />
 <h2 id="safety">Safety<a class="headerlink" href="#safety" title="Permanent link">&para;</a></h2>
@@ -1630,6 +1899,93 @@ as <code>ci95_low</code> / <code>ci95_high</code>, e.g. <code>0.83 (range: 0.79�
 <li><strong><a href="../../offline_safety/">Offline Safety</a></strong> – The local safety classifier</li>
 <li><strong><a href="../../guides/persona/">Persona Guide</a></strong> – Persona YAML schema</li>
 </ul>
+<hr />
+<h2 id="grounding-retrieval-augmented-answers">Grounding (retrieval-augmented answers)<a class="headerlink" href="#grounding-retrieval-augmented-answers" title="Permanent link">&para;</a></h2>
+<p>Deterministic and offline. Reads the retrieval context the provider attached to
+each assistant turn (<code>metadata["context"]</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>grounding = supported_quantities / checked_quantities        # 1.0 if nothing to check
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>citation_validity = 1 − invalid_citations / citations
+</code></pre></div>
+<p>A quantity is a number plus a unit (<code>5 drops</code>, <code>40 minutes</code>, <code>500 mg</code>); bare
+integers are skipped by default (<code>units_only</code>). Values and units are normalised
+before comparison. Unsupported quantities are reported as <strong>invented</strong> (no
+figure in that unit anywhere in the passages) or <strong>contradicted</strong> (a different
+figure in that unit was given). A <code>[n]</code> beyond the excerpt list is an invalid
+citation.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>score</code></td>
+<td>headline grounding</td>
+</tr>
+<tr>
+<td><code>quantities_checked</code>, <code>quantities_supported</code></td>
+<td>totals</td>
+</tr>
+<tr>
+<td><code>invented</code>, <code>contradicted</code></td>
+<td>unsupported quantities by kind</td>
+</tr>
+<tr>
+<td><code>citations</code>, <code>invalid_citations</code>, <code>citation_validity</code></td>
+<td>citation audit</td>
+</tr>
+<tr>
+<td><code>violations</code></td>
+<td>worst answers first, with the unsupported figures</td>
+</tr>
+</tbody>
+</table>
+<h2 id="faithfulness-and-correctness-retrieval-augmented-answers">Faithfulness and correctness (retrieval-augmented answers)<a class="headerlink" href="#faithfulness-and-correctness-retrieval-augmented-answers" title="Permanent link">&para;</a></h2>
+<p>Judge-based. For each grounded answer the judge labels claims
+<code>supported</code> / <code>unsupported</code> / <code>contradicted</code>, rates correctness 0–10, and
+flags danger.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>turn_faithfulness = supported_claims / all_claims          # 1.0 for a claim-free, appropriate abstention
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>faithfulness      = mean(turn_faithfulness)
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>correctness       = mean(judge_rating / 10)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>dangerous         = count of answers flagged dangerous
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>score</code></td>
+<td>headline faithfulness</td>
+</tr>
+<tr>
+<td><code>correctness</code></td>
+<td>mean judge rating, 0–1</td>
+</tr>
+<tr>
+<td><code>dangerous</code></td>
+<td>count; gate on <code>thresholds.dangerous.fail: 0</code></td>
+</tr>
+<tr>
+<td><code>dangerous_answers</code>, <code>unfaithful_answers</code></td>
+<td>the answers behind the numbers</td>
+</tr>
+<tr>
+<td><code>claims*</code>, <code>abstentions*</code></td>
+<td>totals</td>
+</tr>
+<tr>
+<td><code>judge_calls</code>, <code>judge_calls_skipped</code>, <code>judge_cost_spent</code>, <code>judge_parse_failures</code></td>
+<td>budget accounting</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="../../guides/rag-evaluation/">RAG Evaluation guide</a>.</p>
 
 
 

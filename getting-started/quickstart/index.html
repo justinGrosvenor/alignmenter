@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -443,10 +443,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#install-and-run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Install and run
       
     </span>
   </a>
@@ -454,10 +454,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-initialize-project" class="md-nav__link">
+  <a href="#see-a-regression" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Initialize Project
+        See a regression
       
     </span>
   </a>
@@ -465,168 +465,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-run-your-first-test" class="md-nav__link">
+  <a href="#connect-your-application" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Run Your First Test
+        Connect your application
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-view-the-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. View the Report
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-test-different-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Test Different Models
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-add-llm-judge-analysis-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Add LLM Judge Analysis (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Workflows
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Workflows">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-before-deploying" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Before Deploying
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare-model-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compare Model Versions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sanitize-production-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sanitize Production Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#no-api-key-found" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "No API key found"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#module-not-found-sentence-transformers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Module not found: sentence-transformers"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tests-are-slow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tests are slow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#need-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Need help?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -727,6 +572,62 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -883,6 +784,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -1053,6 +1094,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/cli/" class="md-nav__link">
         
   
@@ -1191,10 +1260,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#install-and-run" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Install and run
       
     </span>
   </a>
@@ -1202,10 +1271,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-initialize-project" class="md-nav__link">
+  <a href="#see-a-regression" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Initialize Project
+        See a regression
       
     </span>
   </a>
@@ -1213,168 +1282,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-run-your-first-test" class="md-nav__link">
+  <a href="#connect-your-application" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Run Your First Test
+        Connect your application
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-view-the-report" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. View the Report
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-test-different-models" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Test Different Models
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-add-llm-judge-analysis-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Add LLM Judge Analysis (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-workflows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Workflows
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Workflows">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-before-deploying" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Before Deploying
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#compare-model-versions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compare Model Versions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#sanitize-production-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sanitize Production Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#no-api-key-found" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "No API key found"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#module-not-found-sentence-transformers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Module not found: sentence-transformers"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tests-are-slow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tests are slow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#need-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Need help?
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1404,130 +1318,39 @@
 
 
 <h1 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h1>
-<p>This guide will walk you through running your first Alignmenter evaluation in under 5 minutes.</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Alignmenter installed (<a href="../installation/">Installation Guide</a>).</li>
-<li>The core install works offline with the default <code>hashed</code> embeddings.</li>
-<li>This quickstart uses local sentence-transformer embeddings and the offline
-    safety classifier, so install the <code>[ml]</code> extra:
-    <code>pip install "alignmenter[ml]"</code> (PyPI) or <code>pip install -e ".[ml]"</code> (repo checkout).</li>
-<li>An API key (<code>OPENAI_API_KEY</code> / <code>ANTHROPIC_API_KEY</code>) is only needed to generate
-  transcripts or enable an LLM judge — not for the default cached, offline run.</li>
-</ul>
-<h2 id="1-initialize-project">1. Initialize Project<a class="headerlink" href="#1-initialize-project" title="Permanent link">&para;</a></h2>
-<p>Create a new project directory:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>alignmenter<span class="w"> </span>init
+<p>Use Python 3.10–3.14 on macOS or Linux for the durable workflow. The example needs no
+API key or local model download.</p>
+<h2 id="install-and-run">Install and run<a class="headerlink" href="#install-and-run" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>alignmenter
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alignmenter<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>alignmenter<span class="w"> </span>init-suite<span class="w"> </span>--out<span class="w"> </span>evals/resource-task
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>alignmenter<span class="w"> </span>run-suite<span class="w"> </span>evals/resource-task/suite.yaml<span class="w"> </span>--out<span class="w"> </span>reports
 </code></pre></div>
-<p>This creates sample configs, datasets, and personas you can use right away.</p>
-<h2 id="2-run-your-first-test">2. Run Your First Test<a class="headerlink" href="#2-run-your-first-test" title="Permanent link">&para;</a></h2>
-<p>Run an evaluation with the demo dataset (reuses the bundled transcripts):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
+<p>The generated suite uses an installed Python target that chooses available resources.
+Its deterministic evaluator checks that exact constraint. A successful run exits 0 and
+prints JSON with its <code>run_dir</code>, <code>evaluation_id</code>, <code>decision</code>, and <code>artifacts</code> directory.
+Open <code>index.html</code> in that directory. <code>evaluation.json</code>, <code>summary.md</code>, and <code>junit.xml</code>
+carry the same decision for automation.</p>
+<h2 id="see-a-regression">See a regression<a class="headerlink" href="#see-a-regression" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">ALIGNMENTER_DEMO_VARIANT</span><span class="o">=</span>bad<span class="w"> </span>alignmenter<span class="w"> </span>run-suite<span class="w"> </span>evals/resource-task/suite.yaml<span class="w"> </span>--out<span class="w"> </span>reports
 </code></pre></div>
-<p>Want fresh transcripts from your provider? Add <code>--generate-transcripts</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/run.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
+<p>The example's bad variant requires unavailable equipment and exits 2. This is a
+purposefully engineered failure, not an AI quality benchmark.</p>
+<p>Compare the saved run directories printed by the two commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>compare<span class="w"> </span>BASELINE_RUN<span class="w"> </span>CANDIDATE_RUN<span class="w"> </span>--out<span class="w"> </span>reports/comparison
 </code></pre></div>
-<p>You'll see output like:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Loading dataset: 60 turns across 10 sessions
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Running model: openai:gpt-4o-mini
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>✓ Brand voice score: 0.83 (range: 0.79-0.87)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>✓ Safety score: 0.95
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>✓ Consistency score: 0.88
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Report written to: reports/2025-11-06_14-32/index.html
-</code></pre></div>
-<div class="admonition success">
-<p class="admonition-title">Success</p>
-<p>The test typically completes in ~10 seconds with the demo dataset.</p>
-</div>
-<h2 id="3-view-the-report">3. View the Report<a class="headerlink" href="#3-view-the-report" title="Permanent link">&para;</a></h2>
-<p>Open the interactive HTML report:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
-</code></pre></div>
-<p>This opens the most recent report in your browser. You'll see:</p>
-<ul>
-<li><strong>Overall score</strong> with letter grade (A/B/C)</li>
-<li><strong>Metric breakdown</strong> for authenticity, safety, and stability</li>
-<li><strong>Interactive charts</strong> showing score distributions</li>
-<li><strong>Session details</strong> with individual conversation analysis</li>
-<li><strong>Export options</strong> to CSV/JSON</li>
-</ul>
-<h2 id="4-test-different-models">4. Test Different Models<a class="headerlink" href="#4-test-different-models" title="Permanent link">&para;</a></h2>
-<p>Compare GPT-4 vs Claude:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test with GPT-4</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test with Claude</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>anthropic:claude-3-5-sonnet-20241022<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts<span class="w"> </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2
-</code></pre></div>
-<h2 id="5-add-llm-judge-analysis-optional">5. Add LLM Judge Analysis (Optional)<a class="headerlink" href="#5-add-llm-judge-analysis-optional" title="Permanent link">&para;</a></h2>
-<p>Get qualitative feedback from an LLM judge. <code>calibrate validate</code> needs the
-<code>[calibrate]</code> extra (<code>pip install "alignmenter[calibrate]"</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/wendys-twitter.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--output<span class="w"> </span>reports/wendys-calibration.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--judge<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
-</code></pre></div>
-<p>This analyzes 20% of your sessions with GPT-4 and provides:
-- Human-readable explanations of brand voice alignment
-- Agreement rate with quantitative metrics
-- Detailed reasoning for each score
-- Cost tracking (typically $0.03-$0.10 for demo dataset)</p>
-<h2 id="common-workflows">Common Workflows<a class="headerlink" href="#common-workflows" title="Permanent link">&para;</a></h2>
-<h3 id="test-before-deploying">Test Before Deploying<a class="headerlink" href="#test-before-deploying" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run full test suite</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml<span class="w"> </span>--generate-transcripts
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># (Thresholds live in configs/prod.yaml)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/prod.yaml
-</code></pre></div>
-<p>Add thresholds to your run config:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">scorers</span><span class="p">:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.80</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
-</code></pre></div>
-<h3 id="compare-model-versions">Compare Model Versions<a class="headerlink" href="#compare-model-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Baseline</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--out<span class="w"> </span>reports/baseline<span class="w"> </span>--generate-transcripts
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># After prompt changes</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand-v2.yaml<span class="w"> </span>--out<span class="w"> </span>reports/v2<span class="w"> </span>--generate-transcripts
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Compare reports manually or diff the JSON exports</span>
-</code></pre></div>
-<h3 id="sanitize-production-data">Sanitize Production Data<a class="headerlink" href="#sanitize-production-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Preview sanitization (dry run)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--dry-run
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Actually sanitize</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod_logs.jsonl<span class="w"> </span>--out<span class="w"> </span>datasets/sanitized.jsonl
-</code></pre></div>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><a href="../concepts/">Core Concepts</a></strong> - Understand the metrics and scoring</li>
-<li><strong><a href="../../guides/persona/">Persona Configuration</a></strong> - Customize your brand voice</li>
-<li><strong><a href="../../reference/cli/">CLI Reference</a></strong> - Full command documentation</li>
-<li><strong><a href="../../guides/calibration/">Calibration Guide</a></strong> - Advanced LLM judge usage</li>
-</ul>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="no-api-key-found">"No API key found"<a class="headerlink" href="#no-api-key-found" title="Permanent link">&para;</a></h3>
-<p>Set your OpenAI API key:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span>
-</code></pre></div></p>
-<h3 id="module-not-found-sentence-transformers">"Module not found: sentence-transformers"<a class="headerlink" href="#module-not-found-sentence-transformers" title="Permanent link">&para;</a></h3>
-<p>Local sentence-transformer embeddings and the offline safety classifier live in
-the <code>[ml]</code> extra. Either install it, or drop the <code>--embedding</code> flag to use the
-default zero-dependency <code>hashed</code> provider:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;alignmenter[ml]&quot;</span>
-</code></pre></div></p>
-<h3 id="tests-are-slow">Tests are slow<a class="headerlink" href="#tests-are-slow" title="Permanent link">&para;</a></h3>
-<p>Runs reuse existing transcripts by default. Only add <code>--generate-transcripts</code> when you explicitly want to call the provider:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml<span class="w"> </span>--generate-transcripts
-</code></pre></div></p>
-<h3 id="need-help">Need help?<a class="headerlink" href="#need-help" title="Permanent link">&para;</a></h3>
-<p>File an issue on <a href="https://github.com/justinGrosvenor/alignmenter/issues">GitHub</a> or check the <a href="../../reference/cli/">CLI Reference</a>.</p>
+<p>The offline report pairs answers by case and shows why they failed. Inspection and
+comparison do not execute either the target or evaluator again.</p>
+<h2 id="connect-your-application">Connect your application<a class="headerlink" href="#connect-your-application" title="Permanent link">&para;</a></h2>
+<p>Replace the suite's target and evaluator factories with your own importable Python
+adapters, or omit the target to evaluate recorded assistant answers. Start new product
+criteria as <code>qualification: draft</code> and supply human references before making claims
+about judge reliability. Inconclusive work exits 3, so CI cannot mistake it for a pass.</p>
+<p>The <a href="../../guides/release-workflow/">release workflow</a> covers suite configuration,
+judged criteria, budgets, human review, regression promotion, and CI. The
+<a href="../../reference/sdk/">SDK reference</a> includes adapter examples. Existing persona users
+can keep using <code>init</code> and <code>run</code>; see the <a href="../../guides/migration-0.3/">migration guide</a>
+and <a href="../../reference/cli/">CLI reference</a> for their compatibility limits.</p>
 
 
 

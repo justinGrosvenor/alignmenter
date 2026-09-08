@@ -1,0 +1,2443 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
+      
+      
+        <meta name="author" content="Justin Grosvenor">
+      
+      
+        <link rel="canonical" href="https://alignmenter.com/plans/alignmenter-next/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Alignmenter Next: target state - Alignmenter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-3733FD2K8Q"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-3733FD2K8Q",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-3733FD2K8Q",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#alignmenter-next-target-state" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Alignmenter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Alignmenter Next: target state
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Alignmenter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/justinGrosvenor/alignmenter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    justinGrosvenor/alignmenter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/persona/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persona Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../persona_annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persona Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Safety Checks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../offline_safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Offline Safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/llm-judges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case Studies
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Case Studies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../case-studies/wendys-twitter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wendy's Twitter Voice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-product-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Product purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-scope-and-product-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Scope and product decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Scope and product decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-alignment-focus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The alignment focus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-practice-check-researched-2026-09-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current-practice check, researched 2026-09-06
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-observable-target-state-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Observable target-state workflows
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Observable target-state workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-improve-atlas-with-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Improve Atlas with evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-apply-it-to-one-avercare-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Apply it to one AverCare workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-maintain-a-conversational-persona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Maintain a conversational persona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-test-a-bounded-workflow-where-the-applications-require-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Test a bounded workflow, where the applications require one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-make-a-release-decision-in-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E. Make a release decision in CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-evaluate-the-evaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F. Evaluate the evaluator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-non-negotiable-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Non-negotiable semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-domain-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core domain objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result-statuses-and-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result statuses and coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-durable-execution-and-application-adapters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Durable execution and application adapters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Durable execution and application adapters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#attempts-retries-and-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attempts, retries, and recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#state-and-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State and scheduling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atlas-integration-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atlas integration requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-evaluation-system-and-metric-packs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Evaluation system and metric packs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Evaluation system and metric packs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repair-and-validate-current-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repair and validate current metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-rubrics-references-and-judge-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Rubrics, references, and judge reliability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Rubrics, references, and judge reliability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#judge-execution-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judge execution contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#budgets-and-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Budgets and caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-comparison-experiments-and-statistical-meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Comparison, experiments, and statistical meaning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-human-review-and-dataset-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Human review and dataset improvement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-calibration-and-evaluating-the-evaluators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Calibration and evaluating the evaluators
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-interfaces-and-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Interfaces and examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-developer-workflow-exports-and-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Developer workflow, exports, and CI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-migration-and-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Migration and boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-success-criteria-and-open-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Success criteria and open decisions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/plans/alignmenter-next.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="alignmenter-next-target-state">Alignmenter Next: target state<a class="headerlink" href="#alignmenter-next-target-state" title="Permanent link">&para;</a></h1>
+<p>Status: planning draft, 2026-09-06. No implementation is implied by this document.
+Repository baseline: <code>4366f72</code>; 132 Python tests and Ruff passed during the inspection.</p>
+<p>The user has agreed to address the execution, scoring, reporting, and extensibility
+findings and requested a substantial upgrade. Subsequent direction is incorporated:
+usefulness to Atlas and potentially AverCare is the bar; retain the alignment focus;
+prioritize SDK, CLI, and CI; accept justified compatibility breaks; meet current
+evaluation practice. AverCare's repository and first evaluation target are pending discovery.</p>
+<p>The companion <a href="../alignmenter-next-delivery/">delivery plan</a> defines milestones,
+dependencies, acceptance tests, migration, and the first implementation slices.
+The <a href="../alignmenter-next-atlas/">Atlas acceptance design</a> adds a concrete behavior spec,
+18 draft cases, preserved observed failures, and a worked comparison. The
+<a href="../alignmenter-next-executor/">executor decision protocol</a> defines the bounded backend spike.
+The completed <a href="../alignmenter-next-executor-decision/">spike decision</a> selects evolving
+Alignmenter's execution path with authoritative SQLite records for the first release.
+The <a href="../../guides/durable-runs/">first production capture slice</a> is now implemented behind
+the existing runner, followed by <a href="../../guides/capture-recovery/">safe capture-only resume</a>
+for recorded and explicitly compatible stateless targets. A third slice adds
+<a href="../../guides/durable-evaluations/">durable rubric evaluations</a>, shared judge reservations,
+and pure saved-result summaries. A fourth slice adds <a href="../../guides/grounding-faithfulness/">durable grounding and faithfulness</a>
+with typed assessments, deterministic traceability, strict claim judgments, and pure metrics.
+The broader target state below remains the delivery plan.</p>
+<h2 id="1-product-purpose">1. Product purpose<a class="headerlink" href="#1-product-purpose" title="Permanent link">&para;</a></h2>
+<p>Alignmenter tests whether an AI application behaves according to its intended role,
+the user's situation, and the product's explicit commitments. It helps a team establish
+whether a change improves that behavior, explain regressions, and preserve what it
+learns as repeatable tests. Atlas is the first acceptance case; AverCare is the proposed
+second consumer. Generality follows from their needs and reusable contracts.</p>
+<p>The object being evaluated is the actual application through an adapter, including its
+retrieval, conversation state, and relevant tool actions. Isolated model evaluation and
+structured-output checks are supported where they help diagnose the application.</p>
+<p>The main workflow is:</p>
+<ol>
+<li>Define cases and the behavior that matters.</li>
+<li>Capture or generate application outputs and their evidence.</li>
+<li>Evaluate with deterministic checks, reviewed rubrics, and optional judges.</li>
+<li>Inspect failures, missing evidence, execution errors, and evaluator disagreements.</li>
+<li>Compare a candidate with a baseline on equivalent cases and evaluation versions.</li>
+<li>Review important findings and promote them into a versioned regression suite.</li>
+<li>Run the suite locally or in CI with explicit release criteria.</li>
+</ol>
+<p>An attractive report is useful when the underlying result can be traced to a case,
+an execution, the evidence available to the evaluator, and a versioned evaluation rule.</p>
+<h2 id="2-scope-and-product-decisions">2. Scope and product decisions<a class="headerlink" href="#2-scope-and-product-decisions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Proposed direction</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Breadth</td>
+<td>Alignment and practical behavior of Atlas and potentially AverCare; reuse demonstrated common needs</td>
+<td>Confirmed direction</td>
+</tr>
+<tr>
+<td>Primary interfaces</td>
+<td>Python SDK, CLI, and straightforward CI hooks; portable reports and review exports</td>
+<td>Confirmed direction</td>
+</tr>
+<tr>
+<td>Compatibility</td>
+<td>Justified API/config breaks are acceptable; preserve valuable data and explain semantic migrations</td>
+<td>Confirmed direction</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>Local execution, local storage, optional remote target and judge providers</td>
+<td>Proposed</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Installable toolkit with no required server; browser workspace is an optional later extension</td>
+<td>Proposed implementation</td>
+</tr>
+<tr>
+<td>Persistence</td>
+<td>SQLite for transactional records; content-addressed files for large artifacts; portable exports</td>
+<td>Backend selected by spike; production schema/artifact details pending</td>
+</tr>
+<tr>
+<td>First reference applications</td>
+<td>Atlas, then one verified AverCare workflow; retain persona fixtures for continuity</td>
+<td>Confirmed priority; AverCare target open</td>
+</tr>
+<tr>
+<td>Additional reference</td>
+<td>A tiny structured/tool fixture only where needed to validate the shared contract</td>
+<td>Bounded engineering fixture</td>
+</tr>
+<tr>
+<td>Quality policy</td>
+<td>Explicit coverage, applicability, and gate outcomes; no implicit overall grade</td>
+<td>Proposed</td>
+</tr>
+<tr>
+<td>Release name</td>
+<td>Use “Next” during design; choose the version after compatibility work is scoped</td>
+<td>Open</td>
+</tr>
+</tbody>
+</table>
+<p>The complete upgrade includes behavioral specifications, scenario-based alignment
+evaluation, durable execution, versioned judgments, comparisons, bounded experiments,
+human review, evaluator calibration, and CI gates. Structured tool-trace evaluation
+ships to the extent Atlas or the selected AverCare workflow needs it. Artifact references
+permit later image/audio support without promising multimodal judges in this release.</p>
+<p>Hosted collaboration, a full browser review application, distributed worker clusters,
+production traffic collection, model serving, and autonomous prompt optimization remain extension directions.
+They require separate product decisions and do not block this upgrade's usefulness.
+Dataset generation and suggested fixes produce drafts for review; a generated case
+does not become a reference answer merely because a model supplied its label.</p>
+<h3 id="the-alignment-focus">The alignment focus<a class="headerlink" href="#the-alignment-focus" title="Permanent link">&para;</a></h3>
+<p>A versioned <code>BehaviorSpec</code> combines the product's role, intended user outcomes,
+evidence obligations, action permissions, boundaries, communication style, and rules
+for changing behavior with context. Persona is one component. The specification also
+declares how to resolve conflicts between obligations and preferences.</p>
+<p>Evaluate alignment at three levels:</p>
+<ul>
+<li><strong>Task:</strong> does the response help with the actual problem under the stated constraints?</li>
+<li><strong>Relationship and role:</strong> does it behave like the intended assistant, preserve relevant
+  facts/preferences, acknowledge uncertainty, and respect its declared scope?</li>
+<li><strong>Trajectory:</strong> do those commitments hold across follow-ups, changed circumstances,
+  conflicting instructions, and pressure to abandon the product's boundaries?</li>
+</ul>
+<p>The positive obligations matter. A system that avoids mistakes by refusing everything
+or reciting generic caveats fails the usefulness criteria. A system that sounds fluent
+and agreeable while violating its evidence or action boundaries fails those criteria.
+The product team defines these tradeoffs in reviewable rules, rather than hiding them
+in an unvalidated weighted average.</p>
+<p>Scenario families test both invariance and appropriate change. Rephrasing a question
+should preserve the relevant commitments; removing fuel from an Atlas scenario should
+change which procedures count as feasible. An actual change in circumstances can require
+a different answer without being classified as persona drift.</p>
+<h3 id="current-practice-check-researched-2026-09-06">Current-practice check, researched 2026-09-06<a class="headerlink" href="#current-practice-check-researched-2026-09-06" title="Permanent link">&para;</a></h3>
+<p>This is a focused capability check from official documentation, not an exhaustive market
+survey. It establishes a baseline and does not claim Alignmenter's planned features are unique.</p>
+<table>
+<thead>
+<tr>
+<th>Capability documented elsewhere</th>
+<th>Evidence</th>
+<th>Consequence for this upgrade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Interrupted evaluation retry with completed-sample reuse</td>
+<td><a href="https://inspect.aisi.org.uk/eval-logs.html">Inspect logs and retries</a></td>
+<td>Durable execution and stable IDs belong in the baseline</td>
+</tr>
+<tr>
+<td>Immutable experiments usable through SDK and CI</td>
+<td><a href="https://www.braintrust.dev/docs/evaluate/run-evaluations">Braintrust experiments</a></td>
+<td>Saved comparisons and code-defined suites are expected workflows</td>
+</tr>
+<tr>
+<td>Comparative evaluation of existing experiments</td>
+<td><a href="https://docs.langchain.com/langsmith/evaluate-pairwise">LangSmith pairwise evaluation</a></td>
+<td>Evaluate saved outputs under common criteria, with explicit comparison work</td>
+</tr>
+<tr>
+<td>Judge iteration against human feedback</td>
+<td><a href="https://docs.langchain.com/langsmith/improve-judge-evaluator-feedback">LangSmith evaluator alignment</a></td>
+<td>Judge qualification and reviewed expectations must ship with the alignment story</td>
+</tr>
+<tr>
+<td>JSON/HTML/JUnit output and CI quality gates</td>
+<td><a href="https://www.promptfoo.dev/docs/integrations/ci-cd/">Promptfoo CI integration</a></td>
+<td>Supply standard CI artifacts and noninteractive behavior</td>
+</tr>
+</tbody>
+</table>
+<p>Own the behavioral specification, scenario tests, evidence semantics, and application
+integrations. Reuse provider SDKs, typed validation, statistical libraries, and suitable
+existing execution mechanisms. The completed M0 build-versus-compose spike selected a
+small native coordinator: both tested options passed with shared guards, while Inspect
+did not eliminate the application-specific durability and accounting layer. See the
+<a href="../alignmenter-next-executor-decision/">decision and scope limits</a>.
+Judge that choice by a working acceptance fixture, dependency cost, and semantic control.</p>
+<p>Provider modernization is capability-based: current application/model/judge endpoints,
+structured output, tool events, usage, cancellation, and explicit unsupported features.
+Audit actual endpoint support during implementation against primary provider docs; do
+not carry obsolete integrations or model identifiers forward solely for compatibility.</p>
+<h2 id="3-observable-target-state-workflows">3. Observable target-state workflows<a class="headerlink" href="#3-observable-target-state-workflows" title="Permanent link">&para;</a></h2>
+<h3 id="a-improve-atlas-with-evidence">A. Improve Atlas with evidence<a class="headerlink" href="#a-improve-atlas-with-evidence" title="Permanent link">&para;</a></h3>
+<p>An engineer imports the saved Atlas transcripts and creates a reviewed suite of
+canonical, constrained, adaptive, follow-up, and missing-evidence cases. They inspect
+the winter-homestead failure with the question, retrieved passages, answer, and
+criterion-level judgments visible together.</p>
+<p>They run the actual iPhone application against two prompt configurations. The phone
+disconnects at case 18. Completed answers and evaluations remain readable, the failed
+attempt has a reason, and the run resumes without discarding completed work. A stale
+device response cannot satisfy a new attempt just because the question text matches.</p>
+<p>The comparison shows task success, factual support, citation support, execution
+completion, sustained latency, and thermal conditions. A new prompt that removes
+numbers but continues missing the task does not appear improved on task success.
+The engineer reviews a regression and adds it to the next dataset revision.</p>
+<h3 id="b-apply-it-to-one-avercare-workflow">B. Apply it to one AverCare workflow<a class="headerlink" href="#b-apply-it-to-one-avercare-workflow" title="Permanent link">&para;</a></h3>
+<p>The initial workflow must be selected from the actual repository. Candidate evaluation
+concerns include fidelity to supplied health context, the product's intended assistance
+role, continuity across turns, changed user circumstances, appropriate uncertainty, and
+permitted actions. These are candidates, not claims about AverCare's current features.</p>
+<p>Begin with synthetic or already-approved fixtures and application-owned expectations.
+Route the actual service/agent output and observed context through an adapter. Reuse
+existing traces and tests where possible; neither deploying a new observability system
+nor sending patient records to an external judge is required for adoption.</p>
+<p>Success is a runnable suite in AverCare's existing test/CI workflow that detects a
+reviewed behavior regression. Product and domain reviewers own the accepted behavior;
+Alignmenter tracks the evidence and whether its evaluators agree with those reviewers.</p>
+<h3 id="c-maintain-a-conversational-persona">C. Maintain a conversational persona<a class="headerlink" href="#c-maintain-a-conversational-persona" title="Permanent link">&para;</a></h3>
+<p>A team loads its existing persona and conversations. It evaluates voice, appropriate
+behavior for each scenario, and conversation-level requirements. It can inspect how
+the judge and deterministic components differ instead of accepting an unexplained blend.</p>
+<p>Calibration uses declared train, development, and test groups. Related turns and
+derived examples stay in the same split. The learned artifact records exactly which
+examples and fitting procedure produced it. Comparing two artifacts uses held-out
+labels with a suitable uncertainty estimate.</p>
+<h3 id="d-test-a-bounded-workflow-where-the-applications-require-one">D. Test a bounded workflow, where the applications require one<a class="headerlink" href="#d-test-a-bounded-workflow-where-the-applications-require-one" title="Permanent link">&para;</a></h3>
+<p>A support-workflow fixture must find a record, update the correct field, and produce
+a receipt. A target adapter returns the final output, tool events, and observed final
+state. Evaluators check the outcome and required constraints directly. Persona
+configuration, retrieval excerpts, and an LLM judge are optional.</p>
+<p>This exercises application evaluation without requiring Alignmenter to implement an
+agent runtime. The target owns application execution and its sandbox/test fixtures.</p>
+<h3 id="e-make-a-release-decision-in-ci">E. Make a release decision in CI<a class="headerlink" href="#e-make-a-release-decision-in-ci" title="Permanent link">&para;</a></h3>
+<p>CI imports an approved baseline and runs a declared regression suite. Gates combine
+hard constraints, quality thresholds, completion requirements, and permitted paired
+regressions. Missing required evidence or unavailable judging is inconclusive and
+cannot produce a green release result. Reports and machine-readable gate results agree.</p>
+<h3 id="f-evaluate-the-evaluator">F. Evaluate the evaluator<a class="headerlink" href="#f-evaluate-the-evaluator" title="Permanent link">&para;</a></h3>
+<p>A reviewer compares a new judge, rubric, or deterministic scorer with a fixed set of
+human-adjudicated cases. The report lists false passes, false failures, agreement by
+criterion and scenario, coverage, repeated-judgment variation, and cost. A new evaluator
+version can then rescore saved outputs without running the application again.</p>
+<h2 id="4-non-negotiable-semantics">4. Non-negotiable semantics<a class="headerlink" href="#4-non-negotiable-semantics" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Completed observations and completed evaluations are committed as work progresses.</li>
+<li>Execution failure, evaluator failure, skipped work, and product failure are distinct.</li>
+<li>Unknown results never become zero violations or perfect scores by default.</li>
+<li>Each evaluation result has a stable identity and versioned inputs.</li>
+<li>Reports, slices, and ordinary comparisons aggregate saved results without provider calls.</li>
+<li>Required release gates include coverage and evidence requirements.</li>
+<li>A hard failure cannot be hidden by averaging unrelated dimensions.</li>
+<li>Original observations remain immutable; review and rescoring create linked revisions.</li>
+<li>Generation inputs exclude reference answers, private rubric expectations, and review labels.</li>
+<li>Application observations and evaluator reference material have separate provenance.</li>
+<li>Budgets apply across the entire declared run/experiment scope and survive resume.</li>
+<li>Reproducibility means identifying and replaying recorded inputs and results; it does
+    not promise deterministic output from nondeterministic remote models or devices.</li>
+</ol>
+<h2 id="5-architecture">5. Architecture<a class="headerlink" href="#5-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart LR
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    A[Versioned cases and suites] --&gt; B[Resolved experiment plan]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    B --&gt; C[Execution coordinator]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    C --&gt; D[Application adapters]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    D --&gt; E[Durable observations]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    E --&gt; F[Evaluation scheduler]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    R[Behavior specifications, rubrics, and reference evidence] --&gt; F
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    F --&gt; G[Deterministic checks and judges]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    G --&gt; H[Durable evaluation results]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    E --&gt; I[Aggregation and comparison]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    H --&gt; I
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    I --&gt; J[SDK, CLI, CI, portable reports]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    J --&gt; K[Annotations and adjudication]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    K --&gt; A
+</code></pre></div>
+<p>The coordinator owns execution state, resource leases, attempts, deadlines, and budgets.
+Application adapters own the mechanics of calling the actual target. Evaluators own
+the meaning of their measurements. Aggregation is a pure operation over a declared
+snapshot of observations and evaluation results. Any future review UI is a client of
+the same query and command interfaces used by the CLI.</p>
+<p>Use a bounded dependency graph for generation, evaluation, and explicitly configured
+judge escalation. This is an internal execution mechanism; users should be able to
+configure ordinary evaluations without learning a workflow orchestration language.</p>
+<h3 id="core-domain-objects">Core domain objects<a class="headerlink" href="#core-domain-objects" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Contents and role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Case</code></td>
+<td>Stable logical ID, revision/content digest, typed input, tags, split group, expectations, reference artifact links</td>
+</tr>
+<tr>
+<td><code>BehaviorSpec</code></td>
+<td>Versioned role, goals, positive obligations, boundaries, preferences, contextual rules, and precedence</td>
+</tr>
+<tr>
+<td><code>ScenarioFamily</code></td>
+<td>Related cases with controlled changes; expected invariant commitments and expected behavior changes</td>
+</tr>
+<tr>
+<td><code>Suite</code></td>
+<td>Frozen case membership, selection rules, evaluator configuration, applicability rules, gates</td>
+</tr>
+<tr>
+<td><code>TargetSpec</code></td>
+<td>Adapter, declared capabilities, nonsecret application/model/config revision, execution parameters</td>
+</tr>
+<tr>
+<td><code>ExperimentSpec</code></td>
+<td>Target variants, repeats, seed policy, case selection, resource policy, evaluation snapshot</td>
+</tr>
+<tr>
+<td><code>RunManifest</code></td>
+<td>Resolved configuration and content digests, package versions, target identity, dataset/evaluator versions, environment facts</td>
+</tr>
+<tr>
+<td><code>Attempt</code></td>
+<td>Unique invocation ID, parent execution, lease, deadline, status, timestamps, failure classification</td>
+</tr>
+<tr>
+<td><code>Observation</code></td>
+<td>Actual output, observed inputs/context, tool events, final state, artifacts, usage and timing, provenance completeness</td>
+</tr>
+<tr>
+<td><code>EvaluatorSpec</code></td>
+<td>Version, behavior/criterion dependencies, accepted input schema, scope, required evidence, metric descriptors, configuration</td>
+</tr>
+<tr>
+<td><code>EvaluationResult</code></td>
+<td>Case/session and observation IDs, evaluator digest, metric results, evidence references, judgment artifacts, status</td>
+</tr>
+<tr>
+<td><code>MetricDescriptor</code></td>
+<td>Name, type/unit, direction, scope, applicability, aggregation, denominator, uncertainty method</td>
+</tr>
+<tr>
+<td><code>Annotation</code></td>
+<td>Reviewer, criterion, value, rationale, evidence, observation/rubric revision, timestamp; immutable history</td>
+</tr>
+<tr>
+<td><code>Comparison</code></td>
+<td>Two observation sets, shared evaluation snapshot, matched cases/repeats, exclusions, deltas, coverage and uncertainty</td>
+</tr>
+<tr>
+<td><code>GateResult</code></td>
+<td>Policy version, pass/warn/fail/inconclusive, evidence and denominator, offending case links</td>
+</tr>
+<tr>
+<td><code>Artifact</code></td>
+<td>Content digest, media type, length, origin, storage reference, export policy</td>
+</tr>
+</tbody>
+</table>
+<p>Typed, versioned schemas are public contracts. Unknown fields, duplicate IDs, invalid
+metric values, unknown gates, and unresolved plugin names fail validation before costly
+work starts. Schema migration is explicit and tested.</p>
+<h3 id="result-statuses-and-coverage">Result statuses and coverage<a class="headerlink" href="#result-statuses-and-coverage" title="Permanent link">&para;</a></h3>
+<p>Execution statuses are <code>pending</code>, <code>running</code>, <code>succeeded</code>, <code>failed</code>, <code>cancelled</code>,
+<code>interrupted</code>, and <code>unknown_outcome</code>. A timeout is a classified failure or unknown
+outcome depending on whether the adapter can confirm that execution stopped.</p>
+<p>Evaluation statuses are <code>scored</code>, <code>not_applicable</code>, <code>missing_evidence</code>, <code>invalid_result</code>,
+<code>skipped_budget</code>, <code>blocked</code>, and <code>error</code>. A recorded abstention is application behavior
+that can be scored; it is not an evaluator error or automatic success.</p>
+<p>Every aggregate carries planned, eligible, scored, missing, skipped, and failed counts.
+Suites declare eligibility from case types and required capabilities before observing
+the outcome. A failure cannot be reclassified as not applicable to improve coverage.</p>
+<p>Keep at least these views separate:</p>
+<ul>
+<li>Application completion: completed eligible executions / planned eligible executions.</li>
+<li>Evaluation coverage: valid evaluations / planned eligible evaluation units.</li>
+<li>Conditional quality: quality among valid evaluated outputs, with that denominator visible.</li>
+<li>End-to-end task success: successful cases / planned eligible cases when the task
+  definition explicitly counts execution failures as unsuccessful tasks.</li>
+</ul>
+<p>An empty population has no empirical score. An incomplete required evaluation produces
+an inconclusive gate. Known hard failures still produce failure even if another dimension
+is incomplete. The display presents both findings without overwriting either.</p>
+<h2 id="6-durable-execution-and-application-adapters">6. Durable execution and application adapters<a class="headerlink" href="#6-durable-execution-and-application-adapters" title="Permanent link">&para;</a></h2>
+<p>Create the run and frozen manifest before the first external call. Commit each attempt
+transition, observation, and evaluator result transactionally. A process killed after an
+answer completes can only lose work not yet committed; recovery reports that boundary.</p>
+<p>The selected direction uses one coordinator writer with transactional state and an
+event history. Workers return structured results. Authoritative records live in SQLite
+and large immutable payloads in a content-addressed artifact directory. Production
+implementation must define the database/artifact commit boundary and preserve the
+accepted commit, recovery, and export guarantees.
+JSONL and JSON exports are snapshots, not a second competing live source of truth.</p>
+<p>An export uses a consistent database snapshot plus a verified artifact manifest. It
+opens and renders on another machine without application adapters, model dependencies,
+API credentials, or network access. Import validates schema, hashes, paths, and sizes.</p>
+<h3 id="attempts-retries-and-recovery">Attempts, retries, and recovery<a class="headerlink" href="#attempts-retries-and-recovery" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Retry only classified transient errors, with bounded attempts, backoff, and an overall deadline.</li>
+<li>Record every attempt and its cost, including failed or malformed judge responses.</li>
+<li>Use unique request IDs and fencing tokens; quarantine late results from expired attempts.</li>
+<li>An adapter declares idempotency, cancellation, reset, concurrency, and recovery capabilities.</li>
+<li>A remote or tool action with uncertain completion becomes <code>unknown_outcome</code>. Recovery
+  reconciles it or starts a deliberately new execution; there is no promise of exactly-once
+  external execution when the target cannot provide it.</li>
+<li>A cooperative timeout must actually cancel the worker where supported. Sync adapters
+  requiring hard deadlines run in managed processes; an abandoned thread is not cancellation.</li>
+<li>Cancellation stops new work, requests cancellation of active attempts, commits state,
+  and leaves completed observations available for reporting and later resume.</li>
+<li>Resume checks the manifest and execution identity. Changed configurations create a new
+  run or evaluation revision rather than modifying the meaning of existing results.</li>
+</ul>
+<h3 id="state-and-scheduling">State and scheduling<a class="headerlink" href="#state-and-scheduling" title="Permanent link">&para;</a></h3>
+<p>Independent cases may run concurrently. Turns within a stateful session preserve order.
+An adapter that cannot restore state resumes at a safe session boundary, retaining the
+previous attempt history and identifying any repeated application calls.</p>
+<p>Shared resources have leases: one physical phone permits one active application run,
+while independent judge work can proceed elsewhere. Rate limits, concurrency limits,
+per-case deadlines, run deadlines, and generation/judging budgets are separate policies.</p>
+<p>For hardware experiments record cold/warm state, thermal state, sampling order, and
+wall-clock timestamps. Offer declared cooldown/block-order policies and record departures
+from them. Compare sustained behavior independently from single-question warm performance.</p>
+<h3 id="atlas-integration-requirements">Atlas integration requirements<a class="headerlink" href="#atlas-integration-requirements" title="Permanent link">&para;</a></h3>
+<p>The device hook and adapter need request/response IDs, explicit session reset, health
+and cancellation/recovery behavior, and response provenance. Errors must echo the
+request identity. The current question-string freshness check is insufficient for repeats.
+The adapter must expose the conversation actually consumed by Atlas, not merely accept
+a <code>messages</code> argument while forwarding only its final question.</p>
+<p>Changes to this adapter and smoke hook belong in Atlas. Alignmenter supplies the general
+adapter contract, resource scheduling, and result persistence. Imported old transcripts
+retain an “observed context completeness unknown” designation where appropriate.</p>
+<h2 id="7-evaluation-system-and-metric-packs">7. Evaluation system and metric packs<a class="headerlink" href="#7-evaluation-system-and-metric-packs" title="Permanent link">&para;</a></h2>
+<p>An evaluator consumes a frozen case/session, observation(s), and its explicitly allowed
+reference data. It returns typed metric results and evidence. Its scope is declared as
+turn, session, case, pair, or set. Set-level evaluators declare their dependency set and
+cannot be silently treated as per-turn measurements.</p>
+<p>Separate evaluation from aggregation. A metric pack registers descriptors and aggregate
+functions so the CLI, UI, thresholds, and exports need no lists of built-in metric names.
+Support pure Python plugins and installed entry points with validated configuration.
+Plugins execute trusted installed code; importing a report never loads or executes plugins.</p>
+<table>
+<thead>
+<tr>
+<th>Pack</th>
+<th>Measures</th>
+<th>Necessary distinctions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Execution</td>
+<td>Completion, latency, tokens, cost, resource observations</td>
+<td>End-to-end vs generation timing; measured vs estimated vs unknown usage</td>
+</tr>
+<tr>
+<td>Structured output</td>
+<td>Schema conformance, exact/set matching, deterministic invariants</td>
+<td>Invalid output vs missing execution; explicit tolerances</td>
+</tr>
+<tr>
+<td>Retrieval</td>
+<td>Relevant evidence recall/rank, context relevance, source coverage</td>
+<td>Needs reviewed relevance labels; relevance is not merely embedding similarity</td>
+</tr>
+<tr>
+<td>Grounding</td>
+<td>Quantity consistency, citation resolution, claim support</td>
+<td>Source presence, claim support, and correctness are different measurements</td>
+</tr>
+<tr>
+<td>Task quality</td>
+<td>Constraint satisfaction, required steps/outcomes, relevance, completeness, useful abstention</td>
+<td>Reviewed criterion-level expectations; no implicit credit for verbosity</td>
+</tr>
+<tr>
+<td>Behavioral alignment</td>
+<td>Role fidelity, positive obligations, boundaries, contextual adaptation, resistance to inappropriate pressure</td>
+<td>Product-owned specification; both excessive abstention and overreach can fail</td>
+</tr>
+<tr>
+<td>Persona</td>
+<td>Voice, lexical constraints, contextual appropriateness, calibrated traits</td>
+<td>Deterministic and judge components visible; versioned blending only when validated</td>
+</tr>
+<tr>
+<td>Conversation</td>
+<td>Instruction retention, contradiction, state continuity, follow-up handling</td>
+<td>Legitimate topic change is not automatically drift</td>
+</tr>
+<tr>
+<td>Tool workflow</td>
+<td>Required/forbidden actions, argument correctness, final state, task completion</td>
+<td>Event traces and fixture truth; target supplies execution</td>
+</tr>
+<tr>
+<td>Policy</td>
+<td>Product-specific unacceptable outcomes and hard constraints</td>
+<td>Validated evidence, coverage, severity; no universal safety certification</td>
+</tr>
+</tbody>
+</table>
+<p>Ship execution, repaired grounding, behavior/task rubrics, conversation cases, and
+persona continuity first. Add structured output, retrieval labels, and tool-workflow
+checks where Atlas or the selected AverCare workflow benefits. Make metric availability
+explicit for each suite; generic breadth is not a release acceptance criterion.</p>
+<h3 id="repair-and-validate-current-metrics">Repair and validate current metrics<a class="headerlink" href="#repair-and-validate-current-metrics" title="Permanent link">&para;</a></h3>
+<p>Quantity extraction preserves signs, units, temperature scales, ranges, comparators,
+ratios, and decimal conventions. Conversions require explicit supported arithmetic;
+ambiguous parsing is reported. Quantities supplied in the question retain their source
+identity. Unit-bearing presence alone remains a diagnostic proxy and is named accordingly.</p>
+<p>Citation checks distinguish “reference resolves” from “the cited passage supports this
+claim.” Unknown or incomplete context cannot establish unsupportedness with full confidence.</p>
+<p>Retire the existing distance-variance stability headline from default suites. Keep a
+versioned legacy diagnostic for old reports; introduce conversation invariants and
+repeat consistency with independently validated semantics.</p>
+<p>Persona component scores remain inspectable. Any blend declares weights, unit of
+analysis, coverage, and validation. Its uncertainty estimate describes the actual blended
+quantity, not the deterministic component's interval attached to a different headline.</p>
+<h2 id="8-rubrics-references-and-judge-reliability">8. Rubrics, references, and judge reliability<a class="headerlink" href="#8-rubrics-references-and-judge-reliability" title="Permanent link">&para;</a></h2>
+<p>A behavior specification is translated into rubrics and scenario families with explicit
+links back to each commitment. A rubric defines named criteria, anchored outcomes, applicability, required evidence,
+allowed abstention, and severity. A case may add specific constraints, expected facts,
+acceptable alternatives, disallowed actions, and independently sourced reference evidence.
+Reference answers can be useful examples; wording overlap is not the default correctness test.</p>
+<p>Separate two judgments:</p>
+<ul>
+<li>Faithfulness: is a claim supported by the evidence the application actually used?</li>
+<li>Correctness/task quality: does it satisfy the case's reviewed expectations and constraints?</li>
+</ul>
+<p>Judges may supply useful diagnostics without reference labels, but their basis is recorded
+as judge knowledge/heuristic rather than validated reference truth. Initial Atlas labels
+must be reviewed; the existing generated answers are observations, not gold answers.</p>
+<h3 id="judge-execution-contract">Judge execution contract<a class="headerlink" href="#judge-execution-contract" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Version the rubric, prompt, schema, model identifier, generation parameters, and evidence selection.</li>
+<li>Treat application text, references, and tool output as untrusted evaluation data.
+   Use delimited fields and test evaluator resistance to instructions embedded in that data.</li>
+<li>Validate required fields, finite ranges, enum values, true booleans, and evidence links.
+   <code>{}</code>, string booleans, dropped invalid claims, and partial output are invalid results.</li>
+<li>Retain the raw request/response and structured verdict. A repair attempt is separately
+   recorded, budgeted, and bounded; invalid results are never made successful by defaults.</li>
+<li>Preserve source identity and coverage. Do not silently cut every source at 1,200 characters
+   and represent the resulting prompt as all the evidence the application saw.</li>
+<li>Use explicit chunked evaluation or declared evidence selection when context is large.
+   Missing necessary evidence yields an incomplete evaluation; it is not proof of an unsupported claim.</li>
+<li>Explain verdicts with criterion-level reasons and evidence references. Verify that quoted
+   evidence exists, while keeping the semantic support judgment distinct from string matching.</li>
+</ol>
+<h3 id="budgets-and-caching">Budgets and caching<a class="headerlink" href="#budgets-and-caching" title="Permanent link">&para;</a></h3>
+<p>One ledger accounts for all target and judge calls in the declared scope, including
+multiple evaluators, variants, retries, repairs, and escalation. Local per-stage limits
+can restrict that ledger further. A run can resume without resetting spend or call counts.</p>
+<p>Reserve projected cost/call capacity before dispatch; reconcile actual usage afterward.
+Separate actual, estimated, unknown, reserved, and cached costs. A strict spend cap
+requires an enforceable upper bound on request/output cost; otherwise report it as a
+soft budget with bounded scheduling, not a guaranteed bill ceiling. Record pricing
+configuration and version rather than silently guessing prices.</p>
+<p>Persistent evaluation cache keys include the full observation, case expectations,
+evaluator version/config, prompt/schema, evidence selection, and judge parameters.
+Reused judgments are labeled. An explicit repeat asks for a new judgment and gets a
+new sample identity instead of being accidentally deduplicated by the cache.</p>
+<p>Optional escalation can request a stronger judge or human review for defined ambiguity,
+disagreement, or high-impact criteria. Save the trigger and every opinion. Ensemble
+majority is an aggregation policy to validate, not an automatic source of truth.</p>
+<h2 id="9-comparison-experiments-and-statistical-meaning">9. Comparison, experiments, and statistical meaning<a class="headerlink" href="#9-comparison-experiments-and-statistical-meaning" title="Permanent link">&para;</a></h2>
+<p>Make comparing saved runs a normal operation. Generation, evaluation, and comparison
+are independently invocable. Updating an evaluator creates new evaluations over the
+same observations; both old and new results remain addressable.</p>
+<p>Match by logical case ID, case revision, and repeat identity. Show added/removed cases,
+unmatched revisions, changed eligibility, and unequal coverage. Comparisons intended
+for release decisions require a common evaluation snapshot. If it changed, rescore both
+observation sets under the chosen version before drawing a headline quality comparison.</p>
+<p>An experiment matrix declares variants of application parameters, model, retrieval,
+prompt, and corpus. It supports repeat counts, stable ordering/seeds, resource limits,
+and budgets. Output caching never collapses intentional repetitions. Use frozen-context
+experiments to distinguish retrieval changes from generation changes when the adapter
+can support that intervention; a diagnostic label alone does not establish causality.</p>
+<p>Provide:</p>
+<ul>
+<li>Per-case and per-criterion regressions, improvements, ties, and changed evidence.</li>
+<li>Paired quality deltas and separately reported completion differences.</li>
+<li>Scenario slices with visible counts and overlapping-tag semantics.</li>
+<li>Latency distributions and quality/cost/latency tradeoff plots.</li>
+<li>Session/group bootstrap intervals where observations share context or provenance.</li>
+<li>Repeat variation and judge variation, separate from uncertainty across sampled cases.</li>
+<li>Optional blinded pairwise judging with balanced presentation order, ties, and abstentions.</li>
+</ul>
+<p>Document the statistic, sampling unit, seed, denominator, weighting, and minimum sample
+requirements. Tiny samples produce descriptive results rather than spurious precision.
+Do not attach population estimates to error-mined samples. Random/stratified audit samples
+and diagnostic selection have separate identities; record inclusion probabilities when
+weighted population estimates are supported. Explicitly distinguish exploratory slices
+from predeclared release metrics and avoid “winner” claims across uncorrected large sweeps.</p>
+<h2 id="10-human-review-and-dataset-improvement">10. Human review and dataset improvement<a class="headerlink" href="#10-human-review-and-dataset-improvement" title="Permanent link">&para;</a></h2>
+<p>The CLI and portable report make a case the primary inspection unit. Show the input,
+constraints, observed output, source passages, tool events, criterion results, judge
+evidence, and execution status. A comparison shows corresponding cases together.
+Review exports must be easy for a non-engineer to label in existing tools. A complete
+custom browser workspace is conditional on friction observed with Atlas or AverCare.</p>
+<p>Review queues can select regressions, hard failures, low coverage, evaluator disagreement,
+or a reproducible audit sample. Users can filter by scenario, target, criterion, evaluator,
+status, and review state. Large suites use indexed queries and pagination.</p>
+<p>Annotations attach to an observation and rubric revision. They record reviewer identity,
+labels, rationale, and evidence. Multiple opinions remain visible; adjudication creates
+a distinct decision. Machine judgments remain unchanged. Updated rubrics flag old labels
+for revalidation instead of treating them as current automatically.</p>
+<p>Promoting a failure to a regression case requires an explicit dataset edit with a stable
+case ID, reviewed expectations, origin, split group, and version change. Generated
+variations and imported incidents enter a candidate queue. Exact/near-duplicate checks
+and source groups help avoid filling a suite with correlated copies.</p>
+<p>CSV/JSONL annotation imports/exports and existing Label Studio workflows remain
+supported. A future local UI or team service can use the same contracts without changing
+evaluation semantics. Adjudication and review provenance are core; hosting them is optional.</p>
+<h2 id="11-calibration-and-evaluating-the-evaluators">11. Calibration and evaluating the evaluators<a class="headerlink" href="#11-calibration-and-evaluating-the-evaluators" title="Permanent link">&para;</a></h2>
+<p>Generalize calibration around versioned examples and artifacts while retaining persona
+tools. Support explicit train/development/test partitions and grouped cross-validation.
+Fitting includes every learned bound, weight, threshold, vocabulary, and trait model.
+Validation must know which examples influenced every fitted component.</p>
+<p>The existing calibration validator splits rows after loading an already-fitted artifact;
+that split cannot by itself establish held-out performance. The case-study cross-validation
+script is useful prior work, but the general tool must track all learned inputs and
+related-example groups, not only refit one component on individual rows.</p>
+<p>Reports distinguish training fit, development tuning, held-out testing, and human agreement.
+Synthetic labels, model labels, individual human labels, and adjudicated references remain
+different provenance classes. A judge's confidence statement is not calibrated probability.</p>
+<p>A scorer qualification suite includes known good/bad cases and controlled mutations:
+changed units/signs, swapped citations, missing evidence, irrelevant but fluent answers,
+constraint violations, harmless topic changes, empty verdicts, and injected instructions.
+Qualification records false passes and false failures by criterion and scenario.</p>
+<p>Calibration outputs are immutable, self-contained artifacts with training IDs/digests,
+split policy, fitting code/version, hyperparameters, validation results, and limitations.
+Automate the current manual bounds/weights/traits merge and verify artifact compatibility.</p>
+<h2 id="12-interfaces-and-examples">12. Interfaces and examples<a class="headerlink" href="#12-interfaces-and-examples" title="Permanent link">&para;</a></h2>
+<p>The commands below describe the proposed interface, not commands available today.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter init --template aligned-reference
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alignmenter dataset validate cases.jsonl
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>alignmenter behavior validate behavior/atlas.yaml
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>alignmenter run --suite atlas.yaml
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alignmenter resume &lt;run-id&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>alignmenter status &lt;run-id&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>alignmenter cancel &lt;run-id&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>alignmenter evaluate &lt;run-id&gt; --suite revised-rubric.yaml
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>alignmenter compare &lt;baseline-id&gt; &lt;candidate-id&gt; --policy release.yaml
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>alignmenter experiment run prompt-study.yaml
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>alignmenter review &lt;run-or-comparison-id&gt;
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>alignmenter report &lt;run-or-comparison-id&gt; --export ./review-bundle
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>alignmenter dataset promote &lt;review-id&gt; --to regressions.jsonl
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>alignmenter judge validate --labels reviewed.jsonl --evaluator task-quality.yaml
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>alignmenter calibrate fit --recipe persona-calibration.yaml
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>alignmenter migrate --from legacy-run --input reports/old-run
+</code></pre></div>
+<p>The SDK exposes the same domain contracts and operations, with progress/event callbacks
+and sync convenience methods over the execution layer. A custom HTTP or callable target
+and custom metric should not require editing the CLI, report renderer, or core registry.
+<code>review</code> initially supports terminal inspection and export/import of labels. It does not
+imply a browser server. HTTP, subprocess/JSONL, and recorded-artifact hooks let applications
+in other languages integrate without embedding a Python runtime in their shipped product.
+A native second-language SDK needs demonstrated value from the AverCare integration.</p>
+<p>Illustrative behavior specification, separate from the implementation prompt:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">schema_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atlas-reference-behavior</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Help a person use the offline library to solve practical problems.</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">commitments</span><span class="p">:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evidence_integrity</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Preserve the meaning and units of source claims; identify missing evidence.</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocking</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">respect_constraints</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Account for the resources and conditions in the question.</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blocking</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">useful_adaptation</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provide a workable next step or the specific missing information needed.</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">graded</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">explanatory_voice</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nt">criterion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Explain relevant principles clearly and make procedures easy to follow.</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">graded</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nt">conflicts</span><span class="p">:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">evidence_integrity takes precedence over providing a precise but unsupported figure.</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Style preferences may yield to the case's practical urgency and user needs.</span>
+</code></pre></div>
+<p>The specification states intended behavior. The product may implement it through any
+prompt, model, retrieval policy, or code. A change in wording should not require rewriting
+the expected outcomes unless the product's commitments actually changed.</p>
+<p>Illustrative suite configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">schema_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atlas-regression</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cases/atlas-reviewed.jsonl</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">behavior</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">behavior/atlas.yaml</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">target</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">adapter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atlas_eval:DeviceTarget</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">device</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ATLAS_DEVICE_ID}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nt">evaluators</span><span class="p">:</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execution</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grounding.quantities</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grounding.citation_support</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local-reviewer</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task.rubric</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="nt">rubric</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rubrics/atlas-task.yaml</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local-reviewer</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="nt">gates</span><span class="p">:</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metric</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">execution.completion_rate</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="nt">minimum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">metric</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task.hard_failure_count</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="nt">maximum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span><span class="nt">required_coverage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="nt">execution</span><span class="p">:</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span><span class="nt">attempts_per_case</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span><span class="nt">case_timeout_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">240</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span><span class="nt">on_error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">continue_independent_cases</span>
+</code></pre></div>
+<p>Suite thresholds are product decisions with review history. The example illustrates
+semantics and does not assert that any particular Atlas threshold is already validated.</p>
+<h2 id="13-developer-workflow-exports-and-ci">13. Developer workflow, exports, and CI<a class="headerlink" href="#13-developer-workflow-exports-and-ci" title="Permanent link">&para;</a></h2>
+<p>The core delivery is a lightweight SDK and CLI with portable HTML/JSON/CSV/JUnit
+artifacts. Python tests can invoke suites directly; other stacks can call the CLI,
+an adapter process, or consume the versioned result format. Supply an example GitHub
+Actions workflow and a plain shell integration rather than requiring a hosted service.</p>
+<p>CI must be noninteractive. Provide deterministic smoke suites for ordinary pull requests,
+bounded judged suites for selected changes, and fuller scheduled/release runs. Persist
+failure artifacts with <code>always()</code> semantics, select baselines by immutable identity, and
+produce a concise Markdown job summary with links to cases. Generate summaries as files;
+posting comments or uploading private run data is configured by the consuming repository.
+Support baseline-cache import/export with configuration-aware identity and coverage checks.</p>
+<p>The optional future browser workspace can add progress, inspection, comparisons, queues,
+and annotation editing through the same services. It must demonstrate a workflow benefit
+before expanding the release scope. Package any eventual frontend so end users do not
+need a JavaScript toolchain, and bind local serving to loopback by default.</p>
+<p>Escape imported/model-generated content, avoid
+executing imported markup, and validate artifact references. Exports are self-contained;
+charts and fonts do not require a CDN. Provider credentials are excluded from manifests
+and exports; configuration snapshots contain allowlisted nonsecret settings and named
+secret references. A redacted export is a derivative artifact with declared omissions,
+not a falsely complete replay package.</p>
+<p>CI emits machine-readable gate results and portable artifacts. Proposed exit semantics:
+0 = all required gates pass (warnings permitted by policy), 1 = configuration or internal
+execution error, 2 = quality gate failure, 3 = incomplete required evaluation. A run may
+record completed execution and still have an inconclusive release decision.</p>
+<h2 id="14-migration-and-boundaries">14. Migration and boundaries<a class="headerlink" href="#14-migration-and-boundaries" title="Permanent link">&para;</a></h2>
+<p>Preserve valuable conversation JSONL, persona YAML, and saved report inputs through
+versioned importers. Preserve original
+files and annotate missing historical provenance. Never infer “no excerpts retrieved”
+from a missing context field. Legacy scores retain their evaluator identity and are not
+silently reinterpreted as the new metrics.</p>
+<p>Provide a compatibility adapter for <code>ChatResponse</code> and legacy <code>score(sessions)</code> plugins.
+Legacy batch scorers cannot promise per-case resumability, fine-grained coverage, or
+pure slice aggregation. Their limits are visible; users migrate them to the new contract
+to gain those capabilities. Built-in scorers migrate before becoming the new default.</p>
+<p>Common <code>run --config</code> and persona workflows may translate through a legacy config loader
+where that is inexpensive. Public API or configuration breaks are acceptable when they
+remove flawed semantics or materially simplify use; document the reason and migration.
+Scorer selection becomes explicit. Old aggregate keys may be exported in a compatibility
+format with provenance; the new canonical format has its own schema version.</p>
+<p>Split the CLI into domain commands backed by reusable application services. Marketing
+and existing historical research remain separate from runtime code. Update product docs
+and examples after the new workflows pass acceptance; mark older design documents as
+historical when they conflict with the chosen design.</p>
+<h2 id="15-success-criteria-and-open-decisions">15. Success criteria and open decisions<a class="headerlink" href="#15-success-criteria-and-open-decisions" title="Permanent link">&para;</a></h2>
+<p>The upgrade is successful when:</p>
+<ul>
+<li>A killed/restarted evaluation preserves completed observations and resumes with honest accounting.</li>
+<li>Required missing, invalid, skipped, and failed evaluations cannot produce a passing release gate.</li>
+<li>Reports and comparisons require zero fresh model calls and agree with CLI/CI outcomes.</li>
+<li>A reviewed Atlas failure set catches task-missing answers as well as quantity mistakes.</li>
+<li>Atlas completes a real-device comparison with stable request identity and declared session state.</li>
+<li>One selected AverCare workflow has a documented integration and, when available, a runnable
+  suite in its current CI; its application scope and acceptance owner are explicit.</li>
+<li>Persona fitting and validation have explicit provenance and group-safe held-out evaluation.</li>
+<li>An external metric works without changes to core reports or thresholds.</li>
+<li>A reviewer can inspect a regression, adjudicate it, and create the next suite revision.</li>
+<li>Exported reports open offline, and old datasets/reports have a tested migration path.</li>
+</ul>
+<p>Decisions to settle during planning:</p>
+<ol>
+<li>Locate AverCare and select the first workflow, fixtures, and integration surface.</li>
+<li>Review the drafted <a href="../alignmenter-next-atlas/">Atlas specification and scenario families</a>,
+   then define the equivalent inputs for the selected AverCare workflow.</li>
+<li>Identify initial reviewers and ownership of application/domain reference expectations.</li>
+<li>Carry the <a href="../alignmenter-next-executor-decision/">completed backend decision</a> into the
+   production schemas and adapter boundary; the prototype itself is not release code.</li>
+<li>Choose release/version policy after the public contract and compatibility inventory are complete.</li>
+<li>Choose time or staffing constraints before assigning calendar estimates to the delivery plan.</li>
+</ol>
+<p>Confirmed: usefulness to current work is the bar, alignment is the focus, SDK/CLI/CI are
+the primary interfaces, and compatibility changes can be justified. A full review UI,
+hosted service, and unrelated metric packs are outside the initial release requirements.</p>
+<p>The plan uses acceptance milestones rather than an unsupported completion date.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/justinGrosvenor/alignmenter" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

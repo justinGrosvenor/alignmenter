@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://alignmenter.com/guides/persona/">
       
       
-        <link rel="prev" href="../../getting-started/concepts/">
+        <link rel="prev" href="../migration-0.3/">
       
       
         <link rel="next" href="../../persona_annotation/">
@@ -497,6 +497,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -957,6 +1013,146 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1106,6 +1302,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1546,9 +1770,9 @@
 </ul>
 <h2 id="annotation-format">Annotation Format<a class="headerlink" href="#annotation-format" title="Permanent link">&para;</a></h2>
 <p>Create a JSONL file with one record per line:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>{&quot;text&quot;: &quot;Our approach emphasizes precision and evidence-based analysis.&quot;, &quot;label&quot;: 1, &quot;persona_id&quot;: &quot;alignmenter&quot;}
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>{&quot;text&quot;: &quot;lol that&#39;s super hyped bro!&quot;, &quot;label&quot;: 0, &quot;persona_id&quot;: &quot;alignmenter&quot;}
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>{&quot;text&quot;: &quot;This aligns with our baseline methodology.&quot;, &quot;label&quot;: 1, &quot;persona_id&quot;: &quot;alignmenter&quot;}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>{"text": "Our approach emphasizes precision and evidence-based analysis.", "label": 1, "persona_id": "alignmenter"}
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>{"text": "lol that's super hyped bro!", "label": 0, "persona_id": "alignmenter"}
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>{"text": "This aligns with our baseline methodology.", "label": 1, "persona_id": "alignmenter"}
 </code></pre></div>
 <h3 id="required-fields">Required Fields<a class="headerlink" href="#required-fields" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1604,17 +1828,17 @@
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;annotations.jsonl&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'annotations.jsonl'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="s1">'label'</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Should be roughly balanced: Counter({1: 42, 0: 38})</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check persona_id consistency</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;annotations.jsonl&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">personas</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="s1">&#39;persona_id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">'annotations.jsonl'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="n">personas</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="s1">'persona_id'</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">)</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">personas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Mixed personas: </span><span class="si">{</span><span class="n">personas</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">personas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"Mixed personas: </span><span class="si">{</span><span class="n">personas</span><span class="si">}</span><span class="s2">"</span>
 </code></pre></div>
 <h3 id="4-run-calibration">4. Run Calibration<a class="headerlink" href="#4-run-calibration" title="Permanent link">&para;</a></h3>
 <p>Train the trait model from your annotations:</p>
@@ -1640,9 +1864,9 @@
 <h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
 <h3 id="multi-annotator-agreement">Multi-Annotator Agreement<a class="headerlink" href="#multi-annotator-agreement" title="Permanent link">&para;</a></h3>
 <p>Track inter-annotator reliability:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{&quot;text&quot;: &quot;...&quot;, &quot;label&quot;: 1, &quot;persona_id&quot;: &quot;bot&quot;, &quot;annotator&quot;: &quot;alice&quot;}
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>{&quot;text&quot;: &quot;...&quot;, &quot;label&quot;: 1, &quot;persona_id&quot;: &quot;bot&quot;, &quot;annotator&quot;: &quot;bob&quot;}
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>{&quot;text&quot;: &quot;...&quot;, &quot;label&quot;: 0, &quot;persona_id&quot;: &quot;bot&quot;, &quot;annotator&quot;: &quot;alice&quot;}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>{"text": "...", "label": 1, "persona_id": "bot", "annotator": "alice"}
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>{"text": "...", "label": 1, "persona_id": "bot", "annotator": "bob"}
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>{"text": "...", "label": 0, "persona_id": "bot", "annotator": "alice"}
 </code></pre></div>
 <p>Calculate Cohen's kappa or percentage agreement before finalizing.</p>
 <h3 id="active-learning">Active Learning<a class="headerlink" href="#active-learning" title="Permanent link">&para;</a></h3>
@@ -1684,20 +1908,20 @@
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Use your text editor to add labels to each turn</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 3. Validate annotations</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s2">import json</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s2">from collections import Counter</span>
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s2">data = [json.loads(line) for line in open(&#39;data/annotated.jsonl&#39;)]</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s2">labels = [d[&#39;label&#39;] for d in data]</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="s2">personas = set(d[&#39;persona_id&#39;] for d in data)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s2">data = [json.loads(line) for line in open('data/annotated.jsonl')]</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s2">labels = [d['label'] for d in data]</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="s2">personas = set(d['persona_id'] for d in data)</span>
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="s2">print(f&#39;Total: {len(data)}&#39;)</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s2">print(f&#39;Balance: {Counter(labels)}&#39;)</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s2">print(f&#39;Personas: {personas}&#39;)</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="s2">assert len(data) &gt;= 25, &#39;Need at least 25 samples&#39;</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="s2">assert len(personas) == 1, &#39;Mixed personas detected&#39;</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="s2">&quot;</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="s2">print(f'Total: {len(data)}')</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="s2">print(f'Balance: {Counter(labels)}')</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="s2">print(f'Personas: {personas}')</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="s2">assert len(data) &gt;= 25, 'Need at least 25 samples'</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="s2">assert len(personas) == 1, 'Mixed personas detected'</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="s2">"</span>
 <a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>
 <a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="c1"># 4. Train the model</span>
 <a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>alignmenter<span class="w"> </span>calibrate-persona<span class="w"> </span><span class="se">\</span>
@@ -1722,22 +1946,22 @@
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gu">## On-Brand (label = 1)</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>✅ Professional but approachable
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>✅ Uses &quot;signal&quot;, &quot;baseline&quot;, &quot;alignment&quot;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>✅ Uses "signal", "baseline", "alignment"
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>✅ Evidence-driven, specific
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>✅ Calm, measured tone
 <a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Example:
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">&gt; </span><span class="ge">&quot;Our baseline analysis shows a 15% improvement in alignment metrics.&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">&gt; </span><span class="ge">"Our baseline analysis shows a 15% improvement in alignment metrics."</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="gu">## Off-Brand (label = 0)</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>❌ Overly casual or slang-heavy
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>❌ Uses &quot;lol&quot;, &quot;bro&quot;, &quot;hype&quot;, &quot;totally&quot;
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>❌ Uses "lol", "bro", "hype", "totally"
 <a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>❌ Emotional or reactive
 <a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>❌ Vague handwaving
 <a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
 <a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>Example:
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">&gt; </span><span class="ge">&quot;Bro this is totally hype!! lol the vibes are immaculate 🔥&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">&gt; </span><span class="ge">"Bro this is totally hype!! lol the vibes are immaculate 🔥"</span>
 <a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
 <a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="gu">## Edge Cases</span>
 <a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>

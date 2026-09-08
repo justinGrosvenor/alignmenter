@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-09-07T03:42:36.806808+00:00",
+  "scope": "Isolated local prototypes; not production or real-device acceptance",
+  "python": "3.14.6",
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "inspect_ai": "0.3.263",
+  "inspect_install": {
+    "distributions": 79,
+    "recorded_file_bytes": 197670706
+  },
+  "pytest": "9.1.1",
+  "repository_head": "4366f7225b96ab93833a462632e34f4c2c8f52f3",
+  "junit": {
+    "path": "reports/executor-spike/acceptance-final.xml",
+    "sha256": "017d64b968bfb45abc72df2b8105678d85f100e442670d24f233d195ecd06d50"
+  },
+  "environment_lock_sha256": "f330f00c497c85d2a61d0623c8dba6901b32758d1db47ce76293b9916a6ff8ac",
+  "source_sha256": {
+    "spikes/__init__.py": "84c5c30ef49b4300f9b01df3b0450afc698ea24110428c9b772575e06f982c4a",
+    "spikes/executor/__init__.py": "2a315042f2bc5d20808a97e6217ba464948f946d76884362309aae67b86f70c6",
+    "spikes/executor/engine.py": "3e2e40f61276ce07d8dfe3aed47c003cbe9bc43c44629e5b80453540bdf291cd",
+    "spikes/executor/inspect_tasks.py": "4ec689f96bc3439b65407f38cfbd9ed6122b84242664a1b41c62c1c75fb86adb",
+    "spikes/executor/record_results.py": "3cc0e03b64c5f5344ea195c306ef18bb38192c1822542161aa77dc59ce3a938a",
+    "spikes/executor/store.py": "5bd856829a9f53917d6ccde2498c7a3c4ec555850959052e7f1fba1273b99354",
+    "spikes/executor/tests/__init__.py": "a82876047ab31c0218a5878be88993275dbb2125785255a67c5cc2bc43d66c5e",
+    "spikes/executor/tests/test_acceptance.py": "a4065f5b03eed91ce4d27d78282985f813bf7401ff931e071bc58acd22827758",
+    "spikes/executor/tests/test_inspect_probe.py": "8f0131bf7c26480d509a53055064fa54441186346d055c0c4f29608211337bd7",
+    "spikes/executor/worker.py": "57214d5f594dab9daa6f8ecb306ced70fbae21f641fd911a8d99abf1ff166e14"
+  },
+  "source_lines": {
+    "spikes/__init__.py": 1,
+    "spikes/executor/__init__.py": 1,
+    "spikes/executor/engine.py": 221,
+    "spikes/executor/inspect_tasks.py": 71,
+    "spikes/executor/record_results.py": 109,
+    "spikes/executor/store.py": 265,
+    "spikes/executor/tests/__init__.py": 1,
+    "spikes/executor/tests/test_acceptance.py": 416,
+    "spikes/executor/tests/test_inspect_probe.py": 45,
+    "spikes/executor/worker.py": 72
+  },
+  "tests": 37,
+  "passed": 37,
+  "failed": 0,
+  "not_tested": 0,
+  "suite_seconds": 24.758,
+  "results": [
+    {
+      "test": "test_E01_before_dispatch[native]",
+      "contract": "E01",
+      "status": "pass",
+      "seconds": 0.062
+    },
+    {
+      "test": "test_E01_before_dispatch[inspect]",
+      "contract": "E01",
+      "status": "pass",
+      "seconds": 0.745
+    },
+    {
+      "test": "test_E02_committed_answer_survives_sigkill[native]",
+      "contract": "E02",
+      "status": "pass",
+      "seconds": 0.086
+    },
+    {
+      "test": "test_E02_committed_answer_survives_sigkill[inspect]",
+      "contract": "E02",
+      "status": "pass",
+      "seconds": 1.506
+    },
+    {
+      "test": "test_E03_unknown_action_is_not_replayed[native]",
+      "contract": "E03",
+      "status": "pass",
+      "seconds": 0.079
+    },
+    {
+      "test": "test_E03_unknown_action_is_not_replayed[inspect]",
+      "contract": "E03",
+      "status": "pass",
+      "seconds": 1.479
+    },
+    {
+      "test": "test_committed_final_answer_does_not_dispatch_again[native]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.094
+    },
+    {
+      "test": "test_committed_final_answer_does_not_dispatch_again[inspect]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 1.41
+    },
+    {
+      "test": "test_E04_late_response_does_not_replace_retry[native]",
+      "contract": "E04",
+      "status": "pass",
+      "seconds": 0.096
+    },
+    {
+      "test": "test_E04_late_response_does_not_replace_retry[inspect]",
+      "contract": "E04",
+      "status": "pass",
+      "seconds": 1.479
+    },
+    {
+      "test": "test_E05_device_owned_across_two_runs_and_reconciled[native]",
+      "contract": "E05",
+      "status": "pass",
+      "seconds": 0.126
+    },
+    {
+      "test": "test_E05_device_owned_across_two_runs_and_reconciled[inspect]",
+      "contract": "E05",
+      "status": "pass",
+      "seconds": 2.196
+    },
+    {
+      "test": "test_E06_identical_questions_and_stale_request_echo[native]",
+      "contract": "E06",
+      "status": "pass",
+      "seconds": 0.053
+    },
+    {
+      "test": "test_E06_identical_questions_and_stale_request_echo[inspect]",
+      "contract": "E06",
+      "status": "pass",
+      "seconds": 0.809
+    },
+    {
+      "test": "test_E07_restart_session_at_safe_boundary[native]",
+      "contract": "E07",
+      "status": "pass",
+      "seconds": 0.083
+    },
+    {
+      "test": "test_E07_restart_session_at_safe_boundary[inspect]",
+      "contract": "E07",
+      "status": "pass",
+      "seconds": 1.794
+    },
+    {
+      "test": "test_E08_racing_judges_share_durable_cap[native]",
+      "contract": "E08",
+      "status": "pass",
+      "seconds": 0.143
+    },
+    {
+      "test": "test_E08_racing_judges_share_durable_cap[inspect]",
+      "contract": "E08",
+      "status": "pass",
+      "seconds": 1.544
+    },
+    {
+      "test": "test_E09_cache_and_intentional_repetition[native]",
+      "contract": "E09",
+      "status": "pass",
+      "seconds": 0.049
+    },
+    {
+      "test": "test_E09_cache_and_intentional_repetition[inspect]",
+      "contract": "E09",
+      "status": "pass",
+      "seconds": 0.865
+    },
+    {
+      "test": "test_E10_unavailable_evidence_invalid_verdict_and_timeout[native]",
+      "contract": "E10",
+      "status": "pass",
+      "seconds": 0.053
+    },
+    {
+      "test": "test_E10_unavailable_evidence_invalid_verdict_and_timeout[inspect]",
+      "contract": "E10",
+      "status": "pass",
+      "seconds": 0.894
+    },
+    {
+      "test": "test_E11_saved_reporting_comparison_and_exports_are_pure[native]",
+      "contract": "E11",
+      "status": "pass",
+      "seconds": 0.058
+    },
+    {
+      "test": "test_E11_saved_reporting_comparison_and_exports_are_pure[inspect]",
+      "contract": "E11",
+      "status": "pass",
+      "seconds": 0.892
+    },
+    {
+      "test": "test_E12_portable_partial_run_without_original_logs_or_buffers[native]",
+      "contract": "E12",
+      "status": "pass",
+      "seconds": 0.09
+    },
+    {
+      "test": "test_E12_portable_partial_run_without_original_logs_or_buffers[inspect]",
+      "contract": "E12",
+      "status": "pass",
+      "seconds": 1.6
+    },
+    {
+      "test": "test_E13_configuration_change_cannot_resume[native]",
+      "contract": "E13",
+      "status": "pass",
+      "seconds": 0.045
+    },
+    {
+      "test": "test_E13_configuration_change_cannot_resume[inspect]",
+      "contract": "E13",
+      "status": "pass",
+      "seconds": 0.842
+    },
+    {
+      "test": "test_E14_retry_does_not_inherit_old_context_or_usage[native]",
+      "contract": "E14",
+      "status": "pass",
+      "seconds": 0.051
+    },
+    {
+      "test": "test_E14_retry_does_not_inherit_old_context_or_usage[inspect]",
+      "contract": "E14",
+      "status": "pass",
+      "seconds": 0.897
+    },
+    {
+      "test": "test_unknown_cost_and_reserved_dispatch_remain_unknown[native]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.133
+    },
+    {
+      "test": "test_unknown_cost_and_reserved_dispatch_remain_unknown[inspect]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.957
+    },
+    {
+      "test": "test_cost_reservations_use_bounds_and_record_actuals[native]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.055
+    },
+    {
+      "test": "test_cost_reservations_use_bounds_and_record_actuals[inspect]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.9
+    },
+    {
+      "test": "test_strict_boolean_and_export_integrity[native]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.051
+    },
+    {
+      "test": "test_strict_boolean_and_export_integrity[inspect]",
+      "contract": null,
+      "status": "pass",
+      "seconds": 0.881
+    },
+    {
+      "test": "test_default_inspect_retry_reuses_A_but_repeats_accepted_B",
+      "contract": null,
+      "status": "pass",
+      "seconds": 1.609
+    }
+  ]
+}

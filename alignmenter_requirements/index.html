@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -496,6 +496,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../guides/persona/" class="md-nav__link">
         
   
@@ -644,6 +700,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -806,6 +1002,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1588,30 +1812,30 @@ Minimal geometric aesthetics with converging lines forming an <strong>A</strong>
 <h2 id="8-data-and-config">8. Data and Config<a class="headerlink" href="#8-data-and-config" title="Permanent link">&para;</a></h2>
 <h3 id="81-conversation-schema-parquet-or-jsonl">8.1 Conversation Schema (Parquet or JSONL)<a class="headerlink" href="#81-conversation-schema-parquet-or-jsonl" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;s1&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">&quot;turn_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;response text&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;scenario:test&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">&quot;persona_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;goth_muse&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s1"</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"turn_index"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"assistant"</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response text"</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scenario:test"</span><span class="p">],</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">"persona_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"goth_muse"</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="82-persona-pack-yaml">8.2 Persona Pack (YAML)<a class="headerlink" href="#82-persona-pack-yaml" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">goth_muse_v1</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Goth Muse</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">exemplars</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;soft-voiced,</span><span class="nv"> </span><span class="s">dry</span><span class="nv"> </span><span class="s">humor,</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">little</span><span class="nv"> </span><span class="s">spooky,</span><span class="nv"> </span><span class="s">never</span><span class="nv"> </span><span class="s">saccharine&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;keep</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">brief;</span><span class="nv"> </span><span class="s">prefer</span><span class="nv"> </span><span class="s">concrete</span><span class="nv"> </span><span class="s">words</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">abstractions&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"soft-voiced,</span><span class="nv"> </span><span class="s">dry</span><span class="nv"> </span><span class="s">humor,</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">little</span><span class="nv"> </span><span class="s">spooky,</span><span class="nv"> </span><span class="s">never</span><span class="nv"> </span><span class="s">saccharine"</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"keep</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">brief;</span><span class="nv"> </span><span class="s">prefer</span><span class="nv"> </span><span class="s">concrete</span><span class="nv"> </span><span class="s">words</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">abstractions"</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nt">lexicon</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">preferred</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;sardonic&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;velvet&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;low-light&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;quiet&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ritual&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">avoid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;awesome!!!&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;super</span><span class="nv"> </span><span class="s">excited&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;lol&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">preferred</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"sardonic"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"velvet"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"low-light"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"quiet"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"ritual"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">avoid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"awesome!!!"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"super</span><span class="nv"> </span><span class="s">excited"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"lol"</span><span class="p p-Indicator">]</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nt">style_rules</span><span class="p">:</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nt">sentence_length</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">max_avg</span><span class="p">:</span><span class="w"> </span><span class="nv">16</span><span class="p p-Indicator">}</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nt">contractions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">allowed</span><span class="p">:</span><span class="w"> </span><span class="nv">true</span><span class="p p-Indicator">}</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">emojis</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">allowed</span><span class="p">:</span><span class="w"> </span><span class="nv">false</span><span class="p p-Indicator">}</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">safety_rules</span><span class="p">:</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">disallowed_topics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;self-harm</span><span class="nv"> </span><span class="s">instructions&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;hate&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nt">brand_notes</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;elegant,</span><span class="nv"> </span><span class="s">no</span><span class="nv"> </span><span class="s">camp&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">disallowed_topics</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"self-harm</span><span class="nv"> </span><span class="s">instructions"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"hate"</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="nt">brand_notes</span><span class="p">:</span><span class="w"> </span><span class="s">"elegant,</span><span class="nv"> </span><span class="s">no</span><span class="nv"> </span><span class="s">camp"</span>
 </code></pre></div>
 <ul>
 <li><strong>Starter template</strong>: ship <code>alignmenter/configs/persona/default.yaml</code> as a neutral voice for teams without a brand pack. A <code>alignmenter persona scaffold --name "Acme"</code> helper populates display name, exemplar scaffold, and lexicon prompts.</li>
@@ -1703,9 +1927,9 @@ Minimal geometric aesthetics with converging lines forming an <strong>A</strong>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--dataset<span class="w"> </span>datasets/demo.jsonl<span class="w"> </span>--persona<span class="w"> </span>alignmenter/configs/persona/goth_muse.yaml<span class="w"> </span>--out<span class="w"> </span>reports/
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span>--compare<span class="w"> </span>anthropic:claude-3-5
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>scaffold<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Acme Voice&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>scaffold<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Acme Voice"</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--dataset<span class="w"> </span>datasets/demo_conversations.jsonl<span class="w"> </span>--out<span class="w"> </span>annotation.csv
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>alignmenter<span class="w"> </span>import<span class="w"> </span>gpt<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Brand Voice&quot;</span><span class="w"> </span>--instructions<span class="w"> </span>instructions.txt<span class="w"> </span>--out<span class="w"> </span>alignmenter/configs/persona/brand_voice.yaml
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>alignmenter<span class="w"> </span>import<span class="w"> </span>gpt<span class="w"> </span>--name<span class="w"> </span><span class="s2">"Brand Voice"</span><span class="w"> </span>--instructions<span class="w"> </span>instructions.txt<span class="w"> </span>--out<span class="w"> </span>alignmenter/configs/persona/brand_voice.yaml
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>lint<span class="w"> </span>datasets/demo_conversations.jsonl
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--config<span class="w"> </span>alignmenter/configs/demo_config.yaml
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>sync-gpt<span class="w"> </span>gpt://brand/voice<span class="w"> </span>--out<span class="w"> </span>alignmenter/configs/persona/_gpt/brand.yaml
@@ -1751,13 +1975,13 @@ Minimal geometric aesthetics with converging lines forming an <strong>A</strong>
 </code></pre></div>
 <h2 id="12-result-schema-excerpt">12. Result Schema (Excerpt)<a class="headerlink" href="#12-result-schema-excerpt" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;demo_001&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai:gpt-4o-mini&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;compare_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic:claude-3-5&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;aggregates&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">&quot;authenticity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.83</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ci95&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.79</span><span class="p">,</span><span class="w"> </span><span class="mf">0.87</span><span class="p">]},</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">&quot;safety&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">},</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">&quot;stability&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;mean&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.88</span><span class="p">}</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">"run_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo_001"</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openai:gpt-4o-mini"</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">"compare_model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anthropic:claude-3-5"</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">"aggregates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">"authenticity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"mean"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.83</span><span class="p">,</span><span class="w"> </span><span class="nt">"ci95"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.79</span><span class="p">,</span><span class="w"> </span><span class="mf">0.87</span><span class="p">]},</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">"safety"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"mean"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.95</span><span class="p">},</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="nt">"stability"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"mean"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.88</span><span class="p">}</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">}</span>
 </code></pre></div>

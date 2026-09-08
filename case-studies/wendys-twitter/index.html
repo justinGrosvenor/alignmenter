@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://alignmenter.com/case-studies/wendys-twitter/">
       
       
-        <link rel="prev" href="../../guides/llm-judges/">
+        <link rel="prev" href="../../guides/grounding-faithfulness/">
       
       
-        <link rel="next" href="../../reference/cli/">
+        <link rel="next" href="../../reference/sdk/">
       
       
         
@@ -500,6 +500,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/persona/" class="md-nav__link">
         
   
@@ -648,6 +704,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -962,6 +1158,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1431,7 +1655,7 @@ The Wendy's project ships only in the source repo. Install Alignmenter from this
 </blockquote>
 <h3 id="3-run-the-baseline-evaluation">3. Run the Baseline Evaluation<a class="headerlink" href="#3-run-the-baseline-evaluation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--config<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/baseline_run.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--config<span class="w"> </span>case-studies/wendys-twitter/baseline_run.yaml<span class="w"> </span><span class="se">\</span>
 </code></pre></div>
 <p>This reproduces the <code>baseline_diagnostics.json</code> file (ROC-AUC ≈ 0.733). Open the HTML report under <code>reports/&lt;timestamp&gt;_baseline/</code> and note that the new scenario/persona analytics already highlight which flows are most off-brand.</p>
 <h3 id="4-calibrate-the-persona">4. Calibrate the Persona<a class="headerlink" href="#4-calibrate-the-persona" title="Permanent link">&para;</a></h3>
@@ -1440,30 +1664,30 @@ The Wendy's project ships only in the source repo. Install Alignmenter from this
 <li>
 <p><strong>Estimate style bounds</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--labeled<span class="w"> </span>case-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/calibration_reports/bounds.json
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>case-studies/wendys-twitter/calibration_reports/bounds.json
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Optimize weights</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--bounds<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/calibration_reports/bounds.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--labeled<span class="w"> </span>case-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--bounds<span class="w"> </span>case-studies/wendys-twitter/calibration_reports/bounds.json<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--output<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/calibration_reports/weights.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--output<span class="w"> </span>case-studies/wendys-twitter/calibration_reports/weights.json<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--grid-step<span class="w"> </span><span class="m">0</span>.1
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Validate + diagnose</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--labeled<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--labeled<span class="w"> </span>case-studies/wendys-twitter/wendys_dataset.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/calibrated_diagnostics.json
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>case-studies/wendys-twitter/calibrated_diagnostics.json
 </code></pre></div></p>
 </li>
 <li>
@@ -1475,39 +1699,39 @@ The Wendy's project ships only in the source repo. Install Alignmenter from this
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pass: strict on-brand slice</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_onbrand_strict.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--dataset<span class="w"> </span>case-studies/wendys-twitter/demo/wendys_onbrand_strict.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_onbrand
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Mid: generic-but-friendly LLM voice</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_generic_llm.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--dataset<span class="w"> </span>case-studies/wendys-twitter/demo/wendys_generic_llm.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_generic
 <a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
 <a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Fail: explicitly off-brand corporate replies</span>
 <a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_offbrand.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>--dataset<span class="w"> </span>case-studies/wendys-twitter/demo/wendys_offbrand.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_offbrand
 <a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
 <a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Holdout suites (fresh sessions not seen during calibration)</span>
 <a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_holdout_service.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">  </span>--dataset<span class="w"> </span>case-studies/wendys-twitter/demo/wendys_holdout_service.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_holdout_service
 <a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
 <a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">  </span>--model<span class="w"> </span>openai:gpt-4o-mini<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">  </span>--dataset<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/demo/wendys_holdout_roast.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">  </span>--persona<span class="w"> </span><span class="k">case</span>-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">  </span>--dataset<span class="w"> </span>case-studies/wendys-twitter/demo/wendys_holdout_roast.jsonl<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">  </span>--persona<span class="w"> </span>case-studies/wendys-twitter/wendys_twitter.yaml<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">  </span>--embedding<span class="w"> </span>sentence-transformer:all-MiniLM-L6-v2<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">  </span>--out<span class="w"> </span>reports/wendys_holdout_roast
 </code></pre></div>

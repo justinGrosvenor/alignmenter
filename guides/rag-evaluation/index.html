@@ -12,31 +12,31 @@
         <meta name="author" content="Justin Grosvenor">
       
       
-        <link rel="canonical" href="https://alignmenter.com/persona_annotation/">
+        <link rel="canonical" href="https://alignmenter.com/guides/rag-evaluation/">
       
       
-        <link rel="prev" href="../guides/persona/">
+        <link rel="prev" href="../llm-judges/">
       
       
-        <link rel="next" href="../guides/calibration/">
+        <link rel="next" href="../durable-runs/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Persona Annotation - Alignmenter</title>
+        <title>RAG Evaluation - Alignmenter</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,7 +55,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#persona-annotation" class="md-skip">
+        <a href="#evaluating-retrieval-augmented-assistants" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+    <a href="../.." title="Alignmenter" class="md-header__button md-logo" aria-label="Alignmenter" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Persona Annotation
+              RAG Evaluation
             
           </span>
         </div>
@@ -244,7 +244,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
+    <a href="../.." title="Alignmenter" class="md-nav__button md-logo" aria-label="Alignmenter" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -274,7 +274,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -355,7 +355,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -383,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -411,7 +411,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/concepts/" class="md-nav__link">
+      <a href="../../getting-started/concepts/" class="md-nav__link">
         
   
   
@@ -500,7 +500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/release-workflow/" class="md-nav__link">
+      <a href="../release-workflow/" class="md-nav__link">
         
   
   
@@ -528,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/migration-0.3/" class="md-nav__link">
+      <a href="../migration-0.3/" class="md-nav__link">
         
   
   
@@ -556,7 +556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/persona/" class="md-nav__link">
+      <a href="../persona/" class="md-nav__link">
         
   
   
@@ -564,6 +564,146 @@
     
   
     Persona Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../persona_annotation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persona Annotation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../calibration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Calibration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Safety Checks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../offline_safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Offline Safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-judges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Judges
   
 
     
@@ -600,7 +740,7 @@
   <span class="md-ellipsis">
     
   
-    Persona Annotation
+    RAG Evaluation
   
 
     
@@ -618,7 +758,7 @@
   <span class="md-ellipsis">
     
   
-    Persona Annotation
+    RAG Evaluation
   
 
     
@@ -644,10 +784,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-label-format" class="md-nav__link">
+  <a href="#1-attach-the-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The label format
+        1. Attach the context
       
     </span>
   </a>
@@ -655,33 +795,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preparing-candidates-to-label" class="md-nav__link">
+  <a href="#2-grounding-offline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preparing candidates to label
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Preparing candidates to label">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-a-persona-export-for-external-annotation-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option A — persona export (for external annotation tools)
+        2. Grounding (offline)
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#option-b-calibrate-generate-calibrate-label-built-in" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#3-faithfulness-and-correctness-judge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option B — calibrate generate + calibrate label (built-in)
+        3. Faithfulness and correctness (judge)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Faithfulness and correctness (judge)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#judging-without-sending-transcripts-anywhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judging without sending transcripts anywhere
       
     </span>
   </a>
@@ -694,10 +834,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-review-rubric" class="md-nav__link">
+  <a href="#4-your-own-scorers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a review rubric
+        4. Your own scorers
       
     </span>
   </a>
@@ -705,10 +845,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#from-labels-to-a-calibrated-scorer" class="md-nav__link">
+  <a href="#5-reading-the-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From labels to a calibrated scorer
+        5. Reading the report
       
     </span>
   </a>
@@ -716,10 +856,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
+  <a href="#two-things-the-numbers-cannot-tell-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related
+        Two things the numbers cannot tell you
       
     </span>
   </a>
@@ -742,147 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/calibration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Calibration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guides/safety/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Safety Checks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../offline_safety/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Offline Safety
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guides/llm-judges/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Judges
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guides/rag-evaluation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    RAG Evaluation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../guides/durable-runs/" class="md-nav__link">
+      <a href="../durable-runs/" class="md-nav__link">
         
   
   
@@ -910,7 +910,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/capture-recovery/" class="md-nav__link">
+      <a href="../capture-recovery/" class="md-nav__link">
         
   
   
@@ -938,7 +938,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/durable-evaluations/" class="md-nav__link">
+      <a href="../durable-evaluations/" class="md-nav__link">
         
   
   
@@ -966,7 +966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../guides/grounding-faithfulness/" class="md-nav__link">
+      <a href="../grounding-faithfulness/" class="md-nav__link">
         
   
   
@@ -1055,7 +1055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../case-studies/wendys-twitter/" class="md-nav__link">
+      <a href="../../case-studies/wendys-twitter/" class="md-nav__link">
         
   
   
@@ -1144,7 +1144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/sdk/" class="md-nav__link">
+      <a href="../../reference/sdk/" class="md-nav__link">
         
   
   
@@ -1172,7 +1172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/cli/" class="md-nav__link">
+      <a href="../../reference/cli/" class="md-nav__link">
         
   
   
@@ -1200,7 +1200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/metrics/" class="md-nav__link">
+      <a href="../../reference/metrics/" class="md-nav__link">
         
   
   
@@ -1228,7 +1228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/config/" class="md-nav__link">
+      <a href="../../reference/config/" class="md-nav__link">
         
   
   
@@ -1263,7 +1263,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../contributing/" class="md-nav__link">
         
   
   
@@ -1310,10 +1310,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-label-format" class="md-nav__link">
+  <a href="#1-attach-the-context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The label format
+        1. Attach the context
       
     </span>
   </a>
@@ -1321,33 +1321,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#preparing-candidates-to-label" class="md-nav__link">
+  <a href="#2-grounding-offline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Preparing candidates to label
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Preparing candidates to label">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-a-persona-export-for-external-annotation-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option A — persona export (for external annotation tools)
+        2. Grounding (offline)
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#option-b-calibrate-generate-calibrate-label-built-in" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#3-faithfulness-and-correctness-judge" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option B — calibrate generate + calibrate label (built-in)
+        3. Faithfulness and correctness (judge)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Faithfulness and correctness (judge)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#judging-without-sending-transcripts-anywhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Judging without sending transcripts anywhere
       
     </span>
   </a>
@@ -1360,10 +1360,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#writing-a-review-rubric" class="md-nav__link">
+  <a href="#4-your-own-scorers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Writing a review rubric
+        4. Your own scorers
       
     </span>
   </a>
@@ -1371,10 +1371,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#from-labels-to-a-calibrated-scorer" class="md-nav__link">
+  <a href="#5-reading-the-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        From labels to a calibrated scorer
+        5. Reading the report
       
     </span>
   </a>
@@ -1382,10 +1382,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
+  <a href="#two-things-the-numbers-cannot-tell-you" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related
+        Two things the numbers cannot tell you
       
     </span>
   </a>
@@ -1409,7 +1409,7 @@
 
 
   
-    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/persona_annotation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/guides/rag-evaluation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1417,132 +1417,229 @@
   
 
 
-<h1 id="persona-annotation">Persona Annotation<a class="headerlink" href="#persona-annotation" title="Permanent link">&para;</a></h1>
-<p>Calibration turns Alignmenter's authenticity scorer from a reasonable default into
-a measurement tuned to <em>your</em> brand voice. It all starts with a small set of
-human-labeled examples. This page explains the annotation workflow and how those
-labels flow into calibration.</p>
-<h2 id="the-label-format">The label format<a class="headerlink" href="#the-label-format" title="Permanent link">&para;</a></h2>
-<p>Annotation is a binary judgment on individual assistant turns:</p>
+<h1 id="evaluating-retrieval-augmented-assistants">Evaluating Retrieval-Augmented Assistants<a class="headerlink" href="#evaluating-retrieval-augmented-assistants" title="Permanent link">&para;</a></h1>
+<p>For saved evaluations with durable judge budgets, strict missing-evidence handling,
+and reusable assessments, use the <a href="../grounding-faithfulness/">grounding and faithfulness guide</a>.
+The <code>run</code> examples below describe the older scorer API and retain its legacy score semantics.</p>
+<p>Brand voice, safety, and stability describe <em>how</em> an assistant speaks. A
+retrieval-augmented assistant — one that answers from documents it was given —
+has a fourth question that matters more than any of those: <strong>is what it said
+actually in the documents, and is it right?</strong></p>
+<p>Alignmenter ships two scorers for that, and a seam for your own.</p>
+<table>
+<thead>
+<tr>
+<th>Scorer</th>
+<th>Needs</th>
+<th>Answers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>grounding</code></td>
+<td>nothing (offline, deterministic)</td>
+<td>Are the <em>figures</em> in the answer traceable to the retrieved passages? Are the <code>[n]</code> citations real?</td>
+</tr>
+<tr>
+<td><code>faithfulness</code></td>
+<td>an LLM judge</td>
+<td>Which <em>claims</em> do the passages support? Is the answer correct for the question? Could it hurt someone?</td>
+</tr>
+<tr>
+<td><code>custom</code></td>
+<td>a class you write</td>
+<td>Whatever your product needs — resolution rate, latency, contribution …</td>
+</tr>
+</tbody>
+</table>
+<p>Both built-ins read the retrieval context the provider attached to each
+assistant turn. Neither runs unless you ask for it.</p>
+<h2 id="1-attach-the-context">1. Attach the context<a class="headerlink" href="#1-attach-the-context" title="Permanent link">&para;</a></h2>
+<p>Your provider's <code>chat()</code> returns a <code>ChatResponse</code>. Put what the model was shown
+in <code>context</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">alignmenter.providers.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatResponse</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ChatResponse</span><span class="p">:</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">question</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">"content"</span><span class="p">]</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">excerpts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retriever</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">question</span><span class="p">)</span>          <span class="c1"># your retrieval</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">answer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">answer</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">excerpts</span><span class="p">)</span>      <span class="c1"># your generation</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">return</span> <span class="n">ChatResponse</span><span class="p">(</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="n">text</span><span class="o">=</span><span class="n">answer</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="n">usage</span><span class="o">=</span><span class="p">{</span><span class="s2">"prompt_tokens"</span><span class="p">:</span> <span class="mi">1200</span><span class="p">,</span> <span class="s2">"completion_tokens"</span><span class="p">:</span> <span class="mi">300</span><span class="p">},</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="n">context</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            <span class="s2">"question"</span><span class="p">:</span> <span class="n">question</span><span class="p">,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>            <span class="s2">"excerpts"</span><span class="p">:</span> <span class="p">[</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                <span class="p">{</span><span class="s2">"title"</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">"section"</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="s2">"text"</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">}</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">excerpts</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>            <span class="p">],</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>            <span class="s2">"latency_ms"</span><span class="p">:</span> <span class="mi">1840</span><span class="p">,</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        <span class="p">},</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="p">)</span>
+</code></pre></div>
+<p>The runner writes it to the turn as <code>metadata["context"]</code>, so it is also in the
+saved transcript and you can re-score later without re-generating. Excerpts may
+be dicts (<code>text</code> plus optional <code>title</code> / <code>section</code>) or plain strings, under any of
+the keys <code>excerpts</code>, <code>passages</code>, <code>documents</code>, <code>sources</code>, <code>context</code>. Keep them in
+the order the model saw them so <code>[n]</code> citations line up.</p>
+<p>If you score recorded transcripts rather than generating, the same shape works
+in the dataset JSONL: an assistant turn with <code>metadata.context.excerpts</code>.</p>
+<h2 id="2-grounding-offline">2. Grounding (offline)<a class="headerlink" href="#2-grounding-offline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">grounding</span><span class="p">:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">units_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">     </span><span class="c1"># default: only quantities that carry a unit are judged</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">threshold_fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.85</span>
+</code></pre></div>
+<p>or <code>alignmenter run --grounding …</code>.</p>
+<p>Every quantity in the answer (<code>5 drops</code>, <code>40 minutes</code>, <code>70 °C</code>, <code>500 mg</code>) must
+appear in the passages, after unit normalisation (<code>litres</code> = <code>liters</code> = <code>l</code>,
+<code>1.0</code> = <code>1</code>). List numbering and citation digits are stripped first. Bare
+integers are ignored by default: they are almost always layout, and the claims a
+reader acts on carry units.</p>
+<p>Unsupported quantities are split two ways because they need different fixes:</p>
 <ul>
-<li><strong><code>1</code> = on-brand</strong> – the response sounds like your persona</li>
-<li><strong><code>0</code> = off-brand</strong> – it does not</li>
+<li><strong>invented</strong> — the passages gave no figure in that unit at all. The model
+  filled a gap. Fix the prompt ("say the library does not specify").</li>
+<li><strong>contradicted</strong> — the passages gave a figure in that unit and the answer's
+  differs. Fix retrieval or comprehension.</li>
 </ul>
-<p>Labeled data is stored as JSONL, one record per turn. Each record needs at least:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"persona_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default_v1"</span><span class="p">,</span><span class="w"> </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Our baseline analysis shows a clear signal."</span><span class="p">,</span><span class="w"> </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">}</span>
+<p>A citation that points past the end of the excerpt list is counted as invalid.</p>
+<p>Payload:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>score</code></td>
+<td>supported ÷ checked quantities, across all grounded turns</td>
+</tr>
+<tr>
+<td><code>invented</code>, <code>contradicted</code></td>
+<td>counts of unsupported quantities by kind</td>
+</tr>
+<tr>
+<td><code>citation_validity</code></td>
+<td>1 − invalid ÷ total citations</td>
+</tr>
+<tr>
+<td><code>violations</code></td>
+<td>the worst answers first: question, the unsupported figures, how many excerpts it had</td>
+</tr>
+</tbody>
+</table>
+<p>Grounding is a proxy. It says nothing about whether the answer was correct or
+whether the right passages were retrieved. That is what the judge is for.</p>
+<h2 id="3-faithfulness-and-correctness-judge">3. Faithfulness and correctness (judge)<a class="headerlink" href="#3-faithfulness-and-correctness-judge" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">faithfulness</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic:claude-sonnet-5</span><span class="w">      </span><span class="c1"># or openai:…, or a local endpoint (below)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span><span class="w">                            </span><span class="c1"># max judge calls this run</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">an offline survival and first-aid reference</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">threshold_warn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">thresholds</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">dangerous</span><span class="p">:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">fail</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">                                </span><span class="c1"># any answer that could hurt someone fails the run</span>
 </code></pre></div>
-<p>The <code>persona_id</code> must match the <code>id</code> field of the persona YAML you are
-calibrating; <code>calibrate-persona</code> skips rows whose <code>persona_id</code> does not match.
-Interactive labeling also records <code>labeler</code>, <code>timestamp</code>, <code>confidence</code>
-(<code>high</code>/<code>medium</code>/<code>low</code>), and free-text <code>notes</code>, but only <code>persona_id</code>, <code>text</code>, and
-<code>label</code> are required for training.</p>
-<p>Aim for at least <strong>25 labeled turns</strong> (the default <code>--min-samples</code>), balanced
-between on-brand and off-brand examples. Calibration needs both classes present.</p>
-<h2 id="preparing-candidates-to-label">Preparing candidates to label<a class="headerlink" href="#preparing-candidates-to-label" title="Permanent link">&para;</a></h2>
-<p>You have two ways to assemble the turns you will label.</p>
-<h3 id="option-a-persona-export-for-external-annotation-tools">Option A — <code>persona export</code> (for external annotation tools)<a class="headerlink" href="#option-a-persona-export-for-external-annotation-tools" title="Permanent link">&para;</a></h3>
-<p>Export assistant turns from a dataset into a spreadsheet-friendly CSV, or into
-Label Studio tasks:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># CSV for a spreadsheet / labeling tool</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--persona-id<span class="w"> </span>default_v1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--out<span class="w"> </span>annotation_batch.csv
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Label Studio JSON tasks</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--format<span class="w"> </span>labelstudio<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--out<span class="w"> </span>tasks.json
-</code></pre></div>
-<p>Add a <code>label</code> column/field (0 or 1) in your tool of choice, then convert the
-results back to the JSONL format above.</p>
-<h3 id="option-b-calibrate-generate-calibrate-label-built-in">Option B — <code>calibrate generate</code> + <code>calibrate label</code> (built-in)<a class="headerlink" href="#option-b-calibrate-generate-calibrate-label-built-in" title="Permanent link">&para;</a></h3>
-<p>Sample a diverse set of candidate turns, then label them interactively in the
-terminal:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Sample candidates from an existing dataset</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--dataset<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>candidates.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--num-samples<span class="w"> </span><span class="m">50</span><span class="w"> </span>--strategy<span class="w"> </span>diverse
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 2. Label them one-by-one (writes each label immediately)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--input<span class="w"> </span>candidates.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--output<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--labeler<span class="w"> </span>jane
-</code></pre></div>
-<p>The labeler prompt shows the persona's exemplars and lexicon for context and
-accepts <code>1</code> (on-brand), <code>0</code> (off-brand), <code>s</code> (skip), or <code>q</code> (quit). Use
-<code>--append</code> to resume a labeling session without re-labeling turns you already
-covered.</p>
-<h2 id="writing-a-review-rubric">Writing a review rubric<a class="headerlink" href="#writing-a-review-rubric" title="Permanent link">&para;</a></h2>
-<p>Consistent labels come from a shared definition of "on-brand." Before annotating,
-write down for each persona:</p>
+<p>For each grounded answer the judge sees the question, the numbered passages,
+and the answer, and returns:</p>
 <ul>
-<li><strong>Tone traits</strong> to reward (e.g. measured, precise, warm) and their opposites.</li>
-<li><strong>Disallowed phrases / lexicon</strong> — words the brand never uses (mirror the
-  persona's <code>lexicon.avoid</code>).</li>
-<li><strong>Borderline guidance</strong> — how to handle responses that are correct but flat, or
-  on-topic but off-voice.</li>
+<li>the answer's factual claims, each <code>supported</code> / <code>unsupported</code> /
+  <code>contradicted</code>, with the passage phrase as evidence;</li>
+<li>a correctness rating 0–10, judged against the passages first and expert
+  knowledge second — a fluent answer with a wrong figure scores low, an honest
+  "the material does not cover this" scores high when true;</li>
+<li>whether it answered the question, whether it abstained and whether that was
+  appropriate;</li>
+<li>a <code>dangerous</code> flag with a specific reason, reserved for answers that could
+  plausibly cause serious harm if followed.</li>
 </ul>
-<p>Keep the rubric next to the labeling tool so every annotator applies the same bar.</p>
-<h2 id="from-labels-to-a-calibrated-scorer">From labels to a calibrated scorer<a class="headerlink" href="#from-labels-to-a-calibrated-scorer" title="Permanent link">&para;</a></h2>
-<p>Once you have <code>labeled.jsonl</code>, the calibration pipeline consumes it in stages.
-Diagnostics and weight tuning require the <code>[calibrate]</code> extra
-(<code>pip install "alignmenter[calibrate]"</code>); fitting the trait model does not.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Estimate style-similarity normalization bounds   [calibrate]</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--output<span class="w"> </span>bounds.json
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 2. Grid-search the style/traits/lexicon blend weights  [calibrate]</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--bounds<span class="w"> </span>bounds.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--output<span class="w"> </span>weights.json
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># 3. Fit the persona trait model -&gt; writes &lt;persona&gt;.traits.json</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>alignmenter<span class="w"> </span>calibrate-persona<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--persona-path<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--dataset<span class="w"> </span>labeled.jsonl
+<p>Tell the judge what the product is with <code>domain</code>; "dangerous" means different
+things for a survival reference and a recipe assistant.</p>
+<p>Payload:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>score</code></td>
+<td>faithfulness: supported ÷ all claims, averaged per answer (an appropriate abstention with no claims scores 1)</td>
+</tr>
+<tr>
+<td><code>correctness</code></td>
+<td>mean judge rating on 0–1</td>
+</tr>
+<tr>
+<td><code>dangerous</code></td>
+<td>count of answers flagged dangerous</td>
+</tr>
+<tr>
+<td><code>dangerous_answers</code></td>
+<td>those answers, with the judge's reason — read these first</td>
+</tr>
+<tr>
+<td><code>unfaithful_answers</code></td>
+<td>answers with unsupported or contradicted claims, weakest first</td>
+</tr>
+<tr>
+<td><code>claims</code>, <code>claims_supported</code>, <code>claims_unsupported</code>, <code>claims_contradicted</code></td>
+<td>totals</td>
+</tr>
+<tr>
+<td><code>abstentions</code>, <code>abstentions_appropriate</code></td>
+<td>how often it said "not covered", and how often that was right</td>
+</tr>
+<tr>
+<td><code>judge_calls</code>, <code>judge_calls_skipped</code>, <code>judge_cost_spent</code>, <code>judge_parse_failures</code></td>
+<td>budget accounting</td>
+</tr>
+</tbody>
+</table>
+<p>Gate on <code>dangerous</code>, not on the mean. A product with a 0.95 faithfulness score
+and one answer that tells someone to drink undiluted bleach is not ready; the
+<code>thresholds.dangerous.fail: 0</code> line above makes the run exit non-zero.</p>
+<h3 id="judging-without-sending-transcripts-anywhere">Judging without sending transcripts anywhere<a class="headerlink" href="#judging-without-sending-transcripts-anywhere" title="Permanent link">&para;</a></h3>
+<p>Any OpenAI-compatible endpoint can be the judge:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">faithfulness</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local:http://127.0.0.1:8080/v1|qwen3.5-32b</span>
 </code></pre></div>
-<p>What each stage produces:</p>
-<ul>
-<li><strong><code>bounds</code></strong> derives <code>style_sim_min</code> / <code>style_sim_max</code> percentiles used to
-  rescale raw embedding cosine similarity into a presentable band.</li>
-<li><strong><code>optimize</code></strong> searches component weight combinations that sum to 1.0 and reports
-  the blend that maximizes ROC-AUC against your labels.</li>
-<li><strong><code>calibrate-persona</code></strong> trains a per-token/phrase-weight <strong>logistic model</strong> (the
-  "traits" component) and writes <code>&lt;persona&gt;.traits.json</code> next to the persona YAML.
-  The authenticity scorer loads this file automatically on the next run; without
-  it, the scorer falls back to heuristic trait weights.</li>
-</ul>
-<p>You can then confirm the result and inspect disagreements:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Cross-validate and (optionally) sample an LLM judge   [calibrate]</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--output<span class="w"> </span>diagnostics.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--judge<span class="w"> </span>anthropic:claude-sonnet-5<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Explain false positives / false negatives with a judge</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--labeled<span class="w"> </span>labeled.jsonl<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--persona<span class="w"> </span>configs/persona/default.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--output<span class="w"> </span>errors.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--judge<span class="w"> </span>anthropic:claude-sonnet-5
+<p>Start <code>llama-server</code>, vLLM, Ollama, or LM Studio with a model large enough to
+audit claims reliably — the judge should be clearly stronger than the model it
+is judging. Judge calls are cached per prompt within a run.</p>
+<h2 id="4-your-own-scorers">4. Your own scorers<a class="headerlink" href="#4-your-own-scorers" title="Permanent link">&para;</a></h2>
+<p>Anything with an <code>id</code> and <code>score(sessions) -&gt; dict</code> can be loaded from your
+product's code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">custom</span><span class="p">:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_product.eval.scorers:ContributionScorer</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_product.eval.scorers:ResolutionRate</span>
 </code></pre></div>
-<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<p>or <code>--custom-scorer my_product.eval.scorers:ContributionScorer</code> (repeatable).
+<code>score</code> receives the same session objects as the built-ins; assistant turns
+carry <code>metadata["context"]</code> when the provider attached one. A numeric <code>score</code>
+key gets the standard report treatment.</p>
+<h2 id="5-reading-the-report">5. Reading the report<a class="headerlink" href="#5-reading-the-report" title="Permanent link">&para;</a></h2>
+<p>The HTML report lists, under each scorer, the answers behind the number:
+dangerous answers first, then unfaithful ones with their problem claims, then
+grounding violations split into invented and contradicted figures. The same
+lists are in <code>results.json</code>. Start at the top of those lists; the mean is the
+last thing to look at.</p>
+<h2 id="two-things-the-numbers-cannot-tell-you">Two things the numbers cannot tell you<a class="headerlink" href="#two-things-the-numbers-cannot-tell-you" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><a href="../guides/calibration/">Calibration Guide</a></strong> – end-to-end walkthrough</li>
-<li><strong><a href="../guides/persona/">Persona Guide</a></strong> – the persona YAML schema</li>
-<li><strong><a href="../reference/cli/">CLI Reference</a></strong> – every <code>calibrate</code> command</li>
-<li><strong><a href="../reference/metrics/">Metrics Reference</a></strong> – how the trait model scores</li>
+<li><strong>Whether the right passages were retrieved.</strong> Both scorers judge the answer
+  against what the model <em>was shown</em>. A perfectly faithful answer to the wrong
+  passage is still wrong. Keep a retrieval eval beside this one.</li>
+<li><strong>Whether a supported claim is true.</strong> Passages can be wrong or outdated.
+  Faithfulness measures fidelity to the library; curate the library.</li>
 </ul>
 
 
@@ -1617,10 +1714,10 @@ Diagnostics and weight tuning require the <code>[calibrate]</code> extra
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

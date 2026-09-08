@@ -12,13 +12,13 @@
         <meta name="author" content="Justin Grosvenor">
       
       
-        <link rel="canonical" href="https://alignmenter.com/getting-started/concepts/">
+        <link rel="canonical" href="https://alignmenter.com/guides/release-workflow/">
       
       
-        <link rel="prev" href="../quickstart/">
+        <link rel="prev" href="../../getting-started/concepts/">
       
       
-        <link rel="next" href="../../guides/release-workflow/">
+        <link rel="next" href="../migration-0.3/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Core Concepts - Alignmenter</title>
+        <title>Application Release Workflow - Alignmenter</title>
       
     
     
@@ -90,7 +90,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#core-concepts" class="md-skip">
+        <a href="#application-evaluation-and-release-checks" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Core Concepts
+              Application Release Workflow
             
           </span>
         </div>
@@ -298,8 +298,6 @@
       
   
   
-    
-  
   
   
     
@@ -312,11 +310,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
@@ -337,7 +337,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -355,7 +355,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -383,7 +383,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -408,6 +408,95 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
     
   
   
@@ -427,7 +516,7 @@
   <span class="md-ellipsis">
     
   
-    Core Concepts
+    Application Release Workflow
   
 
     
@@ -445,7 +534,7 @@
   <span class="md-ellipsis">
     
   
-    Core Concepts
+    Application Release Workflow
   
 
     
@@ -471,44 +560,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-three-metrics" class="md-nav__link">
+  <a href="#run-the-offline-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Three Metrics
+        Run the offline example
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Three Metrics">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-your-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure your application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preserve-and-compare-a-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserve and compare a baseline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preserve and compare a baseline">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-authenticity-brand-voice" class="md-nav__link">
+  <a href="#uncertainty-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Authenticity (Brand Voice)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-safety" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Safety
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-stability-consistency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Stability (Consistency)
+        Uncertainty limits
       
     </span>
   </a>
@@ -521,10 +610,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#personas" class="md-nav__link">
+  <a href="#review-and-maintain-regression-cases" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Personas
+        Review and maintain regression cases
       
     </span>
   </a>
@@ -532,10 +621,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datasets" class="md-nav__link">
+  <a href="#inspect-and-exchange-saved-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Datasets
+        Inspect and exchange saved work
       
     </span>
   </a>
@@ -543,88 +632,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-judges-optional" class="md-nav__link">
+  <a href="#use-in-ci" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Judges (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reports
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Reports">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#report-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Report Sections
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calibration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Calibration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calibration-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calibration Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Use in CI
       
     </span>
   </a>
@@ -640,67 +651,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Guides
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Guides
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
                 
   
@@ -708,35 +658,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/release-workflow/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Application Release Workflow
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../guides/migration-0.3/" class="md-nav__link">
+      <a href="../migration-0.3/" class="md-nav__link">
         
   
   
@@ -764,7 +686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/persona/" class="md-nav__link">
+      <a href="../persona/" class="md-nav__link">
         
   
   
@@ -820,7 +742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/calibration/" class="md-nav__link">
+      <a href="../calibration/" class="md-nav__link">
         
   
   
@@ -848,7 +770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/safety/" class="md-nav__link">
+      <a href="../safety/" class="md-nav__link">
         
   
   
@@ -904,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/llm-judges/" class="md-nav__link">
+      <a href="../llm-judges/" class="md-nav__link">
         
   
   
@@ -932,7 +854,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+      <a href="../rag-evaluation/" class="md-nav__link">
         
   
   
@@ -960,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/durable-runs/" class="md-nav__link">
+      <a href="../durable-runs/" class="md-nav__link">
         
   
   
@@ -988,7 +910,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/capture-recovery/" class="md-nav__link">
+      <a href="../capture-recovery/" class="md-nav__link">
         
   
   
@@ -1016,7 +938,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+      <a href="../durable-evaluations/" class="md-nav__link">
         
   
   
@@ -1044,7 +966,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+      <a href="../grounding-faithfulness/" class="md-nav__link">
         
   
   
@@ -1388,44 +1310,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-three-metrics" class="md-nav__link">
+  <a href="#run-the-offline-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Three Metrics
+        Run the offline example
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The Three Metrics">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-your-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure your application
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preserve-and-compare-a-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserve and compare a baseline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preserve and compare a baseline">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-authenticity-brand-voice" class="md-nav__link">
+  <a href="#uncertainty-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Authenticity (Brand Voice)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-safety" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Safety
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-stability-consistency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Stability (Consistency)
+        Uncertainty limits
       
     </span>
   </a>
@@ -1438,10 +1360,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#personas" class="md-nav__link">
+  <a href="#review-and-maintain-regression-cases" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Personas
+        Review and maintain regression cases
       
     </span>
   </a>
@@ -1449,10 +1371,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#datasets" class="md-nav__link">
+  <a href="#inspect-and-exchange-saved-work" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Datasets
+        Inspect and exchange saved work
       
     </span>
   </a>
@@ -1460,88 +1382,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-judges-optional" class="md-nav__link">
+  <a href="#use-in-ci" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Judges (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reports
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Reports">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#report-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Report Sections
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#calibration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calibration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Calibration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#calibration-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Calibration Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
+        Use in CI
       
     </span>
   </a>
@@ -1565,7 +1409,7 @@
 
 
   
-    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/getting-started/concepts.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/justinGrosvenor/alignmenter/edit/main/docs/guides/release-workflow.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1573,198 +1417,193 @@
   
 
 
-<h1 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h1>
-<p>Understanding how Alignmenter evaluates your AI chatbot.</p>
-<h2 id="the-three-metrics">The Three Metrics<a class="headerlink" href="#the-three-metrics" title="Permanent link">&para;</a></h2>
-<p>Alignmenter measures AI behavior across three dimensions:</p>
-<h3 id="1-authenticity-brand-voice">1. Authenticity (Brand Voice)<a class="headerlink" href="#1-authenticity-brand-voice" title="Permanent link">&para;</a></h3>
-<p><strong>Question</strong>: Does the AI sound like your brand?</p>
-<p><strong>How it works</strong>:
-- Compares AI responses to reference exemplars using semantic embeddings
-- Scores learned personality traits via a per-persona token/phrase-weight logistic model
-- Validates lexicon usage (preferred words vs avoided words)
-- When an LLM judge is configured, its rating is <strong>blended into</strong> the headline score</p>
-<p><strong>Formula</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Deterministic score (always available, runs offline):
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>deterministic = w_style × style_similarity + w_traits × trait_model + w_lexicon × lexicon
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Headline score:
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>#   with a judge:  0.6 × judge + 0.4 × deterministic   (default judge_weight = 0.6)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>#   offline:       deterministic
-</code></pre></div></p>
-<p>Default component weights are <code>style 0.3 / traits 0.3 / lexicon 0.4</code>, replaced by
-calibrated values after <code>calibrate-persona</code> / <code>calibrate optimize</code>. See the
-<a href="../../reference/metrics/#authenticity-brand-voice">Metrics Reference</a> for details.</p>
-<p><strong>Score Range</strong>: 0.0 to 1.0 (higher is better)</p>
-<p><strong>Example</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Brand voice wants professional tone</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">preferred_words</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"baseline"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"signal"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"analysis"</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">avoided_words</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"lol"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"hype"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"crushing</span><span class="nv"> </span><span class="s">it"</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># AI response: "Our baseline analysis shows strong signal"</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># ✓ High authenticity (uses preferred terms, professional tone)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># AI response: "We're totally crushing it with these results lol"</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># ✗ Low authenticity (uses avoided slang, informal tone)</span>
-</code></pre></div></p>
-<h3 id="2-safety">2. Safety<a class="headerlink" href="#2-safety" title="Permanent link">&para;</a></h3>
-<p><strong>Question</strong>: Does the AI avoid harmful or inappropriate content?</p>
-<p><strong>How it works</strong>:
-- Keyword rule check across category word lists
-- An LLM judge for nuanced safety evaluation, or an offline ML classifier
-  (<code>ProtectAI/distilled-safety-roberta</code>, needs the <code>[ml]</code> extra) when no judge is set
-- Combines the rule score and the fused judge/classifier score conservatively</p>
-<p><strong>Formula</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rule_score  = 1 - violation_rate
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>fused_judge = judge_mean   # or the classifier mean when no judge is configured
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Safety      = min(rule_score, fused_judge)
-</code></pre></div></p>
-<p>See <a href="../../offline_safety/">Offline Safety</a> for the fusion details.</p>
-<p><strong>Score Range</strong>: 0.0 to 1.0 (higher is safer)</p>
-<p><strong>Categories</strong>:
-- Harmful content (violence, self-harm)
-- Offensive language (profanity, slurs)
-- Misinformation (medical, financial)
-- Policy violations (custom rules)</p>
-<h3 id="3-stability-consistency">3. Stability (Consistency)<a class="headerlink" href="#3-stability-consistency" title="Permanent link">&para;</a></h3>
-<p><strong>Question</strong>: Does the AI behave consistently across sessions?</p>
-<p><strong>How it works</strong>:
-- Measures response variance within a single conversation
-- Compares behavior across different test sessions
-- Detects semantic drift over time
-- Useful for regression testing when updating models</p>
-<p><strong>Formula</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Stability = 1 - normalized_variance(embeddings)
-</code></pre></div></p>
-<p><strong>Score Range</strong>: 0.0 to 1.0 (higher is more consistent)</p>
-<p><strong>Use cases</strong>:
-- Detect when a model update changes behavior unexpectedly
-- Ensure consistent responses to similar questions
-- Validate fine-tuning didn't break existing behavior</p>
-<h2 id="personas">Personas<a class="headerlink" href="#personas" title="Permanent link">&para;</a></h2>
-<p>A <strong>persona</strong> defines your brand voice in YAML format:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-brand</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">"My</span><span class="nv"> </span><span class="s">Brand</span><span class="nv"> </span><span class="s">Assistant"</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"Friendly,</span><span class="nv"> </span><span class="s">helpful,</span><span class="nv"> </span><span class="s">professional"</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">voice</span><span class="p">:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">tone</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"friendly"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"professional"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"helpful"</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nt">formality</span><span class="p">:</span><span class="w"> </span><span class="s">"business_casual"</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="nt">lexicon</span><span class="p">:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">preferred</span><span class="p">:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"happy</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">help"</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you"</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">avoided</span><span class="p">:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"no</span><span class="nv"> </span><span class="s">problem"</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"sure</span><span class="nv"> </span><span class="s">thing"</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nt">examples</span><span class="p">:</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"I'd</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">happy</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">help</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">request."</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Let</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">assist</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">finding</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">right</span><span class="nv"> </span><span class="s">solution."</span>
+<h1 id="application-evaluation-and-release-checks">Application evaluation and release checks<a class="headerlink" href="#application-evaluation-and-release-checks" title="Permanent link">&para;</a></h1>
+<p>Alignmenter 0.3 evaluates the commitments your application makes: using available
+resources, respecting user constraints, grounding advice in supplied evidence, and
+avoiding dangerous recommendations. Each decision retains the captured answer,
+criterion, evidence, evaluator configuration, and coverage behind it.</p>
+<h2 id="run-the-offline-example">Run the offline example<a class="headerlink" href="#run-the-offline-example" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>alignmenter
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alignmenter<span class="w"> </span>--version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>alignmenter<span class="w"> </span>init-suite<span class="w"> </span>--out<span class="w"> </span>evals/resource-task
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>alignmenter<span class="w"> </span>run-suite<span class="w"> </span>evals/resource-task/suite.yaml<span class="w"> </span>--out<span class="w"> </span>reports
 </code></pre></div>
-<p>Personas are stored in <code>configs/persona/</code> and referenced in run configs.</p>
-<h2 id="datasets">Datasets<a class="headerlink" href="#datasets" title="Permanent link">&para;</a></h2>
-<p>Test datasets are JSONL files containing conversation turns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"turn"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hello!"</span><span class="p">,</span><span class="w"> </span><span class="nt">"assistant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hi! How can I help?"</span><span class="p">}</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p">{</span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"turn"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What's the weather?"</span><span class="p">,</span><span class="w"> </span><span class="nt">"assistant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I can help with that..."</span><span class="p">}</span>
+<p><code>init-suite</code> writes a dataset and suite YAML. The example's target is a local Python
+function: it chooses resources from an available list. Its deterministic evaluator
+checks a precise engineering predicate. This demonstrates the integration contract;
+it is not a model benchmark or a human-qualified judge. No API key is needed.</p>
+<p><code>run-suite</code> prints JSON containing <code>run_dir</code>, <code>evaluation_id</code>, <code>decision</code>, and
+<code>artifacts</code>. The artifact directory contains <code>index.html</code>, <code>evaluation.json</code>,
+<code>summary.md</code>, and <code>junit.xml</code>. The HTML works offline and includes saved evidence.
+Exit codes are <strong>0 pass, 2 fail, 3 inconclusive</strong>; invalid configuration also exits
+nonzero. Capture exceptions preserve partial evidence and produce a non-green result
+when a run has been initialized. A process kill can leave artifacts unwritten; inspect
+the saved run with <code>status</code> and resume explicitly.</p>
+<p>To exercise a failure, run the same example with its deliberately bad target variant:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">ALIGNMENTER_DEMO_VARIANT</span><span class="o">=</span>bad<span class="w"> </span>alignmenter<span class="w"> </span>run-suite<span class="w"> </span>evals/resource-task/suite.yaml<span class="w"> </span>--out<span class="w"> </span>reports
 </code></pre></div>
-<p><strong>Key fields</strong>:
-- <code>session_id</code> - Groups turns into conversations
-- <code>turn</code> - Order within session
-- <code>user</code> - User message
-- <code>assistant</code> - AI response (optional - can be generated)</p>
-<p>Datasets support:
-- <strong>Regeneration</strong>: Add <code>--generate-transcripts</code> to call the configured provider and refresh assistant turns
-- <strong>Caching</strong>: By default Alignmenter reuses recorded transcripts for deterministic scoring
-- <strong>Sanitization</strong>: Built-in PII scrubbing</p>
-<h2 id="llm-judges-optional">LLM Judges (Optional)<a class="headerlink" href="#llm-judges-optional" title="Permanent link">&para;</a></h2>
-<p>LLM judges provide <strong>qualitative analysis</strong> alongside quantitative metrics:</p>
-<p><strong>Benefits</strong>:
-- Human-readable explanations of scores
-- Catches nuanced brand voice issues
-- Validates metric accuracy</p>
-<p><strong>Cost control</strong>:
-- Sampling strategies (on_failure, random, stratified)
-- Budget guardrails ($1, $5, $10, etc.)
-- Cost estimation before running</p>
-<p><strong>Example output</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">"reasoning"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tone matches brand guidelines well, but occasionally too formal in casual contexts"</span><span class="p">,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">"strengths"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Professional language"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Clear structure"</span><span class="p">],</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">"weaknesses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Could be more conversational"</span><span class="p">],</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">"suggestion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Consider softening language in informal scenarios"</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
-</code></pre></div></p>
-<h2 id="reports">Reports<a class="headerlink" href="#reports" title="Permanent link">&para;</a></h2>
-<p>Every test run generates an <strong>interactive HTML report</strong>:</p>
-<h3 id="report-sections">Report Sections<a class="headerlink" href="#report-sections" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Summary Card</strong></li>
-<li>Overall grade (A/B/C/D/F)</li>
-<li>Metric breakdown</li>
-<li>
-<p>Model and dataset info</p>
-</li>
-<li>
-<p><strong>Score Distribution</strong></p>
-</li>
-<li>Interactive charts (Chart.js)</li>
-<li>Session-level breakdowns</li>
-<li>
-<p>Trend analysis</p>
-</li>
-<li>
-<p><strong>Session Details</strong></p>
-</li>
-<li>Turn-by-turn analysis</li>
-<li>Flagged issues</li>
-<li>
-<p>Judge feedback (if enabled)</p>
-</li>
-<li>
-<p><strong>Reproducibility</strong></p>
-</li>
-<li>Python version</li>
-<li>Model details</li>
-<li>Timestamps</li>
-<li>
-<p>Config snapshot</p>
-</li>
-<li>
-<p><strong>Exports</strong></p>
-</li>
-<li>Download as CSV</li>
-<li>Download as JSON</li>
-<li>Share URL (if hosted)</li>
-</ol>
-<h2 id="calibration">Calibration<a class="headerlink" href="#calibration" title="Permanent link">&para;</a></h2>
-<p><strong>Calibration</strong> validates that your metrics match human judgment:</p>
-<h3 id="validation-workflow">Validation Workflow<a class="headerlink" href="#validation-workflow" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Run base evaluation</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>alignmenter<span class="w"> </span>run<span class="w"> </span>--model<span class="w"> </span>gpt-4o<span class="w"> </span>--config<span class="w"> </span>configs/brand.yaml
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Validate with LLM judge</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--judge<span class="w"> </span>gpt-4o<span class="w"> </span>--judge-sample<span class="w"> </span><span class="m">0</span>.2
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Check agreement rate</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Output: ✓ Judge agreement: 87.5%</span>
+<p>This exits 2 because the target asks for unavailable equipment. The environment flag
+is part of this example adapter, not a general Alignmenter setting.</p>
+<h2 id="configure-your-application">Configure your application<a class="headerlink" href="#configure-your-application" title="Permanent link">&para;</a></h2>
+<p>Suite paths are resolved relative to the YAML file. Factories are explicitly imported
+<code>module.path:function_name</code> callables; install your application package so they are
+importable. They must construct adapters without dispatching work in their constructors.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource-task</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dataset.jsonl</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">target_factory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter.examples.resource_task:make_target</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">max_target_calls</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">evaluator_factories</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter.examples.resource_task:make_evaluator</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">evaluation</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource-constraints</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">qualification</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviewed</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">criteria</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uses_available_resources</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">      </span><span class="nt">evaluator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource_task</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nt">policy</span><span class="p">:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource-release</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="nt">gates</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource_success</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="nt">metric</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource_task.success</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">      </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">at_least</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">      </span><span class="nt">threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">      </span><span class="nt">min_denominator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 </code></pre></div>
-<h3 id="calibration-commands">Calibration Commands<a class="headerlink" href="#calibration-commands" title="Permanent link">&para;</a></h3>
-<ul>
-<li><code>calibrate validate</code> - Check judge agreement with metrics</li>
-<li><code>calibrate diagnose-errors</code> - Find sessions where judge disagrees</li>
-<li><code>calibrate analyze-scenarios</code> - Deep dive into specific test cases</li>
-</ul>
-<p>See the <a href="../../guides/calibration/">Calibration Guide</a> for details.</p>
-<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong><a href="../quickstart/">Quick Start</a></strong> - Run your first test</li>
-<li><strong><a href="../../guides/persona/">Persona Guide</a></strong> - Customize your brand voice</li>
-<li><strong><a href="../../guides/llm-judges/">LLM Judges</a></strong> - Add qualitative analysis</li>
-<li><strong><a href="../../reference/cli/">CLI Reference</a></strong> - Full command docs</li>
-</ul>
+<p>Omit <code>target_factory</code> to score recorded assistant answers. Generated suites require
+<code>max_target_calls</code>; reservations include interrupted and failed attempts. Target cost
+is currently unavailable, not reported as zero. Retry safety is an adapter declaration;
+see <a href="../capture-recovery/">capture recovery</a>. Do not declare a stateful device operation
+idempotent unless replay is actually safe.</p>
+<p>For <code>rubric</code> or <code>faithfulness</code> criteria, configure <code>judge_factory</code> and
+<code>judge_budget: {max_calls: 20}</code>. Monetary limits additionally require an adapter-declared
+per-call upper bound. All durable judged evaluations in the same run share a ledger;
+reporting, grouping, and comparison consume saved results. Unknown dispatch outcomes
+retain their reservation and do not retry automatically. See
+<a href="../durable-evaluations/">durable evaluations</a> for judged adapters and strict evidence
+contracts, and the <a href="../../reference/sdk/">SDK reference</a> for application-owned evaluators.</p>
+<p><code>qualification: reviewed</code> is an owner's declaration about the specification. It does
+not certify the evaluator or create human reference labels. Start product rubrics as
+<code>draft</code>; draft results remain inconclusive unless a violation already makes them fail.</p>
+<h2 id="preserve-and-compare-a-baseline">Preserve and compare a baseline<a class="headerlink" href="#preserve-and-compare-a-baseline" title="Permanent link">&para;</a></h2>
+<p>Use the run directories and evaluation UUIDs printed by <code>run-suite</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>alignmenter<span class="w"> </span>compare<span class="w"> </span>BASELINE_RUN<span class="w"> </span>CANDIDATE_RUN<span class="w"> </span>--out<span class="w"> </span>reports/comparison<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--baseline-id<span class="w"> </span>BASELINE_EVALUATION_UUID<span class="w"> </span>--candidate-id<span class="w"> </span>CANDIDATE_EVALUATION_UUID
+</code></pre></div>
+<p>For automatic regression gates, add these fields to the candidate suite:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">baseline</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../../reports/path-to-baseline-run</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">baseline_evaluation_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BASELINE_EVALUATION_UUID</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">policy</span><span class="p">:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">release</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">revision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v2</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">regressions</span><span class="p">:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_resource_regression</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">metric</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource_task.success</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">max_regression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
+<p>Pin the baseline UUID for repeatable CI decisions. When omitted, <code>run-suite</code> resolves
+the latest baseline evaluation during preflight and freezes that UUID in the run.</p>
+<p>Pairing uses <code>case_id</code> and criterion ID. Put stable <code>case_id</code> and optional
+<code>case_revision</code> fields on assistant dataset records. Without an explicit ID,
+Alignmenter uses the session ID and assistant-turn index. A scenario digest includes
+the declared revision and planned conversation text, excluding assistant answers so
+different model responses remain comparable. Related cases should share
+<code>metadata.split_group</code>; its default is the logical session. Keep generated variants
+in their original split group when creating training and evaluation partitions.</p>
+<p>Changed scenarios or split groups, added/removed cases, unavailable results, and
+asymmetric not-applicable outcomes are explicit. They cannot silently enter a complete
+headline comparison. Both sides must have the same evaluation specification, judge
+contract, evaluator descriptors, engine revision, and package version. Re-evaluate
+old captures under one configuration before comparing different evaluator versions.</p>
+<p>Metric deltas use only matched eligible pairs and each metric's owning evaluators.
+The report shows denominators, missing populations, outcome transitions, and side by
+side answers. A hard violation cannot be hidden by an improving average. Absolute
+gates can select a criterion or a tag; combined criterion-and-tag gates are not yet
+supported. Unknown metrics or tags are configuration errors; absent required metric
+populations are inconclusive. Regression gates use the metric's declared direction.</p>
+<h3 id="uncertainty-limits">Uncertainty limits<a class="headerlink" href="#uncertainty-limits" title="Permanent link">&para;</a></h3>
+<p>Comparison intervals are descriptive 95% paired percentile bootstrap intervals,
+resampling whole split groups with replacement (1,000 draws, seed 0 by default).
+The groups must plausibly be independent. Intervals are omitted for fewer than five
+groups and for count metrics. Five groups is a display minimum, not a guarantee of
+reliable inference. The implementation is pure Python; SciPy's
+<a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.bootstrap.html">bootstrap reference</a>
+describes the underlying paired percentile method and alternatives. Alignmenter
+does not use BCa correction, perform a significance test, or infer product-wide
+quality from a selected failure queue. Regression gates compare observed deltas;
+they do not interpret interval overlap as significance.</p>
+<h2 id="review-and-maintain-regression-cases">Review and maintain regression cases<a class="headerlink" href="#review-and-maintain-regression-cases" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>review-export<span class="w"> </span>RUN<span class="w"> </span>--out<span class="w"> </span>review.jsonl<span class="w"> </span>--evaluation-id<span class="w"> </span>EVALUATION_UUID
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># A reviewer edits only each row's annotation object.</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>alignmenter<span class="w"> </span>review-import<span class="w"> </span>RUN<span class="w"> </span>--annotations<span class="w"> </span>review.jsonl
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>alignmenter<span class="w"> </span>qualify<span class="w"> </span>RUN<span class="w"> </span>--evaluation-id<span class="w"> </span>EVALUATION_UUID
+</code></pre></div>
+<p>Each JSONL task contains immutable evidence, criterion, original machine result, and
+an editable <code>annotation</code>. To submit a label, fill <code>reviewer</code>, <code>outcome</code> (<code>met</code>,
+<code>violated</code>, or permitted <code>not_applicable</code>), <code>rationale</code>, and <code>provenance</code> (<code>human</code>,
+<code>model</code>, or <code>synthetic</code>). <code>role</code> defaults to <code>opinion</code>. Use <code>adjudication</code> when a human
+has resolved the reference decision. Blank outcomes remain pending. Import validates
+the whole batch before appending anything, and reimporting identical IDs is idempotent.</p>
+<p>Opinions can disagree. A correction needs a new annotation UUID and <code>supersedes</code>
+pointing at the active previous annotation; history is retained. Editing an existing
+ID's contents is rejected. Re-export if the underlying saved task has changed before
+import. Human references can be reused across repeated judge samples or judge
+configurations when the run's evidence and criterion are unchanged; changed evidence
+or criteria make them stale.</p>
+<p>Qualification compares saved machine outcomes to active <strong>human adjudications</strong>.
+It reports reference coverage, evaluator coverage, agreement, false passes, false
+failures, and disagreements by criterion and tag. Model and synthetic labels never
+count as human references. Missing references remain inconclusive. Provenance is
+declared by the importer, not verified identity or independence; a review queue is a
+selected sample, not a population estimate. Machine outcomes remain immutable and
+qualification does not silently change a suite's declaration or CI result.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>promote<span class="w"> </span>RUN<span class="w"> </span>--annotation-id<span class="w"> </span>ANNOTATION_UUID<span class="w"> </span>--out<span class="w"> </span>evals/regressions/case
+</code></pre></div>
+<p>Promotion requires an active human adjudication. It writes the captured conversation
+prefix to <code>dataset.jsonl</code> and keeps the reference, source lineage, and dataset digest
+in a separate <code>expectations.jsonl</code>. Targets never receive the expectations file.
+Case identity and split group are preserved. Review the promoted case before adding
+it to a suite; promotion does not automatically change an evaluation configuration.
+JSONL review exchange is supported in 0.3; a hosted UI and CSV editing are deferred.</p>
+<h2 id="inspect-and-exchange-saved-work">Inspect and exchange saved work<a class="headerlink" href="#inspect-and-exchange-saved-work" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>alignmenter<span class="w"> </span>check<span class="w"> </span>RUN<span class="w"> </span>--out<span class="w"> </span>reports/saved-review<span class="w"> </span>--evaluation-id<span class="w"> </span>EVALUATION_UUID
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>alignmenter<span class="w"> </span>check<span class="w"> </span>RUN<span class="w"> </span>--policy<span class="w"> </span>gates.yaml<span class="w"> </span>--baseline<span class="w"> </span>BASELINE_RUN<span class="w"> </span>--out<span class="w"> </span>reports/gated
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>alignmenter<span class="w"> </span>archive-export<span class="w"> </span>RUN<span class="w"> </span>--out<span class="w"> </span>run.zip
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>alignmenter<span class="w"> </span>archive-import<span class="w"> </span>run.zip<span class="w"> </span>--out<span class="w"> </span>imported-run
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>alignmenter<span class="w"> </span>check<span class="w"> </span>imported-run<span class="w"> </span>--out<span class="w"> </span>reports/imported-review
+</code></pre></div>
+<p><code>check</code> recomputes decisions from saved outcomes and does not import application
+factories or call providers. By default it retains a suite run's frozen policy and
+pinned baseline; use <code>--policy</code> to explicitly choose a different policy. Baseline
+comparisons require the saved baseline to remain accessible, including when inspecting
+an archived candidate. A missing baseline cannot silently remove a regression gate.
+Output paths must be new unless <code>--force</code> is supplied.
+Suite runs write their own <code>review</code> directory automatically.</p>
+<p>Archives contain a verified SQLite snapshot, source evidence, evaluations, raw judge
+replies, and annotations. They may contain sensitive application text: choose which
+artifacts to share with that in mind. SHA-256 checks detect corruption, not authenticity
+against a malicious sender. Import validates the archive and creates a <strong>read-only</strong>
+inspection copy. It cannot resume capture, spend a copied budget, or accept annotations;
+return review JSONL to the original run owner for import. New independent execution
+needs a new run. Budgets are local to one run, not a distributed account-wide limit.</p>
+<h2 id="use-in-ci">Use in CI<a class="headerlink" href="#use-in-ci" title="Permanent link">&para;</a></h2>
+<p>Install a pinned release and your application adapter, then run the suite as a normal
+failing step. Upload evidence even when the step fails:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install 'alignmenter==0.3.0' -e .</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter run-suite evals/suite.yaml --out reports</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always()</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter-review</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports/**/review/*</span>
+</code></pre></div>
+<p>Publish <code>summary.md</code> to your job summary and ingest <code>junit.xml</code> with your CI's test
+reporter if desired. HTML, JSON, Markdown, JUnit, and CLI all use the same gate decision.
+Provide secrets only to jobs that deliberately execute a remote adapter. A complete
+example is in <code>.github/examples/application-evals.yml</code> in the repository.</p>
 
 
 

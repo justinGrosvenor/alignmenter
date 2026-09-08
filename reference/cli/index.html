@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://alignmenter.com/reference/cli/">
       
       
-        <link rel="prev" href="../../case-studies/wendys-twitter/">
+        <link rel="prev" href="../sdk/">
       
       
         <link rel="next" href="../metrics/">
@@ -500,6 +500,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/persona/" class="md-nav__link">
         
   
@@ -648,6 +704,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -815,6 +1011,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -889,6 +1113,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#durable-suite-and-release-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durable suite and release commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -912,10 +1147,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alignmenter-run" class="md-nav__link">
+  <a href="#alignmenter-run-legacy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        alignmenter run
+        alignmenter run (legacy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-capture-and-alignmenter-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter capture and alignmenter resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-evaluate-and-alignmenter-evaluation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter evaluate and alignmenter evaluation-status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-export-transcripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter export-transcripts
       
     </span>
   </a>
@@ -1391,6 +1670,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#durable-suite-and-release-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durable suite and release commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#core-commands" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1414,10 +1704,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alignmenter-run" class="md-nav__link">
+  <a href="#alignmenter-run-legacy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        alignmenter run
+        alignmenter run (legacy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-capture-and-alignmenter-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter capture and alignmenter resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-evaluate-and-alignmenter-evaluation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter evaluate and alignmenter evaluation-status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alignmenter-export-transcripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alignmenter export-transcripts
       
     </span>
   </a>
@@ -1820,6 +2154,36 @@ scikit-learn. Some commands need optional dependency groups:</p>
 <td><code>[ml]</code> for local embeddings</td>
 </tr>
 <tr>
+<td><code>status</code></td>
+<td>Inspect committed execution state</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>capture</code></td>
+<td>Save recorded or generated answers without scoring</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>resume</code></td>
+<td>Continue compatible capture with recovery preflight</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>evaluate</code></td>
+<td>Evaluate saved answers with versioned rubrics and a durable shared judge budget</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>evaluation-status</code></td>
+<td>Inspect saved rubric decisions, evidence, and budget usage</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>export-transcripts</code></td>
+<td>Recover committed transcripts from a complete or partial run</td>
+<td>—</td>
+</tr>
+<tr>
 <td><code>demo</code></td>
 <td>One-line demo run over the bundled dataset</td>
 <td>—</td>
@@ -1912,6 +2276,65 @@ scikit-learn. Some commands need optional dependency groups:</p>
 </tbody>
 </table>
 <hr />
+<h2 id="durable-suite-and-release-commands">Durable suite and release commands<a class="headerlink" href="#durable-suite-and-release-commands" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>init-suite --out DIR</code></td>
+<td>Write a runnable offline application example</td>
+</tr>
+<tr>
+<td><code>run-suite SUITE --out reports [--resume RUN]</code></td>
+<td>Capture, evaluate, compare, and export under a frozen config</td>
+</tr>
+<tr>
+<td><code>check RUN --out DIR [--policy YAML] [--baseline RUN]</code></td>
+<td>Apply gates to saved results and export all formats</td>
+</tr>
+<tr>
+<td><code>compare BASELINE CANDIDATE --out DIR</code></td>
+<td>Compare compatible saved cases and evidence</td>
+</tr>
+<tr>
+<td><code>review-export RUN --out JSONL</code></td>
+<td>Export immutable evidence with editable annotation fields</td>
+</tr>
+<tr>
+<td><code>review-import RUN --annotations JSONL</code></td>
+<td>Append validated opinions/adjudications atomically</td>
+</tr>
+<tr>
+<td><code>qualify RUN</code></td>
+<td>Compare machine outcomes against active human adjudications</td>
+</tr>
+<tr>
+<td><code>promote RUN --annotation-id UUID --out DIR</code></td>
+<td>Write a regression case with separate expectations</td>
+</tr>
+<tr>
+<td><code>archive-export RUN --out ZIP</code></td>
+<td>Export a verified snapshot with evidence and annotations</td>
+</tr>
+<tr>
+<td><code>archive-import ZIP --out DIR</code></td>
+<td>Create a read-only inspection copy</td>
+</tr>
+</tbody>
+</table>
+<p>Use <code>--evaluation-id</code> on saved checks and review export/qualification to pin a snapshot.
+<code>compare</code> accepts <code>--baseline-id</code> and <code>--candidate-id</code>; <code>check --baseline</code> accepts
+<code>--baseline-id</code>. Run <code>COMMAND --help</code> for all options. <code>evaluate</code> accepts repeatable
+<code>--evaluator-factory module:function</code> for custom deterministic checks; <code>capture</code>
+accepts <code>--max-target-calls</code>. <code>--version</code> prints the installed package version.</p>
+<p>Release commands use exit codes 0 (pass), 2 (fail), and 3 (inconclusive). Configuration
+errors also exit nonzero. The same policy decision appears in every report format.
+See the <a href="../../guides/release-workflow/">release workflow</a> for configuration and semantics.</p>
 <h2 id="core-commands">Core commands<a class="headerlink" href="#core-commands" title="Permanent link">&para;</a></h2>
 <h3 id="alignmenter-init"><code>alignmenter init</code><a class="headerlink" href="#alignmenter-init" title="Permanent link">&para;</a></h3>
 <p>Interactively configure provider credentials, embedding/judge defaults, and write
@@ -1929,7 +2352,7 @@ OpenAI-compatible endpoint), and optional safety judge settings. It writes the
 <code>.env</code> file, copies the bundled demo dataset/persona/keywords into your
 workspace, and emits a runnable <code>configs/run.yaml</code>.</p>
 <hr />
-<h3 id="alignmenter-run"><code>alignmenter run</code><a class="headerlink" href="#alignmenter-run" title="Permanent link">&para;</a></h3>
+<h3 id="alignmenter-run-legacy"><code>alignmenter run</code> (legacy)<a class="headerlink" href="#alignmenter-run-legacy" title="Permanent link">&para;</a></h3>
 <p>Execute an evaluation run and write a report directory.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>alignmenter<span class="w"> </span>run<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
@@ -1951,6 +2374,8 @@ workspace, and emits a runnable <code>configs/run.yaml</code>.</p>
 <ul>
 <li>If a threshold is configured and any metric falls below its <code>fail</code> value, <code>run</code> exits with code <code>2</code>.</li>
 <li>With <code>--generate-transcripts</code>, provider initialization failure aborts the run; without it, recorded transcripts are scored offline.</li>
+<li>Run capture is persisted incrementally. A later failure preserves committed answers;
+  see <a href="../../guides/durable-runs/">durable runs</a> for recovery and status semantics.</li>
 </ul>
 <p><strong>Examples</strong>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Score recorded transcripts (offline, deterministic authenticity)</span>
@@ -1976,10 +2401,49 @@ workspace, and emits a runnable <code>configs/run.yaml</code>.</p>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="nv">0.95</span><span class="p p-Indicator">,</span><span class="nt"> fail</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">}</span>
 </code></pre></div>
 <hr />
+<h3 id="alignmenter-capture-and-alignmenter-resume"><code>alignmenter capture</code> and <code>alignmenter resume</code><a class="headerlink" href="#alignmenter-capture-and-alignmenter-resume" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>capture<span class="w"> </span>--dataset<span class="w"> </span>conversations.jsonl<span class="w"> </span><span class="o">[</span>--persona<span class="w"> </span>persona.yaml<span class="o">]</span><span class="w"> </span><span class="o">[</span>--target<span class="w"> </span>module:factory<span class="o">]</span><span class="w"> </span><span class="o">[</span>--out<span class="w"> </span>reports<span class="o">]</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>alignmenter<span class="w"> </span>resume<span class="w"> </span>RUN_DIRECTORY<span class="w"> </span><span class="o">[</span>--target<span class="w"> </span>module:factory<span class="o">]</span><span class="w"> </span><span class="o">[</span>--compare-target<span class="w"> </span>module:factory<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dataset<span class="w"> </span>conversations.jsonl<span class="o">]</span><span class="w"> </span><span class="o">[</span>--persona<span class="w"> </span>persona.yaml<span class="o">]</span><span class="w"> </span><span class="o">[</span>--check<span class="o">]</span>
+</code></pre></div>
+<p>Capture imports recorded answers when no target is supplied. Target factories return a
+<code>CaptureTarget</code>; generated resume requires the original compatible recovery declaration.
+<code>--check</code> validates continuation without dispatch or database writes. Optional source
+paths assert compatibility with the saved snapshots. Capture/resume never invokes
+scorers; see <a href="../../guides/capture-recovery/">capture and resume</a> for adapter contracts,
+idempotency requirements, and database compatibility.</p>
+<h3 id="alignmenter-evaluate-and-alignmenter-evaluation-status"><code>alignmenter evaluate</code> and <code>alignmenter evaluation-status</code><a class="headerlink" href="#alignmenter-evaluate-and-alignmenter-evaluation-status" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>evaluate<span class="w"> </span>RUN_DIRECTORY<span class="w"> </span>--spec<span class="w"> </span>evaluations.yaml<span class="w"> </span><span class="o">[</span>--judge-factory<span class="w"> </span>module:factory<span class="o">]</span><span class="w"> </span><span class="o">[</span>--max-judge-calls<span class="w"> </span><span class="m">20</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>--max-judge-cost-micros<span class="w"> </span><span class="m">10000</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>--new-evaluation<span class="o">]</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>alignmenter<span class="w"> </span>evaluation-status<span class="w"> </span>RUN_DIRECTORY<span class="w"> </span><span class="o">[</span>--evaluation-id<span class="w"> </span>UUID<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span><span class="w"> </span><span class="o">[</span>--details<span class="o">]</span>
+</code></pre></div>
+<p>Deterministic grounding requires neither a judge factory nor a budget. Generic rubrics
+and faithfulness require a factory; the first judged evaluation requires an explicit
+call budget. Later evaluations and
+resumes share the frozen run budget; new rubric/judge/input snapshots require
+<code>--new-evaluation</code>. Monetary limits require an adapter-declared cost upper bound.
+Evaluation exits <code>0</code> for pass, <code>2</code> for a violation, and <code>3</code> for inconclusive; CLI/config
+errors also return nonzero. Status only reads saved data and can export full evidence
+with <code>--details</code>. See <a href="../../guides/durable-evaluations/">durable evaluations</a> for adapter
+factories, strict verdicts, coverage semantics, and the boundary with legacy scorers.
+The <a href="../../guides/grounding-faithfulness/">grounding and faithfulness guide</a> describes
+built-in specs, evidence eligibility, saved metrics, and migration semantics.</p>
+<h3 id="alignmenter-status"><code>alignmenter status</code><a class="headerlink" href="#alignmenter-status" title="Permanent link">&para;</a></h3>
+<p>Read the last committed execution state without calling providers or scorers.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>status<span class="w"> </span>RUN_DIRECTORY<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+<p><code>--json</code> emits the versioned execution summary, including planned/committed record
+counts and attempt statuses. Liveness is not inferred: a hard kill may leave a
+nonterminal recorded state. This command supports runs with the new durable database.</p>
+<h3 id="alignmenter-export-transcripts"><code>alignmenter export-transcripts</code><a class="headerlink" href="#alignmenter-export-transcripts" title="Permanent link">&para;</a></h3>
+<p>Export committed transcript records, including partial runs, without new execution.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>alignmenter<span class="w"> </span>export-transcripts<span class="w"> </span>RUN_DIRECTORY<span class="w"> </span>--out<span class="w"> </span>recovered.jsonl<span class="w"> </span><span class="o">[</span>--stream<span class="w"> </span>primary<span class="p">|</span>compare<span class="o">]</span><span class="w"> </span><span class="o">[</span>--force<span class="o">]</span>
+</code></pre></div>
+<p>The default stream is <code>primary</code>. Existing output files require <code>--force</code>; the durable
+database itself cannot be replaced by an export. Missing answers remain absent.</p>
+<hr />
 <h3 id="alignmenter-demo"><code>alignmenter demo</code><a class="headerlink" href="#alignmenter-demo" title="Permanent link">&para;</a></h3>
 <p>Convenience wrapper around <code>run</code> that scores the bundled demo dataset and persona,
 regenerating transcripts from the chosen model.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>alignmenter<span class="w"> </span>demo<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>alignmenter<span class="w"> </span>demo<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -1989,7 +2453,7 @@ regenerating transcripts from the chosen model.</p>
 <hr />
 <h3 id="alignmenter-report"><code>alignmenter report</code><a class="headerlink" href="#alignmenter-report" title="Permanent link">&para;</a></h3>
 <p>Open a generated HTML report in your default browser.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -1998,15 +2462,15 @@ regenerating transcripts from the chosen model.</p>
 <li><code>--reports-dir DIR</code> – Base directory to search when using <code>--last</code> (default: <code>reports</code>)</li>
 </ul>
 <p>Either <code>--last</code> or <code>--path</code> must be supplied.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--path<span class="w"> </span>reports/2026-07-31_14-32_alignmenter_run
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--last
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>alignmenter<span class="w"> </span>report<span class="w"> </span>--path<span class="w"> </span>reports/2026-07-31_14-32_alignmenter_run
 </code></pre></div>
 <hr />
 <h3 id="alignmenter-bootstrap-dataset"><code>alignmenter bootstrap-dataset</code><a class="headerlink" href="#alignmenter-bootstrap-dataset" title="Permanent link">&para;</a></h3>
 <p>Generate a synthetic conversation dataset seeded with deliberate safety traps and
 brand-voice violations. Also available as <code>alignmenter dataset bootstrap</code> with the
 same options.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>alignmenter<span class="w"> </span>bootstrap-dataset<span class="w"> </span>--out<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>alignmenter<span class="w"> </span>bootstrap-dataset<span class="w"> </span>--out<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2025,7 +2489,7 @@ same options.</p>
 token/phrase-weight logistic model (pure Python — no <code>[calibrate]</code> extra needed)
 and writes a <code>&lt;persona&gt;.traits.json</code> file that the authenticity scorer loads
 automatically.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>alignmenter<span class="w"> </span>calibrate-persona<span class="w"> </span>--persona-path<span class="w"> </span>PATH<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>alignmenter<span class="w"> </span>calibrate-persona<span class="w"> </span>--persona-path<span class="w"> </span>PATH<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2042,7 +2506,7 @@ automatically.</p>
 <h2 id="persona-commands"><code>persona</code> commands<a class="headerlink" href="#persona-commands" title="Permanent link">&para;</a></h2>
 <h3 id="alignmenter-persona-scaffold"><code>alignmenter persona scaffold</code><a class="headerlink" href="#alignmenter-persona-scaffold" title="Permanent link">&para;</a></h3>
 <p>Write a starter persona YAML template.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>scaffold<span class="w"> </span>--name<span class="w"> </span>NAME<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>scaffold<span class="w"> </span>--name<span class="w"> </span>NAME<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2056,7 +2520,7 @@ automatically.</p>
 <hr />
 <h3 id="alignmenter-persona-export"><code>alignmenter persona export</code><a class="headerlink" href="#alignmenter-persona-export" title="Permanent link">&para;</a></h3>
 <p>Export assistant turns from a dataset for annotation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2069,7 +2533,7 @@ automatically.</p>
 <h3 id="alignmenter-persona-sync-gpt"><code>alignmenter persona sync-gpt</code><a class="headerlink" href="#alignmenter-persona-sync-gpt" title="Permanent link">&para;</a></h3>
 <p>Pull instructions from a Custom GPT into a persona pack (requires <code>OPENAI_API_KEY</code>
 and Custom GPT API access).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>sync-gpt<span class="w"> </span>GPT_ID<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>alignmenter<span class="w"> </span>persona<span class="w"> </span>sync-gpt<span class="w"> </span>GPT_ID<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Arguments / options</strong>:</p>
 <ul>
@@ -2081,7 +2545,7 @@ and Custom GPT API access).</p>
 <h2 id="dataset-commands"><code>dataset</code> commands<a class="headerlink" href="#dataset-commands" title="Permanent link">&para;</a></h2>
 <h3 id="alignmenter-dataset-lint"><code>alignmenter dataset lint</code><a class="headerlink" href="#alignmenter-dataset-lint" title="Permanent link">&para;</a></h3>
 <p>Validate a dataset's schema and persona coverage.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>lint<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>lint<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Arguments / options</strong>:</p>
 <ul>
@@ -2094,7 +2558,7 @@ and Custom GPT API access).</p>
 <hr />
 <h3 id="alignmenter-dataset-sanitize"><code>alignmenter dataset sanitize</code><a class="headerlink" href="#alignmenter-dataset-sanitize" title="Permanent link">&para;</a></h3>
 <p>Remove PII and sensitive data from a dataset.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Arguments / options</strong>:</p>
 <ul>
@@ -2104,8 +2568,8 @@ and Custom GPT API access).</p>
 <li><code>--use-hashing / --no-use-hashing</code> – Use stable hashes for replacements instead of generic placeholders (default: on)</li>
 <li><code>--dry-run</code> – Show results without writing output</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--out<span class="w"> </span>datasets/clean.jsonl
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--dry-run
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--out<span class="w"> </span>datasets/clean.jsonl
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>alignmenter<span class="w"> </span>dataset<span class="w"> </span>sanitize<span class="w"> </span>datasets/prod.jsonl<span class="w"> </span>--dry-run
 </code></pre></div>
 <hr />
 <h3 id="alignmenter-dataset-bootstrap"><code>alignmenter dataset bootstrap</code><a class="headerlink" href="#alignmenter-dataset-bootstrap" title="Permanent link">&para;</a></h3>
@@ -2115,7 +2579,7 @@ and Custom GPT API access).</p>
 <h3 id="alignmenter-import-gpt"><code>alignmenter import gpt</code><a class="headerlink" href="#alignmenter-import-gpt" title="Permanent link">&para;</a></h3>
 <p>Convert a Custom GPT instructions text file into a persona pack offline (no API
 call — it parses the text heuristically).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>alignmenter<span class="w"> </span>import<span class="w"> </span>gpt<span class="w"> </span>--instructions<span class="w"> </span>PATH<span class="w"> </span>--name<span class="w"> </span>NAME<span class="w"> </span>--out<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>alignmenter<span class="w"> </span>import<span class="w"> </span>gpt<span class="w"> </span>--instructions<span class="w"> </span>PATH<span class="w"> </span>--name<span class="w"> </span>NAME<span class="w"> </span>--out<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2133,7 +2597,7 @@ diagnostics. See <a href="../../persona_annotation/">Persona Annotation</a> and 
 <a href="../../guides/calibration/">Calibration Guide</a>.</p>
 <h3 id="alignmenter-calibrate-generate"><code>alignmenter calibrate generate</code><a class="headerlink" href="#alignmenter-calibrate-generate" title="Permanent link">&para;</a></h3>
 <p>Sample candidate responses from an existing dataset for labeling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>generate<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2148,7 +2612,7 @@ diagnostics. See <a href="../../persona_annotation/">Persona Annotation</a> and 
 <h3 id="alignmenter-calibrate-label"><code>alignmenter calibrate label</code><a class="headerlink" href="#alignmenter-calibrate-label" title="Permanent link">&para;</a></h3>
 <p>Interactively label candidates as on-brand (1) or off-brand (0). Writes each label
 immediately so progress is never lost.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span>--input<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>label<span class="w"> </span>--input<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2166,7 +2630,7 @@ percentiles used to rescale embedding cosine into a presentable band).</p>
 <p class="admonition-title">Requires <code>[calibrate]</code></p>
 <p><code>pip install "alignmenter[calibrate]"</code> (needs numpy).</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>bounds<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2185,7 +2649,7 @@ labeled data.</p>
 <p class="admonition-title">Requires <code>[calibrate]</code></p>
 <p><code>pip install "alignmenter[calibrate]"</code> (needs numpy + scikit-learn).</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>optimize<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2204,7 +2668,7 @@ optional LLM-judge sample for agreement analysis.</p>
 <p class="admonition-title">Requires <code>[calibrate]</code></p>
 <p><code>pip install "alignmenter[calibrate]"</code> (needs numpy + scikit-learn).</p>
 </div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>validate<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2223,7 +2687,7 @@ optional LLM-judge sample for agreement analysis.</p>
 <h3 id="alignmenter-calibrate-diagnose-errors"><code>alignmenter calibrate diagnose-errors</code><a class="headerlink" href="#alignmenter-calibrate-diagnose-errors" title="Permanent link">&para;</a></h3>
 <p>Use an LLM judge to explain calibration false positives and false negatives.
 <code>--judge</code> is required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span>--judge<span class="w"> </span>PROVIDER:MODEL<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>diagnose-errors<span class="w"> </span>--labeled<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span>--judge<span class="w"> </span>PROVIDER:MODEL<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2238,7 +2702,7 @@ optional LLM-judge sample for agreement analysis.</p>
 <h3 id="alignmenter-calibrate-analyze-scenarios"><code>alignmenter calibrate analyze-scenarios</code><a class="headerlink" href="#alignmenter-calibrate-analyze-scenarios" title="Permanent link">&para;</a></h3>
 <p>Group sessions by <code>scenario:*</code> tag and judge a sample from each to see which
 scenarios perform well or poorly. <code>--judge</code> is required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>analyze-scenarios<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span>--judge<span class="w"> </span>PROVIDER:MODEL<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>alignmenter<span class="w"> </span>calibrate<span class="w"> </span>analyze-scenarios<span class="w"> </span>--dataset<span class="w"> </span>PATH<span class="w"> </span>--persona<span class="w"> </span>PATH<span class="w"> </span>--output<span class="w"> </span>PATH<span class="w"> </span>--judge<span class="w"> </span>PROVIDER:MODEL<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
 <p><strong>Options</strong>:</p>
 <ul>
@@ -2255,28 +2719,28 @@ scenarios perform well or poorly. <code>--judge</code> is required.</p>
 <h3 id="run-config-file">Run config file<a class="headerlink" href="#run-config-file" title="Permanent link">&para;</a></h3>
 <p>Run configurations are YAML. Only <code>model</code> is strictly required; everything else
 falls back to defaults or environment variables.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># configs/run.yaml</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nt">run_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter_run</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai:gpt-4o-mini</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datasets/demo_conversations.jsonl</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persona/default.yaml</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">safety_keywords.yaml</span>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nt">embedding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashed</span><span class="w">            </span><span class="c1"># or sentence-transformer:all-MiniLM-L6-v2 with [ml]</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="nt">scorers</span><span class="p">:</span>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="w">    </span><span class="nt">offline_classifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span><span class="w">  </span><span class="c1"># try the ML classifier, fall back to heuristic</span>
-<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span>
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic:claude-sonnet-5</span>
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="w">      </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
-<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="nt">thresholds</span><span class="p">:</span>
-<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="nv">0.78</span><span class="p p-Indicator">,</span><span class="nt"> fail</span><span class="p">:</span><span class="w"> </span><span class="nv">0.72</span><span class="p p-Indicator">}</span>
-<a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="nv">0.95</span><span class="p p-Indicator">,</span><span class="nt"> fail</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">}</span>
-<a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>
-<a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="nt">report</span><span class="p">:</span>
-<a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports</span>
-<a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="w">  </span><span class="nt">include_raw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># configs/run.yaml</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="nt">run_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alignmenter_run</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai:gpt-4o-mini</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="nt">dataset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datasets/demo_conversations.jsonl</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="nt">persona</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persona/default.yaml</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="nt">keywords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">safety_keywords.yaml</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="nt">embedding</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashed</span><span class="w">            </span><span class="c1"># or sentence-transformer:all-MiniLM-L6-v2 with [ml]</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="nt">scorers</span><span class="p">:</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="w">    </span><span class="nt">offline_classifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span><span class="w">  </span><span class="c1"># try the ML classifier, fall back to heuristic</span>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a><span class="w">    </span><span class="nt">judge</span><span class="p">:</span>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a><span class="w">      </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anthropic:claude-sonnet-5</span>
+<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a><span class="w">      </span><span class="nt">budget</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>
+<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a><span class="nt">thresholds</span><span class="p">:</span>
+<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a><span class="w">  </span><span class="nt">authenticity</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="nv">0.78</span><span class="p p-Indicator">,</span><span class="nt"> fail</span><span class="p">:</span><span class="w"> </span><span class="nv">0.72</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a><span class="w">  </span><span class="nt">safety</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">warn</span><span class="p">:</span><span class="w"> </span><span class="nv">0.95</span><span class="p p-Indicator">,</span><span class="nt"> fail</span><span class="p">:</span><span class="w"> </span><span class="nv">0.90</span><span class="p p-Indicator">}</span>
+<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>
+<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a><span class="nt">report</span><span class="p">:</span>
+<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a><span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports</span>
+<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a><span class="w">  </span><span class="nt">include_raw</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <p>Thresholds are scoped per scorer. If a score falls below its <code>fail</code> value,
 <code>alignmenter run</code> exits with status code <code>2</code>.</p>

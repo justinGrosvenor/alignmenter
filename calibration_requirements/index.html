@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -496,6 +496,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../guides/persona/" class="md-nav__link">
         
   
@@ -644,6 +700,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -806,6 +1002,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1559,7 +1783,7 @@
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   ├── persona_annotation.md        # Annotation guidelines
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └── offline_safety.md            # Safety classifier doc
 <a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>├── calibration_data/                # User&#39;s calibration datasets (gitignored)
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>├── calibration_data/                # User's calibration datasets (gitignored)
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│   ├── labeled/
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│   │   ├── default_v1_labeled.jsonl
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│   │   └── validation_split.jsonl
@@ -1583,7 +1807,7 @@
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│         │                                                       │
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│         └─&gt; alignmenter calibrate label (interactive)          │
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│             • Show response + persona context                  │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│             • Ask: &quot;On-brand (1) or off-brand (0)?&quot;            │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│             • Ask: "On-brand (1) or off-brand (0)?"            │
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│             • Output: labeled/default_v1_labeled.jsonl         │
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>└─────────────────────────────────────────────────────────────────┘
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
@@ -1600,10 +1824,10 @@
 <a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                 │
 <a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  bounds_report.json                                             │
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    {                                                            │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│      &quot;style_sim_min&quot;: 0.08,  # 5th percentile                  │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│      &quot;style_sim_max&quot;: 0.28,  # 95th percentile                 │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│      &quot;variance_min&quot;: 0.015,                                    │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│      &quot;variance_max&quot;: 0.45                                      │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│      "style_sim_min": 0.08,  # 5th percentile                  │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│      "style_sim_max": 0.28,  # 95th percentile                 │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│      "variance_min": 0.015,                                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│      "variance_max": 0.45                                      │
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    }                                                            │
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>└─────────────────────────────────────────────────────────────────┘
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
@@ -1624,15 +1848,15 @@
 <a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                 │
 <a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  weights_report.json                                            │
 <a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│    {                                                            │
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│      &quot;best_weights&quot;: {                                         │
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│        &quot;style&quot;: 0.5,                                           │
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│        &quot;traits&quot;: 0.3,                                          │
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│        &quot;lexicon&quot;: 0.2                                          │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│      "best_weights": {                                         │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│        "style": 0.5,                                           │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│        "traits": 0.3,                                          │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│        "lexicon": 0.2                                          │
 <a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│      },                                                         │
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│      &quot;metrics&quot;: {                                              │
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│        &quot;roc_auc&quot;: 0.87,                                        │
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│        &quot;f1&quot;: 0.82,                                             │
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>│        &quot;correlation&quot;: 0.78                                     │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│      "metrics": {                                              │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│        "roc_auc": 0.87,                                        │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│        "f1": 0.82,                                             │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>│        "correlation": 0.78                                     │
 <a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>│      }                                                          │
 <a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>│    }                                                            │
 <a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>└─────────────────────────────────────────────────────────────────┘
@@ -1655,10 +1879,10 @@
 <a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>│         │                                                       │
 <a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>│         └─&gt; Merge into configs/persona/default.traits.json     │
 <a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>│             {                                                   │
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>│               &quot;weights&quot;: {...},                                 │
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>│               &quot;trait_model&quot;: {...},                             │
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>│               &quot;style_sim_min&quot;: 0.08,                            │
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>│               &quot;style_sim_max&quot;: 0.28                             │
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>│               "weights": {...},                                 │
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>│               "trait_model": {...},                             │
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>│               "style_sim_min": 0.08,                            │
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>│               "style_sim_max": 0.28                             │
 <a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>│             }                                                   │
 <a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>│                                                                 │
 <a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>│  alignmenter run --config configs/run.yaml                      │
@@ -1695,16 +1919,16 @@
 <p><strong>File:</strong> <code>calibration/data/labeled/{persona_id}_labeled.jsonl</code></p>
 <p><strong>Schema:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Absolutely. Alignmenter scores authenticity, safety, and stability...&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;persona_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;default_v1&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&quot;session_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;session-01&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&quot;turn_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;scenario_tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;scenario:product_inquiry&quot;</span><span class="p">],</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">&quot;labeler&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;justin&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-11-05T10:30:00Z&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;high&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">&quot;notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Absolutely. Alignmenter scores authenticity, safety, and stability..."</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"label"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"persona_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default_v1"</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">"session_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"session-01"</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">"turn_index"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">"scenario_tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scenario:product_inquiry"</span><span class="p">],</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">"labeler"</span><span class="p">:</span><span class="w"> </span><span class="s2">"justin"</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-11-05T10:30:00Z"</span><span class="p">,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">"confidence"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">"notes"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Fields:</strong>
@@ -1751,15 +1975,15 @@
 <p><strong>Method:</strong> Empirical percentiles</p>
 <p><strong>Algorithm:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">estimate_bounds</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">persona</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="sd">    Compute empirical normalization bounds from labeled data.</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="sd">    Uses 5th and 95th percentiles to be robust to outliers.</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd">    """</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="c1"># Compute raw style similarity for all examples</span>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">raw_style_scores</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">labeled_data</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">([</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">embedding</span> <span class="o">=</span> <span class="n">embedder</span><span class="o">.</span><span class="n">embed</span><span class="p">([</span><span class="n">example</span><span class="p">[</span><span class="s2">"text"</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">style_sim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cosine_similarity</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span> <span class="n">ex</span><span class="p">)</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                       <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">persona</span><span class="o">.</span><span class="n">exemplars</span><span class="p">)</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">raw_style_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">style_sim</span><span class="p">)</span>
@@ -1769,10 +1993,10 @@
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">style_sim_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">,</span> <span class="mi">95</span><span class="p">)</span>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="k">return</span> <span class="p">{</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="s2">&quot;style_sim_min&quot;</span><span class="p">:</span> <span class="n">style_sim_min</span><span class="p">,</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="s2">&quot;style_sim_max&quot;</span><span class="p">:</span> <span class="n">style_sim_max</span><span class="p">,</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="s2">&quot;style_sim_mean&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">),</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        <span class="s2">&quot;style_sim_std&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="s2">"style_sim_min"</span><span class="p">:</span> <span class="n">style_sim_min</span><span class="p">,</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="s2">"style_sim_max"</span><span class="p">:</span> <span class="n">style_sim_max</span><span class="p">,</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="s2">"style_sim_mean"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">),</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>        <span class="s2">"style_sim_std"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">raw_style_scores</span><span class="p">)</span>
 <a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    <span class="p">}</span>
 </code></pre></div></p>
 <p><strong>Output:</strong> <code>bounds_report.json</code></p>
@@ -1786,11 +2010,11 @@
 <p><strong>Objective:</strong> Maximize discriminative power (ROC-AUC or F1)</p>
 <p><strong>Algorithm:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">optimize_weights</span><span class="p">(</span><span class="n">labeled_data</span><span class="p">,</span> <span class="n">persona</span><span class="p">,</span> <span class="n">embedder</span><span class="p">):</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="sd">    Grid search over component weight combinations.</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="sd">    Constraint: weights must sum to 1.0</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">    """</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">best_auc</span> <span class="o">=</span> <span class="mi">0</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">best_weights</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
@@ -1806,20 +2030,20 @@
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="n">labeled_data</span><span class="p">:</span>
 <a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>                <span class="n">score</span> <span class="o">=</span> <span class="n">compute_authenticity</span><span class="p">(</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>                    <span class="n">example</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>                    <span class="n">example</span><span class="p">[</span><span class="s2">"text"</span><span class="p">],</span>
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>                    <span class="n">persona</span><span class="p">,</span>
 <a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>                    <span class="n">embedder</span><span class="p">,</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>                    <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">&quot;traits&quot;</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">&quot;lexicon&quot;</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>                    <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">"style"</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">"traits"</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">"lexicon"</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
 <a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>                <span class="p">)</span>
 <a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>                <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="s2">"label"</span><span class="p">])</span>
 <a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
 <a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>            <span class="c1"># Compute ROC-AUC</span>
 <a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>            <span class="n">auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">scores</span><span class="p">)</span>
 <a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
 <a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>            <span class="k">if</span> <span class="n">auc</span> <span class="o">&gt;</span> <span class="n">best_auc</span><span class="p">:</span>
 <a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>                <span class="n">best_auc</span> <span class="o">=</span> <span class="n">auc</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>                <span class="n">best_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">&quot;traits&quot;</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">&quot;lexicon&quot;</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>                <span class="n">best_weights</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"style"</span><span class="p">:</span> <span class="n">style_w</span><span class="p">,</span> <span class="s2">"traits"</span><span class="p">:</span> <span class="n">traits_w</span><span class="p">,</span> <span class="s2">"lexicon"</span><span class="p">:</span> <span class="n">lexicon_w</span><span class="p">}</span>
 <a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
 <a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    <span class="k">return</span> <span class="n">best_weights</span><span class="p">,</span> <span class="n">best_auc</span>
 </code></pre></div></p>

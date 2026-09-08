@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Automated testing for AI chatbots - measure brand voice, safety, and consistency">
+        <meta name="description" content="Application alignment evaluations, saved evidence, human review, and CI gates">
       
       
         <meta name="author" content="Justin Grosvenor">
@@ -498,6 +498,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../guides/release-workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Release Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/migration-0.3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrating to 0.3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../guides/persona/" class="md-nav__link">
         
   
@@ -646,6 +702,146 @@
     
   
     LLM Judges
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rag-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG Evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-runs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Runs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/capture-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capture and Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/durable-evaluations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Durable Evaluations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/grounding-faithfulness/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grounding and Faithfulness
   
 
     
@@ -808,6 +1004,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sdk/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1774,7 +1998,7 @@
 </code></pre></div>
 <h3 id="6-commit">6. Commit<a class="headerlink" href="#6-commit" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add feature: description&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Add feature: description"</span>
 </code></pre></div>
 <p>Commit message format:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>&lt;type&gt;: &lt;short summary&gt;
@@ -1795,7 +2019,7 @@
 <a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">persona</span><span class="p">:</span> <span class="n">Persona</span><span class="p">,</span>
 <a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">embeddings</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate authenticity score for a response.</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="sd">"""Calculate authenticity score for a response.</span>
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="sd">    Args:</span>
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="sd">        response: The AI-generated response text</span>
@@ -1807,18 +2031,18 @@
 <a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
 <a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="sd">    Example:</span>
 <a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="sd">        &gt;&gt;&gt; score = calculate_authenticity_score(</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="sd">        ...     &quot;Our baseline shows improvement&quot;,</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="sd">        ...     "Our baseline shows improvement",</span>
 <a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="sd">        ...     persona,</span>
 <a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="sd">        ...     embeddings</span>
 <a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="sd">        ... )</span>
 <a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="sd">        &gt;&gt;&gt; assert 0.0 &lt;= score &lt;= 1.0</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="sd">    """</span>
 <a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>    <span class="c1"># Implementation...</span>
 </code></pre></div>
 <h3 id="dataclasses-over-dicts">Dataclasses over Dicts<a class="headerlink" href="#dataclasses-over-dicts" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># ❌ Bad</span>
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_scores</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;authenticity&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">&quot;safety&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">}</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">"authenticity"</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">"safety"</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">}</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># ✅ Good</span>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nd">@dataclass</span>
@@ -1839,20 +2063,20 @@
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">api_call</span><span class="p">()</span>
 <a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="k">except</span> <span class="n">OpenAIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;OpenAI API failed: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">raise</span> <span class="n">EvaluationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model call failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"OpenAI API failed: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="k">raise</span> <span class="n">EvaluationError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Model call failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 </code></pre></div>
 <h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
 <h3 id="unit-tests">Unit Tests<a class="headerlink" href="#unit-tests" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_authenticity_with_perfect_match</span><span class="p">():</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Test authenticity scorer with identical text.&quot;&quot;&quot;</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="sd">"""Test authenticity scorer with identical text."""</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">persona</span> <span class="o">=</span> <span class="n">Persona</span><span class="p">(</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Our baseline shows improvement&quot;</span><span class="p">]</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="nb">id</span><span class="o">=</span><span class="s2">"test"</span><span class="p">,</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">"Our baseline shows improvement"</span><span class="p">]</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    <span class="p">)</span>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    <span class="n">scorer</span> <span class="o">=</span> <span class="n">AuthenticityScorer</span><span class="p">(</span><span class="n">persona</span><span class="p">)</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score_response</span><span class="p">(</span><span class="s2">&quot;Our baseline shows improvement&quot;</span><span class="p">)</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>    <span class="n">score</span> <span class="o">=</span> <span class="n">scorer</span><span class="o">.</span><span class="n">score_response</span><span class="p">(</span><span class="s2">"Our baseline shows improvement"</span><span class="p">)</span>
 <a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
 <a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>    <span class="k">assert</span> <span class="n">score</span> <span class="o">&gt;</span> <span class="mf">0.95</span>  <span class="c1"># Should be very high</span>
 </code></pre></div>
@@ -1860,16 +2084,16 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span>
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">sample_persona</span><span class="p">():</span>
 <a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="k">return</span> <span class="n">Persona</span><span class="p">(</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;test-persona&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>        <span class="nb">id</span><span class="o">=</span><span class="s2">"test-persona"</span><span class="p">,</span>
 <a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>        <span class="n">voice</span><span class="o">=</span><span class="n">Voice</span><span class="p">(</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>            <span class="n">tone</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;professional&quot;</span><span class="p">],</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>            <span class="n">formality</span><span class="o">=</span><span class="s2">&quot;business_casual&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>            <span class="n">tone</span><span class="o">=</span><span class="p">[</span><span class="s2">"professional"</span><span class="p">],</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>            <span class="n">formality</span><span class="o">=</span><span class="s2">"business_casual"</span><span class="p">,</span>
 <a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>            <span class="n">lexicon</span><span class="o">=</span><span class="n">Lexicon</span><span class="p">(</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                <span class="n">preferred</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;baseline&quot;</span><span class="p">,</span> <span class="s2">&quot;signal&quot;</span><span class="p">],</span>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>                <span class="n">avoided</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;lol&quot;</span><span class="p">,</span> <span class="s2">&quot;hype&quot;</span><span class="p">]</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>                <span class="n">preferred</span><span class="o">=</span><span class="p">[</span><span class="s2">"baseline"</span><span class="p">,</span> <span class="s2">"signal"</span><span class="p">],</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>                <span class="n">avoided</span><span class="o">=</span><span class="p">[</span><span class="s2">"lol"</span><span class="p">,</span> <span class="s2">"hype"</span><span class="p">]</span>
 <a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>            <span class="p">)</span>
 <a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>        <span class="p">),</span>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Our baseline analysis shows strong signal.&quot;</span><span class="p">]</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">"Our baseline analysis shows strong signal."</span><span class="p">]</span>
 <a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>    <span class="p">)</span>
 <a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
 <a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_with_fixture</span><span class="p">(</span><span class="n">sample_persona</span><span class="p">):</span>
@@ -1884,7 +2108,7 @@
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="n">turns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Turn</span><span class="p">],</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="n">persona</span><span class="p">:</span> <span class="n">Persona</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SessionAnalysis</span><span class="p">:</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a conversation session for brand voice alignment.</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="sd">"""Evaluate a conversation session for brand voice alignment.</span>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="sd">    Args:</span>
 <a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="sd">        session_id: Unique identifier for this session</span>
@@ -1898,10 +2122,10 @@
 <a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="sd">        EvaluationError: If session is empty or invalid</span>
 <a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>
 <a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="sd">    Example:</span>
-<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="sd">        &gt;&gt;&gt; turns = [Turn(user=&quot;Hello&quot;, assistant=&quot;Hi there!&quot;)]</span>
-<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="sd">        &gt;&gt;&gt; analysis = evaluate_session(&quot;s001&quot;, turns, persona)</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="sd">        &gt;&gt;&gt; turns = [Turn(user="Hello", assistant="Hi there!")]</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="sd">        &gt;&gt;&gt; analysis = evaluate_session("s001", turns, persona)</span>
 <a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="sd">        &gt;&gt;&gt; assert 0.0 &lt;= analysis.authenticity &lt;= 1.0</span>
-<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="sd">    """</span>
 </code></pre></div>
 <h3 id="user-docs">User Docs<a class="headerlink" href="#user-docs" title="Permanent link">&para;</a></h3>
 <p>When adding features, update:

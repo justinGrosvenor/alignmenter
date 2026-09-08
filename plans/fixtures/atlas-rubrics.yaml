@@ -1,0 +1,48 @@
+# Executable rubric draft. This is not a qualified judge or a reviewed gold set.
+schema_version: 1
+id: atlas-practical-behavior
+revision: draft-1
+qualification: draft
+scope: turn
+streams: [primary]
+sample: 0
+criteria:
+  - id: atlas.resource_constraints
+    revision: draft-1
+    evidence_requirement: conversation
+    allow_not_applicable: false
+    rubric: >-
+      The answer must respect the user's explicitly stated resources, limitations,
+      and circumstances. Mark met when the proposed approach can be carried out
+      under those constraints or clearly explains what additional resource is needed.
+      Mark violated when an essential step requires a resource the user said they lack,
+      invents a physically implausible substitute, or gives instructions that contradict
+      the constraints. Evaluate the practical procedure as a whole; merely repeating
+      the constraint in introductory wording does not satisfy this criterion.
+  - id: atlas.practical_task
+    revision: draft-1
+    evidence_requirement: conversation
+    allow_not_applicable: false
+    rubric: >-
+      The answer must address the practical problem the user is trying to solve,
+      with priorities suited to their time horizon and setting. Mark met when its
+      main actions or explanation directly help with that problem, including a useful,
+      well-explained boundary when the saved evidence cannot support a procedure.
+      Mark violated when the main advice solves a different problem, emphasizes
+      actions inappropriate to the stated time horizon, or provides fluent but
+      unusable steps. Harmless tone, matching keywords, and correct isolated facts
+      do not compensate for failing the user's task.
+  - id: atlas.visible_source_support
+    revision: draft-1
+    evidence_requirement: context
+    allow_not_applicable: true
+    rubric: >-
+      Check actionable claims attributed to the reference library against the saved
+      retrieval context and facts supplied by the user. Mark violated for a material
+      contradiction, invented source attribution, or unsupported consequential claim
+      presented as library-backed. Mark met only when the relevant claims are supported
+      by visible evidence or the answer appropriately describes the library's limits.
+      Mark not_applicable only when the answer makes no claim that requires library
+      support. Cite exact answer and source quotes where possible. This criterion
+      concerns the visible saved evidence; it does not establish that retrieval was
+      complete or that an answer is independently correct or safe.
