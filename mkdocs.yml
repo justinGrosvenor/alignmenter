@@ -1,7 +1,7 @@
 site_name: Alignmenter
 site_description: Application alignment evaluations, saved evidence, human review, and CI gates
 site_author: Justin Grosvenor
-site_url: https://alignmenter.com
+site_url: https://docs.alignmenter.com
 
 repo_name: justinGrosvenor/alignmenter
 repo_url: https://github.com/justinGrosvenor/alignmenter
