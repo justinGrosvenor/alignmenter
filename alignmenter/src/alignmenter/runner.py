@@ -2,17 +2,36 @@
 
 from __future__ import annotations
 
-import copy
+import hashlib
+import logging
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
+from alignmenter.execution.artifacts import export_capture, model_slug, transcript_filename
+from alignmenter.execution.leases import coordinator_lease
+from alignmenter.execution.legacy import capture_transcripts
 from alignmenter.providers.base import ChatProvider
+from alignmenter.providers.callable import recovery_contract
 from alignmenter.reporting.html import HTMLReporter
 from alignmenter.reporting.json_out import JSONReporter
+from alignmenter.schemas.execution import (
+    ExecutionStatus,
+    FailureInfo,
+    PlannedTurn,
+    RunManifest,
+    RunPhase,
+    Stream,
+    TargetSnapshot,
+    content_digest,
+)
+from alignmenter.storage.runs import DATABASE_NAME, DATABASE_VERSION, RunStore
 from alignmenter.utils.io import read_jsonl, write_json, write_jsonl
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -26,6 +45,7 @@ class RunConfig:
     compare_model: str | None = None
     report_out_dir: Path = Path("reports")
     include_raw: bool = True
+    max_target_calls: int | None = None
 
     def __post_init__(self) -> None:
         self.dataset_path = Path(self.dataset_path)
@@ -60,6 +80,7 @@ class Runner:
         progress_callback: Callable[[int], None] | None = None,
         compare_progress_callback: Callable[[int], None] | None = None,
         thresholds: dict[str, dict[str, float]] | None = None,
+        suite_snapshot: dict | None = None,
     ) -> None:
         self.config = config
         self.scorers = list(scorers)
@@ -76,17 +97,112 @@ class Runner:
             compare_progress_callback if self.compare_generate else None
         )
         self.thresholds = thresholds or {}
+        self.suite_snapshot = suite_snapshot
         self.latest_results: dict[str, Any] | None = None
         self.threshold_results: dict[str, dict[str, Any]] = {}
         self.analytics: dict[str, Any] = {}
+        self.run_dir: Path | None = None
 
-    def execute(self) -> Path:
-        """Execute an evaluation run and return the artifact directory."""
+    def capture(self) -> Path:
+        """Capture inputs and answers without invoking scorers or reporters."""
+        return self.execute(capture_only=True)
 
+    def execute(self, *, capture_only: bool = False) -> Path:
+        """Execute a fresh run; committed captures survive later failures."""
+
+        self.run_dir = None
+        self.latest_results = None
+        self.threshold_results = {}
+        self.analytics = {}
         records = load_dataset(self.config.dataset_path)
+        manifest, plan, persona = self._plan_run(records)
+        run_at = manifest.created_at.isoformat().replace("+00:00", "Z")
+        run_dir = prepare_run_directory(self.config.report_out_dir, run_at, self.config.run_id)
+        self.run_dir = run_dir
+        with coordinator_lease(run_dir):
+            store = RunStore.create(run_dir, manifest, plan, dataset=records, persona=persona)
+            return self._execute_created(store, run_at, capture_only=capture_only)
+
+    def _execute_created(self, store: RunStore, run_at: str, *, capture_only: bool) -> Path:
+        run_dir, manifest = store.run_dir, store.manifest()
+        try:
+            write_json(run_dir / "manifest.json", manifest.model_dump(mode="json"))
+            write_json(run_dir / "run.json", {
+                "run_id": self.config.run_id, "model": self.config.model,
+                "compare_model": self.config.compare_model, "run_at": run_at,
+                "dataset_path": str(self.config.dataset_path),
+                "persona_path": str(self.config.persona_path),
+                "storage": {"schema_version": DATABASE_VERSION, "path": DATABASE_NAME, "run_uuid": str(manifest.id)},
+            })
+            result = self._execute_pipeline(run_dir, run_at, store, capture_only=capture_only)
+            store.set_run_state(status=ExecutionStatus.CAPTURED if capture_only else ExecutionStatus.SUCCEEDED)
+            return result
+        except BaseException as exc:
+            self.latest_results = None
+            try:
+                interrupted = isinstance(exc, (KeyboardInterrupt, SystemExit))
+                store.set_run_state(
+                    status=ExecutionStatus.INTERRUPTED if interrupted else ExecutionStatus.FAILED,
+                    failure=FailureInfo(kind="interrupted" if interrupted else "pipeline_error",
+                                        exception_type=type(exc).__name__),
+                )
+                self._export_captured_transcripts(store)
+            except Exception:
+                logger.error("Could not finalize run artifacts; committed database records remain authoritative")
+            raise
+
+    def _plan_run(self, records: list[dict]) -> tuple[RunManifest, list[PlannedTurn], bytes | None]:
+        grouped = _group_records(records)
+        ordered = [turn for turns in grouped.values() for turn in turns]
+        targets = [TargetSnapshot(
+            stream="primary", model=self.config.model,
+            mode="generate" if self.generate_transcripts else "recorded",
+            adapter=_adapter_name(self.provider) if self.generate_transcripts else None,
+            recovery=recovery_contract(self.provider) if self.generate_transcripts else None,
+        )]
+        if self.compare_scorers:
+            targets.append(TargetSnapshot(
+                stream="compare", model=self.config.compare_model or "compare",
+                mode="generate" if self.compare_generate else "recorded",
+                adapter=_adapter_name(self.compare_provider) if self.compare_generate else None,
+                recovery=recovery_contract(self.compare_provider) if self.compare_generate else None,
+            ))
+        plan = [PlannedTurn(
+            stream=target.stream, ordinal=ordinal, session_id=record["session_id"],
+            role=(record.get("role") or "user").strip().lower(),
+            generate=target.mode == "generate" and (record.get("role") or "user").strip().lower() == "assistant",
+            record=record,
+        ) for target in targets for ordinal, record in enumerate(ordered)]
+        persona = self.config.persona_path.read_bytes() if self.config.persona_path.is_file() else None
+        try:
+            package_version = version("alignmenter")
+        except PackageNotFoundError:
+            package_version = "unknown"
+        manifest = RunManifest(
+            label=self.config.run_id, dataset_path=str(self.config.dataset_path),
+            dataset_digest=content_digest(records), persona_path=str(self.config.persona_path),
+            plan_digest=content_digest([t.model_dump(mode="json") for t in sorted(plan, key=lambda t: (t.stream, t.ordinal))]),
+            persona_digest=hashlib.sha256(persona).hexdigest() if persona is not None else None,
+            targets=tuple(targets), scorer_ids={"primary": [s.id for s in self.scorers],
+                                               "compare": [s.id for s in self.compare_scorers]},
+            thresholds=self.thresholds, include_raw=self.config.include_raw, package_version=package_version,
+            max_target_calls=self.config.max_target_calls, suite=self.suite_snapshot,
+        )
+        return manifest, plan, persona
+
+    def _export_captured_transcripts(self, store: RunStore) -> None:
+        export_capture(store)
+
+    def _transcript_filename(self, stream: Stream) -> str:
+        model = self.config.model if stream == "primary" else self.config.compare_model or "compare"
+        return transcript_filename(model, stream, self.config.model)
+
+    def _execute_pipeline(
+        self, run_dir: Path, run_at: str, store: RunStore, *, capture_only: bool = False
+    ) -> Path:
 
         primary_records, primary_usage = self._prepare_transcripts(
-            records,
+            store=store, stream="primary",
             provider=self.provider if self.generate_transcripts else None,
             model_identifier=self.config.model,
             progress_callback=self.progress_callback,
@@ -99,13 +215,17 @@ class Runner:
 
         if self.compare_scorers:
             compare_records, compare_usage = self._prepare_transcripts(
-                records,
+                store=store, stream="compare",
                 provider=self.compare_provider if self.compare_generate else None,
                 model_identifier=self.config.compare_model,
                 progress_callback=self.compare_progress_callback,
             )
             compare_sessions = group_sessions(compare_records)
 
+        self._export_captured_transcripts(store)
+        if capture_only:
+            return run_dir
+        store.set_run_state(phase=RunPhase.SCORING)
         primary_scores = self._run_scorers(self.scorers, primary_sessions)
         score_results: dict[str, Any] = {"primary": primary_scores}
 
@@ -125,14 +245,13 @@ class Runner:
             score_results["analytics"] = analytics
             self.analytics = analytics
 
-        run_at = datetime.now(timezone.utc).replace(microsecond=0, tzinfo=None).isoformat() + "Z"
-        run_dir = prepare_run_directory(self.config.report_out_dir, run_at, self.config.run_id)
+        store.set_run_state(phase=RunPhase.REPORTING)
 
         transcript_info: dict[str, dict[str, str]] = {}
         transcripts_dir = run_dir / "transcripts"
         transcripts_dir.mkdir(parents=True, exist_ok=True)
 
-        primary_transcript_path = transcripts_dir / f"{_slugify_model(self.config.model)}.jsonl"
+        primary_transcript_path = transcripts_dir / self._transcript_filename("primary")
         write_jsonl(primary_transcript_path, primary_records)
         transcript_info["primary"] = {
             "model": self.config.model,
@@ -142,7 +261,7 @@ class Runner:
 
         if compare_records is not None:
             compare_model = self.config.compare_model or "compare"
-            compare_transcript_path = transcripts_dir / f"{_slugify_model(compare_model)}.jsonl"
+            compare_transcript_path = transcripts_dir / self._transcript_filename("compare")
             write_jsonl(compare_transcript_path, compare_records)
             transcript_info["compare"] = {
                 "model": compare_model,
@@ -160,6 +279,8 @@ class Runner:
             "session_count": len(primary_sessions),
             "turn_count": len(primary_records),
             "transcripts": transcript_info,
+            "storage": {"schema_version": DATABASE_VERSION, "path": DATABASE_NAME,
+                        "run_uuid": str(store.manifest().id)},
         }
 
         if threshold_eval:
@@ -225,13 +346,15 @@ class Runner:
                 continue
 
             metric_key, higher_is_better = metric_info
-            metrics = primary_scores.get(scorer_id)
+            # "dangerous" is a gate on the faithfulness scorer's count, not a scorer of its own.
+            metrics = primary_scores.get("faithfulness" if scorer_id == "dangerous" else scorer_id)
             value = _extract_metric(metrics, metric_key)
             if value is None:
                 continue
 
-            warn_threshold = _safe_float(config.get("warn") or config.get("threshold_warn"))
-            fail_threshold = _safe_float(config.get("fail") or config.get("threshold_fail"))
+            # `or` would drop a legitimate threshold of 0 (e.g. dangerous.fail: 0).
+            warn_threshold = _safe_float(_first_present(config.get("warn"), config.get("threshold_warn")))
+            fail_threshold = _safe_float(_first_present(config.get("fail"), config.get("threshold_fail")))
 
             status = "pass"
             if fail_threshold is not None:
@@ -290,46 +413,19 @@ class Runner:
 
     def _prepare_transcripts(
         self,
-        records: Iterable[dict[str, Any]],
         *,
+        store: RunStore,
+        stream: Stream,
         provider: ChatProvider | None,
         model_identifier: str | None,
         progress_callback: Callable[[int], None] | None = None,
     ) -> tuple[list[dict[str, Any]], dict[str, int]]:
-        grouped = _group_records(records)
-        output: list[dict[str, Any]] = []
+        output = capture_transcripts(store, stream, provider, model_identifier or "provider", progress_callback)
         usage = _UsageAccumulator()
-
-        for session_id in grouped:
-            conversation: list[dict[str, str]] = []
-            for turn in grouped[session_id]:
-                record = copy.deepcopy(turn)
-                role = (record.get("role") or "user").strip().lower()
-
-                if role == "assistant" and provider is not None:
-                    baseline = record.get("text")
-                    if baseline:
-                        metadata = _ensure_metadata(record)
-                        metadata.setdefault("baseline_text", baseline)
-
-                    response = provider.chat([dict(msg) for msg in conversation])
-                    generated_text = (response.text or "").strip()
-                    record["text"] = generated_text
-
-                    metadata = _ensure_metadata(record)
-                    metadata["generated_by"] = model_identifier or getattr(provider, "name", "provider")
-                    if response.usage:
-                        metadata["usage"] = response.usage
-                        usage.add(response.usage)
-
-                    conversation.append({"role": "assistant", "content": generated_text})
-                    if progress_callback:
-                        progress_callback(1)
-                else:
-                    conversation.append({"role": role or "user", "content": record.get("text", "")})
-
-                output.append(record)
-
+        if provider is not None:
+            for observation in store.observations():
+                if observation.stream == stream and observation.origin == "generated" and observation.usage is not None:
+                    usage.add(observation.usage)
         return output, usage.as_dict()
 
 
@@ -383,9 +479,16 @@ def prepare_run_directory(base_dir: Path, run_at: str, run_id: str) -> Path:
     """Create a timestamped run directory."""
 
     timestamp = run_at.replace(":", "-").replace("Z", "")
-    run_dir = base_dir / f"{timestamp}_{run_id}"
-    run_dir.mkdir(parents=True, exist_ok=True)
-    return run_dir
+    base_dir = Path(base_dir)
+    base_dir.mkdir(parents=True, exist_ok=True)
+    stem = f"{timestamp}_{_slugify_model(run_id)}"
+    run_dir = base_dir / stem
+    while True:
+        try:
+            run_dir.mkdir(exist_ok=False)
+            return run_dir
+        except FileExistsError:
+            run_dir = base_dir / f"{stem}_{uuid4().hex}"
 
 
 def compute_diffs(primary: dict, compare: dict) -> dict:
@@ -440,6 +543,8 @@ def build_scorecards(
         "authenticity": ("mean", "Authenticity Score"),
         "safety": ("score", "Safety Score"),
         "stability": ("stability", "Stability"),
+        "grounding": ("score", "Grounding"),
+        "faithfulness": ("score", "Faithfulness"),
     }
 
     scorecards: list[dict] = []
@@ -494,6 +599,13 @@ def _serialize_session(session: Session) -> dict[str, Any]:
     }
 
 
+def _first_present(*values: Any) -> Any:
+    for value in values:
+        if value is not None and value != "":
+            return value
+    return None
+
+
 def _safe_float(value: Any) -> float | None:
     try:
         if value is None or value == "":
@@ -505,10 +617,22 @@ def _safe_float(value: Any) -> float | None:
 
 def _group_records(records: Iterable[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = {}
+    seen: set[tuple[str, int]] = set()
     for record in records:
+        if not isinstance(record, dict):
+            raise ValueError("Dataset records must be JSON objects")
         session_id = record.get("session_id")
-        if not session_id:
+        if not isinstance(session_id, str) or not session_id.strip():
             raise ValueError("Dataset record missing 'session_id'.")
+        if not isinstance(record.get("role") or "user", str):
+            raise ValueError("Dataset role must be a string")
+        if "turn_index" in record:
+            index = record["turn_index"]
+            if type(index) is not int or index < 0:
+                raise ValueError("Dataset turn_index must be a nonnegative integer")
+            if (session_id, index) in seen:
+                raise ValueError(f"Duplicate turn_index in session {session_id!r}")
+            seen.add((session_id, index))
         grouped.setdefault(session_id, []).append(record)
 
     for turns in grouped.values():
@@ -517,20 +641,14 @@ def _group_records(records: Iterable[dict[str, Any]]) -> dict[str, list[dict[str
     return {session_id: grouped[session_id] for session_id in sorted(grouped)}
 
 
-def _ensure_metadata(record: dict[str, Any]) -> dict[str, Any]:
-    metadata = record.get("metadata")
-    if not isinstance(metadata, dict):
-        metadata = {}
-        record["metadata"] = metadata
-    return metadata
+def _adapter_name(provider: ChatProvider | None) -> str | None:
+    if provider is None:
+        return None
+    return f"{type(provider).__module__}.{type(provider).__qualname__}"
 
 
 def _slugify_model(identifier: str | None) -> str:
-    if not identifier:
-        return "model"
-    slug = [ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in identifier]
-    collapsed = "".join(slug).strip("_")
-    return collapsed or "model"
+    return model_slug(identifier)
 
 
 class _UsageAccumulator:
@@ -573,4 +691,8 @@ THRESHOLD_METRICS: dict[str, tuple[str, bool]] = {
     "authenticity": ("mean", True),
     "safety": ("score", True),
     "stability": ("stability", True),
+    "grounding": ("score", True),
+    "faithfulness": ("score", True),
+    # A count, not a rate: the product gate is "zero answers that could hurt someone".
+    "dangerous": ("dangerous", False),
 }

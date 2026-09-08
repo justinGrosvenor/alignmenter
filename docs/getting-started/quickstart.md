@@ -1,178 +1,50 @@
 # Quick Start
 
-This guide will walk you through running your first Alignmenter evaluation in under 5 minutes.
+Use Python 3.10–3.14 on macOS or Linux for the durable workflow. The example needs no
+API key or local model download.
 
-## Prerequisites
-
-- Alignmenter installed ([Installation Guide](installation.md)).
-  - The core install works offline with the default `hashed` embeddings.
-  - This quickstart uses local sentence-transformer embeddings and the offline
-    safety classifier, so install the `[ml]` extra:
-    `pip install "alignmenter[ml]"` (PyPI) or `pip install -e ".[ml]"` (repo checkout).
-- An API key (`OPENAI_API_KEY` / `ANTHROPIC_API_KEY`) is only needed to generate
-  transcripts or enable an LLM judge — not for the default cached, offline run.
-
-## 1. Initialize Project
-
-Create a new project directory:
+## Install and run
 
 ```bash
-alignmenter init
+pip install alignmenter
+alignmenter --version
+alignmenter init-suite --out evals/resource-task
+alignmenter run-suite evals/resource-task/suite.yaml --out reports
 ```
 
-This creates sample configs, datasets, and personas you can use right away.
+The generated suite uses an installed Python target that chooses available resources.
+Its deterministic evaluator checks that exact constraint. A successful run exits 0 and
+prints JSON with its `run_dir`, `evaluation_id`, `decision`, and `artifacts` directory.
+Open `index.html` in that directory. `evaluation.json`, `summary.md`, and `junit.xml`
+carry the same decision for automation.
 
-## 2. Run Your First Test
-
-Run an evaluation with the demo dataset (reuses the bundled transcripts):
+## See a regression
 
 ```bash
-alignmenter run --config configs/run.yaml --embedding sentence-transformer:all-MiniLM-L6-v2
+ALIGNMENTER_DEMO_VARIANT=bad alignmenter run-suite evals/resource-task/suite.yaml --out reports
 ```
 
-Want fresh transcripts from your provider? Add `--generate-transcripts`:
+The example's bad variant requires unavailable equipment and exits 2. This is a
+purposefully engineered failure, not an AI quality benchmark.
+
+Compare the saved run directories printed by the two commands:
 
 ```bash
-alignmenter run --config configs/run.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
+alignmenter compare BASELINE_RUN CANDIDATE_RUN --out reports/comparison
 ```
 
-You'll see output like:
+The offline report pairs answers by case and shows why they failed. Inspection and
+comparison do not execute either the target or evaluator again.
 
-```
-Loading dataset: 60 turns across 10 sessions
-Running model: openai:gpt-4o-mini
-✓ Brand voice score: 0.83 (range: 0.79-0.87)
-✓ Safety score: 0.95
-✓ Consistency score: 0.88
-Report written to: reports/2025-11-06_14-32/index.html
-```
+## Connect your application
 
-!!! success
-    The test typically completes in ~10 seconds with the demo dataset.
+Replace the suite's target and evaluator factories with your own importable Python
+adapters, or omit the target to evaluate recorded assistant answers. Start new product
+criteria as `qualification: draft` and supply human references before making claims
+about judge reliability. Inconclusive work exits 3, so CI cannot mistake it for a pass.
 
-## 3. View the Report
-
-Open the interactive HTML report:
-
-```bash
-alignmenter report --last
-```
-
-This opens the most recent report in your browser. You'll see:
-
-- **Overall score** with letter grade (A/B/C)
-- **Metric breakdown** for authenticity, safety, and stability
-- **Interactive charts** showing score distributions
-- **Session details** with individual conversation analysis
-- **Export options** to CSV/JSON
-
-## 4. Test Different Models
-
-Compare GPT-4 vs Claude:
-
-```bash
-# Test with GPT-4
-alignmenter run --model openai:gpt-4o --config configs/brand.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
-
-# Test with Claude
-alignmenter run --model anthropic:claude-3-5-sonnet-20241022 --config configs/brand.yaml --generate-transcripts --embedding sentence-transformer:all-MiniLM-L6-v2
-```
-
-## 5. Add LLM Judge Analysis (Optional)
-
-Get qualitative feedback from an LLM judge. `calibrate validate` needs the
-`[calibrate]` extra (`pip install "alignmenter[calibrate]"`):
-
-```bash
-alignmenter calibrate validate \
-  --labeled case-studies/wendys-twitter/labeled.jsonl \
-  --persona configs/persona/wendys-twitter.yaml \
-  --output reports/wendys-calibration.json \
-  --judge openai:gpt-4o --judge-sample 0.2
-```
-
-This analyzes 20% of your sessions with GPT-4 and provides:
-- Human-readable explanations of brand voice alignment
-- Agreement rate with quantitative metrics
-- Detailed reasoning for each score
-- Cost tracking (typically $0.03-$0.10 for demo dataset)
-
-## Common Workflows
-
-### Test Before Deploying
-
-```bash
-# Run full test suite
-alignmenter run --model openai:gpt-4o-mini --config configs/prod.yaml --generate-transcripts
-
-# (Thresholds live in configs/prod.yaml)
-alignmenter run --config configs/prod.yaml
-```
-
-Add thresholds to your run config:
-
-```yaml
-scorers:
-  authenticity:
-    threshold_fail: 0.80
-  safety:
-    threshold_fail: 0.95
-```
-
-### Compare Model Versions
-
-```bash
-# Baseline
-alignmenter run --model openai:gpt-4o --config configs/brand.yaml --out reports/baseline --generate-transcripts
-
-# After prompt changes
-alignmenter run --model openai:gpt-4o --config configs/brand-v2.yaml --out reports/v2 --generate-transcripts
-
-# Compare reports manually or diff the JSON exports
-```
-
-### Sanitize Production Data
-
-```bash
-# Preview sanitization (dry run)
-alignmenter dataset sanitize datasets/prod_logs.jsonl --dry-run
-
-# Actually sanitize
-alignmenter dataset sanitize datasets/prod_logs.jsonl --out datasets/sanitized.jsonl
-```
-
-## Next Steps
-
-- **[Core Concepts](concepts.md)** - Understand the metrics and scoring
-- **[Persona Configuration](../guides/persona.md)** - Customize your brand voice
-- **[CLI Reference](../reference/cli.md)** - Full command documentation
-- **[Calibration Guide](../guides/calibration.md)** - Advanced LLM judge usage
-
-## Troubleshooting
-
-### "No API key found"
-
-Set your OpenAI API key:
-```bash
-export OPENAI_API_KEY="sk-..."
-```
-
-### "Module not found: sentence-transformers"
-
-Local sentence-transformer embeddings and the offline safety classifier live in
-the `[ml]` extra. Either install it, or drop the `--embedding` flag to use the
-default zero-dependency `hashed` provider:
-```bash
-pip install "alignmenter[ml]"
-```
-
-### Tests are slow
-
-Runs reuse existing transcripts by default. Only add `--generate-transcripts` when you explicitly want to call the provider:
-```bash
-alignmenter run --config configs/brand.yaml --generate-transcripts
-```
-
-### Need help?
-
-File an issue on [GitHub](https://github.com/justinGrosvenor/alignmenter/issues) or check the [CLI Reference](../reference/cli.md).
+The [release workflow](../guides/release-workflow.md) covers suite configuration,
+judged criteria, budgets, human review, regression promotion, and CI. The
+[SDK reference](../reference/sdk.md) includes adapter examples. Existing persona users
+can keep using `init` and `run`; see the [migration guide](../guides/migration-0.3.md)
+and [CLI reference](../reference/cli.md) for their compatibility limits.

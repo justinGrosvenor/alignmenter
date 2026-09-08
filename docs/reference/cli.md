@@ -25,6 +25,12 @@ The CLI is organized into top-level commands plus four sub-command groups:
 | --- | --- | --- |
 | `init` | Interactive setup of credentials, defaults, and a starter run config | — |
 | `run` | Execute an evaluation run | `[ml]` for local embeddings |
+| `status` | Inspect committed execution state | — |
+| `capture` | Save recorded or generated answers without scoring | — |
+| `resume` | Continue compatible capture with recovery preflight | — |
+| `evaluate` | Evaluate saved answers with versioned rubrics and a durable shared judge budget | — |
+| `evaluation-status` | Inspect saved rubric decisions, evidence, and budget usage | — |
+| `export-transcripts` | Recover committed transcripts from a complete or partial run | — |
 | `demo` | One-line demo run over the bundled dataset | — |
 | `report` | Open a generated HTML report in the browser | — |
 | `bootstrap-dataset` | Generate a synthetic dataset with safety/brand traps | — |
@@ -45,6 +51,31 @@ The CLI is organized into top-level commands plus four sub-command groups:
 | `calibrate analyze-scenarios` | LLM-judge breakdown by scenario tag | judge API |
 
 ---
+
+## Durable suite and release commands
+
+| Command | Purpose |
+| --- | --- |
+| `init-suite --out DIR` | Write a runnable offline application example |
+| `run-suite SUITE --out reports [--resume RUN]` | Capture, evaluate, compare, and export under a frozen config |
+| `check RUN --out DIR [--policy YAML] [--baseline RUN]` | Apply gates to saved results and export all formats |
+| `compare BASELINE CANDIDATE --out DIR` | Compare compatible saved cases and evidence |
+| `review-export RUN --out JSONL` | Export immutable evidence with editable annotation fields |
+| `review-import RUN --annotations JSONL` | Append validated opinions/adjudications atomically |
+| `qualify RUN` | Compare machine outcomes against active human adjudications |
+| `promote RUN --annotation-id UUID --out DIR` | Write a regression case with separate expectations |
+| `archive-export RUN --out ZIP` | Export a verified snapshot with evidence and annotations |
+| `archive-import ZIP --out DIR` | Create a read-only inspection copy |
+
+Use `--evaluation-id` on saved checks and review export/qualification to pin a snapshot.
+`compare` accepts `--baseline-id` and `--candidate-id`; `check --baseline` accepts
+`--baseline-id`. Run `COMMAND --help` for all options. `evaluate` accepts repeatable
+`--evaluator-factory module:function` for custom deterministic checks; `capture`
+accepts `--max-target-calls`. `--version` prints the installed package version.
+
+Release commands use exit codes 0 (pass), 2 (fail), and 3 (inconclusive). Configuration
+errors also exit nonzero. The same policy decision appears in every report format.
+See the [release workflow](../guides/release-workflow.md) for configuration and semantics.
 
 ## Core commands
 
@@ -70,7 +101,7 @@ workspace, and emits a runnable `configs/run.yaml`.
 
 ---
 
-### `alignmenter run`
+### `alignmenter run` (legacy)
 
 Execute an evaluation run and write a report directory.
 
@@ -96,6 +127,8 @@ alignmenter run [OPTIONS]
 
 - If a threshold is configured and any metric falls below its `fail` value, `run` exits with code `2`.
 - With `--generate-transcripts`, provider initialization failure aborts the run; without it, recorded transcripts are scored offline.
+- Run capture is persisted incrementally. A later failure preserves committed answers;
+  see [durable runs](../guides/durable-runs.md) for recovery and status semantics.
 
 **Examples**:
 
@@ -125,6 +158,64 @@ thresholds:
   authenticity: {warn: 0.78, fail: 0.72}
   safety: {warn: 0.95, fail: 0.90}
 ```
+
+---
+
+### `alignmenter capture` and `alignmenter resume`
+
+```sh
+alignmenter capture --dataset conversations.jsonl [--persona persona.yaml] [--target module:factory] [--out reports]
+alignmenter resume RUN_DIRECTORY [--target module:factory] [--compare-target module:factory] [--dataset conversations.jsonl] [--persona persona.yaml] [--check]
+```
+
+Capture imports recorded answers when no target is supplied. Target factories return a
+`CaptureTarget`; generated resume requires the original compatible recovery declaration.
+`--check` validates continuation without dispatch or database writes. Optional source
+paths assert compatibility with the saved snapshots. Capture/resume never invokes
+scorers; see [capture and resume](../guides/capture-recovery.md) for adapter contracts,
+idempotency requirements, and database compatibility.
+
+### `alignmenter evaluate` and `alignmenter evaluation-status`
+
+```sh
+alignmenter evaluate RUN_DIRECTORY --spec evaluations.yaml [--judge-factory module:factory] [--max-judge-calls 20] [--max-judge-cost-micros 10000] [--new-evaluation]
+alignmenter evaluation-status RUN_DIRECTORY [--evaluation-id UUID] [--json] [--details]
+```
+
+Deterministic grounding requires neither a judge factory nor a budget. Generic rubrics
+and faithfulness require a factory; the first judged evaluation requires an explicit
+call budget. Later evaluations and
+resumes share the frozen run budget; new rubric/judge/input snapshots require
+`--new-evaluation`. Monetary limits require an adapter-declared cost upper bound.
+Evaluation exits `0` for pass, `2` for a violation, and `3` for inconclusive; CLI/config
+errors also return nonzero. Status only reads saved data and can export full evidence
+with `--details`. See [durable evaluations](../guides/durable-evaluations.md) for adapter
+factories, strict verdicts, coverage semantics, and the boundary with legacy scorers.
+The [grounding and faithfulness guide](../guides/grounding-faithfulness.md) describes
+built-in specs, evidence eligibility, saved metrics, and migration semantics.
+
+### `alignmenter status`
+
+Read the last committed execution state without calling providers or scorers.
+
+```bash
+alignmenter status RUN_DIRECTORY [--json]
+```
+
+`--json` emits the versioned execution summary, including planned/committed record
+counts and attempt statuses. Liveness is not inferred: a hard kill may leave a
+nonterminal recorded state. This command supports runs with the new durable database.
+
+### `alignmenter export-transcripts`
+
+Export committed transcript records, including partial runs, without new execution.
+
+```bash
+alignmenter export-transcripts RUN_DIRECTORY --out recovered.jsonl [--stream primary|compare] [--force]
+```
+
+The default stream is `primary`. Existing output files require `--force`; the durable
+database itself cannot be replaced by an export. Missing answers remain absent.
 
 ---
 

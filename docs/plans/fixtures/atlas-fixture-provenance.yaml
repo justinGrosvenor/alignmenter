@@ -1,0 +1,39 @@
+schema_version: 1
+status: observed_outputs_with_unreviewed_planning_labels
+source:
+  repo: atlas
+  path: eval/reports/2026-08-28T22-10-04_postfix/transcripts/atlas_device.jsonl
+  sha256: abab4614d0fe680941ad33f21083e63d92064d331440da2b7882dfa808c3ca9e
+  lines_one_based:
+  - 61
+  - 62
+  - 79
+  - 80
+  run_directory_timestamp: 2026-08-28T22-10-04
+  generation_commit: unknown
+  capture_completeness: not_declared_by_legacy_adapter
+fixture:
+  path: atlas-observed-failures.jsonl
+  sha256: 682db319b78fe68e87d16b67ff9f28aa77bd85939a722097b9a13c424030db80
+  sessions:
+  - q31
+  - q40
+  transformation: Selected original complete JSONL lines verbatim; no field normalization.
+planning_inputs:
+  repo: atlas
+  inspected_head: 61710c6024c6a6ade7c72967da9998ae7a696d17
+  head_is_generation_commit: false
+  files:
+  - path: src/config.ts
+    working_tree_sha256: 1e05014a757da82e298a788edd0483497807563b5cc71a0aeb147d4d103cfdc3
+  - path: eval/dataset.jsonl
+    working_tree_sha256: f4490069453ef8ef6a09ecfb1ddc5b63a3b5b693f30a8e7c2758923dcbabbe83
+  - path: eval/atlas_eval/provider.py
+    working_tree_sha256: 8acdc66df6d4897f5dac867159942c78a21e15e2a13a1d01e604543d8c467560
+limits:
+- Source hash identifies the available transcript, not an independently verified generation
+  environment.
+- Captured excerpts exist, but historical prompt, citation-map, session-reset, and
+  evidence-completeness guarantees are not established.
+- Behavior expectations added during planning are draft labels, not prior measured
+  scorer verdicts.

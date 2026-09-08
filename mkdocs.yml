@@ -1,5 +1,5 @@
 site_name: Alignmenter
-site_description: Automated testing for AI chatbots - measure brand voice, safety, and consistency
+site_description: Application alignment evaluations, saved evidence, human review, and CI gates
 site_author: Justin Grosvenor
 site_url: https://alignmenter.com
 
@@ -65,15 +65,23 @@ nav:
       - Quick Start: getting-started/quickstart.md
       - Core Concepts: getting-started/concepts.md
   - Guides:
+      - Application Release Workflow: guides/release-workflow.md
+      - Migrating to 0.3: guides/migration-0.3.md
       - Persona Configuration: guides/persona.md
       - Persona Annotation: persona_annotation.md
       - Calibration: guides/calibration.md
       - Safety Checks: guides/safety.md
       - Offline Safety: offline_safety.md
       - LLM Judges: guides/llm-judges.md
+      - RAG Evaluation: guides/rag-evaluation.md
+      - Durable Runs: guides/durable-runs.md
+      - Capture and Resume: guides/capture-recovery.md
+      - Durable Evaluations: guides/durable-evaluations.md
+      - Grounding and Faithfulness: guides/grounding-faithfulness.md
   - Case Studies:
       - Wendy's Twitter Voice: case-studies/wendys-twitter.md
   - Reference:
+      - Python SDK: reference/sdk.md
       - CLI Commands: reference/cli.md
       - Metrics: reference/metrics.md
       - Configuration: reference/config.md

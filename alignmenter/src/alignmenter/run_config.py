@@ -119,7 +119,7 @@ def load_run_options(path: Path) -> dict[str, Any]:
                 _store_threshold(scorer, "warn", config.get("warn"))
                 _store_threshold(scorer, "fail", config.get("fail"))
 
-    for scorer in ("authenticity", "safety", "stability"):
+    for scorer in ("authenticity", "safety", "stability", "grounding", "faithfulness"):
         section = data.get("scorers", {}).get(scorer, {})
         if isinstance(section, dict):
             _store_threshold(scorer, "warn", section.get("threshold_warn"))
@@ -127,5 +127,44 @@ def load_run_options(path: Path) -> dict[str, Any]:
 
     if thresholds:
         options["thresholds"] = thresholds
+
+    # Retrieval-grounded dimensions and product-owned scorers. Off unless asked for: they only
+    # make sense when the provider attaches retrieval context to each answer.
+    scorers_section = data.get("scorers") if isinstance(data.get("scorers"), dict) else {}
+
+    grounding = scorers_section.get("grounding")
+    if isinstance(grounding, dict):
+        options["grounding"] = bool(grounding.get("enabled", True))
+        if grounding.get("units_only") is not None:
+            options["grounding_units_only"] = bool(grounding.get("units_only"))
+    elif isinstance(grounding, bool):
+        options["grounding"] = grounding
+
+    faithfulness = scorers_section.get("faithfulness")
+    if isinstance(faithfulness, dict):
+        options["faithfulness"] = bool(faithfulness.get("enabled", True))
+        if faithfulness.get("judge"):
+            options["faithfulness_judge"] = faithfulness.get("judge")
+        if faithfulness.get("budget") is not None:
+            options["faithfulness_budget"] = faithfulness.get("budget")
+        if faithfulness.get("domain"):
+            options["faithfulness_domain"] = str(faithfulness.get("domain"))
+        if faithfulness.get("max_excerpt_chars") is not None:
+            options["faithfulness_max_excerpt_chars"] = faithfulness.get("max_excerpt_chars")
+    elif isinstance(faithfulness, bool):
+        options["faithfulness"] = faithfulness
+
+    custom = scorers_section.get("custom") or data.get("custom_scorers")
+    if isinstance(custom, str):
+        custom = [custom]
+    if isinstance(custom, list):
+        specs: list[str] = []
+        for entry in custom:
+            if isinstance(entry, str) and entry.strip():
+                specs.append(entry.strip())
+            elif isinstance(entry, dict) and entry.get("spec"):
+                specs.append(str(entry["spec"]).strip())
+        if specs:
+            options["custom_scorers"] = specs
 
     return options

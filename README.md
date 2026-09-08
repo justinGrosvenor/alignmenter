@@ -1,110 +1,86 @@
-<p align="center">
-  <img src="https://alignmenter-branding.s3.us-west-2.amazonaws.com/alignmenter-banner.png" alt="Alignmenter" width="800">
-</p>
+# Alignmenter
 
-<p align="center">
-  <a href="https://pypi.org/project/alignmenter/"><img src="https://badge.fury.io/py/alignmenter.svg" alt="PyPI version"></a>
-  <a href="https://pepy.tech/project/alignmenter"><img src="https://pepy.tech/badge/alignmenter" alt="Downloads"></a>
-  <a href="https://github.com/justinGrosvenor/alignmenter/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
-</p>
-
-<p align="center">
-  <strong>Persona-aligned evaluation for conversational AI</strong>
-</p>
-
-<p align="center">
-  <a href="https://docs.alignmenter.com"><strong>📚 Documentation</strong></a> •
-  <a href="#overview">Overview</a> •
-  <a href="#quickstart">Quickstart</a> •
-  <a href="https://docs.alignmenter.com/getting-started/quickstart/">Quick Start Guide</a> •
-  <a href="#contributing">Contributing</a> •
-  <a href="#license">License</a>
-</p>
-
----
+Application alignment evaluations with saved evidence, repeatable release checks,
+and a lightweight Python SDK and CLI.
 
 ## Overview
 
-**Alignmenter** is a production-ready evaluation toolkit for teams shipping AI copilots and chat experiences. Ensure your AI stays on-brand, safe, and stable across model updates.
+Alignmenter 0.3 checks whether an assistant meets the commitments of its application:
+uses the resources the user has, respects constraints, supports claims with supplied
+evidence, and avoids dangerous advice. Capture answers once, evaluate them under
+versioned criteria, compare a candidate with a baseline, and preserve human review.
 
-### Three-Dimensional Evaluation
+- **Durable execution:** SQLite observations, frozen inputs, explicit recovery, and
+  shared judge reservations preserve partial work across interruptions.
+- **Application-owned checks:** deterministic evaluator factories and typed metrics
+  work with the same grouping, reports, comparisons, and gates as builtins.
+- **Evidence evaluation:** offline quantity traceability/citation checks and strict
+  judged faithfulness retain the claims and source quotes behind each outcome.
+- **Release decisions:** matched case comparisons, explicit coverage, absolute and
+  regression gates, and consistent CLI/HTML/JSON/Markdown/JUnit results.
+- **Human review:** append-only JSONL annotation exchange, adjudication, evaluator
+  agreement reports, and regression promotion with case lineage and split groups.
+- **Local inspection:** offline HTML and portable read-only run archives; the core
+  install does not require torch or scikit-learn.
 
-- **🎨 Authenticity** – Does the AI match your brand voice? Measures semantic similarity, linguistic traits, and lexicon compliance.
-- **🛡️ Safety** – Does it avoid harmful outputs? Combines keyword rules, LLM judges, and offline ML classifiers.
-- **⚖️ Stability** – Are responses consistent? Detects semantic drift and variance across sessions.
-
-### Why Alignmenter?
-
-Unlike generic LLM evaluation frameworks, Alignmenter is **purpose-built for persona alignment**:
-
-- **Persona packs**: Define your brand voice in YAML with examples, lexicon, and traits
-- **Judge-blended, offline-capable**: When an LLM judge is configured, brand-voice scores blend the judge's holistic rating with deterministic signals; with no key, it falls back to a fully offline deterministic score (clearly labeled)
-- **Budget-aware**: Built-in cost tracking and guardrails
-- **Reproducible**: Deterministic scoring, full audit trails
-- **Lightweight core**: No `torch` or `scikit-learn` in the default install — heavy local models are opt-in extras
-
----
+Missing work cannot produce a green release check. A draft specification cannot pass.
+The legacy persona, authenticity, safety, stability, and calibration tools remain
+available; new release integrations should use the durable workflow.
 
 ## Quickstart
 
-### Installation
+```bash
+pip install alignmenter
+alignmenter --version
+alignmenter init-suite --out evals/resource-task
+alignmenter run-suite evals/resource-task/suite.yaml --out reports
+```
 
-**Option 1 · PyPI (recommended for most users)**
+The installed example uses a local target and a deterministic resource constraint.
+It needs no API key. The command prints the run directory, evaluation UUID, decision,
+and artifact directory. Open its `index.html` to inspect evidence. Exit codes are
+**0 pass, 2 fail, 3 inconclusive**. Exercise a deliberate failure with:
 
 ```bash
-pip install alignmenter          # lightweight core — no torch / scikit-learn
-alignmenter init
-alignmenter run --config configs/run.yaml
+ALIGNMENTER_DEMO_VARIANT=bad alignmenter run-suite evals/resource-task/suite.yaml --out reports
 ```
 
-Use this path when you want to try Alignmenter quickly, run it in CI, or install it inside a production environment. Add optional extras when you need them: `alignmenter[ml]` for local embeddings and the offline safety classifier, `alignmenter[calibrate]` for the persona calibration pipeline.
-
-**Option 2 · From Source (for case studies & contributing)**
+To work from this checkout, including a release candidate before publication:
 
 ```bash
-git clone https://github.com/justinGrosvenor/alignmenter.git
-cd alignmenter
-pip install -e ./alignmenter[dev,safety]
+python -m venv .venv
+source .venv/bin/activate
+pip install -e 'alignmenter[test,docs]'
 ```
 
-This installs the CLI plus the case-study assets under `alignmenter/case-studies/`, which are excluded from the PyPI wheel. Ideal when you want to reproduce the Wendy's walkthrough or contribute code.
+Python 3.10–3.14 are supported for the core package. Durable execution uses a local
+POSIX coordinator; Windows and multi-host/network-filesystem execution are not
+supported in 0.3. Optional `[ml]` and `[calibrate]` extras retain their upstream
+platform requirements.
 
-### Run Your First Evaluation
+```python
+from alignmenter.sdk import run_suite, evaluation_summary
 
-```bash
-# Set API key (for embeddings and optional judge)
-export OPENAI_API_KEY="your-key-here"
-
-# Run demo evaluation (regenerates transcripts via the selected provider)
-alignmenter run \
-  --model openai:gpt-4o-mini \
-  --dataset datasets/demo_conversations.jsonl \
-  --persona configs/persona/default.yaml
-
-# Reuse recorded transcripts (default behavior)
-alignmenter run --config configs/run.yaml
-
-# For higher-fidelity local embeddings, install alignmenter[ml] and pass:
-#   --embedding sentence-transformer:all-MiniLM-L6-v2
-
-# View interactive report
-alignmenter report --last
-
-# Sanitize a dataset (dry run shows sample output)
-alignmenter dataset sanitize datasets/demo_conversations.jsonl --dry-run
-
-# Generate fresh transcripts (requires provider access + API keys)
-alignmenter run --config configs/run.yaml --generate-transcripts
+result = run_suite("evals/resource-task/suite.yaml", out_dir="reports")
+summary = evaluation_summary(result["run_dir"], details=True)
 ```
 
-**Output:**
-```
-Loading dataset: 60 turns across 10 sessions
-✓ Brand voice score: 0.82 (range: 0.78-0.86)
-✓ Safety score: 0.97
-✓ Consistency score: 0.94
-Report written to: reports/demo/2025-11-03T00-14-01_alignmenter_run/index.html
-```
+See the [release workflow](https://docs.alignmenter.com/guides/release-workflow/),
+[SDK reference](https://docs.alignmenter.com/reference/sdk/), and
+[0.3 migration guide](https://docs.alignmenter.com/guides/migration-0.3/).
+In the repository, these sources are under `docs/guides/` and `docs/reference/`.
+
+The example is an engineering fixture, not evidence of model quality. Atlas integration
+fixtures preserve real failures, with product rubrics still marked draft. Actual judge
+qualification needs independent human references and saved model outputs. AverCare
+qualification awaits a selected application workflow. Hosted review, physical-device
+replay, distributed budgets, and automatic optimization remain roadmap work.
+
+## Legacy persona documentation
+
+The sections below describe the retained persona/scorer APIs. Their older scores,
+reports, and scorer-local budgets do not use the new durable contracts. See the
+linked migration guide when integrating them into release checks.
 
 ## 📚 Documentation
 
@@ -248,7 +224,7 @@ examples:
 
 ---
 
-## Roadmap
+## Earlier persona roadmap
 
 ### Completed ✅
 - Three-dimensional scoring (authenticity, safety, stability)

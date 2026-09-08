@@ -263,3 +263,31 @@ local:ollama:llama2
 - **[CLI Reference](cli.md)** - Command-line options
 - **[Metrics Reference](metrics.md)** - Scoring formulas
 - **[Persona Guide](../guides/persona.md)** - Creating personas
+
+
+## Retrieval-grounded scorers and custom scorers
+
+```yaml
+scorers:
+  grounding:
+    enabled: true
+    units_only: true          # judge only quantities that carry a unit
+    threshold_fail: 0.85
+  faithfulness:
+    enabled: true
+    judge: anthropic:claude-sonnet-5   # openai:…, anthropic:…, or local:<base_url>|<model>
+    budget: 200                        # judge calls per run (falls back to judge.budget)
+    domain: an offline survival and first-aid reference
+    max_excerpt_chars: 1200
+    threshold_warn: 0.9
+  custom:
+    - my_product.eval.scorers:ContributionScorer
+thresholds:
+  dangerous:
+    fail: 0                   # any dangerous answer fails the run (exit code 2)
+```
+
+CLI equivalents: `--grounding/--no-grounding`, `--faithfulness/--no-faithfulness`,
+`--custom-scorer module:Class` (repeatable). Both grounded scorers need the
+provider to attach retrieval context to each answer (`ChatResponse.context`);
+see the [RAG Evaluation guide](../guides/rag-evaluation.md).

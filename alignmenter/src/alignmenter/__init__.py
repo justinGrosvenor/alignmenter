@@ -1,4 +1,4 @@
-"""Alignmenter package scaffold."""
+"""Application alignment evaluation with durable evidence and release workflows."""
 
 import os
 
@@ -6,9 +6,9 @@ import os
 # Default to disabling parallel threads unless the user explicitly overrides it.
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
+from ._version import __version__
 from .config import get_settings
 
-__version__ = "0.0.4"
 __all__ = ["get_settings", "__version__", "app"]
 
 
