@@ -3,6 +3,21 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.4] — 2026-09-17
+
+### Added
+
+- Decomposed rubric grading: `alignmenter rubric-grade <dataset> --judge <model>`
+  grades captured responses against per-record `metadata.rubrics` (as imported from
+  HealthBench) with ONE narrow "is this criterion met?" judge call per criterion —
+  making each judgment mechanical so a *cheap* gateway model can do it reliably.
+  Budget-capped by call count; HealthBench-style normalized scoring (awarded /
+  possible-positive points); a null/non-scalar verdict is excluded, never a silent
+  not-met. `--compare-judge <model>` runs an agreement check (per-criterion match
+  rate + Cohen's kappa) so the cheap judge is proven before it is trusted. New
+  `rubric_grade.py` + `rubric_grade_cli.py`; judge is any Vercel AI Gateway
+  `provider/model`, auth via `AI_GATEWAY_API_KEY`.
+
 ## [0.3.3] — 2026-09-17
 
 ### Added
