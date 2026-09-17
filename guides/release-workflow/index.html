@@ -1434,7 +1434,9 @@ checks a precise engineering predicate. This demonstrates the integration contra
 it is not a model benchmark or a human-qualified judge. No API key is needed.</p>
 <p><code>run-suite</code> prints JSON containing <code>run_dir</code>, <code>evaluation_id</code>, <code>decision</code>, and
 <code>artifacts</code>. The artifact directory contains <code>index.html</code>, <code>evaluation.json</code>,
-<code>summary.md</code>, and <code>junit.xml</code>. The HTML works offline and includes saved evidence.
+<code>summary.md</code>, <code>junit.xml</code>, and <code>comment.md</code>. The HTML works offline and includes
+saved evidence; <code>comment.md</code> is a sticky Markdown body (verdict, blocking issues,
+gate and metric tables, baseline deltas) ready to post as a pull-request comment.
 Exit codes are <strong>0 pass, 2 fail, 3 inconclusive</strong>; invalid configuration also exits
 nonzero. Capture exceptions preserve partial evidence and produce a non-green result
 when a run has been initialized. A process kill can leave artifacts unwritten; inspect
@@ -1601,9 +1603,14 @@ failing step. Upload evidence even when the step fails:</p>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reports/**/review/*</span>
 </code></pre></div>
 <p>Publish <code>summary.md</code> to your job summary and ingest <code>junit.xml</code> with your CI's test
-reporter if desired. HTML, JSON, Markdown, JUnit, and CLI all use the same gate decision.
+reporter if desired. Post <code>comment.md</code> as a sticky pull-request comment (it opens with
+a <code>&lt;!-- alignmenter:report --&gt;</code> marker so an upsert step updates one comment instead of
+appending). HTML, JSON, Markdown, JUnit, and CLI all use the same gate decision.
 Provide secrets only to jobs that deliberately execute a remote adapter. A complete
 example is in <code>.github/examples/application-evals.yml</code> in the repository.</p>
+<p>To keep a deterministic (offline, no-judge) pull-request gate green while a spec is still
+<code>draft</code>, pass <code>--allow-inconclusive</code> to <code>run-suite</code> or <code>check</code>: an inconclusive decision
+then exits 0, while a genuine <code>fail</code> (a violation or a regression) still exits non-zero.</p>
 
 
 
