@@ -32,6 +32,7 @@ from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.release_cli import register_release_commands
+from alignmenter.rubric_grade_cli import register_rubric_grade_command
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.schemas.evaluation import EvaluationSpec, JudgeBudget, JudgeContract
@@ -48,6 +49,7 @@ from alignmenter.storage.runs import RunStore
 
 app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
 register_release_commands(app)
+register_rubric_grade_command(app)
 
 persona_app = typer.Typer(help="Persona helper commands.")
 dataset_app = typer.Typer(help="Dataset helper commands.")
@@ -65,21 +67,34 @@ register_dataset_commands(dataset_app)
 def _show_version(value):
     if value:
         from alignmenter import __version__
+
         typer.echo(__version__)
         raise typer.Exit()
 
 
 @app.callback()
-def main(version: bool = typer.Option(False, "--version", callback=_show_version, is_eager=True, help="Print the installed release version.")):
+def main(
+    version: bool = typer.Option(
+        False,
+        "--version",
+        callback=_show_version,
+        is_eager=True,
+        help="Print the installed release version.",
+    ),
+):
     """Evaluate application behavior with durable evidence, review, and CI gates."""
 
 
 @import_app.command("gpt")
 def import_gpt(
-    instructions: Path = typer.Option(..., "--instructions", help="Path to instructions text file."),
+    instructions: Path = typer.Option(
+        ..., "--instructions", help="Path to instructions text file."
+    ),
     name: str = typer.Option(..., "--name", help="Display name for the persona."),
     out: Path = typer.Option(..., "--out", help="Where to write the persona YAML."),
-    allow_overwrite: bool = typer.Option(False, "--force", help="Overwrite the output file if it exists."),
+    allow_overwrite: bool = typer.Option(
+        False, "--force", help="Overwrite the output file if it exists."
+    ),
 ) -> None:
     """Import Custom GPT instructions into a persona pack."""
 
@@ -255,7 +270,9 @@ def _prompt_choice(
         typer.secho("Invalid selection. Try again.", fg=typer.colors.YELLOW)
 
 
-def _find_model_default_index(model_identifier: str | None, choices: list[dict[str, Any]]) -> int | None:
+def _find_model_default_index(
+    model_identifier: str | None, choices: list[dict[str, Any]]
+) -> int | None:
     if not model_identifier:
         return None
     if model_identifier.startswith("openai-gpt:"):
@@ -313,7 +330,8 @@ def init(
     active_env_key = os.getenv("OPENAI_API_KEY") or settings.openai_api_key or ""
 
     use_openai = typer.confirm(
-        "Configure OpenAI access?", default=bool(env_entries.get("OPENAI_API_KEY") or settings.openai_api_key)
+        "Configure OpenAI access?",
+        default=bool(env_entries.get("OPENAI_API_KEY") or settings.openai_api_key),
     )
 
     openai_key = ""
@@ -321,11 +339,17 @@ def init(
     existing_env_key = env_entries.get("OPENAI_API_KEY")
     if use_openai:
         if existing_env_key:
-            typer.echo("Found an existing OpenAI key in alignmenter/.env. Leave blank to keep it or enter a new key.")
+            typer.echo(
+                "Found an existing OpenAI key in alignmenter/.env. Leave blank to keep it or enter a new key."
+            )
         elif active_env_key:
-            typer.echo("Detected OPENAI_API_KEY in your shell environment. Leave blank to keep using that value.")
+            typer.echo(
+                "Detected OPENAI_API_KEY in your shell environment. Leave blank to keep using that value."
+            )
         else:
-            typer.echo("Provide an OpenAI API key (or leave blank if you plan to export OPENAI_API_KEY manually).")
+            typer.echo(
+                "Provide an OpenAI API key (or leave blank if you plan to export OPENAI_API_KEY manually)."
+            )
 
         openai_input = typer.prompt(
             "OpenAI API key",
@@ -359,9 +383,15 @@ def init(
                 openai_key = ""
                 store_openai_in_file = False
 
-    embedding_default = env_entries.get("ALIGNMENTER_EMBEDDING_PROVIDER") or settings.embedding_provider or "hashed"
+    embedding_default = (
+        env_entries.get("ALIGNMENTER_EMBEDDING_PROVIDER") or settings.embedding_provider or "hashed"
+    )
     embedding_default_index = next(
-        (idx for idx, option in enumerate(EMBEDDING_CHOICES) if option.get("value") == embedding_default),
+        (
+            idx
+            for idx, option in enumerate(EMBEDDING_CHOICES)
+            if option.get("value") == embedding_default
+        ),
         None,
     )
     embedding_choice = _prompt_choice(
@@ -417,7 +447,10 @@ def init(
             show_default=False,
         ).strip()
         if not custom_gpt_id:
-            typer.secho("No Custom GPT id provided. Falling back to OpenAI GPT-4o mini.", fg=typer.colors.YELLOW)
+            typer.secho(
+                "No Custom GPT id provided. Falling back to OpenAI GPT-4o mini.",
+                fg=typer.colors.YELLOW,
+            )
             default_model = "openai:gpt-4o-mini"
             custom_gpt_env_value = None
         else:
@@ -434,7 +467,10 @@ def init(
             default=default_local_model or "llama3",
         ).strip()
         if not endpoint or not local_model:
-            typer.secho("Endpoint and model are required. Using manual entry fallback.", fg=typer.colors.YELLOW)
+            typer.secho(
+                "Endpoint and model are required. Using manual entry fallback.",
+                fg=typer.colors.YELLOW,
+            )
             default_model = typer.prompt(
                 "Provider:model identifier",
                 default=suggested_model,
@@ -484,11 +520,13 @@ def init(
         )
         judge_price_in = _prompt_optional_float(
             "Price per 1K prompt tokens (USD)",
-            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT") or settings.judge_price_per_1k_input,
+            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT")
+            or settings.judge_price_per_1k_input,
         )
         judge_price_out = _prompt_optional_float(
             "Price per 1K completion tokens (USD)",
-            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT") or settings.judge_price_per_1k_output,
+            env_entries.get("ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT")
+            or settings.judge_price_per_1k_output,
         )
         judge_tokens = _prompt_optional_int(
             "Estimated tokens per judge call",
@@ -497,15 +535,21 @@ def init(
         )
 
     env_updates: dict[str, str | None] = {
-        "OPENAI_API_KEY": openai_key if (use_openai and store_openai_in_file and openai_key) else None,
+        "OPENAI_API_KEY": openai_key
+        if (use_openai and store_openai_in_file and openai_key)
+        else None,
         "ALIGNMENTER_DEFAULT_MODEL": default_model or None,
         "ALIGNMENTER_EMBEDDING_PROVIDER": embedding_provider or None,
         "ALIGNMENTER_JUDGE_PROVIDER": judge_provider or None,
-        "ALIGNMENTER_JUDGE_BUDGET": str(judge_budget_calls) if judge_budget_calls is not None else None,
+        "ALIGNMENTER_JUDGE_BUDGET": str(judge_budget_calls)
+        if judge_budget_calls is not None
+        else None,
         "ALIGNMENTER_JUDGE_BUDGET_USD": _format_float(judge_budget_usd),
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_INPUT": _format_float(judge_price_in),
         "ALIGNMENTER_JUDGE_PRICE_PER_1K_OUTPUT": _format_float(judge_price_out),
-        "ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL": str(judge_tokens) if judge_tokens is not None else None,
+        "ALIGNMENTER_JUDGE_ESTIMATED_TOKENS_PER_CALL": str(judge_tokens)
+        if judge_tokens is not None
+        else None,
         "ALIGNMENTER_CUSTOM_GPT_ID": custom_gpt_env_value or None,
     }
 
@@ -531,9 +575,12 @@ def init(
     display_path = _relative_to_cwd(config_path)
     typer.echo(f"Next: run `alignmenter run --config {display_path}`")
 
+
 @app.command()
 def run(
-    config: str | None = typer.Option(None, "--config", "-c", help="Path to run configuration YAML."),
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to run configuration YAML."
+    ),
     model: str | None = typer.Option(None, help="Primary model identifier (provider:model-id)."),
     dataset: str | None = typer.Option(None, help="Path to conversation dataset."),
     persona: str | None = typer.Option(None, help="Persona pack to evaluate against."),
@@ -542,9 +589,15 @@ def run(
     ),
     out: str | None = typer.Option(None, help="Output directory for run artifacts."),
     keywords: str | None = typer.Option(None, help="Safety keyword configuration file."),
-    embedding: str | None = typer.Option(None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."),
-    judge: str | None = typer.Option(None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."),
-    judge_budget: int | None = typer.Option(None, help="Legacy scorer-local judge limit; use run-suite for durable shared budgets."),
+    embedding: str | None = typer.Option(
+        None, help="Embedding provider identifier (e.g. 'sentence-transformer:all-MiniLM-L6-v2')."
+    ),
+    judge: str | None = typer.Option(
+        None, help="Safety judge provider identifier (e.g. 'openai:gpt-4o-mini')."
+    ),
+    judge_budget: int | None = typer.Option(
+        None, help="Legacy scorer-local judge limit; use run-suite for durable shared budgets."
+    ),
     generate_transcripts: bool = typer.Option(
         False,
         "--generate-transcripts",
@@ -650,7 +703,9 @@ def run(
             typer.secho(f"Run failed: {exc}", fg=typer.colors.RED)
             if runner.run_dir is not None:
                 typer.echo(f"Captured work: {runner.run_dir}")
-                typer.echo("Use 'alignmenter status' or 'alignmenter export-transcripts' with that directory.")
+                typer.echo(
+                    "Use 'alignmenter status' or 'alignmenter export-transcripts' with that directory."
+                )
             raise typer.Exit(code=1) from exc
 
     threshold_eval = getattr(runner, "threshold_results", {})
@@ -669,21 +724,41 @@ def run(
 
 @app.command()
 def capture(
-    dataset: Path = typer.Option(..., "--dataset", exists=True, dir_okay=False, help="Conversation JSONL."),
-    persona: Path | None = typer.Option(None, "--persona", exists=True, dir_okay=False, help="Optional persona snapshot."),
-    target: str | None = typer.Option(None, "--target", help="Product target factory as module:function; omit to import recorded answers."),
-    out: Path = typer.Option(Path("reports"), "--out", help="Parent directory for a new durable run."),
-    max_target_calls: int | None = typer.Option(None, "--max-target-calls", min=0, help="Frozen run-wide target dispatch cap, including retries."),
+    dataset: Path = typer.Option(
+        ..., "--dataset", exists=True, dir_okay=False, help="Conversation JSONL."
+    ),
+    persona: Path | None = typer.Option(
+        None, "--persona", exists=True, dir_okay=False, help="Optional persona snapshot."
+    ),
+    target: str | None = typer.Option(
+        None,
+        "--target",
+        help="Product target factory as module:function; omit to import recorded answers.",
+    ),
+    out: Path = typer.Option(
+        Path("reports"), "--out", help="Parent directory for a new durable run."
+    ),
+    max_target_calls: int | None = typer.Option(
+        None,
+        "--max-target-calls",
+        min=0,
+        help="Frozen run-wide target dispatch cap, including retries.",
+    ),
 ) -> None:
     """Capture target answers or recorded data without invoking scorers."""
     runner = None
     try:
         supplied = _load_capture_target(target) if target else None
         runner = Runner(
-            RunConfig(model=supplied.model if supplied else "recorded",
-                      dataset_path=dataset, persona_path=persona or Path(""),
-                      report_out_dir=out, max_target_calls=max_target_calls),
-            scorers=[], provider=supplied.provider if supplied else None,
+            RunConfig(
+                model=supplied.model if supplied else "recorded",
+                dataset_path=dataset,
+                persona_path=persona or Path(""),
+                report_out_dir=out,
+                max_target_calls=max_target_calls,
+            ),
+            scorers=[],
+            provider=supplied.provider if supplied else None,
         )
         run_dir = runner.capture()
     except Exception as exc:
@@ -707,12 +782,34 @@ def _load_capture_target(spec: str) -> CaptureTarget:
 
 @app.command()
 def resume(
-    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
-    target: str | None = typer.Option(None, "--target", help="Primary target factory as module:function."),
-    compare_target: str | None = typer.Option(None, "--compare-target", help="Comparison target factory as module:function."),
-    dataset: Path | None = typer.Option(None, "--dataset", exists=True, dir_okay=False, help="Assert dataset compatibility; otherwise use the saved snapshot."),
-    persona: Path | None = typer.Option(None, "--persona", exists=True, dir_okay=False, help="Assert persona compatibility; otherwise use the saved snapshot."),
-    check: bool = typer.Option(False, "--check", help="Check compatibility and recovery without dispatching or changing the database."),
+    run_dir: Path = typer.Argument(
+        ..., exists=True, file_okay=False, help="Durable run directory."
+    ),
+    target: str | None = typer.Option(
+        None, "--target", help="Primary target factory as module:function."
+    ),
+    compare_target: str | None = typer.Option(
+        None, "--compare-target", help="Comparison target factory as module:function."
+    ),
+    dataset: Path | None = typer.Option(
+        None,
+        "--dataset",
+        exists=True,
+        dir_okay=False,
+        help="Assert dataset compatibility; otherwise use the saved snapshot.",
+    ),
+    persona: Path | None = typer.Option(
+        None,
+        "--persona",
+        exists=True,
+        dir_okay=False,
+        help="Assert persona compatibility; otherwise use the saved snapshot.",
+    ),
+    check: bool = typer.Option(
+        False,
+        "--check",
+        help="Check compatibility and recovery without dispatching or changing the database.",
+    ),
 ) -> None:
     """Continue missing capture safely; scoring is a separate operation."""
     try:
@@ -721,8 +818,9 @@ def resume(
             targets["primary"] = _load_capture_target(target)
         if compare_target:
             targets["compare"] = _load_capture_target(compare_target)
-        summary = resume_capture(run_dir, targets=targets, dataset_path=dataset,
-                                 persona_path=persona, check_only=check)
+        summary = resume_capture(
+            run_dir, targets=targets, dataset_path=dataset, persona_path=persona, check_only=check
+        )
     except Exception as exc:
         raise typer.BadParameter(str(exc)) from exc
     typer.echo("Resume checks passed." if check else "Capture is complete; no scoring was run.")
@@ -733,12 +831,36 @@ def resume(
 @app.command()
 def evaluate(
     run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Saved capture run."),
-    spec: Path = typer.Option(..., "--spec", exists=True, dir_okay=False, help="Versioned evaluation YAML."),
-    judge_factory: str | None = typer.Option(None, "--judge-factory", help="Judge adapter factory as module:function; omit for deterministic grounding."),
-    max_judge_calls: int | None = typer.Option(None, "--max-judge-calls", min=0, help="Shared durable call budget; required for the first judged evaluation."),
-    max_judge_cost_micros: int | None = typer.Option(None, "--max-judge-cost-micros", min=0, help="Optional cost cap in millionths of USD; requires a bounded-cost adapter."),
-    new_evaluation: bool = typer.Option(False, "--new-evaluation", help="Explicitly create a changed evaluation under the same run budget."),
-    evaluator_factory: list[str] = typer.Option([], "--evaluator-factory", help="Repeatable deterministic evaluator factory as module:function."),
+    spec: Path = typer.Option(
+        ..., "--spec", exists=True, dir_okay=False, help="Versioned evaluation YAML."
+    ),
+    judge_factory: str | None = typer.Option(
+        None,
+        "--judge-factory",
+        help="Judge adapter factory as module:function; omit for deterministic grounding.",
+    ),
+    max_judge_calls: int | None = typer.Option(
+        None,
+        "--max-judge-calls",
+        min=0,
+        help="Shared durable call budget; required for the first judged evaluation.",
+    ),
+    max_judge_cost_micros: int | None = typer.Option(
+        None,
+        "--max-judge-cost-micros",
+        min=0,
+        help="Optional cost cap in millionths of USD; requires a bounded-cost adapter.",
+    ),
+    new_evaluation: bool = typer.Option(
+        False,
+        "--new-evaluation",
+        help="Explicitly create a changed evaluation under the same run budget.",
+    ),
+    evaluator_factory: list[str] = typer.Option(
+        [],
+        "--evaluator-factory",
+        help="Repeatable deterministic evaluator factory as module:function.",
+    ),
 ) -> None:
     """Evaluate saved answers, reusing committed judge replies and verdicts."""
     try:
@@ -753,12 +875,27 @@ def evaluate(
             if not separator or not module or not name.isidentifier():
                 raise ValueError("Judge factory must be module.path:function_name")
             judge = getattr(import_module(module), name)()
-            if not isinstance(getattr(judge, "contract", None), JudgeContract) or not callable(getattr(judge, "evaluate", None)):
-                raise ValueError("Judge factory must return an adapter with a JudgeContract and evaluate(request)")
+            if not isinstance(getattr(judge, "contract", None), JudgeContract) or not callable(
+                getattr(judge, "evaluate", None)
+            ):
+                raise ValueError(
+                    "Judge factory must return an adapter with a JudgeContract and evaluate(request)"
+                )
         if max_judge_cost_micros is not None and max_judge_calls is None:
             raise ValueError("Supply --max-judge-calls with a monetary budget")
-        budget = JudgeBudget(max_calls=max_judge_calls, max_cost_micros=max_judge_cost_micros) if max_judge_calls is not None else None
-        evaluation_id = evaluate_saved(run_dir, rubric, judge, budget=budget, new_evaluation=new_evaluation, evaluators=evaluators)
+        budget = (
+            JudgeBudget(max_calls=max_judge_calls, max_cost_micros=max_judge_cost_micros)
+            if max_judge_calls is not None
+            else None
+        )
+        evaluation_id = evaluate_saved(
+            run_dir,
+            rubric,
+            judge,
+            budget=budget,
+            new_evaluation=new_evaluation,
+            evaluators=evaluators,
+        )
         summary = evaluation_summary(run_dir, evaluation_id)
     except Exception as exc:
         raise typer.BadParameter(str(exc)) from exc
@@ -768,8 +905,12 @@ def evaluate(
 
 def _print_evaluation_summary(summary: dict) -> None:
     typer.echo(f"Evaluation: {summary['evaluation_id']}")
-    typer.echo(f"Decision: {summary['decision']} (rubric qualification: {summary['spec']['qualification']})")
-    typer.echo(f"Judged: {summary['judged']}/{summary['applicable']}; unavailable: {summary['unavailable']}")
+    typer.echo(
+        f"Decision: {summary['decision']} (rubric qualification: {summary['spec']['qualification']})"
+    )
+    typer.echo(
+        f"Judged: {summary['judged']}/{summary['applicable']}; unavailable: {summary['unavailable']}"
+    )
     typer.echo(f"Outcomes: {json.dumps(summary['counts'], sort_keys=True)}")
     budget = summary["budget"]
     limit = budget["limits"]["max_calls"] if budget["limits"] is not None else "unconfigured"
@@ -779,9 +920,13 @@ def _print_evaluation_summary(summary: dict) -> None:
 @app.command("evaluation-status")
 def evaluation_status(
     run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Saved capture run."),
-    evaluation_id: UUID | None = typer.Option(None, "--evaluation-id", help="Saved evaluation UUID; defaults to latest."),
+    evaluation_id: UUID | None = typer.Option(
+        None, "--evaluation-id", help="Saved evaluation UUID; defaults to latest."
+    ),
     json_output: bool = typer.Option(False, "--json", help="Print pure saved-result summary JSON."),
-    details: bool = typer.Option(False, "--details", help="Include frozen inputs, raw replies, and verdicts in JSON."),
+    details: bool = typer.Option(
+        False, "--details", help="Include frozen inputs, raw replies, and verdicts in JSON."
+    ),
 ) -> None:
     """Inspect saved verdicts and budget usage without loading a judge."""
     try:
@@ -796,8 +941,12 @@ def evaluation_status(
 
 @app.command()
 def status(
-    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
-    json_output: bool = typer.Option(False, "--json", help="Print the versioned execution summary."),
+    run_dir: Path = typer.Argument(
+        ..., exists=True, file_okay=False, help="Durable run directory."
+    ),
+    json_output: bool = typer.Option(
+        False, "--json", help="Print the versioned execution summary."
+    ),
 ) -> None:
     """Inspect saved execution state without calling a provider or scorer."""
     try:
@@ -811,13 +960,19 @@ def status(
     typer.echo(f"Last recorded state: {summary.run.status.value} ({summary.run.phase.value})")
     typer.echo(f"Saved records: {summary.committed_records}/{summary.planned_records}")
     typer.echo(f"Saved observations: {summary.observations}")
-    typer.echo("Process liveness is not checked; a hard kill may leave a nonterminal recorded state.")
+    typer.echo(
+        "Process liveness is not checked; a hard kill may leave a nonterminal recorded state."
+    )
 
 
 @app.command("export-transcripts")
 def export_transcripts(
-    run_dir: Path = typer.Argument(..., exists=True, file_okay=False, help="Durable run directory."),
-    out: Path = typer.Option(..., "--out", help="Write committed transcript records to this JSONL file."),
+    run_dir: Path = typer.Argument(
+        ..., exists=True, file_okay=False, help="Durable run directory."
+    ),
+    out: Path = typer.Option(
+        ..., "--out", help="Write committed transcript records to this JSONL file."
+    ),
     stream: str = typer.Option("primary", "--stream", help="primary or compare"),
     force: bool = typer.Option(False, "--force", help="Replace an existing output file."),
 ) -> None:
@@ -940,18 +1095,18 @@ def persona_scaffold(
         f"id: {slug}_v1\n"
         f"display_name: {name}\n"
         "exemplars:\n"
-        "  - \"Describe tone, humor, and formality expectations.\"\n"
-        "  - \"Add another exemplar guiding brevity or vocabulary.\"\n"
+        '  - "Describe tone, humor, and formality expectations."\n'
+        '  - "Add another exemplar guiding brevity or vocabulary."\n'
         "lexicon:\n"
-        "  preferred: [\"signal\", \"precision\"]\n"
-        "  avoid: [\"lol\", \"super hyped\"]\n"
+        '  preferred: ["signal", "precision"]\n'
+        '  avoid: ["lol", "super hyped"]\n'
         "style_rules:\n"
         "  sentence_length: {max_avg: 16}\n"
         "  contractions: {allowed: true}\n"
         "  emojis: {allowed: false}\n"
         "safety_rules:\n"
         "  disallowed_topics: []\n"
-        "  brand_notes: \"Add extra guardrails here.\"\n"
+        '  brand_notes: "Add extra guardrails here."\n'
     )
 
     target.write_text(content)
@@ -981,11 +1136,7 @@ def persona_export(
     if persona_id:
         records = [r for r in records if r.get("persona_id") == persona_id]
 
-    assistant_turns = [
-        r
-        for r in records
-        if r.get("role") == "assistant" and r.get("text")
-    ]
+    assistant_turns = [r for r in records if r.get("role") == "assistant" and r.get("text")]
 
     if not assistant_turns:
         raise typer.BadParameter("No assistant turns found matching criteria.")
@@ -1143,10 +1294,16 @@ def dataset_lint(
 @dataset_app.command("sanitize")
 def dataset_sanitize(
     path: Path = typer.Argument(..., help="Path to input dataset (JSONL)."),
-    out: Path | None = typer.Option(None, "--out", help="Output path (default: <input>_sanitized.jsonl)."),
+    out: Path | None = typer.Option(
+        None, "--out", help="Output path (default: <input>_sanitized.jsonl)."
+    ),
     in_place: bool = typer.Option(False, "--in-place", help="Overwrite the input file."),
-    use_hashing: bool = typer.Option(True, help="Use stable hashes for replacements instead of generic placeholders."),
-    dry_run: bool = typer.Option(False, "--dry-run", help="Show sanitization results without writing output."),
+    use_hashing: bool = typer.Option(
+        True, help="Use stable hashes for replacements instead of generic placeholders."
+    ),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", help="Show sanitization results without writing output."
+    ),
 ) -> None:
     input_path = path if path.is_absolute() else (Path.cwd() / path)
 
@@ -1215,13 +1372,23 @@ def _run_bootstrap_dataset(
 @dataset_app.command("bootstrap")
 @app.command("bootstrap-dataset")
 def bootstrap_dataset_command(
-    source: Path | None = typer.Option(None, "--source", help="Optional source dataset to augment."),
+    source: Path | None = typer.Option(
+        None, "--source", help="Optional source dataset to augment."
+    ),
     out: Path = typer.Option(..., "--out", help="Output JSONL path for generated data."),
     sessions: int = typer.Option(10, "--sessions", help="Number of sessions to generate."),
-    turns_per_session: int = typer.Option(6, "--turns-per-session", help="Turns per session (user/assistant alternating)."),
-    safety_trap_ratio: float = typer.Option(0.2, "--safety-trap-ratio", help="Fraction of sessions with safety traps."),
-    brand_trap_ratio: float = typer.Option(0.2, "--brand-trap-ratio", help="Fraction of sessions with brand violations."),
-    persona_id: str = typer.Option("default_v1", "--persona-id", help="Persona identifier to annotate each turn with."),
+    turns_per_session: int = typer.Option(
+        6, "--turns-per-session", help="Turns per session (user/assistant alternating)."
+    ),
+    safety_trap_ratio: float = typer.Option(
+        0.2, "--safety-trap-ratio", help="Fraction of sessions with safety traps."
+    ),
+    brand_trap_ratio: float = typer.Option(
+        0.2, "--brand-trap-ratio", help="Fraction of sessions with brand violations."
+    ),
+    persona_id: str = typer.Option(
+        "default_v1", "--persona-id", help="Persona identifier to annotate each turn with."
+    ),
     seed: int = typer.Option(42, "--seed", help="Random seed for reproducibility."),
 ) -> None:
     """Generate a synthetic dataset with brand + safety traps."""
@@ -1247,7 +1414,9 @@ def calibrate_generate(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output unlabeled candidates JSONL"),
     num_samples: int = typer.Option(50, "--num-samples", help="Number of candidates to generate"),
-    strategy: str = typer.Option("diverse", "--strategy", help="Sampling strategy: diverse, random, edge_cases"),
+    strategy: str = typer.Option(
+        "diverse", "--strategy", help="Sampling strategy: diverse, random, edge_cases"
+    ),
     seed: int = typer.Option(42, "--seed", help="Random seed for reproducibility"),
 ) -> None:
     """Generate candidate responses for labeling from existing dataset."""
@@ -1266,7 +1435,7 @@ def calibrate_generate(
         typer.echo(f"  Strategy: {result['strategy']}")
         typer.echo(f"  Output: {result['output_path']}")
         typer.echo("\nScenario distribution:")
-        for scenario, count in sorted(result['scenario_distribution'].items()):
+        for scenario, count in sorted(result["scenario_distribution"].items()):
             typer.echo(f"  {scenario}: {count}")
     except Exception as e:
         typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
@@ -1307,8 +1476,12 @@ def calibrate_bounds(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output bounds report JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
-    percentile_low: float = typer.Option(5.0, "--percentile-low", help="Lower percentile for min bound"),
-    percentile_high: float = typer.Option(95.0, "--percentile-high", help="Upper percentile for max bound"),
+    percentile_low: float = typer.Option(
+        5.0, "--percentile-low", help="Lower percentile for min bound"
+    ),
+    percentile_high: float = typer.Option(
+        95.0, "--percentile-high", help="Upper percentile for max bound"
+    ),
 ) -> None:
     """Estimate normalization bounds from labeled data."""
     from alignmenter.calibration.bounds import estimate_bounds
@@ -1358,14 +1531,24 @@ def calibrate_optimize(
 @calibrate_app.command("validate")
 def calibrate_validate(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
-    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
+    persona: Path = typer.Option(
+        ..., "--persona", help="Path to persona YAML (with .traits.json calibration)"
+    ),
     output: Path = typer.Option(..., "--output", help="Path to output diagnostics report JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
     train_split: float = typer.Option(0.8, "--train-split", help="Fraction of data for training"),
     seed: int = typer.Option(42, "--seed", help="Random seed for splitting"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
-    judge_sample: float = typer.Option(0.0, "--judge-sample", help="Fraction of sessions to judge (0.0-1.0)"),
-    judge_strategy: str = typer.Option("stratified", "--judge-strategy", help="Sampling strategy: random, stratified, errors, extremes"),
+    judge: str | None = typer.Option(
+        None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"
+    ),
+    judge_sample: float = typer.Option(
+        0.0, "--judge-sample", help="Fraction of sessions to judge (0.0-1.0)"
+    ),
+    judge_strategy: str = typer.Option(
+        "stratified",
+        "--judge-strategy",
+        help="Sampling strategy: random, stratified, errors, extremes",
+    ),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Validate calibration and generate diagnostics with optional LLM judge analysis."""
@@ -1393,10 +1576,14 @@ def calibrate_validate(
 @calibrate_app.command("diagnose-errors")
 def calibrate_diagnose_errors(
     labeled: Path = typer.Option(..., "--labeled", help="Path to labeled JSONL data"),
-    persona: Path = typer.Option(..., "--persona", help="Path to persona YAML (with .traits.json calibration)"),
+    persona: Path = typer.Option(
+        ..., "--persona", help="Path to persona YAML (with .traits.json calibration)"
+    ),
     output: Path = typer.Option(..., "--output", help="Path to output error analysis JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
+    judge: str | None = typer.Option(
+        None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"
+    ),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Diagnose calibration errors using LLM judge analysis.
@@ -1407,7 +1594,9 @@ def calibrate_diagnose_errors(
     from alignmenter.calibration.diagnose import diagnose_calibration_errors
 
     if not judge:
-        typer.secho("✗ Error: --judge is required for error diagnosis", fg=typer.colors.RED, err=True)
+        typer.secho(
+            "✗ Error: --judge is required for error diagnosis", fg=typer.colors.RED, err=True
+        )
         typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
@@ -1421,7 +1610,9 @@ def calibrate_diagnose_errors(
             judge_budget=judge_budget,
         )
         typer.secho(f"✓ Error analysis written to {output}", fg=typer.colors.GREEN)
-        typer.echo(f"Found {len(report.get('false_positives', []))} false positives, {len(report.get('false_negatives', []))} false negatives")
+        typer.echo(
+            f"Found {len(report.get('false_positives', []))} false positives, {len(report.get('false_negatives', []))} false negatives"
+        )
     except Exception as e:
         typer.secho(f"✗ Error: {e}", fg=typer.colors.RED, err=True)
         raise typer.Exit(1)
@@ -1433,8 +1624,12 @@ def analyze_scenarios(
     persona: Path = typer.Option(..., "--persona", help="Path to persona YAML"),
     output: Path = typer.Option(..., "--output", help="Path to output scenario analysis JSON"),
     embedding: str | None = typer.Option(None, "--embedding", help="Embedding provider"),
-    judge: str | None = typer.Option(None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"),
-    per_scenario: int = typer.Option(3, "--per-scenario", help="Number of sessions to judge per scenario tag"),
+    judge: str | None = typer.Option(
+        None, "--judge", help="Judge provider (e.g., 'anthropic:claude-sonnet-5')"
+    ),
+    per_scenario: int = typer.Option(
+        3, "--per-scenario", help="Number of sessions to judge per scenario tag"
+    ),
     judge_budget: int | None = typer.Option(None, "--judge-budget", help="Maximum judge API calls"),
 ) -> None:
     """Analyze performance across different scenario types using LLM judge.
@@ -1445,7 +1640,9 @@ def analyze_scenarios(
     from alignmenter.calibration.analyze import analyze_scenario_performance
 
     if not judge:
-        typer.secho("✗ Error: --judge is required for scenario analysis", fg=typer.colors.RED, err=True)
+        typer.secho(
+            "✗ Error: --judge is required for scenario analysis", fg=typer.colors.RED, err=True
+        )
         typer.echo("Example: --judge anthropic:claude-sonnet-5")
         raise typer.Exit(1)
 
@@ -1469,11 +1666,19 @@ def analyze_scenarios(
 
 @app.command("calibrate-persona")
 def calibrate_persona_command(
-    persona_path: Path = typer.Option(..., "--persona-path", help="Persona YAML containing the 'id' to calibrate."),
-    dataset: Path = typer.Option(..., "--dataset", help="Labeled JSONL with persona_id + label fields."),
+    persona_path: Path = typer.Option(
+        ..., "--persona-path", help="Persona YAML containing the 'id' to calibrate."
+    ),
+    dataset: Path = typer.Option(
+        ..., "--dataset", help="Labeled JSONL with persona_id + label fields."
+    ),
     out: Path | None = typer.Option(None, "--out", help="Output path for generated .traits.json"),
-    min_samples: int = typer.Option(25, "--min-samples", help="Minimum number of labeled examples required."),
-    learning_rate: float = typer.Option(0.1, "--learning-rate", help="Learning rate for logistic regression."),
+    min_samples: int = typer.Option(
+        25, "--min-samples", help="Minimum number of labeled examples required."
+    ),
+    learning_rate: float = typer.Option(
+        0.1, "--learning-rate", help="Learning rate for logistic regression."
+    ),
     epochs: int = typer.Option(300, "--epochs", help="Training epochs."),
     l2: float = typer.Option(0.0, "--l2", help="L2 regularization strength."),
 ) -> None:
@@ -1608,7 +1813,7 @@ def _relpath_for_config(target: Path, base_dir: Path) -> str:
 def _format_float(value: float | None) -> str | None:
     if value is None:
         return None
-    return (f"{value:.6f}".rstrip("0").rstrip("."))
+    return f"{value:.6f}".rstrip("0").rstrip(".")
 
 
 def _safe_float(value: object) -> float | None:
@@ -1672,7 +1877,8 @@ def _build_judge_cost_config(options: dict[str, object], settings: Any) -> dict[
             options.get("judge_price_per_1k_output") or settings.judge_price_per_1k_output
         ),
         "estimated_tokens_per_call": _coerce_int(
-            options.get("judge_estimated_tokens_per_call") or settings.judge_estimated_tokens_per_call
+            options.get("judge_estimated_tokens_per_call")
+            or settings.judge_estimated_tokens_per_call
         ),
         "estimated_prompt_tokens_per_call": _coerce_int(
             options.get("judge_estimated_prompt_tokens_per_call")
@@ -1825,9 +2031,7 @@ def _prepare_run_inputs(
         embedding or config_options.get("embedding") or settings.embedding_provider
     )
     classifier_identifier = (
-        config_options.get("safety_classifier")
-        or settings.safety_classifier
-        or "auto"
+        config_options.get("safety_classifier") or settings.safety_classifier or "auto"
     )
 
     raw_thresholds = config_options.get("thresholds") or {}
@@ -1873,7 +2077,9 @@ def _prepare_run_inputs(
         judge_cost=judge_cost,
         classifier_identifier=classifier_identifier,
         thresholds=thresholds,
-        grounding=bool(grounding if grounding is not None else config_options.get("grounding", False)),
+        grounding=bool(
+            grounding if grounding is not None else config_options.get("grounding", False)
+        ),
         grounding_units_only=bool(config_options.get("grounding_units_only", True)),
         faithfulness=bool(
             faithfulness if faithfulness is not None else config_options.get("faithfulness", False)
@@ -1881,7 +2087,9 @@ def _prepare_run_inputs(
         faithfulness_judge=config_options.get("faithfulness_judge"),  # type: ignore[arg-type]
         faithfulness_budget=_safe_int(config_options.get("faithfulness_budget")),
         faithfulness_domain=config_options.get("faithfulness_domain"),  # type: ignore[arg-type]
-        faithfulness_max_excerpt_chars=_safe_int(config_options.get("faithfulness_max_excerpt_chars")),
+        faithfulness_max_excerpt_chars=_safe_int(
+            config_options.get("faithfulness_max_excerpt_chars")
+        ),
         custom_scorers=list(custom_scorers or config_options.get("custom_scorers") or []),  # type: ignore[arg-type]
     )
 
@@ -2055,9 +2263,7 @@ def _build_progress_managers(
     turn_counter: Callable[[], int],
 ) -> tuple[_ProgressReporter, _ProgressReporter]:
     primary_total = turn_counter() if regenerate else 0
-    compare_total = (
-        turn_counter() if regenerate and inputs.compare_identifier else 0
-    )
+    compare_total = turn_counter() if regenerate and inputs.compare_identifier else 0
     primary = _ProgressReporter(
         total=primary_total,
         label=f"Generating transcripts ({inputs.model_identifier})",
@@ -2153,7 +2359,10 @@ def _fetch_custom_gpt_metadata(
         data, reason = _fetch_custom_gpt_metadata_http(gpt_id, api_key)
         if data:
             return data, None
-        return {}, reason or "Custom GPT API not available; update openai package or request API access."
+        return (
+            {},
+            reason or "Custom GPT API not available; update openai package or request API access.",
+        )
 
     try:
         gpt = gpts.retrieve(gpt_id)
@@ -2163,9 +2372,7 @@ def _fetch_custom_gpt_metadata(
     return _normalize_gpt_metadata(gpt_id, gpt), None
 
 
-def _fetch_custom_gpt_metadata_http(
-    gpt_id: str, api_key: str
-) -> tuple[dict[str, Any], str | None]:
+def _fetch_custom_gpt_metadata_http(gpt_id: str, api_key: str) -> tuple[dict[str, Any], str | None]:
     url = f"https://api.openai.com/v1/gpts/{gpt_id}"
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -2193,7 +2400,9 @@ def _persona_from_gpt_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
     instructions = metadata.get("instructions") or ""
     conversation_starters = metadata.get("conversation_starters") or []
     if not conversation_starters and instructions:
-        conversation_starters = [line.strip() for line in instructions.splitlines() if line.strip()][:2]
+        conversation_starters = [
+            line.strip() for line in instructions.splitlines() if line.strip()
+        ][:2]
 
     return {
         "id": f"{slug}_gpt",
@@ -2270,7 +2479,9 @@ def _extract_style_rules(text: str) -> dict[str, Any]:
     concise = bool(re.search(r"\b(concise|brief|succinct)\b", text, re.I))
     formal = bool(re.search(r"\b(formal|objective|professional)\b", text, re.I))
     emoji_mention = bool(re.search(r"\bemoji|emojis|emoticon\b", text, re.I))
-    allow_emoji = bool(re.search(r"emoji.*(allow|use|ok)\b", text, re.I)) if emoji_mention else False
+    allow_emoji = (
+        bool(re.search(r"emoji.*(allow|use|ok)\b", text, re.I)) if emoji_mention else False
+    )
 
     return {
         "sentence_length": {"max_avg": 16 if concise else 20},
@@ -2348,9 +2559,11 @@ def _describe_gpt_via_conversation(
     )
 
     try:
-        response = provider.chat([
-            {"role": "user", "content": prompt},
-        ])
+        response = provider.chat(
+            [
+                {"role": "user", "content": prompt},
+            ]
+        )
     except Exception as exc:  # pragma: no cover - network failure
         return {}, f"Failed to query GPT for self-description: {exc}"
 
@@ -2403,7 +2616,7 @@ def _extract_json_block(text: str) -> str | None:
     end = text.rfind("}")
     if start == -1 or end == -1 or end <= start:
         return None
-    block = text[start: end + 1]
+    block = text[start : end + 1]
     block = block.replace("```json", "").replace("```", "").strip()
     return block or None
 
