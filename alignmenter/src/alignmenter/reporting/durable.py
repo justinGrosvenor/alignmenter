@@ -12,6 +12,7 @@ from xml.etree import ElementTree as ET
 
 from alignmenter.execution.evaluation import evaluation_summary
 from alignmenter.execution.gates import gate_report
+from alignmenter.reporting.github_comment import render_github_comment
 
 
 def _escape(value):
@@ -167,5 +168,6 @@ def export_evaluation(run_dir, out_dir, *, evaluation_id=None, policy=None, comp
     report["comparison"] = comparison
     report["review"] = qualification_report(run_dir, report["evaluation_id"])
     write_artifacts(out_dir, {"evaluation.json": _pretty(report) + "\n", "index.html": render_html(report),
-                              "junit.xml": render_junit(report), "summary.md": render_markdown(report)}, force=force)
+                              "junit.xml": render_junit(report), "summary.md": render_markdown(report),
+                              "comment.md": render_github_comment(report)}, force=force)
     return report

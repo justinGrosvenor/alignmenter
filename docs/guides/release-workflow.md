@@ -21,7 +21,9 @@ it is not a model benchmark or a human-qualified judge. No API key is needed.
 
 `run-suite` prints JSON containing `run_dir`, `evaluation_id`, `decision`, and
 `artifacts`. The artifact directory contains `index.html`, `evaluation.json`,
-`summary.md`, and `junit.xml`. The HTML works offline and includes saved evidence.
+`summary.md`, `junit.xml`, and `comment.md`. The HTML works offline and includes
+saved evidence; `comment.md` is a sticky Markdown body (verdict, blocking issues,
+gate and metric tables, baseline deltas) ready to post as a pull-request comment.
 Exit codes are **0 pass, 2 fail, 3 inconclusive**; invalid configuration also exits
 nonzero. Capture exceptions preserve partial evidence and produce a non-green result
 when a run has been initialized. A process kill can leave artifacts unwritten; inspect
@@ -231,6 +233,12 @@ failing step. Upload evidence even when the step fails:
 ```
 
 Publish `summary.md` to your job summary and ingest `junit.xml` with your CI's test
-reporter if desired. HTML, JSON, Markdown, JUnit, and CLI all use the same gate decision.
+reporter if desired. Post `comment.md` as a sticky pull-request comment (it opens with
+a `<!-- alignmenter:report -->` marker so an upsert step updates one comment instead of
+appending). HTML, JSON, Markdown, JUnit, and CLI all use the same gate decision.
 Provide secrets only to jobs that deliberately execute a remote adapter. A complete
 example is in `.github/examples/application-evals.yml` in the repository.
+
+To keep a deterministic (offline, no-judge) pull-request gate green while a spec is still
+`draft`, pass `--allow-inconclusive` to `run-suite` or `check`: an inconclusive decision
+then exits 0, while a genuine `fail` (a violation or a regression) still exits non-zero.

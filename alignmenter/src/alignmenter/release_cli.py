@@ -22,6 +22,18 @@ from alignmenter.schemas.gates import GatePolicy
 EXIT_CODES = {"pass": 0, "fail": 2, "inconclusive": 3}
 
 
+def _exit_code(decision: str, *, allow_inconclusive: bool = False) -> int:
+    """Map a decision to a process exit code.
+
+    With ``allow_inconclusive`` an inconclusive decision (e.g. an unreviewed
+    ``draft`` spec that met every applicable criterion) exits 0 so an automated
+    gate is not blocked; a genuine ``fail`` still exits non-zero.
+    """
+    if allow_inconclusive and decision == "inconclusive":
+        return 0
+    return EXIT_CODES[decision]
+
+
 def register_release_commands(app):
     @app.command("archive-export")
     def archive_export(
@@ -67,6 +79,9 @@ def register_release_commands(app):
         suite: Path = typer.Argument(..., exists=True, dir_okay=False),
         out: Path = typer.Option(Path("reports"), "--out"),
         resume: Path | None = typer.Option(None, "--resume", exists=True, file_okay=False),
+        allow_inconclusive: bool = typer.Option(
+            False, "--allow-inconclusive",
+            help="Exit 0 on an inconclusive decision (a fail still exits non-zero)."),
     ):
         """Capture, evaluate, compare, and write CI artifacts under a frozen suite config."""
         try:
@@ -74,7 +89,9 @@ def register_release_commands(app):
         except Exception as exc:
             raise typer.BadParameter(str(exc)) from exc
         typer.echo(json.dumps(result, indent=2))
-        raise typer.Exit(EXIT_CODES[result["decision"]])
+        if allow_inconclusive and result["decision"] == "inconclusive":
+            typer.echo("Inconclusive tolerated (--allow-inconclusive): exiting 0.")
+        raise typer.Exit(_exit_code(result["decision"], allow_inconclusive=allow_inconclusive))
 
     @app.command("review-export")
     def review_export(
@@ -137,6 +154,9 @@ def register_release_commands(app):
         baseline: Path | None = typer.Option(None, "--baseline", exists=True, file_okay=False),
         baseline_id: UUID | None = typer.Option(None, "--baseline-id"),
         force: bool = typer.Option(False, "--force"),
+        allow_inconclusive: bool = typer.Option(
+            False, "--allow-inconclusive",
+            help="Exit 0 on an inconclusive decision (a fail still exits non-zero)."),
     ):
         """Check saved results and export CI artifacts without invoking any provider."""
         try:
@@ -147,7 +167,7 @@ def register_release_commands(app):
             raise typer.BadParameter(str(exc)) from exc
         decision = report["gate_report"]["decision"]
         typer.echo(f"Decision: {decision}\nArtifacts: {out.resolve()}")
-        raise typer.Exit(EXIT_CODES[decision])
+        raise typer.Exit(_exit_code(decision, allow_inconclusive=allow_inconclusive))
 
     @app.command("compare")
     def compare(
