@@ -257,3 +257,55 @@ def test_cli_rubric_grade_agreement(tmp_path, monkeypatch):
     # the JSON body (after the summary line) parses and reports agreement mode
     body = json.loads(res.output[res.output.index("{") :])
     assert body["mode"] == "agreement" and body["n"] == 2 and body["agree"] == 2
+
+
+# --- hardening (review findings) -------------------------------------------
+
+
+def test_extract_cases_tolerates_bad_turn_index():
+    # non-int / None turn_index must not crash the sort
+    recs = [
+        {
+            "session_id": "s1",
+            "turn_index": None,
+            "role": "user",
+            "text": "q",
+            "metadata": {"rubrics": [R_EMERG]},
+        },
+        {"session_id": "s1", "turn_index": "2", "role": "assistant", "text": "Call 911."},
+    ]
+    cases = extract_cases(recs)
+    assert len(cases) == 1 and cases[0].response == "Call 911."
+
+
+def test_extract_cases_falls_back_to_last_nonempty_assistant():
+    recs = [
+        _rec("s1", 1, "user", "q", rubrics=[R_EMERG]),
+        _rec("s1", 2, "assistant", "real answer"),
+        _rec("s1", 3, "assistant", "   "),  # trailing blank must not discard the case
+    ]
+    cases = extract_cases(recs)
+    assert len(cases) == 1 and cases[0].response == "real answer"
+
+
+def test_null_or_nonscalar_met_is_invalid():
+    r = Rubric("c", 10)
+    for raw in ('{"met": null}', '{"met": []}', '{"met": {}}'):
+        v = parse_criterion_verdict(raw, r)
+        assert v.status == "invalid" and v.met is None
+
+
+def test_score_case_clamps_below_zero():
+    def v(pts, met):
+        return parse_criterion_verdict(json.dumps({"met": met, "evidence": "x"}), Rubric("c", pts))
+
+    # +10 not met, -5 (penalty) met → awarded -5 over max_positive 10 → clamped to 0.0
+    assert score_case([v(10, False), v(-5, True)]) == 0.0
+
+
+def test_kappa_degenerate_constant_raters():
+    rubrics = [{"criterion": f"c{i}", "points": 1} for i in range(3)]
+    recs = _case("s1", "q", "r", rubrics)
+    all_true = _met_if({"c0", "c1", "c2"})
+    a = measure_agreement(recs, FakeJudge(all_true), FakeJudge(all_true))
+    assert a.agreement == 1.0 and a.kappa == 1.0  # pe>=1 degenerate branch → 1.0

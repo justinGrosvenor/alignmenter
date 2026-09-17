@@ -129,6 +129,17 @@ class GradeReport:
 # --- extracting gradeable cases from a captured dataset --------------------
 
 
+def _turn_index(turn: dict) -> int:
+    """Sort key tolerant of a missing/non-int turn_index (never crashes the run)."""
+    ti = turn.get("turn_index")
+    if isinstance(ti, bool) or not isinstance(ti, int):
+        try:
+            return int(ti)
+        except (TypeError, ValueError):
+            return 0
+    return ti
+
+
 def extract_cases(records: Iterable[dict]) -> list[Case]:
     """Pull (question, response, rubrics) cases from a captured dataset.
 
@@ -151,7 +162,7 @@ def extract_cases(records: Iterable[dict]) -> list[Case]:
 
     cases: list[Case] = []
     for sid in order:
-        turns = sorted(by_session[sid], key=lambda t: t.get("turn_index", 0))
+        turns = sorted(by_session[sid], key=_turn_index)
         rubric_turn = next(
             (t for t in turns if isinstance((t.get("metadata") or {}).get("rubrics"), list)), None
         )
@@ -166,10 +177,19 @@ def extract_cases(records: Iterable[dict]) -> list[Case]:
         )
         if not rubrics:
             continue
+        # The captured response is the last assistant turn with real text (a
+        # trailing blank turn shouldn't discard a case that did answer earlier).
         response = next(
-            (t.get("text", "") for t in reversed(turns) if t.get("role") == "assistant"), ""
+            (
+                t["text"]
+                for t in reversed(turns)
+                if t.get("role") == "assistant"
+                and isinstance(t.get("text"), str)
+                and t["text"].strip()
+            ),
+            "",
         )
-        if not isinstance(response, str) or not response.strip():
+        if not response.strip():
             continue
         question = rubric_turn.get("text", "") if isinstance(rubric_turn.get("text"), str) else ""
         cases.append(Case(case_id=sid, question=question, response=response, rubrics=rubrics))
@@ -230,9 +250,11 @@ def _extract_json(text: str) -> dict | None:
 
 def parse_criterion_verdict(raw_text: str, rubric: Rubric) -> CriterionVerdict:
     data = _extract_json(raw_text)
-    if data is None or "met" not in data:
+    met = data.get("met") if isinstance(data, dict) else None
+    # Missing, null, or non-scalar `met` = the judge didn't actually decide →
+    # invalid (excluded from scoring), never a silent not-met.
+    if data is None or "met" not in data or met is None or isinstance(met, (list, dict)):
         return CriterionVerdict(rubric.criterion, rubric.points, None, None, "", "invalid")
-    met = data.get("met")
     if not isinstance(met, bool):
         met = str(met).strip().lower() in {"true", "yes", "1"}
     conf = data.get("confidence")
@@ -352,6 +374,8 @@ def measure_agreement(
 ) -> AgreementReport:
     """Grade the same cases with two judges and report their per-criterion agreement.
 
+    Runs the full grading pass ONCE PER JUDGE, so this costs roughly 2x a single
+    grade (each judge's spend is reported separately as calls_a / calls_b).
     ``max_calls`` caps EACH judge's calls independently. Only criteria both judges
     actually graded (met is not None) count toward agreement.
     """
