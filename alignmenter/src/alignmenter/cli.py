@@ -21,6 +21,7 @@ import typer
 import yaml
 
 from alignmenter.config import get_settings
+from alignmenter.dataset_cli import register_dataset_commands
 from alignmenter.evaluators.custom import evaluator_registry, load_evaluators
 from alignmenter.execution.evaluation import evaluate_saved, evaluation_summary
 from alignmenter.execution.recovery import resume_capture
@@ -57,6 +58,8 @@ app.add_typer(persona_app, name="persona")
 app.add_typer(dataset_app, name="dataset")
 app.add_typer(import_app, name="import")
 app.add_typer(calibrate_app, name="calibrate")
+
+register_dataset_commands(dataset_app)
 
 
 def _show_version(value):
