@@ -32,6 +32,7 @@ from alignmenter.providers.classifiers import load_safety_classifier
 from alignmenter.providers.judges import load_judge_provider
 from alignmenter.providers.openai import OpenAICustomGPTProvider
 from alignmenter.release_cli import register_release_commands
+from alignmenter.rubric_grade_cli import register_rubric_grade_command
 from alignmenter.run_config import load_run_options
 from alignmenter.runner import RunConfig, Runner
 from alignmenter.schemas.evaluation import EvaluationSpec, JudgeBudget, JudgeContract
@@ -48,6 +49,7 @@ from alignmenter.storage.runs import RunStore
 
 app = typer.Typer(help="Alignmenter — audit your model's alignment signals.")
 register_release_commands(app)
+register_rubric_grade_command(app)
 
 persona_app = typer.Typer(help="Persona helper commands.")
 dataset_app = typer.Typer(help="Dataset helper commands.")
