@@ -3,7 +3,7 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.3.1] — 2026-09-17
 
 ### Added
 
