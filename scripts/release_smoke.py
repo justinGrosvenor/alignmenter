@@ -32,7 +32,7 @@ def main():
     options = parser.parse_args()
     root = options.out.resolve()
     root.mkdir(parents=True, exist_ok=True)
-    assert __version__ == version("alignmenter") == "0.3.2"
+    assert __version__ == version("alignmenter") == "0.3.3"
     if options.core_only:
         assert importlib.util.find_spec("torch") is None
         assert importlib.util.find_spec("sklearn") is None

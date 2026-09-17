@@ -3,6 +3,24 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.3] — 2026-09-17
+
+### Added
+
+- Dataset importers on the `dataset` sub-app: `import <source> <input> --out`
+  adapts public eval corpora into Alignmenter turn records. First adapter:
+  **HealthBench** (OpenAI, MIT) — rows carry physician rubrics but no reference
+  answer, so each becomes a prompt session with the rubrics riding the final user
+  turn's `metadata` for a later rubric evaluator. Importers never download
+  (corpora are user-fetched/licensed); `--sample`/`--seed`/`--no-stratify`/
+  `--manifest`. Sampling is session-level and stratified by the source's axis so a
+  small sample keeps topic coverage; ids are deduped/disambiguated and selection is
+  input-order-invariant for a fixed seed. New `importers/` package.
+- `dataset sample` — down-sample a dataset to N whole units (session|group|persona),
+  optionally pre-filtered by tag (`--filter-tag`, repeatable OR). The change-aware
+  selection primitive: a random seeded subset for regular runs, or
+  `--filter-tag tool:<name>` for a change-scoped subset.
+
 ## [0.3.2] — 2026-09-17
 
 ### Added
