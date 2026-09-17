@@ -3,6 +3,21 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Dataset-management commands on the `dataset` sub-app: `stats` (coverage — record/
+  session counts, role balance, tag + persona histograms), `validate` (schema
+  validator; lenient by default, `--strict` adds turn_index+tags+persona_id and an
+  assistant turn per session; complements the existing `lint`), `dedupe` (drop
+  content-identical records), `merge`
+  (concatenate datasets, optional `--dedupe` / `--namespace-sessions`), `split`
+  (group-aware train/holdout — a case and its variants never straddle the boundary),
+  and `manifest` (a content-addressed `DatasetManifest` with provenance, plus
+  `--verify`). New `schemas/dataset.py` (`DatasetManifest`, `ProvenanceEntry`,
+  `build_manifest`, `dataset_digest`, `validate_records`).
+
 ## [0.3.1] — 2026-09-17
 
 ### Added

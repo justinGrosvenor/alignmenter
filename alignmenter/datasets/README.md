@@ -11,6 +11,28 @@ Alignmenter datasets serve two primary purposes:
 
 All datasets in this repository follow strict data hygiene practices to protect user privacy and enable reproducible research.
 
+## Dataset management commands
+
+The `alignmenter dataset` sub-app manages datasets as content-addressed, versioned
+artifacts:
+
+```bash
+alignmenter dataset stats data.jsonl [--json]        # coverage: counts, roles, tag/persona histograms
+alignmenter dataset validate data.jsonl [--strict]   # canonical schema check (exit 1 on errors)
+alignmenter dataset dedupe data.jsonl --out out.jsonl # drop content-identical records
+alignmenter dataset merge a.jsonl b.jsonl --out m.jsonl [--dedupe] [--namespace-sessions]
+alignmenter dataset split data.jsonl --out dir/ --holdout 0.2 --by split_group  # group-aware train/holdout
+alignmenter dataset manifest data.jsonl --out manifest.json   # content-addressed manifest + provenance
+alignmenter dataset manifest data.jsonl --verify manifest.json # confirm the data still matches (exit 2 on drift)
+```
+
+`validate` checks the row schema below (lenient by default, `--strict` for the fuller
+contract); `lint` additionally checks turn sequencing, scenario-tag coverage, and
+persona files. `split` keeps a
+case and its counterfactual variants on the same side of the boundary via the
+grouping unit (`split_group` / `group:` tag / session / persona). `manifest`'s digest
+is order-independent (reordering rows does not change the dataset's identity).
+
 ## Dataset Format
 
 ### Conversation JSONL Schema
