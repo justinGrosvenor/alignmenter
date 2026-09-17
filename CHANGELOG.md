@@ -3,6 +3,18 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- GitHub pull-request comment reporter: `export_evaluation` now also writes
+  `comment.md`, a sticky Markdown body (verdict badge, blocking issues first,
+  gate and metric tables, baseline deltas, collapsed breakdowns) that opens with
+  a `<!-- alignmenter:report -->` marker so a CI step can update one comment.
+- `--allow-inconclusive` flag on `run-suite` and `check`: an inconclusive
+  decision exits 0 so a deterministic, offline pull-request gate stays green
+  while a spec is still `draft`; a genuine `fail` still exits non-zero.
+
 ## [0.3.0] — 2026-09-07
 
 Application alignment release: capture, evaluate, compare, review, promote regressions,

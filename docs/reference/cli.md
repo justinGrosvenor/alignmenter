@@ -57,8 +57,8 @@ The CLI is organized into top-level commands plus four sub-command groups:
 | Command | Purpose |
 | --- | --- |
 | `init-suite --out DIR` | Write a runnable offline application example |
-| `run-suite SUITE --out reports [--resume RUN]` | Capture, evaluate, compare, and export under a frozen config |
-| `check RUN --out DIR [--policy YAML] [--baseline RUN]` | Apply gates to saved results and export all formats |
+| `run-suite SUITE --out reports [--resume RUN] [--allow-inconclusive]` | Capture, evaluate, compare, and export under a frozen config |
+| `check RUN --out DIR [--policy YAML] [--baseline RUN] [--allow-inconclusive]` | Apply gates to saved results and export all formats |
 | `compare BASELINE CANDIDATE --out DIR` | Compare compatible saved cases and evidence |
 | `review-export RUN --out JSONL` | Export immutable evidence with editable annotation fields |
 | `review-import RUN --annotations JSONL` | Append validated opinions/adjudications atomically |
