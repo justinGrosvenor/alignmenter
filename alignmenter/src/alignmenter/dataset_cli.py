@@ -321,8 +321,12 @@ def register_dataset_commands(dataset_app: typer.Typer) -> None:
     @dataset_app.command("import")
     def import_corpus_cmd(
         source: str = typer.Argument(..., help="Corpus adapter (e.g. healthbench)."),
-        input: Path = typer.Argument(
-            ..., exists=True, dir_okay=False, help="Local corpus JSONL you fetched/licensed."
+        input_path: Path = typer.Argument(
+            ...,
+            metavar="INPUT",
+            exists=True,
+            dir_okay=False,
+            help="Local corpus JSONL you fetched/licensed.",
         ),
         out: Path = typer.Option(..., "--out", help="Output dataset JSONL."),
         sample: int | None = typer.Option(
@@ -354,7 +358,7 @@ def register_dataset_commands(dataset_app: typer.Typer) -> None:
                 f"unknown source {source!r}; available: {', '.join(available())}"
             ) from exc
 
-        rows = read_jsonl(input)
+        rows = read_jsonl(input_path)
         records, report = import_corpus(
             rows,
             mapper,
@@ -364,15 +368,19 @@ def register_dataset_commands(dataset_app: typer.Typer) -> None:
         )
         if not records:
             typer.echo(
-                f"no records imported from {input} ({report['input_rows']} rows, {report['skipped']} skipped)",
+                f"no records imported from {input_path} "
+                f"({report['input_rows']} rows, {report['skipped']} skipped)",
                 err=True,
             )
             raise typer.Exit(1)
 
         write_jsonl(out, records)
+        deduped = report.get("deduped", 0)
         typer.echo(
             f"imported {report['records_out']} records / {report['sessions_out']} sessions "
-            f"from {report['input_rows']} rows ({report['skipped']} skipped) -> {out}"
+            f"from {report['input_rows']} rows ({report['skipped']} skipped"
+            + (f", {deduped} duplicate(s) dropped" if deduped else "")
+            + f") -> {out}"
         )
         if report.get("strata"):
             typer.echo("strata: " + ", ".join(f"{k}={v}" for k, v in report["strata"].items()))
@@ -380,7 +388,7 @@ def register_dataset_commands(dataset_app: typer.Typer) -> None:
         if manifest:
             provenance = ProvenanceEntry(
                 kind="import",
-                ref=f"{source}:{input.name}",
+                ref=f"{source}:{input_path.name}",
                 count=len(records),
                 digest=dataset_digest(records),
             )

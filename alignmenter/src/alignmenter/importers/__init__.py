@@ -17,6 +17,7 @@ from collections import defaultdict
 from collections.abc import Callable, Iterable
 
 from alignmenter.importers.healthbench import healthbench_to_records
+from alignmenter.schemas.execution import content_digest
 
 Mapper = Callable[[dict], list[dict]]
 
@@ -45,6 +46,41 @@ def _stratum_of(records: list[dict], prefix: str) -> str:
             if isinstance(tag, str) and tag.startswith(prefix):
                 return tag
     return "(none)"
+
+
+def _dedupe_and_disambiguate(sessions: list[list[dict]]) -> tuple[list[list[dict]], int]:
+    """Guarantee unique session ids across mapped sessions.
+
+    Two source rows can map to the same session_id — a content-addressed id
+    collides when rows share prompt content and carry no source id. Left alone
+    that emits duplicate turn_index within one session, which fails
+    ``validate_records``. So: drop byte-identical duplicates, and suffix an id
+    that collides with *different* content (`<id>#2`, `#3`, …). Returns the
+    cleaned sessions plus the count of exact duplicates dropped.
+    """
+    seen: dict[str, str] = {}  # session_id -> session content digest
+    kept: list[list[dict]] = []
+    dropped = 0
+    for session in sessions:
+        sid = _session_of(session)
+        digest = content_digest(session)
+        if sid not in seen:
+            seen[sid] = digest
+            kept.append(session)
+            continue
+        if seen[sid] == digest:
+            dropped += 1  # exact duplicate row
+            continue
+        suffix = 2
+        new_sid = f"{sid}#{suffix}"
+        while new_sid in seen:
+            suffix += 1
+            new_sid = f"{sid}#{suffix}"
+        for record in session:
+            record["session_id"] = new_sid
+        seen[new_sid] = digest
+        kept.append(session)
+    return kept, dropped
 
 
 def _stratified_sample(
@@ -77,9 +113,12 @@ def import_corpus(
 ) -> tuple[list[dict], dict]:
     """Map ``rows`` to turn records, optionally down-sampling whole sessions.
 
-    Returns ``(records, report)``. Output is ordered by session_id so the content
-    digest is stable regardless of input order. ``report`` carries input/skip/
-    session counts and the per-stratum breakdown of what was kept.
+    Returns ``(records, report)``. Deterministic in input order: sessions are
+    deduped/disambiguated to unique ids, then sorted by id before any sampling,
+    so the same ``seed`` picks the same subset (and emits the same order — hence a
+    stable content digest) regardless of how the rows were ordered on input.
+    ``report`` carries input/skip/dedupe/session counts and the per-stratum
+    breakdown of what was kept.
     """
     sessions: list[list[dict]] = []
     total = 0
@@ -92,7 +131,16 @@ def import_corpus(
         else:
             skipped += 1
 
-    report: dict = {"input_rows": total, "skipped": skipped, "sessions_in": len(sessions)}
+    sessions, deduped = _dedupe_and_disambiguate(sessions)
+    # Sort before sampling so selection is input-order-invariant for a fixed seed.
+    sessions.sort(key=_session_of)
+
+    report: dict = {
+        "input_rows": total,
+        "skipped": skipped,
+        "deduped": deduped,
+        "sessions_in": len(sessions),
+    }
 
     if sample is not None and sample < len(sessions):
         rng = random.Random(seed)

@@ -142,3 +142,29 @@ def test_bad_by_rejected(tmp_path):
     src = _write(tmp_path, [_session("s0", ["group:x"])])
     res = _run([str(src), "--out", str(tmp_path / "o.jsonl"), "--n", "1", "--by", "bogus"])
     assert res.exit_code != 0
+
+
+def test_sample_by_group_keeps_group_whole(tmp_path):
+    # a1+a2 share group g1; b1 is g2. Sampling 1 group unit keeps exactly one
+    # group tag (and both sessions if g1 is drawn).
+    sessions = [
+        _session("a1", ["group:g1"]),
+        _session("a2", ["group:g1"]),
+        _session("b1", ["group:g2"]),
+    ]
+    src = _write(tmp_path, sessions)
+    out = tmp_path / "out.jsonl"
+    res = _run([str(src), "--out", str(out), "--n", "1", "--by", "group", "--seed", "1"])
+    assert res.exit_code == 0, res.output
+    groups = {t for r in read_jsonl(out) for t in r["tags"] if t.startswith("group:")}
+    assert len(groups) == 1
+
+
+def test_sample_by_persona_treats_persona_as_unit(tmp_path):
+    # Both sessions share persona_id "p" -> one persona unit; n=1 keeps both.
+    sessions = [_session("s0", ["group:x"]), _session("s1", ["group:x"])]
+    src = _write(tmp_path, sessions)
+    out = tmp_path / "out.jsonl"
+    res = _run([str(src), "--out", str(out), "--n", "1", "--by", "persona"])
+    assert res.exit_code == 0, res.output
+    assert len({r["session_id"] for r in read_jsonl(out)}) == 2

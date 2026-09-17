@@ -216,3 +216,62 @@ def test_cli_import_unknown_source_errors(tmp_path):
 
 def test_available_lists_healthbench():
     assert "healthbench" in available()
+
+
+# --- collisions (content-addressed id) -------------------------------------
+
+
+def test_identical_rows_without_id_are_deduped():
+    # Two byte-identical rows with no prompt_id would collide on session_id and
+    # emit a duplicate turn_index. They must collapse to one valid session.
+    prompt = [{"role": "user", "content": "identical question"}]
+    row = {"prompt": prompt, "rubrics": [], "example_tags": ["theme:a"]}
+    mapper, prefix = get_importer("healthbench")
+    records, report = import_corpus([dict(row), dict(row)], mapper, stratify_prefix=prefix)
+    assert report["sessions_out"] == 1
+    assert report["deduped"] == 1
+    assert validate_records(records) == []
+
+
+def test_same_prompt_different_rubrics_is_disambiguated():
+    # Same prompt (same hash) but different rubrics = distinct cases; ids must
+    # be made unique rather than dropped, and the output must stay valid.
+    prompt = [{"role": "user", "content": "same prompt text"}]
+    a = {
+        "prompt": prompt,
+        "rubrics": [{"criterion": "A", "points": 1}],
+        "example_tags": ["theme:x"],
+    }
+    b = {
+        "prompt": prompt,
+        "rubrics": [{"criterion": "B", "points": 2}],
+        "example_tags": ["theme:x"],
+    }
+    mapper, prefix = get_importer("healthbench")
+    records, report = import_corpus([a, b], mapper, stratify_prefix=prefix)
+    assert report["sessions_out"] == 2
+    assert report["deduped"] == 0
+    sids = {r["session_id"] for r in records}
+    assert len(sids) == 2
+    assert any(s.endswith("#2") for s in sids)
+    assert validate_records(records) == []
+
+
+def test_sampling_selection_is_input_order_invariant():
+    # Same seed + same rows in any order -> same selection (stratified and plain).
+    rows = _corpus(30)
+    mapper, prefix = get_importer("healthbench")
+    a, _ = import_corpus(rows, mapper, sample=6, seed=5, stratify_prefix=prefix)
+    b, _ = import_corpus(list(reversed(rows)), mapper, sample=6, seed=5, stratify_prefix=prefix)
+    assert [r["session_id"] for r in a] == [r["session_id"] for r in b]
+    c, _ = import_corpus(rows, mapper, sample=6, seed=5, stratify_prefix=None)
+    d, _ = import_corpus(list(reversed(rows)), mapper, sample=6, seed=5, stratify_prefix=None)
+    assert [r["session_id"] for r in c] == [r["session_id"] for r in d]
+
+
+def test_no_stratify_path_samples_valid_subset():
+    rows = _corpus(9)
+    mapper, _ = get_importer("healthbench")
+    records, report = import_corpus(rows, mapper, sample=3, seed=1, stratify_prefix=None)
+    assert report["sessions_out"] == 3
+    assert validate_records(records) == []
