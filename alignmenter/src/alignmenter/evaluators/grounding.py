@@ -1,7 +1,8 @@
 """Conservative quantity traceability and citation resolution, not semantic entailment.
 
 Supported quantities retain signs, bounds and units. Exact SI conversions use rational
-arithmetic. Recognized but unsupported notation stays ambiguous instead of passing.
+arithmetic. Approximate hedges ("about", "around", "roughly") name the bare value and
+match it; other recognized-but-unsupported notation stays ambiguous instead of passing.
 """
 
 from __future__ import annotations
@@ -73,11 +74,23 @@ def _normal_unit(value):
     return re.sub(r"°\s+", "°", re.sub(r"\s+", " ", value.casefold()))
 
 
+# Prefixes that approximate a value rather than bound it; folded to the bare form.
+_APPROXIMATE = {"about", "approximately", "around", "roughly", "nearly", "almost", "~", "≈"}
+
+
 def _signature(match):
     first, last = match["a"], match["b"]
     if match["suffix"] or re.search(r"[,/eE¼½¾⅓⅔⅛⅜⅝⅞]", first + (last or "")):
         return None
     prefix = " ".join((match["prefix"] or "").casefold().split())
+    # Approximate hedges ("about 400 mg", "around 2 liters", "roughly 7 to 9 hours")
+    # name the same quantity as the bare form — the hedge softens delivery, not the
+    # value referenced — so treat them as bare. Without this they parsed but had no
+    # operator and fell through to "ambiguous", so hedged health prose (and hedged
+    # SOURCE text) never matched an exact source value. Real bounds (at least/up to/
+    # more than/…) keep their own operators below.
+    if prefix in _APPROXIMATE:
+        prefix = ""
     operator = {
         "": "eq", "between": "range", "at least": "ge", "no less than": "ge", "not less than": "ge", "minimum": "ge", ">=": "ge", "≥": "ge",
         "at most": "le", "no more than": "le", "not more than": "le", "maximum": "le", "up to": "le", "<=": "le", "≤": "le",
