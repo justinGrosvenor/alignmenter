@@ -29,7 +29,7 @@ def _value(report, metric):
     return report["metrics"].get(metric, {"value": None, "denominator": 0})
 
 
-def gate_report(report, policy: GatePolicy | None = None, *, comparison=None):
+def gate_report(report, policy: GatePolicy | None = None, *, comparison=None, review=None):
     from alignmenter.schemas.evaluation import EvaluationManifest
 
     policy = policy or GatePolicy()
@@ -37,6 +37,25 @@ def gate_report(report, policy: GatePolicy | None = None, *, comparison=None):
     validate_policy(policy, manifest.spec, manifest.evaluators)
     checks = [{"id": "evaluation", "decision": report["decision"],
                "reason": "All required outcomes and coverage, including the spec's qualification."}]
+    # Opt-in (policy.require_human_review): a pass must be backed by human sign-off —
+    # every applicable case carries a matching human adjudication (role=adjudication,
+    # provenance=human) that the evaluator agrees with. `qualification_report` already
+    # encodes exactly that — pass only when every case is adjudicated and measured
+    # with no disagreement; a changed case's stale sign-off no longer matches its
+    # review_key so the case reads unreviewed. Without adjudications this is
+    # inconclusive, so a bare `qualification: reviewed` label can never fabricate a
+    # pass. Default off keeps the standard trusted-evaluator `reviewed` semantics.
+    if policy.require_human_review:
+        decision = "inconclusive" if review is None else review["decision"]
+        refs = 0 if review is None else review.get("references", 0)
+        applicable = report.get("applicable", 0)
+        stale = 0 if review is None else review.get("stale_references", 0)
+        reason = ("Every applicable case carries a matching human adjudication the evaluator agrees with."
+                  if decision == "pass"
+                  else f"Human sign-off incomplete or stale: {refs}/{applicable} cases adjudicated"
+                  + (f"; {stale} stale (a case changed — re-review)" if stale else "") + ".")
+        checks.append({"id": "human-review", "decision": decision, "references": refs,
+                       "applicable": applicable, "stale": stale, "reason": reason})
     for gate in policy.gates:
         selected = report
         if gate.criterion is not None:

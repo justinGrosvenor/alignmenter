@@ -150,3 +150,54 @@ def test_cli_review_promote_and_recorded_rerun_preserve_lineage(tmp_path):
     assert result.exit_code == 0, result.output
     runs = list((tmp_path / "rerun").iterdir())
     assert len(runs) == 1 and len(EvaluationStore(runs[0]).observations()) == 1
+
+
+# --- Opt-in per-run human-sign-off enforcement (GatePolicy.require_human_review) ---
+
+def _gate(run, out, *, require_human_review):
+    from alignmenter.reporting.durable import export_evaluation
+    from alignmenter.schemas.gates import GatePolicy
+    report = export_evaluation(run, out, policy=GatePolicy(require_human_review=require_human_review), force=True)
+    return report["gate_report"]
+
+
+def _human_review_check(gate_report):
+    return next((c for c in gate_report["checks"] if c["id"] == "human-review"), None)
+
+
+def test_require_human_review_without_adjudications_is_inconclusive(tmp_path):
+    run = evaluated(tmp_path / "run", ("good", "good"))  # clean machine pass, no sign-off
+    gated = _gate(run, tmp_path / "a", require_human_review=True)
+    assert gated["decision"] == "inconclusive"
+    check = _human_review_check(gated)
+    assert check is not None and check["decision"] == "inconclusive" and check["references"] == 0
+    # The flag is opt-in: without it, the trusted-evaluator reviewed pass is unchanged.
+    assert _gate(run, tmp_path / "b", require_human_review=False)["decision"] == "pass"
+    assert _human_review_check(_gate(run, tmp_path / "c", require_human_review=False)) is None
+
+
+def test_require_human_review_with_full_signoff_passes(tmp_path):
+    run = evaluated(tmp_path / "run", ("good", "good"))
+    annotated_file(run, tmp_path / "adj.jsonl", outcome="met")  # human adjudicates every case, agrees
+    import_review(run, tmp_path / "adj.jsonl")
+    gated = _gate(run, tmp_path / "out", require_human_review=True)
+    assert gated["decision"] == "pass"
+    assert _human_review_check(gated)["decision"] == "pass"
+
+
+def test_require_human_review_partial_signoff_is_inconclusive(tmp_path):
+    run = evaluated(tmp_path / "run", ("good", "good"))
+    export_review(run, tmp_path / "adj.jsonl")
+    rows = [json.loads(line) for line in (tmp_path / "adj.jsonl").read_text().splitlines()]
+    rows[0]["annotation"].update(outcome="met", reviewer="R", role="adjudication",
+                                 rationale="Unit test reference.", provenance="human")  # only 1 of 2 cases
+    (tmp_path / "adj.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    import_review(run, tmp_path / "adj.jsonl")
+    assert _gate(run, tmp_path / "out", require_human_review=True)["decision"] == "inconclusive"
+
+
+def test_require_human_review_disagreement_fails(tmp_path):
+    run = evaluated(tmp_path / "run", ("good", "good"))  # machine: both met
+    annotated_file(run, tmp_path / "adj.jsonl", outcome="violated")  # human disagrees
+    import_review(run, tmp_path / "adj.jsonl")
+    assert _gate(run, tmp_path / "out", require_human_review=True)["decision"] == "fail"

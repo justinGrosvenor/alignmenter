@@ -42,7 +42,7 @@ def load_suite(path):
     return SuiteSpec.model_validate(data)
 
 
-def run_suite(path, *, out_dir=Path("reports"), resume=None):
+def run_suite(path, *, out_dir=Path("reports"), resume=None, adjudications=None):
     """Run one frozen suite. Target exceptions retain partial data and non-green artifacts.
 
     Factories are explicit application code and must not dispatch work in constructors.
@@ -110,6 +110,13 @@ def run_suite(path, *, out_dir=Path("reports"), resume=None):
             capture_error = type(exc).__name__
     evaluation_id = evaluate_saved(run_dir, suite.evaluation, judge, budget=suite.judge_budget,
                                     evaluators=evaluators, new_evaluation=resume is not None)
+    # Committed human adjudications (a reviewed suite's sign-off baseline): import them
+    # so a `reviewed` pass is backed by matching human review of the run's actual cases.
+    # import_review rejects any task whose evidence/evaluator snapshot differs, so a
+    # changed case cannot carry over a stale sign-off.
+    if adjudications is not None:
+        from alignmenter.execution.review import import_review
+        import_review(run_dir, Path(adjudications))
     comparison = compare_saved(Path(suite.baseline), run_dir, baseline_id=suite.baseline_evaluation_id,
                                 candidate_id=evaluation_id) if suite.baseline else None
     report = export_evaluation(run_dir, run_dir / "review", evaluation_id=evaluation_id,

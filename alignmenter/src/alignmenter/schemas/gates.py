@@ -29,6 +29,11 @@ class GatePolicy(VersionedRecord):
     revision: Name = "v1"
     gates: tuple[MetricGate, ...] = ()
     regressions: tuple[RegressionGate, ...] = ()
+    # Opt-in: require every applicable case to carry a matching human adjudication
+    # (role=adjudication, provenance=human) that the evaluator agrees with, before a
+    # pass. Off by default, so the standard `reviewed` (trusted-evaluator) semantics
+    # are unchanged; suites that must show per-run human sign-off set this true.
+    require_human_review: bool = False
 
     @model_validator(mode="after")
     def unique_ids(self):

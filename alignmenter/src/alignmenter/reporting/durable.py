@@ -164,9 +164,10 @@ def export_evaluation(run_dir, out_dir, *, evaluation_id=None, policy=None, comp
                 comparison = compare_saved(config["baseline"], run_dir,
                                            baseline_id=config.get("baseline_evaluation_id"),
                                            candidate_id=report["evaluation_id"])
-    report["gate_report"] = gate_report(report, policy, comparison=comparison)
+    review = qualification_report(run_dir, report["evaluation_id"])
+    report["gate_report"] = gate_report(report, policy, comparison=comparison, review=review)
     report["comparison"] = comparison
-    report["review"] = qualification_report(run_dir, report["evaluation_id"])
+    report["review"] = review
     write_artifacts(out_dir, {"evaluation.json": _pretty(report) + "\n", "index.html": render_html(report),
                               "junit.xml": render_junit(report), "summary.md": render_markdown(report),
                               "comment.md": render_github_comment(report)}, force=force)

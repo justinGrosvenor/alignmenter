@@ -79,13 +79,17 @@ def register_release_commands(app):
         suite: Path = typer.Argument(..., exists=True, dir_okay=False),
         out: Path = typer.Option(Path("reports"), "--out"),
         resume: Path | None = typer.Option(None, "--resume", exists=True, file_okay=False),
+        adjudications: Path | None = typer.Option(
+            None, "--adjudications", exists=True, dir_okay=False,
+            help="Committed human adjudications (review-export JSONL). A `reviewed` suite "
+                 "passes only when these cover every applicable case and the evaluator agrees."),
         allow_inconclusive: bool = typer.Option(
             False, "--allow-inconclusive",
             help="Exit 0 on an inconclusive decision (a fail still exits non-zero)."),
     ):
         """Capture, evaluate, compare, and write CI artifacts under a frozen suite config."""
         try:
-            result = run_suite(suite, out_dir=out, resume=resume)
+            result = run_suite(suite, out_dir=out, resume=resume, adjudications=adjudications)
         except Exception as exc:
             raise typer.BadParameter(str(exc)) from exc
         typer.echo(json.dumps(result, indent=2))
