@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 
 from alignmenter.cli import app
 from alignmenter.evaluators.evidence import evidence_bundle
+from alignmenter.evaluators.faithfulness import assess_faithfulness
 from alignmenter.evaluators.grounding import assess_grounding
 from alignmenter.execution.evaluation import evaluate_saved, evaluation_summary
 from alignmenter.schemas.evaluation import Criterion, EvaluationSpec, JudgeBudget, JudgeReply
@@ -90,14 +91,66 @@ def test_grounding_preserves_sign_units_ranges_and_bounds(source, answer, expect
         assert finding.status == "unmatched" and finding.evidence is None
 
 
-@pytest.mark.parametrize("answer", ["1/2 cup", "½ cup", "1 mg/kg", "1 mg per kg", "about 3 m",
+@pytest.mark.parametrize("answer", ["1/2 cup", "½ cup", "1 mg/kg", "1 mg per kg",
                                      "1,000 mg", "1e3 mg", "5 minutes or more", "10–5 mg", "±5 mg",
-                                     "roughly 3 m", "3 m²", "3 m^2"])
+                                     "3 m²", "3 m^2"])
 def test_unsupported_quantity_notation_needs_review(answer):
     bundle = evidence_bundle(answer, {"excerpts": [answer]}, [{"role": "user", "content": "Question", "source_id": "turn:0"}])
     assessment = assess_grounding(bundle)
     assert assessment.outcome == "needs_review"
     assert all(q.status == "ambiguous" for q in assessment.quantities)
+
+
+# Approximate hedges ("about", "around", "roughly", "~", "≈") name the bare value and
+# are traceable to an exact (or equally-hedged) source quantity — health prose hedges
+# constantly, so treating every hedge as unverifiable made quantity_traceability useless
+# on natural text. This is a deliberate refinement of the earlier conservative behavior.
+@pytest.mark.parametrize("source,answer,expected", [
+    ("400 mg", "about 400 mg", "met"),
+    ("about 400 mg", "400 mg", "met"),          # hedged SOURCE is matchable too
+    ("2 liters", "around 2 liters", "met"),
+    ("~400 mg", "400 mg", "met"),
+    ("7 to 9 hours", "roughly 7 to 9 hours", "met"),   # hedged range
+    ("about 7 to 9 hours", "7–9 hours", "met"),        # hedged source range ↔ en-dash answer
+    ("400 mg", "about 500 mg", "violated"),     # approximation is not a free pass to a wrong value
+    ("at least 5 minutes", "about 5 minutes", "violated"),  # a bound is not an approximation
+])
+def test_grounding_treats_approximate_hedges_as_the_bare_value(source, answer, expected):
+    bundle = evidence_bundle(answer, {"excerpts": [source]}, [{"role": "user", "content": "Question", "source_id": "turn:0"}])
+    assessment = assess_grounding(bundle)
+    assert assessment.outcome == expected and len(assessment.quantities) == 1
+    if expected == "met":
+        assert assessment.quantities[0].status == "source"
+    else:
+        assert assessment.quantities[0].status == "unmatched"
+
+
+def _faith_value(claims):
+    return {"claims": claims, "correctness": 9, "answers_question": True, "abstained": False,
+            "abstention_appropriate": None, "dangerous": False, "danger_reason": None,
+            "reasoning": "fixture", "no_claims_reason": None}
+
+
+def test_faithfulness_matches_claims_across_markdown_and_whitespace():
+    # The judge quotes verbatim, but a verbatim quote differs from the rendered answer
+    # by Markdown emphasis inside the span and by wrapped whitespace — cosmetic only.
+    answer = "You should **drink 2 L** of water and\nsleep 7 to 9 hours."
+    bundle = evidence_bundle(answer, {"excerpts": ["Drink 2 L; sleep 7 to 9 hours."]},
+                             [{"role": "user", "content": "habits?", "source_id": "turn:0"}])
+    value = _faith_value([
+        {"text": "drink 2 L of water", "status": "unsupported", "evidence": []},   # ** inside span
+        {"text": "water and sleep 7 to 9 hours", "status": "unsupported", "evidence": []},  # spans newline
+    ])
+    assess_faithfulness(value, bundle, 7)  # must not raise
+
+
+def test_faithfulness_still_rejects_a_fabricated_claim():
+    answer = "You should **drink 2 L** of water."
+    bundle = evidence_bundle(answer, {"excerpts": ["Drink 2 L."]},
+                             [{"role": "user", "content": "habits?", "source_id": "turn:0"}])
+    value = _faith_value([{"text": "drink 5 L of juice", "status": "unsupported", "evidence": []}])
+    with pytest.raises(ValueError, match="not in the saved answer"):
+        assess_faithfulness(value, bundle, 7)
 
 
 @pytest.mark.parametrize("context", [{}, {"excerpts": None}, {"excerpts": "text"},

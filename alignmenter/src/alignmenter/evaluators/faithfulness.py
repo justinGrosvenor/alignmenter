@@ -1,7 +1,27 @@
 """Strict source-grounded claim judgments; transport and accounting live in the runner."""
 
+import re
+
 from alignmenter.evaluators.evidence import supporting_sources
 from alignmenter.schemas.scoring import FaithfulnessAssessment, FaithfulnessVerdict
+
+# The judge quotes claims/evidence verbatim, but a verbatim quote and its source
+# text can differ in Markdown emphasis and whitespace only: an answer rendered with
+# "**Call 988**" or wrapped across lines yields a quote ("Call 988") that is not a
+# byte-for-byte substring, so a correct verdict was rejected as invalid. Compare on
+# a surface-normalized form — emphasis/code markers dropped, whitespace collapsed,
+# case folded — so cosmetic differences match while the words must still be present
+# and contiguous (a fabricated quote, with different words, still fails).
+_MARKUP = re.compile(r"[*_`~]+")
+_WS = re.compile(r"\s+")
+
+
+def _surface(text: str) -> str:
+    return _WS.sub(" ", _MARKUP.sub("", text)).strip().casefold()
+
+
+def _contains(haystack: str, needle: str) -> bool:
+    return needle in haystack or _surface(needle) in _surface(haystack)
 
 FAITHFULNESS_SYSTEM = (
     "Assess the saved assistant answer against the user's actual question and visible retrieved passages. "
@@ -26,10 +46,10 @@ def assess_faithfulness(value, data, min_correctness):
     verdict = FaithfulnessVerdict.model_validate(value)
     sources = supporting_sources(data)
     for claim in verdict.claims:
-        if claim.text not in data.answer:
+        if not _contains(data.answer, claim.text):
             raise ValueError("Judge claim quote is not in the saved answer")
         for citation in claim.evidence:
             source = sources.get(citation.source_id)
-            if source is None or citation.quote not in source:
+            if source is None or not _contains(source, citation.quote):
                 raise ValueError("Judge evidence reference or quote is not in the supporting sources")
     return FaithfulnessAssessment(verdict=verdict, min_correctness=min_correctness)
