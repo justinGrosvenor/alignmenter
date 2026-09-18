@@ -3,6 +3,23 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.5] — 2026-09-18
+
+### Changed
+
+- Faithfulness evaluator: claim and evidence matching now tolerates Markdown
+  emphasis and whitespace, so a verbatim quote taken from a rendered answer
+  (`**bold**`, `` `code` ``, soft-wrapped across a line) is no longer rejected as
+  "not in the saved answer". Block boundaries (a blank line, or a list-item marker)
+  are preserved, so a claim cannot fabricate contiguity across two list items or
+  paragraphs — a fabricated or reordered quote still fails.
+- Grounding evaluator: approximate hedges (`about 400 mg`, `around 2 liters`,
+  `roughly 7 to 9 hours`, `~`, `≈`) are treated as the bare value and are traceable
+  to an exact (or equally-hedged) source quantity, instead of falling through to
+  `ambiguous`. Matching stays exact-signature (an approximation is not a free pass
+  to a different value); real bounds (`at least` / `up to` / `more than` / …) are
+  unchanged. This makes quantity traceability usable on natural, hedged prose.
+
 ## [0.3.4] — 2026-09-17
 
 ### Added
