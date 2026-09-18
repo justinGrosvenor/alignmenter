@@ -7,17 +7,29 @@ from alignmenter.schemas.scoring import FaithfulnessAssessment, FaithfulnessVerd
 
 # The judge quotes claims/evidence verbatim, but a verbatim quote and its source
 # text can differ in Markdown emphasis and whitespace only: an answer rendered with
-# "**Call 988**" or wrapped across lines yields a quote ("Call 988") that is not a
-# byte-for-byte substring, so a correct verdict was rejected as invalid. Compare on
-# a surface-normalized form — emphasis/code markers dropped, whitespace collapsed,
-# case folded — so cosmetic differences match while the words must still be present
-# and contiguous (a fabricated quote, with different words, still fails).
-_MARKUP = re.compile(r"[*_`~]+")
+# "**Call 988**" or soft-wrapped across a line yields a quote ("Call 988") that is
+# not a byte-for-byte substring, so a correct verdict was rejected as invalid.
+# Compare on a surface-normalized form so cosmetic differences match while a claim
+# whose words are NOT contiguous in the rendered answer still fails.
+#
+# Block boundaries (a blank line, or a list-item marker) are replaced with a
+# sentinel BEFORE inline markers are stripped, so a claim cannot silently span two
+# list items or paragraphs ("* drink 2 L\n* smoke daily" must not accept the fused
+# "2 L smoke daily"). A soft-wrap newline inside a paragraph is not a boundary.
+# Inline emphasis/code/strikethrough markers (* _ ` ~) are then removed outright —
+# this is a substring-existence check, so it intentionally does not model the
+# approximation ("~400") or strikethrough meaning those markers carry.
+_BLOCK = re.compile(r"\n\s*\n|\n[^\S\n]*(?:[-*+]|\d+[.)])\s+")
+_INLINE = re.compile(r"[*_`~]+")
 _WS = re.compile(r"\s+")
+_SEP = "\x00"
 
 
 def _surface(text: str) -> str:
-    return _WS.sub(" ", _MARKUP.sub("", text)).strip().casefold()
+    text = _BLOCK.sub(_SEP, text)
+    text = _INLINE.sub("", text)
+    text = _WS.sub(" ", text)
+    return text.strip().casefold()
 
 
 def _contains(haystack: str, needle: str) -> bool:

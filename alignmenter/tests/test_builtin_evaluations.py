@@ -144,11 +144,18 @@ def test_faithfulness_matches_claims_across_markdown_and_whitespace():
     assess_faithfulness(value, bundle, 7)  # must not raise
 
 
-def test_faithfulness_still_rejects_a_fabricated_claim():
-    answer = "You should **drink 2 L** of water."
+@pytest.mark.parametrize("answer,claim", [
+    ("You should **drink 2 L** of water.", "drink 5 L of juice"),        # wholly different words
+    ("* drink 2 L\n* smoke daily", "2 L smoke daily"),                   # fused across list items
+    ("**Sleep 7 h.**\n\n**Avoid caffeine.**", "7 h Avoid caffeine"),     # fused across paragraphs
+    ("1. Rest today\n2. Call a doctor tomorrow", "today Call a doctor"),  # fused across ordered items
+])
+def test_faithfulness_still_rejects_a_fabricated_claim(answer, claim):
+    # Normalization tolerates cosmetics but must not fabricate contiguity: a claim
+    # whose words are not contiguous within one block of the rendered answer fails.
     bundle = evidence_bundle(answer, {"excerpts": ["Drink 2 L."]},
                              [{"role": "user", "content": "habits?", "source_id": "turn:0"}])
-    value = _faith_value([{"text": "drink 5 L of juice", "status": "unsupported", "evidence": []}])
+    value = _faith_value([{"text": claim, "status": "unsupported", "evidence": []}])
     with pytest.raises(ValueError, match="not in the saved answer"):
         assess_faithfulness(value, bundle, 7)
 
