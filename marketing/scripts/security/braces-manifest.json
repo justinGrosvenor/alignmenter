@@ -1,0 +1,23 @@
+{
+  "version": "3.0.3",
+  "patch": "patches/braces@3.0.3.patch",
+  "patchHash": "58ba366efffb111e51fce827b23f2ab113a5ac1dac9a13407d8fa7b19a933285",
+  "before": {
+    "lib/constants.js": "c18ac5adb57308f1ce42a28552da3a31f5d83709743ebd9a636336813a744d4b",
+    "lib/stringify.js": "379f22d77bfa1478341ccd49c5e4267464aabcbba03558bab332aac23fc6f23a",
+    "lib/parse.js": "e572166565f15fa6ad9865ae49d678218e32aabfd1b3720f6d0d43d39800d310",
+    "lib/expand.js": "41ccc196ebfa7b7781a634e721eb744e4e7bcb54cba427a7e3d6806a1b9e58f7",
+    "lib/compile.js": "dc98f22eee3d511785d92a00758d5f0d48efed5f5813bdecc2de430c529b5c9f"
+  },
+  "after": {
+    "lib/constants.js": "f9fb688959232eee3e6ad7906a5b0e3234815db49ee857ef86983d65b917dc7c",
+    "lib/stringify.js": "c20d246d814b1c8e0db98111d9c7480c8e9efc3f1cd702ba2cec7b19f4db20c0",
+    "lib/parse.js": "ef9b3851f848460daaf91ff248222a43e266f97c4f2df7010cb7858e1e39a107",
+    "lib/expand.js": "2974d5b8763a358d81dfa5b4b804329f525239f34429c396b93a540219504809",
+    "lib/compile.js": "b651f7715e6db8942ce61d3394357b4d81c8ece88240aa31a458ea1165edd195"
+  },
+  "parents": [
+    "node_modules/chokidar",
+    "node_modules/micromatch"
+  ]
+}

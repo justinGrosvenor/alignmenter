@@ -61,7 +61,7 @@ jobs:
           .source-venv/bin/pip install dist/*.tar.gz
           .source-venv/bin/pip check
           .source-venv/bin/python scripts/release_smoke.py --core-only --out reports/source
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: release-rehearsal
@@ -88,13 +88,21 @@ jobs:
         working-directory: marketing
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '22.23.4'
           cache: npm
           cache-dependency-path: marketing/package-lock.json
       - run: npm ci
-      - run: npm audit --audit-level=high
+      - run: npm run security:test
+      - run: npm run security:audit
+      - name: Preserve raw dependency audit and verified correction evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: marketing-dependency-audit
+          path: marketing/dependency-audit*.json
+          if-no-files-found: ignore
       - run: npm run lint
       - run: npm run build
       - name: Configure AWS credentials
