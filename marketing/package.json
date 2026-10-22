@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "export": "next build"
+    "export": "next build",
+    "postinstall": "node scripts/security/braces.mjs --apply",
+    "security:test": "node --test scripts/security/*.test.mjs",
+    "security:audit": "node scripts/security/audit.mjs"
   },
   "dependencies": {
     "next": "16.4.1",
@@ -26,7 +29,7 @@
     "typescript": "5.4.5"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "overrides": {
     "postcss-selector-parser": "^7.1.6"
