@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 from dataclasses import dataclass
 from importlib.metadata import version
 from typing import Protocol
@@ -37,7 +38,8 @@ class ChatCompletionJudge:
     """
 
     def __init__(self, *, client, model: str, revision: str, max_completion_tokens: int = 2048,
-                 timeout: float = 60.0, json_mode: bool = True) -> None:
+                 timeout: float = 60.0, json_mode: bool = True,
+                 response_schema: dict | None = None) -> None:
         if type(max_completion_tokens) is not int or max_completion_tokens < 1:
             raise ValueError("max_completion_tokens must be a positive integer")
         import math
@@ -46,9 +48,16 @@ class ChatCompletionJudge:
             raise ValueError("Judge timeout must be positive and finite")
         if not revision.strip():
             raise ValueError("Judge deployment revision is required")
+        if response_schema is not None:
+            if not json_mode:
+                raise ValueError("response_schema requires json_mode=True")
+            if not isinstance(response_schema, dict) or response_schema.get("type") != "object":
+                raise ValueError("response_schema must describe a JSON object")
+            content_digest(response_schema)  # Reject non-JSON/non-finite configuration before dispatch.
         self._client = client.with_options(max_retries=0, timeout=timeout)
         self._model, self._tokens, self._json_mode = model, max_completion_tokens, json_mode
-        self.contract = JudgeContract(model=model, configuration_digest=content_digest({
+        self._schema = deepcopy(response_schema)
+        configuration = {
             "adapter": "chat-completion-v1", "model": model, "deployment_revision": revision,
             "sdk_version": version("openai"),
             "organization": getattr(self._client, "organization", None),
@@ -56,10 +65,17 @@ class ChatCompletionJudge:
             # Persist only the digest; endpoint URLs may contain private routing details.
             "endpoint": str(self._client.base_url), "max_completion_tokens": max_completion_tokens,
             "timeout": timeout, "json_mode": json_mode, "max_retries": 0,
-        }))
+        }
+        if self._schema is not None:
+            configuration.update(adapter="chat-completion-schema-v1", response_schema=self._schema)
+        self.contract = JudgeContract(model=model, configuration_digest=content_digest(configuration))
 
     def evaluate(self, request: JudgeRequest) -> JudgeReply:
         options = {"response_format": {"type": "json_object"}} if self._json_mode else {}
+        if self._schema is not None:
+            options = {"response_format": {"type": "json_schema", "json_schema": {
+                "name": "alignmenter_verdict", "strict": True, "schema": deepcopy(self._schema),
+            }}}
         response = self._client.chat.completions.create(
             model=self._model, extra_body={"max_completion_tokens": self._tokens},
             messages=[{"role": "system", "content": request.system},

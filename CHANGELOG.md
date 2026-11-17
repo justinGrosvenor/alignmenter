@@ -3,6 +3,17 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.6] — 2026-11-16
+
+### Added
+
+- `ChatCompletionJudge(response_schema=...)` requests strict JSON-schema output
+  from compatible providers, including required nullable verdict fields. The
+  schema is frozen into the judge's cache identity. Legacy JSON/text modes are
+  unchanged; replies remain unmodified and each invocation still makes at most
+  one request, without SDK retries or fallback. Provider schemas do not replace
+  the existing strict evidence and verdict validation.
+
 ## [0.3.5] — 2026-09-18
 
 ### Changed
