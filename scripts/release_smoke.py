@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import importlib.util
 import json
 import os
@@ -32,7 +33,14 @@ def main():
     options = parser.parse_args()
     root = options.out.resolve()
     root.mkdir(parents=True, exist_ok=True)
-    assert __version__ == version("alignmenter") == "0.3.5"
+    # Compare the installed artifact to this checkout's single release source;
+    # never import source code into the clean wheel/sdist environment.
+    source = Path(__file__).resolve().parents[1] / "alignmenter/src/alignmenter/_version.py"
+    assignments = ast.parse(source.read_text()).body
+    expected = next(ast.literal_eval(node.value) for node in assignments
+                    if isinstance(node, ast.Assign)
+                    and any(isinstance(target, ast.Name) and target.id == "__version__" for target in node.targets))
+    assert __version__ == version("alignmenter") == expected
     if options.core_only:
         assert importlib.util.find_spec("torch") is None
         assert importlib.util.find_spec("sklearn") is None

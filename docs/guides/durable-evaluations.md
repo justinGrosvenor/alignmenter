@@ -157,6 +157,16 @@ SDK version, organization/project, timeout, token limit, and JSON mode. It canno
 that a deployment matches its declared revision. Custom transports must not introduce
 their own hidden inference retries.
 
+`ChatCompletionJudge` also accepts `response_schema=<JSON object schema>` (0.3.6+).
+This selects the provider's strict `json_schema` output mode instead of generic
+JSON mode. Include every field the evaluator requires, including nullable fields.
+The supplied schema is copied and included in the judge configuration digest;
+changing it cannot reuse an incompatible saved judge reply. `json_mode=False`
+and `response_schema` are mutually exclusive. Without a schema, JSON/text behavior
+is unchanged. Supply a schema supported by your endpoint: provider-specific
+constraint simplification belongs in the caller, while local verdict validation
+still enforces the original constraints. Raw replies are not repaired or retried.
+
 `ChatCompletionJudge` records returned usage but has no inferred pricing or monetary
 upper bound. Use its call-count budget or supply a bounded-cost custom adapter. There
 is no network dispatch during the repository's adapter tests: they use a mocked HTTP
