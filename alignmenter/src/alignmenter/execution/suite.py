@@ -39,6 +39,10 @@ def load_suite(path):
             data[key] = str((path.parent / data[key]).resolve())
             if not Path(data[key]).exists():
                 raise ValueError(f"Suite {key} path does not exist")
+    data["judge_cache_sources"] = [str((path.parent / p).resolve()) for p in data["judge_cache_sources"]]
+    for source in data["judge_cache_sources"]:
+        if not (Path(source) / "run.sqlite3").is_file():
+            raise ValueError("Suite judge cache source is not a durable run")
     return SuiteSpec.model_validate(data)
 
 
@@ -109,7 +113,8 @@ def run_suite(path, *, out_dir=Path("reports"), resume=None):
                 raise
             capture_error = type(exc).__name__
     evaluation_id = evaluate_saved(run_dir, suite.evaluation, judge, budget=suite.judge_budget,
-                                    evaluators=evaluators, new_evaluation=resume is not None)
+                                    evaluators=evaluators, new_evaluation=resume is not None,
+                                    judge_cache_sources=tuple(Path(p) for p in suite.judge_cache_sources))
     comparison = compare_saved(Path(suite.baseline), run_dir, baseline_id=suite.baseline_evaluation_id,
                                 candidate_id=evaluation_id) if suite.baseline else None
     report = export_evaluation(run_dir, run_dir / "review", evaluation_id=evaluation_id,

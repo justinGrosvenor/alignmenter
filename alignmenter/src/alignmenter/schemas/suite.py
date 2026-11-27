@@ -19,6 +19,7 @@ class SuiteSpec(VersionedRecord):
     max_target_calls: NonNegativeInt | None = None
     judge_factory: Name | None = None
     judge_budget: JudgeBudget | None = None
+    judge_cache_sources: tuple[Name, ...] = ()
     evaluator_factories: tuple[Name, ...] = ()
     evaluation: EvaluationSpec
     policy: GatePolicy = GatePolicy()

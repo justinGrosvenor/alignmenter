@@ -6,14 +6,17 @@ import json
 import sqlite3
 from collections.abc import Iterator
 from contextlib import contextmanager
-from uuid import UUID
+from pathlib import Path
+from uuid import UUID, uuid4
 
 from alignmenter.schemas.evaluation import (
     EvaluationInput,
     EvaluationManifest,
     EvaluationResult,
     JudgeBudget,
+    JudgeCacheImport,
     JudgeCall,
+    JudgeCallReuse,
     JudgeContract,
     JudgeReply,
     JudgeRequest,
@@ -22,7 +25,7 @@ from alignmenter.schemas.execution import RunManifest, content_digest, utc_now
 from alignmenter.schemas.metrics import validate_samples
 from alignmenter.storage.runs import RunStore
 
-EVALUATION_DATABASE_VERSION = 1
+EVALUATION_DATABASE_VERSION = 2
 
 
 class BudgetBlocked(ValueError):
@@ -59,7 +62,7 @@ class EvaluationStore(RunStore):
     def _check_schema(db):
         if not db.execute("SELECT 1 FROM sqlite_master WHERE name='evaluation_schema'").fetchone():
             raise ValueError("Run has no saved rubric evaluations")
-        if db.execute("SELECT version FROM evaluation_schema").fetchone()[0] != EVALUATION_DATABASE_VERSION:
+        if db.execute("SELECT version FROM evaluation_schema").fetchone()[0] not in {1, EVALUATION_DATABASE_VERSION}:
             raise ValueError("Unsupported evaluation database version")
 
     def initialize(
@@ -88,6 +91,10 @@ class EvaluationStore(RunStore):
                     db.execute(sql)
                 db.execute("INSERT INTO evaluation_schema VALUES (1, ?)", (EVALUATION_DATABASE_VERSION,))
             self._check_schema(db)
+            # Explicit evaluation initialization upgrades the additive extension;
+            # readers of historical version-1 ledgers never mutate their source.
+            db.execute("CREATE TABLE IF NOT EXISTS judge_cache_imports (source_run_id TEXT PRIMARY KEY, payload TEXT NOT NULL, digest TEXT NOT NULL)")
+            db.execute("UPDATE evaluation_schema SET version=?", (EVALUATION_DATABASE_VERSION,))
             frozen = self._budget(db)
             if frozen is None and budget is not None:
                 db.execute("INSERT INTO judge_budget VALUES (1, ?, ?)", _encode(budget))
@@ -138,10 +145,28 @@ class EvaluationStore(RunStore):
         with self.transaction() as db:
             return self._calls(db)
 
-    @staticmethod
-    def _calls(db):
-        return [_decode(JudgeCall, row) for row in db.execute(
+    @classmethod
+    def _calls(cls, db):
+        calls = [_decode(JudgeCall, row) for row in db.execute(
             "SELECT payload,digest FROM judge_calls ORDER BY rowid")]
+        certificates = {c.source_run_id: c for c in cls._cache_imports(db)}
+        for call in calls:
+            ref = call.reused_from
+            if ref is None:
+                continue
+            certificate = certificates.get(ref.source_run_id)
+            original = {**call.model_dump(mode="json", exclude={"reused_from"}), "id": str(ref.source_call_id)}
+            if (certificate is None or certificate.source_calls_digest != ref.source_calls_digest
+                    or content_digest(original) != ref.source_call_digest):
+                raise ValueError("Imported judge call provenance mismatch")
+        return calls
+
+    @staticmethod
+    def _cache_imports(db):
+        if not db.execute("SELECT 1 FROM sqlite_master WHERE name='judge_cache_imports'").fetchone():
+            return []
+        return [_decode(JudgeCacheImport, row) for row in db.execute(
+            "SELECT payload,digest FROM judge_cache_imports ORDER BY rowid")]
 
     def budget_summary(self) -> dict:
         with self.transaction() as db:
@@ -150,13 +175,16 @@ class EvaluationStore(RunStore):
     def _budget_summary(self, db) -> dict:
         budget = self._budget(db)
         calls = self._calls(db)
-        actual = [c.reply.actual_cost_micros if c.reply is not None else None for c in calls]
-        charged = [self._charge(c) for c in calls]
+        fresh = [c for c in calls if c.reused_from is None]
+        actual = [c.reply.actual_cost_micros if c.reply is not None else None for c in fresh]
+        charged = [self._charge(c) for c in fresh]
         capture = RunManifest.model_validate_json(db.execute("SELECT payload FROM manifest").fetchone()[0])
         return {
             "scope": "durable_evaluations",
             "limits": budget.model_dump(mode="json") if budget is not None else None,
-            "reserved_calls": len(calls),
+            "reserved_calls": len(fresh),
+            "imported_cache_calls": len(calls) - len(fresh),
+            "cache_sources": [c.model_dump(mode="json") for c in self._cache_imports(db)],
             "known_actual_cost_micros": sum(n for n in actual if n is not None),
             "calls_with_unknown_actual_cost": sum(n is None for n in actual),
             "accounted_cost_micros": sum(charged) if all(n is not None for n in charged) else None,
@@ -165,6 +193,59 @@ class EvaluationStore(RunStore):
                        "reserved_calls": db.execute("SELECT count(*) FROM attempts").fetchone()[0],
                        "actual_cost_micros": None},
         }
+
+    def cache_imports(self) -> list[JudgeCacheImport]:
+        with self.transaction() as db:
+            return self._cache_imports(db)
+
+    def reuse_judge_calls(self, source_run_dir: Path) -> JudgeCacheImport:
+        """Import a complete terminal raw-call cohort, never selected verdicts.
+
+        The caller must hold coordinator leases on BOTH runs (evaluate_saved does
+        this). Original sources are read-only, and imported calls cannot be used
+        as sources again. The destination's frozen budget counts fresh provider
+        dispatches only; historical costs and failed outcomes remain in the raw
+        calls and source certificate. Every cache hit is revalidated by the engine.
+        """
+        source = EvaluationStore(source_run_dir)
+        if source.path.resolve() == self.path.resolve():
+            raise ValueError("Judge cache source must be a different run")
+        with source.transaction() as db:
+            calls = source._calls(db)
+            budget = source._budget(db)
+            source_id = source.manifest().id
+        if any(c.status == "running" or c.reused_from is not None for c in calls):
+            raise ValueError("Judge cache source must contain only original terminal calls")
+        if budget is None or len(calls) > budget.max_calls:
+            raise ValueError("Judge cache source has no valid frozen call budget")
+        payloads = [c.model_dump(mode="json", exclude={"reused_from"}) for c in calls]
+        cohort_digest = content_digest(payloads)
+        certificate = JudgeCacheImport(source_run_id=source_id, source_run_dir=str(source.run_dir.resolve()),
+                                       source_calls_digest=cohort_digest, call_count=len(calls), source_budget=budget)
+        with self.transaction(write=True) as db:
+            row = db.execute("SELECT payload,digest FROM judge_cache_imports WHERE source_run_id=?",
+                             (str(source_id),)).fetchone()
+            if row:
+                if _decode(JudgeCacheImport, row) != certificate:
+                    raise ValueError("Previously imported judge cache source changed")
+                return certificate
+            for call, payload in zip(calls, payloads, strict=True):
+                row = db.execute("SELECT payload,digest FROM judge_calls WHERE cache_key=?", (call.cache_key,)).fetchone()
+                if row:
+                    existing = _decode(JudgeCall, row)
+                    # Equal requests judged in separate cohorts can disagree. Do
+                    # not choose a preferred outcome or overwrite a local result.
+                    if existing.model_dump(mode="json", exclude={"id", "started_at", "finished_at", "reused_from"}) != call.model_dump(mode="json", exclude={"id", "started_at", "finished_at", "reused_from"}):
+                        raise ValueError("Conflicting raw replies for the same judge cache key")
+                    continue
+                reused = JudgeCall.model_validate({**call.model_dump(), "id": uuid4(), "reused_from": JudgeCallReuse(
+                    source_run_id=source_id, source_call_id=call.id,
+                    source_call_digest=content_digest(payload), source_calls_digest=cohort_digest)})
+                db.execute("INSERT INTO judge_calls VALUES (?, ?, ?, ?)",
+                           (str(reused.id), reused.cache_key, *_encode(reused)))
+            db.execute("INSERT INTO judge_cache_imports VALUES (?, ?, ?)", (str(source_id), *_encode(certificate)))
+            self._event(db, "judge_cache_imported", str(source_id))
+        return certificate
 
     @staticmethod
     def _budget(db):
@@ -212,10 +293,11 @@ class EvaluationStore(RunStore):
             budget = self._budget(db)
             if budget is None:
                 raise BudgetBlocked("Judge budget is not configured")
-            calls = self._calls(db)
+            all_calls = self._calls(db)
+            calls = [c for c in all_calls if c.reused_from is None]
             if len(calls) >= budget.max_calls:
                 raise BudgetBlocked("Run judge call budget exhausted")
-            if any(c.status == "cost_bound_exceeded" for c in calls):
+            if any(c.status == "cost_bound_exceeded" for c in all_calls):
                 raise BudgetBlocked("Judge exceeded a declared cost bound; further dispatch is blocked")
             upper = judge.max_cost_micros_per_call
             if budget.max_cost_micros is not None:

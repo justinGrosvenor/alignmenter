@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from collections.abc import Callable
+from contextlib import ExitStack
 from importlib.metadata import version
 from pathlib import Path
 from uuid import UUID
@@ -212,12 +213,16 @@ def evaluate_saved(
     run_dir: Path, spec: EvaluationSpec, judge: DurableJudge | None = None, *, budget: JudgeBudget | None = None,
     new_evaluation: bool = False, progress: Callable[[EvaluationResult], None] | None = None,
     evaluators: tuple[DeterministicEvaluator, ...] = (),
+    judge_cache_sources: tuple[Path, ...] = (),
 ) -> UUID:
     """Create or resume one rubric evaluation without regenerating any target answers.
 
     A changed rubric/judge/input snapshot requires explicit new_evaluation. All evaluations
     on the same capture share the frozen budget. Unknown judge outcomes are never retried
     automatically; explicit repeated samples consume the remaining original budget.
+    Explicit cache sources import whole terminal raw-call cohorts under leases.
+    Only byte-identical requests and judge contracts can hit; saved replies are
+    parsed and validated again against current inputs. Reuse spends no new call.
     """
     # Copy nested user configuration before planning; no adapter work in construction.
     spec = EvaluationSpec.model_validate_json(spec.model_dump_json())
@@ -229,7 +234,14 @@ def evaluate_saved(
         raise ValueError("Rubric and faithfulness evaluators require a judge adapter")
     contract = JudgeContract.model_validate_json(judge.contract.model_dump_json()) if needs_judge else None
     store = EvaluationStore(run_dir)
-    with coordinator_lease(store.run_dir):
+    paths = [store.run_dir.resolve(), *(Path(p).resolve() for p in judge_cache_sources)]
+    if len(set(paths)) != len(paths):
+        raise ValueError("Judge cache source runs must be distinct from each other and the destination")
+    with ExitStack() as leases:
+        for path in sorted(paths):
+            if not path.is_dir():
+                raise FileNotFoundError(f"No run directory at {path}")
+            leases.enter_context(coordinator_lease(path))
         inputs = plan_evaluation(store, spec)
         input_digest = content_digest([i.model_dump(mode="json") for i in inputs])
         package_version = version("alignmenter")
@@ -242,6 +254,8 @@ def evaluate_saved(
             run_id=store.manifest().id, identity=identity, spec=spec, judge=contract,
             inputs_digest=input_digest, package_version=package_version, engine_revision="evaluators-v2", evaluators=descriptors,
         ), inputs, budget, new_evaluation=new_evaluation)
+        for source in judge_cache_sources:
+            store.reuse_judge_calls(source)
         store.abandon_calls()
         completed = {r.input_key for r in store.results(manifest.id)}
         criteria = {c.id: c for c in spec.criteria}
