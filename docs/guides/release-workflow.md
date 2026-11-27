@@ -242,3 +242,32 @@ example is in `.github/examples/application-evals.yml` in the repository.
 To keep a deterministic (offline, no-judge) pull-request gate green while a spec is still
 `draft`, pass `--allow-inconclusive` to `run-suite` or `check`: an inconclusive decision
 then exits 0, while a genuine `fail` (a violation or a regression) still exits non-zero.
+
+### Reuse identical raw judge replies across capture runs
+
+A new capture can explicitly reuse prior judge work without regenerating answers
+or paying for identical requests. In a suite YAML, set `judge_cache_sources` to
+prior durable run directories (paths resolve relative to the suite). The SDK
+entry point is `evaluate_saved(..., judge_cache_sources=(Path("prior-run"),))`.
+
+This imports each source's **entire original terminal call cohort**, including
+negative verdicts, invalid replies, unknown outcomes and cost-bound violations.
+It does not copy evaluation results: current validators parse saved raw replies
+again. Both the complete serialized request and judge contract must match exactly;
+changed evidence, answer, rubric, sample, model or configuration causes a miss.
+Unknown/invalid outcomes are never automatically retried. An unchanged valid
+negative cannot be resampled by importing another source.
+
+The engine locks source and destination coordinators during evaluation. Sources
+with running or previously imported calls are rejected, as are conflicting replies
+for one cache key. Imported source identity, full cohort digest, original call
+identity/digest and frozen source budget are recorded. A changed source is rejected
+on resume. Source databases and their original charges remain unchanged.
+
+The destination's `judge_budget` limits **fresh provider dispatches and costs**;
+`reserved_calls` counts those fresh reservations, and `imported_cache_calls`
+reports the full imported cohort separately (some imports may be unused). Original
+usage/cost stays attached to each imported raw call but is not charged twice.
+Budgets are per run: applications authorizing a cumulative limit must include
+historical reservations as well as the new run's fresh cap. Cache imports do not
+increase or replace any previously authorized limit.

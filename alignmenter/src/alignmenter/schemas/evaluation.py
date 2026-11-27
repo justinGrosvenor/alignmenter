@@ -190,6 +190,27 @@ class EvaluationManifest(VersionedRecord):
         return self
 
 
+class JudgeCallReuse(VersionedRecord):
+    source_run_id: UUID
+    source_call_id: UUID
+    source_call_digest: Digest
+    source_calls_digest: Digest
+
+
+class JudgeCacheImport(VersionedRecord):
+    source_run_id: UUID
+    source_run_dir: NonBlank
+    source_calls_digest: Digest
+    call_count: NonNegativeInt
+    source_budget: JudgeBudget
+
+    @model_validator(mode="after")
+    def within_source_budget(self):
+        if self.call_count > self.source_budget.max_calls:
+            raise ValueError("Imported source calls exceed its frozen budget")
+        return self
+
+
 class JudgeCall(VersionedRecord):
     id: UUID = Field(default_factory=uuid4)
     cache_key: Digest
@@ -201,6 +222,7 @@ class JudgeCall(VersionedRecord):
     exception_type: str | None = None
     started_at: AwareDatetime = Field(default_factory=utc_now)
     finished_at: AwareDatetime | None = None
+    reused_from: JudgeCallReuse | None = None
 
     @model_validator(mode="after")
     def committed_boundary(self):
@@ -209,6 +231,8 @@ class JudgeCall(VersionedRecord):
             raise ValueError("Judge call cache identity mismatch")
         if (self.status == "running") != (self.finished_at is None):
             raise ValueError("Only running judge calls have no finish time")
+        if self.reused_from is not None and self.status == "running":
+            raise ValueError("Only terminal judge calls can be reused")
         if (self.reply is not None) != (self.status in {"response_saved", "cost_bound_exceeded"}):
             raise ValueError("Saved response state must match reply presence")
         return self
