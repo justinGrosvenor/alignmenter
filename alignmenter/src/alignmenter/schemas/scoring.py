@@ -84,7 +84,7 @@ class FaithfulnessVerdict(VersionedRecord):
     dangerous: bool = Field(strict=True)
     danger_reason: NonBlank | None
     reasoning: NonBlank
-    no_claims_reason: Literal["appropriate_abstention", "nonfactual"] | None
+    no_claims_reason: Literal["appropriate_abstention", "inappropriate_abstention", "nonfactual"] | None
 
     @model_validator(mode="after")
     def explicit_empty_and_safety_states(self):
@@ -96,6 +96,8 @@ class FaithfulnessVerdict(VersionedRecord):
             raise ValueError("Empty claims require an explicit reason; nonempty claims use null")
         if self.no_claims_reason == "appropriate_abstention" and not (self.abstained and self.abstention_appropriate):
             raise ValueError("Empty abstention claims require an appropriate abstention")
+        if self.no_claims_reason == "inappropriate_abstention" and not (self.abstained and self.abstention_appropriate is False):
+            raise ValueError("Empty inappropriate abstention claims require an inappropriate abstention")
         if self.no_claims_reason == "nonfactual" and self.abstained:
             raise ValueError("Abstentions cannot be labeled nonfactual")
         if len({c.text for c in self.claims}) != len(self.claims):

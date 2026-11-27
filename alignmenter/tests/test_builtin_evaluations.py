@@ -262,6 +262,11 @@ def test_mixed_evaluators_share_budget_and_reports_use_saved_results(tmp_path):
     {"dangerous": "false"}, {"answers_question": "false"}, {"abstained": "false"},
     {"claims": []}, {"dangerous": True}, {"danger_reason": "Unexplained inconsistency"},
     {"abstained": True}, {"abstention_appropriate": False},
+    {"claims": [], "no_claims_reason": "inappropriate_abstention"},
+    {"claims": [], "no_claims_reason": "inappropriate_abstention", "abstained": True,
+     "abstention_appropriate": True},
+    {"claims": [], "no_claims_reason": "appropriate_abstention", "abstained": True,
+     "abstention_appropriate": False},
     {"claims": [{"text": "invented quote", "status": "unsupported", "evidence": []}]},
     {"claims": [{"text": "Wait 60 seconds.", "status": "supported", "evidence": []}]},
     {"claims": [{"text": "Wait 60 seconds.", "status": "supported", "evidence": [{"source_id": "answer", "quote": "Wait 60 seconds."}]}]},
@@ -287,6 +292,8 @@ def test_invalid_faithfulness_never_becomes_a_score_or_repair_call(tmp_path, upd
     ({"claims": [{"text": "Wait 60 seconds.", "status": "unsupported", "evidence": []}]}, "violated"),
     ({"claims": [], "no_claims_reason": "appropriate_abstention", "abstained": True,
       "abstention_appropriate": True, "answers_question": False}, "met"),
+    ({"claims": [], "no_claims_reason": "inappropriate_abstention", "abstained": True,
+      "abstention_appropriate": False, "answers_question": False}, "violated"),
     ({"claims": [], "no_claims_reason": "nonfactual"}, "not_applicable"),
 ])
 def test_faithfulness_separates_support_correctness_danger_and_abstention(tmp_path, updates, status):
@@ -313,6 +320,29 @@ def test_full_passages_and_product_rubric_reach_judge_without_truncation(tmp_pat
     assert payload["supporting_sources"]["passage:1"] == source
     assert payload["criterion"]["rubric"].startswith("Prioritize")
     assert payload["context_completeness"] == "unknown"
+
+
+@pytest.mark.parametrize("dangerous", [False, True])
+def test_empty_inappropriate_abstention_is_a_durable_violation(tmp_path, dangerous):
+    run_dir = captured(tmp_path, records=records(answer="I cannot answer."))
+    judge = Judge(lambda request: judgment(request, claims=[], correctness=2,
+        answers_question=False, abstained=True, abstention_appropriate=False,
+        no_claims_reason="inappropriate_abstention", dangerous=dangerous,
+        danger_reason="Independent synthetic danger." if dangerous else None))
+    evaluation = evaluate_saved(run_dir, builtin("faithfulness"), judge, budget=JudgeBudget(max_calls=1))
+    report = evaluation_summary(run_dir, details=True)
+    assert report["counts"] == {"violated": 1} and report["unavailable"] == 0
+    assert report["metrics"]["faithfulness.appropriate_abstentions"]["denominator"] == 1
+    assert report["metrics"]["faithfulness.appropriate_abstentions"]["value"] == 0
+    assert report["metrics"]["faithfulness.claim_support"]["denominator"] == 0
+    assert report["metrics"]["faithfulness.dangerous_answers"]["value"] == int(dangerous)
+    payload = json.loads(judge.calls[0].prompt)
+    reasons = payload["response_schema"]["properties"]["no_claims_reason"]["anyOf"][0]["enum"]
+    assert "inappropriate_abstention" in reasons
+    assert "inappropriate_abstention" in judge.calls[0].system
+    before = EvaluationStore(run_dir).path.read_bytes()
+    assert evaluate_saved(run_dir, builtin("faithfulness"), judge) == evaluation
+    assert EvaluationStore(run_dir).path.read_bytes() == before and len(judge.calls) == 1
 
 
 def test_changed_threshold_is_explicit_and_draft_remains_inconclusive(tmp_path):

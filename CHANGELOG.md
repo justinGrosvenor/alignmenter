@@ -3,6 +3,17 @@
 All notable changes to Alignmenter are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.7] — 2026-11-26
+
+### Fixed
+
+- Durable faithfulness judgments can explicitly represent an empty inappropriate
+  abstention with `no_claims_reason: "inappropriate_abstention"`. It becomes a
+  valid violation with an abstention denominator, rather than an unrepresentable
+  verdict. The judge schema/instructions describe the additive value; contradictory
+  states, exact evidence validation and independent danger checks remain strict.
+  Saved invalid replies are never repaired or silently reclassified.
+
 ## [0.3.6] — 2026-11-16
 
 ### Added

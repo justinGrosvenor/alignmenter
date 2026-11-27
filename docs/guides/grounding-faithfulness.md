@@ -154,6 +154,12 @@ criterion but contributes no fictional supported claims. A nonfactual answer can
 `not_applicable` when it has no other violation; its explicit empty-claim explanation
 is retained for review.
 
+An empty abstention uses `no_claims_reason: "appropriate_abstention"` when judged
+appropriate, or `"inappropriate_abstention"` when judged inappropriate. Both
+require `abstained: true` and matching `abstention_appropriate`; the latter is a
+valid violation, not an unavailable verdict. `"nonfactual"` remains reserved for
+non-abstentions. Existing contradictory replies are not repaired or reclassified.
+
 Raw replies commit before validation. Interruption after that commit reuses the reply;
 interruption after assessment commit reuses the assessment. Unknown remote outcomes
 retain their reservation and are never automatically resent. These are the same
