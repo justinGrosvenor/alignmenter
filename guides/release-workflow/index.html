@@ -640,6 +640,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Use in CI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reuse-identical-raw-judge-replies-across-capture-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reuse identical raw judge replies across capture runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1390,6 +1407,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Use in CI">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reuse-identical-raw-judge-replies-across-capture-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reuse identical raw judge replies across capture runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1611,6 +1645,30 @@ example is in <code>.github/examples/application-evals.yml</code> in the reposit
 <p>To keep a deterministic (offline, no-judge) pull-request gate green while a spec is still
 <code>draft</code>, pass <code>--allow-inconclusive</code> to <code>run-suite</code> or <code>check</code>: an inconclusive decision
 then exits 0, while a genuine <code>fail</code> (a violation or a regression) still exits non-zero.</p>
+<h3 id="reuse-identical-raw-judge-replies-across-capture-runs">Reuse identical raw judge replies across capture runs<a class="headerlink" href="#reuse-identical-raw-judge-replies-across-capture-runs" title="Permanent link">&para;</a></h3>
+<p>A new capture can explicitly reuse prior judge work without regenerating answers
+or paying for identical requests. In a suite YAML, set <code>judge_cache_sources</code> to
+prior durable run directories (paths resolve relative to the suite). The SDK
+entry point is <code>evaluate_saved(..., judge_cache_sources=(Path("prior-run"),))</code>.</p>
+<p>This imports each source's <strong>entire original terminal call cohort</strong>, including
+negative verdicts, invalid replies, unknown outcomes and cost-bound violations.
+It does not copy evaluation results: current validators parse saved raw replies
+again. Both the complete serialized request and judge contract must match exactly;
+changed evidence, answer, rubric, sample, model or configuration causes a miss.
+Unknown/invalid outcomes are never automatically retried. An unchanged valid
+negative cannot be resampled by importing another source.</p>
+<p>The engine locks source and destination coordinators during evaluation. Sources
+with running or previously imported calls are rejected, as are conflicting replies
+for one cache key. Imported source identity, full cohort digest, original call
+identity/digest and frozen source budget are recorded. A changed source is rejected
+on resume. Source databases and their original charges remain unchanged.</p>
+<p>The destination's <code>judge_budget</code> limits <strong>fresh provider dispatches and costs</strong>;
+<code>reserved_calls</code> counts those fresh reservations, and <code>imported_cache_calls</code>
+reports the full imported cohort separately (some imports may be unused). Original
+usage/cost stays attached to each imported raw call but is not charged twice.
+Budgets are per run: applications authorizing a cumulative limit must include
+historical reservations as well as the new run's fresh cap. Cache imports do not
+increase or replace any previously authorized limit.</p>
 
 
 
