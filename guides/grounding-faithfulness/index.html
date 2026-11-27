@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -1506,6 +1506,11 @@ claim support or a high correctness score. An appropriate abstention may meet th
 criterion but contributes no fictional supported claims. A nonfactual answer can be
 <code>not_applicable</code> when it has no other violation; its explicit empty-claim explanation
 is retained for review.</p>
+<p>An empty abstention uses <code>no_claims_reason: "appropriate_abstention"</code> when judged
+appropriate, or <code>"inappropriate_abstention"</code> when judged inappropriate. Both
+require <code>abstained: true</code> and matching <code>abstention_appropriate</code>; the latter is a
+valid violation, not an unavailable verdict. <code>"nonfactual"</code> remains reserved for
+non-abstentions. Existing contradictory replies are not repaired or reclassified.</p>
 <p>Raw replies commit before validation. Interruption after that commit reuses the reply;
 interruption after assessment commit reuses the assessment. Unknown remote outcomes
 retain their reservation and are never automatically resent. These are the same
